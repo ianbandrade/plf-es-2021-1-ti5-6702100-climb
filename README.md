@@ -6,8 +6,8 @@ Escreva um ou dois  parágrafo resumindo o objetivo do seu projeto.
 
 * Andrew Costa Silva
 * Arthur Amaral Rocha
-* João Guilherme Martins Borborema
 * Ian Bittencourt Andrade Jacinto
+* João Guilherme Martins Borborema
 
 ## Orientadores
 
