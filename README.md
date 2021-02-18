@@ -6,9 +6,9 @@ Escreva um ou dois  parágrafo resumindo o objetivo do seu projeto.
 
 * Andrew Costa Silva
 * Arthur Amaral Rocha
+* Gabriel Moreira Chaves
 * Ian Bittencourt Andrade Jacinto
 * João Guilherme Martins Borborema
-* Gabriel Moreira Chaves
 
 
 ## Orientadores
