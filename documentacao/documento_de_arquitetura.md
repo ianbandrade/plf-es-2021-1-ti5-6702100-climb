@@ -1,20 +1,22 @@
-# TITULO DO PROJETO
+# CLIMB
 
+**Andrew Costa Silva, andrew.costa@sga.pucminas.br**
 
-**Nome completo do Aluno 1, email do aluno 1**
+**Arthur Rocha Amaral, arthur.amaral.1100245@sga.pucminas.br**
 
-**Nome completo do Aluno 2, email do aluno 2**
+**Gabriel Moreira Chaves, gabriel.chaves.1200613@sga.pucminas.br**
 
-**Nome completo do Aluno 3, email do aluno 3**
+**Ian Bittecourt Andrade de Jacinto, ian.andrade@sga.pucminas.br**
+
+**João Guilherme Martins Borborema, jborborema@sga.pucminas.br**
 
 ---
 
 Professores:
 
-**Prof. Nome do Prof 1**
+**Hugo Bastos de Paula**
 
-**Prof. Nome do Prof 2**
-
+**Pedro Alves de Oliveira**
 
 ---
 
@@ -33,7 +35,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 
 | **Data** | **Autor** | **Descrição** | **Versão** |
 | --- | --- | --- | --- |
-| **[dd/mm/aaaa]** | [Nome do autor] | [Descrever as principais alterações realizadas no documento, evidenciando as seções ou capítulos alterados] | [X] |
+| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Moodelo Arquitetural do projeto | 1.0 |
 | | | | |
 | | | | |
 
