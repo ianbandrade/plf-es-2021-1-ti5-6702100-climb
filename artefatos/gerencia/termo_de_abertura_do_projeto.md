@@ -1,21 +1,27 @@
 # Termo de Abertura de Projeto (TAP) no.: 9999
 
-**Nome da empresa:**
+**Nome da empresa:** Climb
 
-**Data:**
+**Data:** 24/02/2021
 
 **Integrantes:**
 
-Nome completo do Aluno 1, email do aluno 1
-Nome completo do Aluno 2, email do aluno 2
-Nome completo do Aluno 3, email do aluno 3
+Andrew Costa Silva, andrew.costa@sga.pucminas.br
+
+Arthur Rocha Amaral, arthur.amaral.1100245@sga.pucminas.br
+
+Gabriel Moreira Chaves, gabriel.chaves.1200613@sga.pucminas.br
+
+Ian Bittecourt Andrade de Jacinto, ian.andrade@sga.pucminas.br
+
+João Guilherme Martins Borborema, jborborema@sga.pucminas.br
 
 ---
 
 **Professores:**
 
-Prof. Nome do Prof 1
-Prof. Nome do Prof 2
+Prof.Hugo Bastos de Paula
+Prof. Pedro Alves de Oliveira
 
 ---
 
@@ -27,21 +33,25 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 ## 1. IDENTIFICAÇÃO DO PROJETO
 
-**1.1 Nome do Projeto:**
+**1.1 Nome do Projeto:** Climb
 
-**1.2 Gerente do Projeto:**
+**1.2 Gerente do Projeto:** Gabriel Moreira Chaves
 
-**1.3 Cliente do Projeto:**
+**1.3 Cliente do Projeto:**: Hugo Bastos de Paula e Pedro Alves de Oliveira
 
 **1.4 Tipo de Projeto:**
 
 [ ] Manutenção em produto existente
-[ ] Desenvolvimento de novo produto
+[X ] Desenvolvimento de novo produto
 [ ] Outro: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 **1.5 Objetivo do projeto:**
 
-**1.6 Benefícios que justificam o projeto:**
+Construir um sistema simples e prático para implantação de aplicações escalonáveis, em um ambiente local (on-premise), utilizando uma interface amigável por meio de uma plataforma como um serviço. Este, se integra com um local de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
+
+**1.6 Benefícios que justificam o projeto:** 
+
+Alta usabilidade, focado na experiência do usuário. No que diz respeito à interface, será bem simples e objetiva. Para fazer a implantação de um projeto, não será necessário ter conhecimento técnico para isto, dessa forma, o sistema se torna amigável e pouco técnico.  
 
 **1.7 Qualidade esperada do produto final (requisitos de qualidade):**
 
