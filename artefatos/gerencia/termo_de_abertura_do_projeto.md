@@ -21,6 +21,7 @@ João Guilherme Martins Borborema, jborborema@sga.pucminas.br
 **Professores:**
 
 Prof.Hugo Bastos de Paula
+
 Prof. Pedro Alves de Oliveira
 
 ---
@@ -42,7 +43,7 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 **1.4 Tipo de Projeto:**
 
 [ ] Manutenção em produto existente
-[X ] Desenvolvimento de novo produto
+[X] Desenvolvimento de novo produto
 [ ] Outro: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 **1.5 Objetivo do projeto:**
@@ -55,24 +56,32 @@ Alta usabilidade, focado na experiência do usuário. No que diz respeito à int
 
 **1.7 Qualidade esperada do produto final (requisitos de qualidade):**
 
+- Aplicação com interface amigável
+- Aplicação eficiente
+- A implantação será realizada pelo usuário de forma intuitiva
+
 ## **2. ESCOPO PRELIMINAR E PREMISSAS** |
 
 **2.1 O que será feito (escopo do projeto)**
 
+Será desenvolvido uma aplicação Web em que uma organização poderá utilizar para que as pessoas envolvidas consigam realizar o deploy de seus sistemas, controlar o acesso desses usuários e alocar os recursos necessários para cada aplicação. Além disso, a implantação desses sitemas será bastante facilitada, por meio da integração com serviços de repositório Git, e também será possível o monitoramento da situação desses sitemas por meio de um aplicativo mobile.
 
 **2.2 O que não será feito no projeto (contra-escopo)**
 
+Não será possível a integração com o Bitbucket
 
 **2.3 Resultados / serviços / produtos a serem entregues**
 
-| **1.** |  |
+| | Resultados |
 | --- | --- |
-| **2.** | |
-| **3.** | |
+| **1.** | Aplicativo Mobile|
+| **2.** | Protótipos de interfaces |
+| **3.** | Diagramas UML |
+| **4.** | Documentação do Projeto |
 
 **2.4 Condições para início do projeto**
 
-
+Realizar a modelagem do sistema e a prototipação das interfaces
 
 
 ## 3. ESTIMATIVA DE PRAZO
