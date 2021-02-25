@@ -83,8 +83,8 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 
 ## 1.3. Definições e Abreviaturas
 
-- **_ROI:_** vindo do inglês, Return on Investment permite saber se o retorno investido será positivo ou negativo;
-- **_PaaS:_** vindo do inglês, Platform as a Service é um serviço de hospedagem e implementação de hardware e software.
+- **_ROI:_** vindo do inglês, _Return on Investment_ permite saber se o retorno investido será positivo ou negativo;
+- **_PaaS:_** vindo do inglês, _Platform as a Service_ é um serviço de hospedagem e implementação de hardware e software.
 
 <a name="requisitos"></a>
 # 2. Requisitos
