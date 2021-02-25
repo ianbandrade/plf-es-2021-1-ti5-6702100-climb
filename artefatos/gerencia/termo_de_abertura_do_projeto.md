@@ -86,29 +86,29 @@ Realizar a modelagem do sistema e a prototipação das interfaces
 
 ## 3. ESTIMATIVA DE PRAZO
 
+**3.1 Prazo previsto (horas):** 2856
 
-**3.1 Prazo previsto (horas):** 9999
+**3.2 Data prevista de início:** 11/02/2021
 
-**3.2 Data prevista de início:  **\_\_\_\_\_ /\_\_\_\_\_ /\_\_\_\_\_ 
-**3.3 Data prevista de término: **\_\_\_\_\_ /\_\_\_\_\_ /\_\_\_\_\_ 
+**3.3 Data prevista de término:** 10/06/2021
 
 ## 4. ESTIMATIVA DE CUSTO
 
 | Item de custo | Qtd. horas | Valor / hora  | Valor total |
 | --- | --- | --- | --- |
-| **4.1 Recursos Humanos** **(especifique):** |  |  |  |
-| **4.2 Hardware (especifique):** |  |  |  |
-| **4.3 Rede e serviços de hospedagem:** |  |  |  |
-| **4.4 Software de terceiros:** |  |  |  |
-| **4.5 Serviços e treinamento:** |  |  |  |
-| **4.6 Total Geral:** |  |  |  |
+| **4.1 Recursos Humanos:** </br> 3 desenvolvedores front-end </br> 2 desenvolvedores back-end| </br> 480 </br> 400 | </br> 54 </br> 60 | </br> 25.920 </br> 24.000 |
+| **4.2 Hardware:** </br> 5 alugueis de notebooks 16GB Intel I5 8gen Linux | </br> 880 | </br> 11,36 | </br> 10000 |
+| **4.3 Rede e serviços de hospedagem:** </br> Internet fibra ótica 100mbps </br>| </br> 880| </br> 0,45 | </br> 400 |
+| **4.4 Software de terceiros:** </br> nenhum custo envolvido| </br> 0 | </br> 0 | </br> 0 |
+| **4.5 Serviços e treinamento:** </br> nenhum custo envolvido| </br> 0 | </br> 0 | </br> 0 |
+| **4.6 Total Geral:** | 2640 | 125,81 | 60.320 |
 
 ## 5. PARTES INTERESSADAS
 
 | Nome | Papel no projeto | Assinatura |
 | --- | --- | --- |
-|     |     |     |
-|     |     |     |
+| Hugo de Bastos Paula    |  Cliente   |     |
+| Pedro Alves De Oliveira    |  Cliente   |     |
 |     |     |     |
 |     |     |     |
 
