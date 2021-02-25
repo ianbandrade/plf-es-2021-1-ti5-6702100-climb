@@ -74,7 +74,7 @@ Entretanto, a configuração do ambiente para hospedagem de cada projeto de form
 
 ## 1.1. Problema
 
-O Climb pretende sanar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.  
+O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.  
 
 ## 1.2. Objetivos do trabalho
 
