@@ -66,24 +66,27 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 6. [Apêndices](#apendices 'APÊNDICES')<br />
 
 <a name="apresentacao"></a>
-
 # 1. Apresentação
 
-Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas.
-Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso.
+Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas. 
+Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso. 
+
+Dessa forma, para obtermos um parâmetro de custo, segundo o site WTSNET, no artigo [Nuvem x On-Premises: Fatores a considerar no cálculo do ROI](https://www.wtsnet.com.br/cloud/nuvem-x-on-premises-calculo-roi/), é evidenciado como é feito o cálculo ROI, que define o ROI do serviço que será utilizado. Este cálculo é feito pela equação ```(Ganho obtido - Investimento Inicial) / Investimento inicial```. Assim, podemos concluir que o custo depende da aplicação e cabe a entidade optar por qual utilizar. No entanto, não existem meios que possam agregar um bom custo e ao mesmo tempo favorecer a facilidade de implantação de uma aplicação. 
 
 ## 1.1. Problema
 
-O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.
+O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.  
 
 ## 1.2. Objetivos do trabalho
 
-O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. Os objetivos específicos serão focados em desenvolver uma aplicação que fique alocada em um ambiente local (on-premise), que desfrute de uma interface amigável, por meio de uma plataforma como um serviço. Estes, serão os pontos focais da descrição arquitetural, já que, são as circunstâncias que se integram com um ambiente de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
+O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. Os objetivos específicos serão focados em desenvolver uma aplicação que fique alocada em um ambiente local (on-premise), que desfrute de uma interface amigável, por meio de uma plataforma como um serviço. Estes, serão os pontos focais da descrição arquitetural, já que, são as circunstâncias que se integram com um ambiente de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações. 
 
 ## 1.3. Definições e Abreviaturas
 
-<a name="requisitos"></a>
+- **_ROI:_** vindo do inglês, Return on Investment permite saber se o retorno investido será positivo ou negativo;
+- **_PaaS:_** vindo do inglês, Platform as a Service é um serviço de hospedagem e implementação de hardware e software.
 
+<a name="requisitos"></a>
 # 2. Requisitos
 
 _Esta seção descreve os requisitos comtemplados nesta descrição arquitetural, divididos em dois grupos: funcionais e não funcionais._
