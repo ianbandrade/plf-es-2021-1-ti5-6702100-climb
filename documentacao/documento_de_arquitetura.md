@@ -33,11 +33,11 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 
 ## Histórico de Revisões
 
-| **Data**       | **Autor**       | **Descrição**                                                           | **Versão** |
-| -------------- | --------------- | ----------------------------------------------------------------------- | ---------- |
-| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Moodelo Arquitetural do projeto | 1.0        |
-|                |                 |                                                                         |            |
-|                |                 |                                                                         |            |
+| **Data**       | **Autor**       | **Descrição**                                                          | **Versão** |
+| -------------- | --------------- | ---------------------------------------------------------------------- | ---------- |
+| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Modelo Arquitetural do projeto | 1.0.0      |
+| **24/02/2021** | Arthur Rocha    | Adição dos requisitos funcionais e requisitos não-funcionais           | 1.1.0      |
+| **25/02/2021** | Gabriel Chaves  | Adição das restrições arquiteturais e mecanismos arquiteturais         | 1.2.0      |
 
 ## SUMÁRIO
 
@@ -68,18 +68,18 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 <a name="apresentacao"></a>
 # 1. Apresentação
 
-Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas. 
-Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso. 
+Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas.
+Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso.
 
-Dessa forma, para obtermos um parâmetro de custo, segundo o site WTSNET, no artigo [Nuvem x On-Premises: Fatores a considerar no cálculo do ROI](https://www.wtsnet.com.br/cloud/nuvem-x-on-premises-calculo-roi/), é evidenciado como é feito o cálculo ROI, que define o ROI do serviço que será utilizado. Este cálculo é feito pela equação ```(Ganho obtido - Investimento Inicial) / Investimento inicial```. Assim, podemos concluir que o custo depende da aplicação e cabe a entidade optar por qual utilizar. No entanto, não existem meios que possam agregar um bom custo e ao mesmo tempo favorecer a facilidade de implantação de uma aplicação. 
+Dessa forma, para obtermos um parâmetro de custo, segundo o site WTSNET, no artigo [Nuvem x On-Premises: Fatores a considerar no cálculo do ROI](https://www.wtsnet.com.br/cloud/nuvem-x-on-premises-calculo-roi/), é evidenciado como é feito o cálculo ROI, que define o ROI do serviço que será utilizado. Este cálculo é feito pela equação ```(Ganho obtido - Investimento Inicial) / Investimento inicial```. Assim, podemos concluir que o custo depende da aplicação e cabe a entidade optar por qual utilizar. No entanto, não existem meios que possam agregar um bom custo e ao mesmo tempo favorecer a facilidade de implantação de uma aplicação.
 
 ## 1.1. Problema
 
-O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.  
+O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.
 
 ## 1.2. Objetivos do trabalho
 
-O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. Os objetivos específicos serão focados em desenvolver uma aplicação que fique alocada em um ambiente local (on-premise), que desfrute de uma interface amigável, por meio de uma plataforma como um serviço. Estes, serão os pontos focais da descrição arquitetural, já que, são as circunstâncias que se integram com um ambiente de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações. 
+O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. Os objetivos específicos serão focados em desenvolver uma aplicação que fique alocada em um ambiente local (on-premise), que desfrute de uma interface amigável, por meio de uma plataforma como um serviço. Estes, serão os pontos focais da descrição arquitetural, já que, são as circunstâncias que se integram com um ambiente de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
 
 ## 1.3. Definições e Abreviaturas
 
@@ -118,25 +118,45 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 
 ## 2.3. Restrições Arquiteturais
 
-As restrições impostas ao projeto que afetam sua arquitetura são (por exemplo):
-
-- O software deverá ser desenvolvido em Python/Django;
-- A comunicação da API deve seguir o padrão RESTful.
+01. O software front-end web deve ser desenvolvido em React/Next.js;
+02. O software front-end mobile deve ser desenvolvido em Flutter;
+03. O software back-end de comunicação com front-end deve ser desenvolvido em Nest.js;
+04. O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
+05. A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
+06. A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
+07. A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
+08. A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
+09. Para a persistência de dados deve ser utilizado o PostgreSQL;
+10. Para o cache de consultas à API deve ser utilizado o Redis;
+11. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
+12. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
+13. Para a construção de imagens de container com Dockerfile deve ser utilizado containers docker:dind;
+14. Para a construção de imagens de container sem Dockerfile deve ser utilizado containers buildpacksio/pack;
+15. Para o armazenamento de imagens de container deve ser utilizado um container registry (Docker Registry);
+16. Para a orquestração de containers deve ser utilizado um implementação do Kubernetes;
+17. Para o controle de ingresso dos serviços do orquestrador deve ser utilizado o Traefik;
+18. Para o fornecimento de certificados de criptografia TLS deve ser utilizado o Let's Encrypt;
+19. Para a coleta de métricas do orquestrador e do controlador de ingresso deve ser utilizado o Prometheus;
+20. Para a visualização de métricas coletadas deve ser utilizado Prometheus Datasources como o Grafana;
+21. Para a resolução de nomes dos endereços IPs para o exterior deve ser utilizado o Cloudflare.
 
 ## 2.4. Mecanismos Arquiteturais
 
-_Visão geral dos mecanismos que compõem a arquitetura do sosftware baseando-se em três estados: (1) análise, (2) design e (3) implementação. Em termos de Análise devem ser listados os aspectos gerais que compõem a arquitetura do software como: persistência, integração com sistemas legados, geração de logs do sistema, ambiente de front end, tratamento de exceções, formato dos testes, formato de distribuição/implantação (deploy), entre outros. Em Design deve-se identificar o padrão tecnológico a seguir para cada mecanismo identificado na análise. Em Implementação, deve-se identificar o produto a ser utilizado na solução.
-Ex: Análise (Persistência), Design (ORM), Implementação (Hibernate)._
-
-| **Análise**       | **Design** | **Implementação** |
-| ----------------- | ---------- | ----------------- |
-| Persistência      |            |                   |
-| Front end         |            |                   |
-| Back end          |            |                   |
-| Integração        |            |                   |
-| Log do sistema    |            |                   |
-| Teste de Software |            |                   |
-| Deploy            |            |                   |
+| **Análise**    | **Design**               | **Implementação** |
+| -------------- | ------------------------ | ----------------- |
+| Apresentação   | Front-end web            | React/Next.js     |
+| Apresentação   | Front-end mobile         | Flutter           |
+| Negócio        | Back-end web             | Nest.js           |
+| Negócio        | Back-end web             | GoLang            |
+| Comunicação    | Front-Back non-real-time | Restful           |
+| Comunicação    | Front-Back real-time     | WebSocket         |
+| Comunicação    | Back-Back synchronous    | gRPC              |
+| Comunicação    | Back-Back asynchronous   | RabbitMQ          |
+| Persistência   | Relational SGBD          | PostgreSQL        |
+| Cache          | In-memory                | Redis             |
+| Implantação    | Container Orchestration  | Kubernetes        |
+| Acesso externo | Ingress-controller       | Traefik           |
+| Monitoramento  | Pull-based               | Prometheus        |
 
 <a name="modelagem"></a>
 
