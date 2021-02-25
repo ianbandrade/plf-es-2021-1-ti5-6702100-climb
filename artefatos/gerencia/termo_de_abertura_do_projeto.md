@@ -48,13 +48,12 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 **1.5 Objetivo do projeto:**
 
-Construir um sistema simples e prático para implantação de aplicações escalonáveis, em um ambiente local (on-premise), utilizando uma interface amigável por meio de uma plataforma como um serviço. Este, se integra com um local de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
+Construir um sistema simples e prático para implantação de aplicações escalonáveis, em um ambiente local (on-premise), utilizando uma interface amigável por meio de uma plataforma como um serviço, incluindo integração com um local de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
 
 **1.6 Benefícios que justificam o projeto:** 
 
-- Alta usabilidade, focado na experiência do usuário.
-- Hospedagem on-premise
-- Implantação facilitada
+- Maior facilidade no processo de implantação de aplicações
+- Menores custos através de hospedagem on-premise
 
 **1.7 Qualidade esperada do produto final (requisitos de qualidade):**
 
@@ -62,11 +61,16 @@ Construir um sistema simples e prático para implantação de aplicações escal
 - Segurança
 - Alto desempenho
 
-## **2. ESCOPO PRELIMINAR E PREMISSAS** |
+## **2. ESCOPO PRELIMINAR E PREMISSAS**
 
 **2.1 O que será feito (escopo do projeto)**
 
-Primeiramente, será realizado o levantamento dos requisitos do sitema, a modelagem de diagramas UML, e prototipação de interfaces.Após essas fases, será desenvolvido uma aplicação Web em que uma organização poderá utilizar para que as pessoas envolvidas consigam realizar o deploy de seus sistemas, controlar o acesso desses usuários e alocar os recursos necessários para cada aplicação. Além disso, a implantação desses sitemas será bastante facilitada, por meio da integração com serviços de repositório Git, e também será possível o monitoramento da situação desses sitemas por meio de um aplicativo mobile.
+1. Levantamento dos requisitos do sistema
+2. Modelagem de diagramas UML
+3. Prototipação de interfaces
+4. Desenvolvimento de uma aplicação Web em que será possível realizar o deploy de seus sistemas
+5. Suporte com integração de hospedagem Git
+6. Monitoramento das aplicações implantadas através de um aplicativo mobile
 
 **2.2 O que não será feito no projeto (contra-escopo)**
 
@@ -86,7 +90,7 @@ Não será possível a integração com o Bitbucket
 
 **2.4 Condições para início do projeto**
 
-Aceitação do tema do projeto pelos clientes
+Aprovação do projeto pelos clientes
 
 ## 3. ESTIMATIVA DE PRAZO
 
