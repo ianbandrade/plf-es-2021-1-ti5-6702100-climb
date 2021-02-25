@@ -26,127 +26,145 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 ---
 
-_**Resumo**. Escrever aqui o resumo. O resumo deve contextualizar rapidamente o trabalho, descrever seu objetivo e, ao final, 
+_**Resumo**. Escrever aqui o resumo. O resumo deve contextualizar rapidamente o trabalho, descrever seu objetivo e, ao final,
 mostrar algum resultado relevante do trabalho (até 10 linhas)._
 
 ---
 
 ## Histórico de Revisões
 
-| **Data** | **Autor** | **Descrição** | **Versão** |
-| --- | --- | --- | --- |
-| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Moodelo Arquitetural do projeto | 1.0 |
-| | | | |
-| | | | |
+| **Data**       | **Autor**       | **Descrição**                                                          | **Versão** |
+| -------------- | --------------- | ---------------------------------------------------------------------- | ---------- |
+| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Modelo Arquitetural do projeto | 1.0.0      |
+| **24/02/2021** | Arthur Rocha    | Adição dos requisitos funcionais e requisitos não-funcionais           | 1.1.0      |
+| **25/02/2021** | Gabriel Chaves  | Adição das restrições arquiteturais e mecanismos arquiteturais         | 1.2.0      |
 
 ## SUMÁRIO
 
-1. [Apresentação](#apresentacao "Apresentação") <br />
-	1.1. Problema <br />
-	1.2. Objetivos do trabalho <br />
-	1.3. Definições e Abreviaturas <br />
+1. [Apresentação](#apresentacao 'Apresentação') <br />
+   1.1. Problema <br />
+   1.2. Objetivos do trabalho <br />
+   1.3. Definições e Abreviaturas <br />
 
-2. [Requisitos](#requisitos "Requisitos") <br />
-'	2.1. Requisitos Funcionais <br />
-	2.2. Requisitos Não-Funcionais <br />
-	2.3. Restrições Arquiteturais <br />
-	2.4. Mecanismos Arquiteturais <br />
+2. [Requisitos](#requisitos 'Requisitos') <br />
+   ' 2.1. Requisitos Funcionais <br />
+   2.2. Requisitos Não-Funcionais <br />
+   2.3. Restrições Arquiteturais <br />
+   2.4. Mecanismos Arquiteturais <br />
 
-3. [Modelagem](#modelagem "Modelagem e projeto arquitetural") <br />
-	3.1. Visão de Negócio <br />
-	3.2. Visão Lógica <br />
-	3.3. Modelo de dados (opcional) <br />
+3. [Modelagem](#modelagem 'Modelagem e projeto arquitetural') <br />
+   3.1. Visão de Negócio <br />
+   3.2. Visão Lógica <br />
+   3.3. Modelo de dados (opcional) <br />
 
-4. [Avaliação](#avaliacao "Avaliação da Arquitetura") <br />
-	4.1. Cenários <br />
-	4.2. Avaliação <br />
+4. [Avaliação](#avaliacao 'Avaliação da Arquitetura') <br />
+   4.1. Cenários <br />
+   4.2. Avaliação <br />
 
-5. [Referências](#referencias "REFERÊNCIAS")<br />
+5. [Referências](#referencias 'REFERÊNCIAS')<br />
 
-6. [Apêndices](#apendices "APÊNDICES")<br />
-
+6. [Apêndices](#apendices 'APÊNDICES')<br />
 
 <a name="apresentacao"></a>
 # 1. Apresentação
 
-_Faça uma introdução ao projeto, apresentando o contexto onde o projeto se situa. É importante deixar claro para o leitor os aspectos que configuram o problema que será apresentado na sequência. Apresente, se possível, números reais que demonstram a relevância do problema apresentado._
+Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas.
+Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso.
 
+Dessa forma, para obtermos um parâmetro de custo, segundo o site WTSNET, no artigo [Nuvem x On-Premises: Fatores a considerar no cálculo do ROI](https://www.wtsnet.com.br/cloud/nuvem-x-on-premises-calculo-roi/), é evidenciado como é feito o cálculo ROI, que define o ROI do serviço que será utilizado. Este cálculo é feito pela equação ```(Ganho obtido - Investimento Inicial) / Investimento inicial```. Assim, podemos concluir que o custo depende da aplicação e cabe a entidade optar por qual utilizar. No entanto, não existem meios que possam agregar um bom custo e ao mesmo tempo favorecer a facilidade de implantação de uma aplicação.
 
 ## 1.1. Problema
 
-_Nesse momento você deve apresentar o problema que a sua aplicação deve resolver. No entanto, não é a hora de comentar sobre a aplicação._
+O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.
 
 ## 1.2. Objetivos do trabalho
 
-_Aqui você deve descrever os objetivos do trabalho indicando que o objetivo geral é apresentar a descrição do projeto arquitetural da aplicação escolhida. Apresente também os objetivos específicos do projeto, descrevendo onde você vai concentrar sua atenção na descrição arquitetural, ou seja, os pontos onde você vai aprofundar no seu trabalho._
+O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. Os objetivos específicos serão focados em desenvolver uma aplicação que fique alocada em um ambiente local (on-premise), que desfrute de uma interface amigável, por meio de uma plataforma como um serviço. Estes, serão os pontos focais da descrição arquitetural, já que, são as circunstâncias que se integram com um ambiente de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
 
 ## 1.3. Definições e Abreviaturas
 
-Coloque aqui as definições, siglas e abreviaturas utilizadas no trabalho._
+- **_ROI:_** vindo do inglês, _Return on Investment_ permite saber se o retorno investido será positivo ou negativo;
+- **_PaaS:_** vindo do inglês, _Platform as a Service_ é um serviço de hospedagem e implementação de hardware e software.
 
 <a name="requisitos"></a>
 # 2. Requisitos
 
-_Esta seção descreve os requisitos comtemplados nesta descrição arquitetural, divididos em dois grupos: funcionais e não funcionais._
-
 ## 2.1. Requisitos Funcionais
 
-_Enumere os requisitos funcionais previstos para a sua aplicação. Concentre-se nos requisitos funcionais que sejam críticos para a definição arquitetural. Lembre-se de listar todos os requisitos que são necessários para garantir cobertura arquitetural. Esta seção deve conter uma lista de requisitos ainda sem modelagem. Na coluna Prioridade utilize uma escala (do mais prioritário para o menos): Essencial, Desejável, Opcional._
-
-| **ID** | **Descrição** | **Prioridade** |
-| --- | --- | --- |
-| RF001 | | |
-| RF002 | | |
-| | | |
-| | | |
-| | | |
-
-Obs: acrescente mais linhas, se necessário.
+| **ID** | **Descrição**                                      | **Prioridade** |
+| ------ | -------------------------------------------------- | -------------- |
+| RF001  | Integração com GitHub                              | Essencial      |
+| RF002  | Integração com GitLab                              | Opcional       |
+| RF003  | Painel de controle dos usuários                    | Essencial      |
+| RF004  | Construção da imagem de container com Docker Build | Essencial      |
+| RF005  | Construção da imagem de container com o Pack       | Desejável      |
+| RF006  | Aplicativos pré-configurados                       | Opcional       |
+| RF007  | Implantação das aplicação dos usuários             | Essencial      |
+| RF008  | Controle de recursos alocados                      | Desejável      |
+| RF009  | Configurar implantação                             | Essencial      |
+| RF010  | Monitoramento (Prometheus + Grafana)               | Desejável      |
+| RF011  | Visualização de informações (Mobile)               | Desejável      |
+| RF012  | Lista de atividades com Rollback                   | Essencial      |
 
 ## 2.2. Requisitos Não-Funcionais
 
-_Enumere os requisitos não-funcionais previstos para a sua aplicação. Entre os requisitos não funcionais, inclua todos os requisitos que julgar importante do ponto de vista arquitetural ou seja os requisitos que terão impacto na definição da arquitetura. Os requisitos devem ser descritos de forma completa e preferencialmente quantitativa._
-
-| **ID** | **Descrição** |
-| --- | --- |
-| RNF001 | |
-| RNF002 | |
-| | |
-| | |
-| | |
-
-Obs: acrescente mais linhas, se necessário.
+| **ID** | **Descrição**                                                                                                            |
+| ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| RNF001 | Deve garantir resiliência permitindo o _rollback_ para desfazer uma implantação errônea.                                 |
+| RNF002 | Deve ser capaz de servir uma grande quantidade de usuários deixando um limite a critério da corporação que for utilizar  |
+| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros         |
+| RNF004 | Deve garantir um bom desempenho retornando respostas com limite de 5 segundos retorno.                                   |
+| RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponíveis. |
 
 ## 2.3. Restrições Arquiteturais
 
-_Enumere as restrições arquiteturais. Lembre-se de que as restrições arquiteturais geralmente não são consideradas requisitos uma vez que limitam a solução candidata. Os requisitos não impõem restrição, mas precisam ser satisfeitos._
-
-As restrições impostas ao projeto que afetam sua arquitetura são (por exemplo):
-
-- O software deverá ser desenvolvido em Python/Django;
-- A comunicação da API deve seguir o padrão RESTful.
+01. O software front-end web deve ser desenvolvido em React/Next.js;
+02. O software front-end mobile deve ser desenvolvido em Flutter;
+03. O software back-end de comunicação com front-end deve ser desenvolvido em Nest.js;
+04. O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
+05. A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
+06. A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
+07. A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
+08. A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
+09. Para a persistência de dados deve ser utilizado o PostgreSQL;
+10. Para o cache de consultas à API deve ser utilizado o Redis;
+11. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
+12. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
+13. Para a construção de imagens de container com Dockerfile deve ser utilizado containers docker:dind;
+14. Para a construção de imagens de container sem Dockerfile deve ser utilizado containers buildpacksio/pack;
+15. Para o armazenamento de imagens de container deve ser utilizado um container registry (Docker Registry);
+16. Para a orquestração de containers deve ser utilizado um implementação do Kubernetes;
+17. Para o controle de ingresso dos serviços do orquestrador deve ser utilizado o Traefik;
+18. Para o fornecimento de certificados de criptografia TLS deve ser utilizado o Let's Encrypt;
+19. Para a coleta de métricas do orquestrador e do controlador de ingresso deve ser utilizado o Prometheus;
+20. Para a visualização de métricas coletadas deve ser utilizado Prometheus Datasources como o Grafana;
+21. Para a resolução de nomes dos endereços IPs para o exterior deve ser utilizado o Cloudflare.
 
 ## 2.4. Mecanismos Arquiteturais
 
-_Visão geral dos mecanismos que compõem a arquitetura do sosftware baseando-se em três estados: (1) análise, (2) design e (3) implementação. Em termos de Análise devem ser listados os aspectos gerais que compõem a arquitetura do software como: persistência, integração com sistemas legados, geração de logs do sistema, ambiente de front end, tratamento de exceções, formato dos testes, formato de distribuição/implantação (deploy), entre outros. Em Design deve-se identificar o padrão tecnológico a seguir para cada mecanismo identificado na análise. Em Implementação, deve-se identificar o produto a ser utilizado na solução.
- Ex: Análise (Persistência), Design (ORM), Implementação (Hibernate)._
-
-| **Análise** | **Design** | **Implementação** |
-| --- | --- | --- |
-| Persistência | | |
-| Front end | | |
-| Back end | | |
-| Integração | | |
-| Log do sistema | | |
-| Teste de Software | | |
-| Deploy | | |
+| **Análise**    | **Design**               | **Implementação** |
+| -------------- | ------------------------ | ----------------- |
+| Apresentação   | Front-end web            | React/Next.js     |
+| Apresentação   | Front-end mobile         | Flutter           |
+| Negócio        | Back-end web             | Nest.js           |
+| Negócio        | Back-end web             | GoLang            |
+| Comunicação    | Front-Back non-real-time | Restful           |
+| Comunicação    | Front-Back real-time     | WebSocket         |
+| Comunicação    | Back-Back synchronous    | gRPC              |
+| Comunicação    | Back-Back asynchronous   | RabbitMQ          |
+| Persistência   | Relational SGBD          | PostgreSQL        |
+| Cache          | In-memory                | Redis             |
+| Implantação    | Container Orchestration  | Kubernetes        |
+| Acesso externo | Ingress-controller       | Traefik           |
+| Monitoramento  | Pull-based               | Prometheus        |
 
 <a name="modelagem"></a>
+
 # 3. Modelagem e projeto arquitetural
 
 _Apresente uma visão geral da solução proposta para o projeto e explique brevemente esse diagrama de visão geral, de forma textual. Esse diagrama não precisa seguir os padrões da UML, e deve ser completo e tão simples quanto possível, apresentando a macroarquitetura da solução._
 
-![Visão Geral da Solução](imagens/visao.png "Visão Geral da Solução")
+![Visão Geral da Solução](imagens/visao.png 'Visão Geral da Solução')
 
 **Figura 1 - Visão Geral da Solução (fonte: https://medium.com)**
 
@@ -170,21 +188,21 @@ Exemplos de resumo de Casos de Uso:
 
 #### UC01 – NOME DO CASO DE USO 01
 
-| **Descrição** | |
-| --- | --- |
-| **Atores** | |
-| **Prioridade** | |
-| **Requisitos associados** | |
-| **Fluxo Principal** | |
+| **Descrição**             |     |
+| ------------------------- | --- |
+| **Atores**                |     |
+| **Prioridade**            |     |
+| **Requisitos associados** |     |
+| **Fluxo Principal**       |     |
 
 #### UC02 – NOME DO CASO DE USO 02
 
-| **Descrição** | |
-| --- | --- |
-| **Atores** | |
-| **Prioridade** | |
-| **Requisitos associados** | |
-| **Fluxo Principal** | |
+| **Descrição**             |     |
+| ------------------------- | --- |
+| **Atores**                |     |
+| **Prioridade**            |     |
+| **Requisitos associados** |     |
+| **Fluxo Principal**       |     |
 
 Exemplos de Histórias de Usuário:
 
@@ -200,8 +218,7 @@ _Apresente os artefatos que serão utilizados descrevendo em linhas gerais as mo
 
 ### Diagrama de Classes
 
-![Diagrama de classes](imagens/classes.gif "Diagrama de classes")
-
+![Diagrama de classes](imagens/classes.gif 'Diagrama de classes')
 
 **Figura 2 – Diagrama de classes (exemplo). Fonte: o próprio autor.**
 
@@ -211,7 +228,7 @@ Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
 
 _Apresente o diagrama de componentes da aplicação, indicando, os elementos da arquitetura e as interfaces entre eles. Liste os estilos/padrões arquiteturais utilizados e faça uma descrição sucinta dos componentes indicando o papel de cada um deles dentro da arquitetura/estilo/padrão arquitetural. Indique também quais componentes serão reutilizados (navegadores, SGBDs, middlewares, etc), quais componentes serão adquiridos por serem proprietários e quais componentes precisam ser desenvolvidos._
 
-![Diagrama de componentes](imagens/componentes.png "Diagrama de componentes")
+![Diagrama de componentes](imagens/componentes.png 'Diagrama de componentes')
 
 **Figura 3 – Diagrama de Componentes (exemplo). Fonte: o próprio autor.**
 
@@ -226,13 +243,14 @@ Ex: conforme diagrama apresentado na Figura X, as entidades participantes da sol
 
 _Caso julgue necessário para explicar a arquitetura, apresente o diagrama de classes ou diagrama de Entidade/Relacionamentos ou tabelas do banco de dados. Este modelo pode ser essencial caso a arquitetura utilize uma solução de banco de dados distribuídos ou um banco NoSQL._
 
-![Diagrama de Entidade Relacionamento (ER) ](imagens/der.png "Diagrama de Entidade Relacionamento (ER) ")
+![Diagrama de Entidade Relacionamento (ER) ](imagens/der.png 'Diagrama de Entidade Relacionamento (ER) ')
 
 **Figura 4 – Diagrama de Entidade Relacionamento (ER) - exemplo. Fonte: o próprio autor.**
 
 Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
 
 <a name="avaliacao"></a>
+
 # 4. Avaliação da Arquitetura
 
 _Esta seção descreve a avaliação da arquitetura apresentada, baseada no método ATAM._
@@ -253,28 +271,29 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 _Apresente as medidas registradas na coleta de dados. O que não for possível quantificar apresente uma justificativa baseada em evidências qualitativas que suportam o atendimento do requisito não-funcional. Apresente uma avaliação geral da arquitetura indicando os pontos fortes e as limitações da arquitetura proposta._
 
-| **Atributo de Qualidade:** | Segurança |
-| --- | --- |
-| **Requisito de Qualidade** | Acesso aos recursos restritos deve ser controlado |
-| **Preocupação:** | Os acessos de usuários devem ser controlados de forma que cada um tenha acesso apenas aos recursos condizentes as suas credenciais. |
-| **Cenários(s):** | Cenário 4 |
-| **Ambiente:** | Sistema em operação normal |
-| **Estímulo:** | Acesso do administrador do sistema as funcionalidades de cadastro de novos produtos e exclusão de produtos. |
-| **Mecanismo:** | O servidor de aplicação (Rails) gera um _token_ de acesso para o usuário que se autentica no sistema. Este _token_ é transferido para a camada de visualização (Angular) após a autenticação e o tratamento visual das funcionalidades podem ser tratados neste nível. |
-| **Medida de Resposta:** | As áreas restritas do sistema devem ser disponibilizadas apenas quando há o acesso de usuários credenciados. |
+| **Atributo de Qualidade:** | Segurança                                                                                                                                                                                                                                                              |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Requisito de Qualidade** | Acesso aos recursos restritos deve ser controlado                                                                                                                                                                                                                      |
+| **Preocupação:**           | Os acessos de usuários devem ser controlados de forma que cada um tenha acesso apenas aos recursos condizentes as suas credenciais.                                                                                                                                    |
+| **Cenários(s):**           | Cenário 4                                                                                                                                                                                                                                                              |
+| **Ambiente:**              | Sistema em operação normal                                                                                                                                                                                                                                             |
+| **Estímulo:**              | Acesso do administrador do sistema as funcionalidades de cadastro de novos produtos e exclusão de produtos.                                                                                                                                                            |
+| **Mecanismo:**             | O servidor de aplicação (Rails) gera um _token_ de acesso para o usuário que se autentica no sistema. Este _token_ é transferido para a camada de visualização (Angular) após a autenticação e o tratamento visual das funcionalidades podem ser tratados neste nível. |
+| **Medida de Resposta:**    | As áreas restritas do sistema devem ser disponibilizadas apenas quando há o acesso de usuários credenciados.                                                                                                                                                           |
 
 **Considerações sobre a arquitetura:**
 
-| **Riscos:** | Não existe |
-| --- | --- |
+| **Riscos:**                  | Não existe |
+| ---------------------------- | ---------- |
 | **Pontos de Sensibilidade:** | Não existe |
-| _ **Tradeoff** _ **:** | Não existe |
+| _ **Tradeoff** _ **:**       | Não existe |
 
 Evidências dos testes realizados
 
 _Apresente imagens, descreva os testes de tal forma que se comprove a realização da avaliação._
 
 <a name="referencias"></a>
+
 # 5. REFERÊNCIAS
 
 _Como um projeto da arquitetura de uma aplicação não requer revisão bibliográfica, a inclusão das referências não é obrigatória. No entanto, caso você deseje incluir referências relacionadas às tecnologias, padrões, ou metodologias que serão usadas no seu trabalho, relacione-as de acordo com a ABNT._
@@ -282,7 +301,6 @@ _Como um projeto da arquitetura de uma aplicação não requer revisão bibliogr
 Verifique no link abaixo como devem ser as referências no padrão ABNT:
 
 http://www.pucminas.br/imagedb/documento/DOC\_DSC\_NOME\_ARQUI20160217102425.pdf
-
 
 **[1]** - _ELMASRI, Ramez; NAVATHE, Sham. **Sistemas de banco de dados**. 7. ed. São Paulo: Pearson, c2019. E-book. ISBN 9788543025001._
 
@@ -294,8 +312,8 @@ http://www.pucminas.br/imagedb/documento/DOC\_DSC\_NOME\_ARQUI20160217102425.pdf
 
 **[5]** - _RUSSELL, Stuart J.; NORVIG, Peter. **Inteligência artificial**. Rio de Janeiro: Elsevier, c2013. xxi, 988 p. ISBN 9788535237016._
 
-
 <a name="apendices"></a>
+
 # 6. APÊNDICES
 
 _Inclua o URL do repositório (Github, Bitbucket, etc) onde você armazenou o código da sua prova de conceito/protótipo arquitetural da aplicação como anexos. A inclusão da URL desse repositório de código servirá como base para garantir a autenticidade dos trabalhos._

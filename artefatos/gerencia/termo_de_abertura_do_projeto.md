@@ -52,19 +52,21 @@ Construir um sistema simples e prático para implantação de aplicações escal
 
 **1.6 Benefícios que justificam o projeto:** 
 
-Alta usabilidade, focado na experiência do usuário. No que diz respeito à interface, será bem simples e objetiva. Para fazer a implantação de um projeto, não será necessário ter conhecimento técnico para isto, dessa forma, o sistema se torna amigável e pouco técnico.  
+- Alta usabilidade, focado na experiência do usuário.
+- Hospedagem on-premise
+- Implantação facilitada
 
 **1.7 Qualidade esperada do produto final (requisitos de qualidade):**
 
-- Aplicação com interface amigável
-- Aplicação eficiente
-- A implantação será realizada pelo usuário de forma intuitiva
+- Integridade do sistema
+- Segurança
+- Alto desempenho
 
 ## **2. ESCOPO PRELIMINAR E PREMISSAS** |
 
 **2.1 O que será feito (escopo do projeto)**
 
-Será desenvolvido uma aplicação Web em que uma organização poderá utilizar para que as pessoas envolvidas consigam realizar o deploy de seus sistemas, controlar o acesso desses usuários e alocar os recursos necessários para cada aplicação. Além disso, a implantação desses sitemas será bastante facilitada, por meio da integração com serviços de repositório Git, e também será possível o monitoramento da situação desses sitemas por meio de um aplicativo mobile.
+Primeiramente, será realizado o levantamento dos requisitos do sitema, a modelagem de diagramas UML, e prototipação de interfaces.Após essas fases, será desenvolvido uma aplicação Web em que uma organização poderá utilizar para que as pessoas envolvidas consigam realizar o deploy de seus sistemas, controlar o acesso desses usuários e alocar os recursos necessários para cada aplicação. Além disso, a implantação desses sitemas será bastante facilitada, por meio da integração com serviços de repositório Git, e também será possível o monitoramento da situação desses sitemas por meio de um aplicativo mobile.
 
 **2.2 O que não será feito no projeto (contra-escopo)**
 
@@ -75,14 +77,16 @@ Não será possível a integração com o Bitbucket
 | | Resultados |
 | --- | --- |
 | **1.** | Aplicativo Mobile|
-| **2.** | Protótipos de interfaces |
-| **3.** | Diagramas UML |
-| **4.** | Documentação do Projeto |
+| **2.** | Aplicação Web |
+| **3.** | Protótipos de interfaces |
+| **4.** | Diagramas de Classe |
+| **5.** | Diagramas de Componentes |
+| **6.** | Modelo de Dados |
+| **7.** | Documentação do Projeto |
 
 **2.4 Condições para início do projeto**
 
-Realizar a modelagem do sistema e a prototipação das interfaces
-
+Aceitação do tema do projeto pelos clientes
 
 ## 3. ESTIMATIVA DE PRAZO
 
