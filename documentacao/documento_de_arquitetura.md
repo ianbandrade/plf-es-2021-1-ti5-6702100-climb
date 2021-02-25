@@ -89,8 +89,6 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 <a name="requisitos"></a>
 # 2. Requisitos
 
-_Esta seção descreve os requisitos comtemplados nesta descrição arquitetural, divididos em dois grupos: funcionais e não funcionais._
-
 ## 2.1. Requisitos Funcionais
 
 | **ID** | **Descrição**                                      | **Prioridade** |
@@ -119,8 +117,6 @@ _Esta seção descreve os requisitos comtemplados nesta descrição arquitetural
 | RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponíveis. |
 
 ## 2.3. Restrições Arquiteturais
-
-_Enumere as restrições arquiteturais. Lembre-se de que as restrições arquiteturais geralmente não são consideradas requisitos uma vez que limitam a solução candidata. Os requisitos não impõem restrição, mas precisam ser satisfeitos._
 
 As restrições impostas ao projeto que afetam sua arquitetura são (por exemplo):
 
