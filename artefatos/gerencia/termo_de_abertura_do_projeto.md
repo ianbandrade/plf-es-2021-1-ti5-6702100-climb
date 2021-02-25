@@ -48,33 +48,33 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 **1.5 Objetivo do projeto:**
 
-Construir um sistema simples e prático para implantação de aplicações escalonáveis, em um ambiente local (on-premise), utilizando uma interface amigável por meio de uma plataforma como um serviço, incluindo integração com um local de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
+Construir um sistema simples e prático para implantação de aplicações escalonáveis, em um ambiente local (_on-premise_), utilizando uma interface amigável por meio de uma plataforma como um serviço, incluindo integração com um local de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
 
 **1.6 Benefícios que justificam o projeto:** 
 
-- Maior facilidade no processo de implantação de aplicações
-- Menores custos através de hospedagem on-premise
+- Maior facilidade no processo de implantação de aplicações;
+- Menores custos através de hospedagem _on-premise_.
 
 **1.7 Qualidade esperada do produto final (requisitos de qualidade):**
 
-- Integridade do sistema
-- Segurança
-- Alto desempenho
+- Integridade do sistema;
+- Segurança;
+- Alto desempenho.
 
 ## **2. ESCOPO PRELIMINAR E PREMISSAS**
 
 **2.1 O que será feito (escopo do projeto)**
 
-1. Levantamento dos requisitos do sistema
-2. Modelagem de diagramas UML
-3. Prototipação de interfaces
-4. Desenvolvimento de uma aplicação Web em que será possível realizar o deploy de seus sistemas
-5. Suporte com integração de hospedagem Git
-6. Monitoramento das aplicações implantadas através de um aplicativo mobile
+1. Levantamento dos requisitos do sistema;
+2. Modelagem de diagramas UML;
+3. Prototipação de interfaces;
+4. Desenvolvimento de uma aplicação Web em que será possível realizar o deploy de seus sistemas;
+5. Suporte com integração de hospedagem Git;
+6. Monitoramento das aplicações implantadas através de um aplicativo mobile.
 
 **2.2 O que não será feito no projeto (contra-escopo)**
 
-Não será possível a integração com o Bitbucket
+Não será possível a integração com o Bitbucket.
 
 **2.3 Resultados / serviços / produtos a serem entregues**
 
@@ -117,8 +117,6 @@ Aprovação do projeto pelos clientes
 | --- | --- | --- |
 | Hugo de Bastos Paula    |  Cliente   |     |
 | Pedro Alves De Oliveira    |  Cliente   |     |
-|     |     |     |
-|     |     |     |
 
 **Observações:**
 
@@ -126,5 +124,5 @@ Aprovação do projeto pelos clientes
 
 - Este documento, após ser completamente preenchido, deve ser assinado pelos responsáveis do projeto (gestores envolvidos).
 
-- Este documento, se aprovado na **reunião de** _ **kickoff** _, autoriza o início do projeto de acordo com a especificação supra e as normas da empresa.
+- Este documento, se aprovado na **reunião de** _**kickoff**_, autoriza o início do projeto de acordo com a especificação supra e as normas da empresa.
 
