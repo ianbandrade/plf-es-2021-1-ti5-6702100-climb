@@ -38,6 +38,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Modelo Arquitetural do projeto | 1.0.0      |
 | **24/02/2021** | Arthur Rocha    | Adição dos requisitos funcionais e requisitos não-funcionais           | 1.1.0      |
 | **25/02/2021** | Gabriel Chaves  | Adição das restrições arquiteturais e mecanismos arquiteturais         | 1.2.0      |
+| **26/02/2021** | Gabriel Chaves  | Remoção de falsas restrições arquiteturais                             | 1.2.1      |
 
 ## SUMÁRIO
 
@@ -130,15 +131,12 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 10. Para o cache de consultas à API deve ser utilizado o Redis;
 11. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
 12. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
-13. Para a construção de imagens de container com Dockerfile deve ser utilizado containers docker:dind;
-14. Para a construção de imagens de container sem Dockerfile deve ser utilizado containers buildpacksio/pack;
-15. Para o armazenamento de imagens de container deve ser utilizado um container registry (Docker Registry);
-16. Para a orquestração de containers deve ser utilizado um implementação do Kubernetes;
-17. Para o controle de ingresso dos serviços do orquestrador deve ser utilizado o Traefik;
-18. Para o fornecimento de certificados de criptografia TLS deve ser utilizado o Let's Encrypt;
-19. Para a coleta de métricas do orquestrador e do controlador de ingresso deve ser utilizado o Prometheus;
-20. Para a visualização de métricas coletadas deve ser utilizado Prometheus Datasources como o Grafana;
-21. Para a resolução de nomes dos endereços IPs para o exterior deve ser utilizado o Cloudflare.
+13. Para a orquestração de containers deve ser utilizado um implementação do Kubernetes;
+14. Para o controle de ingresso dos serviços do orquestrador deve ser utilizado o Traefik;
+15. Para o fornecimento de certificados de criptografia TLS deve ser utilizado o Let's Encrypt;
+16. Para a coleta de métricas do orquestrador e do controlador de ingresso deve ser utilizado o Prometheus;
+17. Para a visualização de métricas coletadas deve ser utilizado Prometheus Datasources como o Grafana;
+18. Para a resolução de nomes dos endereços IPs para o exterior deve ser utilizado o Cloudflare.
 
 ## 2.4. Mecanismos Arquiteturais
 
