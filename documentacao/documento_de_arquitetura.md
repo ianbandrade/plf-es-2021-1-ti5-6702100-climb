@@ -71,9 +71,8 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 # 1. Apresentação
 
 Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas.
-Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso.
 
-Dessa forma, para obtermos um parâmetro de custo, segundo o site WTSNET, no artigo [Nuvem x On-Premises: Fatores a considerar no cálculo do ROI](https://www.wtsnet.com.br/cloud/nuvem-x-on-premises-calculo-roi/), é evidenciado como é feito o cálculo ROI, que define o ROI do serviço que será utilizado. Este cálculo é feito pela equação ```(Ganho obtido - Investimento Inicial) / Investimento inicial```. Assim, podemos concluir que o custo depende da aplicação e cabe a entidade optar por qual utilizar. No entanto, não existem meios que possam agregar um bom custo e ao mesmo tempo favorecer a facilidade de implantação de uma aplicação.
+Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso. 
 
 ## 1.1. Problema
 
