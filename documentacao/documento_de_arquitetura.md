@@ -81,7 +81,14 @@ O problema principal é a necessidade de uma equipe com alta especificidade para
 
 ## 1.2. Objetivos do trabalho
 
-O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. Os objetivos específicos serão focados em desenvolver uma aplicação que fique alocada em um ambiente local (on-premise), que desfrute de uma interface amigável, por meio de uma plataforma como um serviço. Estes, serão os pontos focais da descrição arquitetural, já que, são as circunstâncias que se integram com um ambiente de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
+O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. 
+
+Os objetivos específicos são:
+ 1. Desenvolver uma aplicação que fique alocada em um ambiente local (_on-premise_);
+ 2. Desfrutar de uma alta usabilidade, focada numa interface amigável para a implantação de serviços sem uma equipe especializada;
+ 3. Implementar o serviço de hospedagem _PaaS_.
+
+O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.
 
 ## 1.3. Definições e Abreviaturas
 
