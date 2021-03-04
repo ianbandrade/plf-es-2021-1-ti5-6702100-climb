@@ -33,13 +33,14 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 
 ## Histórico de Revisões
 
-| **Data**       | **Autor**       | **Descrição**                                                          | **Versão** |
-| -------------- | --------------- | ---------------------------------------------------------------------- | ---------- |
-| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Modelo Arquitetural do projeto | 1.0.0      |
-| **24/02/2021** | Arthur Rocha    | Adição dos requisitos funcionais e requisitos não-funcionais           | 1.1.0      |
-| **25/02/2021** | Gabriel Chaves  | Adição das restrições arquiteturais e mecanismos arquiteturais         | 1.2.0      |
-| **26/02/2021** | Gabriel Chaves  | Remoção de falsas restrições arquiteturais                             | 1.2.1      |
-| **04/03/2021** | Ian Bitencourt  | Alteração das características do Modelo Arquitetural do projeto seguindo as considerações feitas pelos professores                            | 1.3.0     |
+| **Data**       | **Autor**       | **Descrição**                                                                                                      | **Versão** |
+| -------------- | --------------- | ------------------------------------------------------------------------------------------------------------------ | ---------- |
+| **24/02/2021** | Ian Bittencourt | Adição das primeiras características do Modelo Arquitetural do projeto                                             | 1.0.0      |
+| **24/02/2021** | Arthur Rocha    | Adição dos requisitos funcionais e requisitos não-funcionais                                                       | 1.1.0      |
+| **25/02/2021** | Gabriel Chaves  | Adição das restrições arquiteturais e mecanismos arquiteturais                                                     | 1.2.0      |
+| **26/02/2021** | Gabriel Chaves  | Remoção de falsas restrições arquiteturais                                                                         | 1.2.1      |
+| **04/03/2021** | Ian Bitencourt  | Alteração das características do Modelo Arquitetural do projeto seguindo as considerações feitas pelos professores | 1.2.2      |
+| **04/03/2021** | Arthur Rocha    | Correção de requisitos                                                                                             | 1.2.3      |
 
 ## SUMÁRIO
 
@@ -68,71 +69,75 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 6. [Apêndices](#apendices 'APÊNDICES')<br />
 
 <a name="apresentacao"></a>
+
 # 1. Apresentação
 
 Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas.
 
-Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso. 
+Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso.
 
 ## 1.1. Problema
 
-O problema principal é a necessidade de uma equipe com alta especificidade para a implantação de aplicações variadas. Dessa forma, o processo de implantação de novas aplicações se torna bastante custoso para as organizações, já que, precisarão contratar profissionais altamente qualificados para implantar e manter as aplicações.  
+O problema principal é a necessidade de uma equipe com alta especificidade para a implantação de aplicações variadas. Dessa forma, o processo de implantação de novas aplicações se torna bastante custoso para as organizações, já que, precisarão contratar profissionais altamente qualificados para implantar e manter as aplicações.
 
 ## 1.2. Objetivos do trabalho
 
-O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis. 
+O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis.
 
 Os objetivos específicos são:
- 1. Desenvolver uma aplicação que fique alocada em um ambiente local (_on-premise_);
- 2. Desfrutar de uma alta usabilidade, focada numa interface amigável para a implantação de serviços sem uma equipe especializada;
- 3. Implementar o serviço de hospedagem _PaaS_.
+
+1.  Desenvolver uma aplicação que fique alocada em um ambiente local (_on-premise_);
+2.  Desfrutar de uma alta usabilidade, focada numa interface amigável para a implantação de serviços sem uma equipe especializada;
+3.  Implementar o serviço de hospedagem _PaaS_.
 
 ## 1.3. Definições e Abreviaturas
 
-- **_ROI:_** vindo do inglês, _Return on Investment_ permite saber se o retorno investido será positivo ou negativo;
 - **_PaaS:_** vindo do inglês, _Platform as a Service_ é um serviço de hospedagem e implementação de hardware e software.
 
 <a name="requisitos"></a>
+
 # 2. Requisitos
 
 ## 2.1. Requisitos Funcionais
 
-| **ID** | **Descrição**                                      | **Prioridade** |
-| ------ | -------------------------------------------------- | -------------- |
-| RF001  | Integração com GitHub                              | Essencial      |
-| RF002  | Integração com GitLab                              | Opcional       |
-| RF003  | Painel de controle dos usuários                    | Essencial      |
-| RF004  | Construção da imagem de container com Docker Build | Essencial      |
-| RF005  | Construção da imagem de container com o Pack       | Desejável      |
-| RF006  | Aplicativos pré-configurados                       | Opcional       |
-| RF007  | Implantação das aplicação dos usuários             | Essencial      |
-| RF008  | Controle de recursos alocados                      | Desejável      |
-| RF009  | Configurar implantação                             | Essencial      |
-| RF010  | Monitoramento (Prometheus + Grafana)               | Desejável      |
-| RF011  | Visualização de informações (Mobile)               | Desejável      |
-| RF012  | Lista de atividades com Rollback                   | Essencial      |
+| **ID** | **Descrição**                                                          | **Prioridade** |
+| ------ | ---------------------------------------------------------------------- | -------------- |
+| RF001  | Integração com GitHub                                                  | Essencial      |
+| RF002  | Painel de administração de usuários                                    | Essencial      |
+| RF003  | Construção da imagem de container com Docker Build                     | Essencial      |
+| RF004  | Configurar implantação da aplicação                                    | Essencial      |
+| RF005  | Implantação da aplicação do usuário por meio de Webhook                | Essencial      |
+| RF006  | Lista de atividades com Rollback                                       | Essencial      |
+| RF007  | Diferenciar níveis de acesso de administrador e usuário                | Essencial      |
+| RF008  | Controle de recursos alocados                                          | Desejável      |
+| RF009  | Monitoramento (Prometheus + Grafana)                                   | Desejável      |
+| RF010  | Visualização de informações (Mobile)                                   | Desejável      |
+| RF011  | Construção da imagem de container com o Buildpacks Pack                | Desejável      |
+| RF012  | Integração com GitLab                                                  | Opcional       |
+| RF013  | Disponibilizar aplicativos pré configurado por meio de template        | Opcional       |
+| RF01r  | Cadastro por meio de carga arquivo ou por meio do acesso a organização | Opcional       |
 
 ## 2.2. Requisitos Não-Funcionais
 
-| **ID** | **Descrição**                                                                                                                               |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| RNF001 | Deve garantir resiliência permitindo o _rollback_ para desfazer uma implantação errônea.                                                    |
+| **ID** | **Descrição**                                                                                                                                           |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RNF001 | Deve garantir resiliência permitindo o _rollback_ para desfazer uma implantação errônea.                                                                |
 | RNF002 | Deve ser capaz de servir 2000 usuários simultâneos deixando o aumento desse limite a critério da corporação com base na infraestrutura que for utilizar |
-| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros                            |
-| RNF004 | Deve garantir um bom desempenho retornando respostas com limite de 5 segundos retorno.                                                      |
-| RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponíveis.                    |
+| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros                                        |
+| RNF004 | Deve garantir um bom desempenho retornando respostas com limite de 5 segundos retorno.                                                                  |
+| RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponíveis.                                |
 
 ## 2.3. Restrições Arquiteturais
 
-01. O software front-end web deve ser desenvolvido em React/Next.js;
-02. O software front-end mobile deve ser desenvolvido em Flutter;
-03. O software back-end de comunicação com front-end deve ser desenvolvido em Nest.js;
-04. O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
-05. A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
-06. A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
-07. A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
-08. A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
-09. Para a persistência de dados deve ser utilizado o PostgreSQL;
+1.  O software front-end web deve ser desenvolvido em React/Next.js;
+2.  O software front-end mobile deve ser desenvolvido em Flutter;
+3.  O software back-end de comunicação com front-end deve ser desenvolvido em Nest.js;
+4.  O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
+5.  A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
+6.  A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
+7.  A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
+8.  A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
+9.  Para a persistência de dados deve ser utilizado o PostgreSQL;
 10. Para o cache de consultas à API deve ser utilizado o Redis;
 11. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
 12. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
@@ -153,8 +158,8 @@ Os objetivos específicos são:
 | Negócio        | Back-end web             | GoLang            |
 | Comunicação    | Front-Back non-real-time | Restful           |
 | Comunicação    | Front-Back real-time     | WebSocket         |
-| Comunicação    | Back-Back synchronous    | gRPC              |
-| Comunicação    | Back-Back asynchronous   | RabbitMQ          |
+| Comunicação    | Back-Back point-to-point | gRPC              |
+| Comunicação    | Back-Back broker-based   | RabbitMQ          |
 | Persistência   | Relational SGBD          | PostgreSQL        |
 | Cache          | In-memory                | Redis             |
 | Implantação    | Container Orchestration  | Kubernetes        |
