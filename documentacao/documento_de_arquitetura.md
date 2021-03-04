@@ -88,8 +88,6 @@ Os objetivos específicos são:
  2. Desfrutar de uma alta usabilidade, focada numa interface amigável para a implantação de serviços sem uma equipe especializada;
  3. Implementar o serviço de hospedagem _PaaS_.
 
-O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.
-
 ## 1.3. Definições e Abreviaturas
 
 - **_ROI:_** vindo do inglês, _Return on Investment_ permite saber se o retorno investido será positivo ou negativo;
