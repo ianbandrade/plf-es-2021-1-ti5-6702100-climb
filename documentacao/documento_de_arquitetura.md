@@ -39,6 +39,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **24/02/2021** | Arthur Rocha    | Adição dos requisitos funcionais e requisitos não-funcionais           | 1.1.0      |
 | **25/02/2021** | Gabriel Chaves  | Adição das restrições arquiteturais e mecanismos arquiteturais         | 1.2.0      |
 | **26/02/2021** | Gabriel Chaves  | Remoção de falsas restrições arquiteturais                             | 1.2.1      |
+| **04/03/2021** | Ian Bitencourt  | Alteração das características do Modelo Arquitetural do projeto seguindo as considerações feitas pelos professores                            | 1.2.2     |
 
 ## SUMÁRIO
 
@@ -76,7 +77,7 @@ Dessa forma, para obtermos um parâmetro de custo, segundo o site WTSNET, no art
 
 ## 1.1. Problema
 
-O Climb pretende evitar os problemas envolvendo a alta especificidade de implantação de aplicações variadas, por muitas das vezes necessitar de uma mão de obra interna especializada, além de diminuir e ou até mesmo sanar os custos de operações e manutenções dessas aplicações.
+O problema principal é a necessidade de uma equipe com alta especificidade para a implantação de aplicações variadas. Dessa forma, o processo de implantação de novas aplicações se torna bastante custoso para as organizações, já que, precisarão contratar profissionais altamente qualificados para implantar e manter as aplicações.  
 
 ## 1.2. Objetivos do trabalho
 
