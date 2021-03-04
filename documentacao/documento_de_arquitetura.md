@@ -109,13 +109,13 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 
 ## 2.2. Requisitos Não-Funcionais
 
-| **ID** | **Descrição**                                                                                                            |
-| ------ | ------------------------------------------------------------------------------------------------------------------------ |
-| RNF001 | Deve garantir resiliência permitindo o _rollback_ para desfazer uma implantação errônea.                                 |
-| RNF002 | Deve ser capaz de servir uma grande quantidade de usuários deixando um limite a critério da corporação que for utilizar  |
-| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros         |
-| RNF004 | Deve garantir um bom desempenho retornando respostas com limite de 5 segundos retorno.                                   |
-| RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponíveis. |
+| **ID** | **Descrição**                                                                                                                               |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| RNF001 | Deve garantir resiliência permitindo o _rollback_ para desfazer uma implantação errônea.                                                    |
+| RNF002 | Deve ser capaz de servir 2000 usuários simultâneos deixando o aumento desse limite a critério da corporação com base na infraestrutura que for utilizar |
+| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros                            |
+| RNF004 | Deve garantir um bom desempenho retornando respostas com limite de 5 segundos retorno.                                                      |
+| RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponíveis.                    |
 
 ## 2.3. Restrições Arquiteturais
 
