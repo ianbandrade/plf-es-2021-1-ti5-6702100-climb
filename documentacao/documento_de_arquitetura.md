@@ -115,7 +115,7 @@ Os objetivos específicos são:
 | RF011  | Construção da imagem de container com o Buildpacks Pack                | Desejável      |
 | RF012  | Integração com GitLab                                                  | Opcional       |
 | RF013  | Disponibilizar aplicativos pré configurado por meio de template        | Opcional       |
-| RF01r  | Cadastro por meio de carga arquivo ou por meio do acesso a organização | Opcional       |
+| RF014  | Cadastro por meio de carga arquivo ou por meio do acesso a organização | Opcional       |
 
 ## 2.2. Requisitos Não-Funcionais
 
