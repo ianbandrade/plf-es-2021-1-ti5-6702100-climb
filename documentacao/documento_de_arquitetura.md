@@ -72,9 +72,13 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 
 # 1. Apresentação
 
-Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo se faz necessário a implantação de diversos sistemas.
+Algumas corporações optam pelo método de implantação interna, pois proporciona mais privacidade, segurança e menor custo. Além de que, em um ambiente corporativo, se faz necessário a implantação de diversos sistemas.
 
-Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada, além de se tornar um projeto custoso.
+Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada e também se torna um projeto custoso.
+
+Segundo o site Ever It, no artigo [Custos da virtualização](https://www.everit.com.br/custos-da-virtualizacao-qual-o-valor-do-orcamento/), ter uma rede privada e um data center local custa em torno de R$ 31.290,93 + US$ 1.900,00, mais também há o custo da equipe de TI, que varia entre especialidades e responsabilidades.
+
+Dessa forma, adotar um serviço que ajuda na redução do tempo de codificação, adição de funcionalidades de desenvolvimento sem adição de funcionários, desenvolvimento simplificado para diversas plataformas, suporte à equipes de desenvolvimento distribuído geograficamente e gerenciamento eficaz do ciclo de vida da aplicação é muito interessante para este cenário.
 
 ## 1.1. Problema
 
