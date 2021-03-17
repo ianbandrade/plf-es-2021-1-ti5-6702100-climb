@@ -184,45 +184,27 @@ Obs: substitua esta imagem por outra, adequada ao seu projeto (cada arquitetura 
 
 ## 3.1. Visão de Negócio (Funcionalidades)
 
-_Apresente uma lista simples com as funcionalidades previstas no projeto (escopo do produto)._
+1. O sistema deve permitir a implantação de aplicações escolhidas pelos usuários;
+2. O sistema deve disponibilizar domínios personalizados para cada aplicação;
+3. O sistema deve permitr que o administrador cadastre usuários na plataforma;
+4. O sistema deve permitir um usuário vincular sua conta do GitHub ou GitLab;
+5. O sistema deve atualizar as aplicações implantadas com base nos Webhooks dos seus respectivos repositórios;
+6. O sistema deve permitir reverter um implantação;
+7. O sistema deve gerenciar o recurso de cada aplicação implantada;
+8. O sistema deve disponibilizar um painel com monitoramente de cada aplicação;
 
-1. O sistema deve...
-2. O sistema deve...
-3. ...
+### Histórias de Usuário
 
-Obs: a quantidade e o escopo das funcionalidades deve ser negociado com os professores/orientadores do trabalho.
+Atores:
+   - Administrador
+   - Usuário direto
+   - Usuário indireto
 
-### Descrição resumida dos Casos de Uso / Histórias de Usuário
-
-_Nesta seção, os casos de uso devem ser resumidos. Esse detalhamento pode ser na forma de um texto sintético ou, alternativamente, você pode optar por descrever estórias de usuários seguindo os métodos ágeis. Neste caso a seção deve chamar &quot;Histórias de usuários&quot;. Lembre-se das características de qualidade das estórias de usuários, ou seja, o que é preciso para descrever boas histórias de usuários._
-
-Exemplos de resumo de Casos de Uso:
-
-#### UC01 – NOME DO CASO DE USO 01
-
-| **Descrição**             |     |
-| ------------------------- | --- |
-| **Atores**                |     |
-| **Prioridade**            |     |
-| **Requisitos associados** |     |
-| **Fluxo Principal**       |     |
-
-#### UC02 – NOME DO CASO DE USO 02
-
-| **Descrição**             |     |
-| ------------------------- | --- |
-| **Atores**                |     |
-| **Prioridade**            |     |
-| **Requisitos associados** |     |
-| **Fluxo Principal**       |     |
-
-Exemplos de Histórias de Usuário:
-
-- Como Fulano eu quero poder convidar meus amigos para que a gente possa se reunir...
-
-- Como Cicrano eu quero poder organizar minhas tarefas diárias, para que...
-
-- Como gerente eu quero conseguir entender o progresso do trabalho do meu time, para que eu possa ter relatórios periódicos dos nossos acertos e falhas.
+- Como usuário direto eu quero poder implantar minhas aplicações clonadas diretamente do GitHub ou GitLab.
+- Como usuário direto eu quero poder configurar o ambiente em que minha aplicação esta rodando.
+- Como usuário indireto eu quero poder acessar as aplicações implantadas pelos usuários diretos.
+- Como usuário direto eu quero conseguir monitorar os recursos utilizados por minhas aplicações.
+- ...
 
 ## 3.2. Visão Lógica
 
