@@ -1,9 +1,14 @@
-import { Box } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/react"
 
 const Home = () => {
   return (
-    <Box mb={8} w="full">
-    </Box>
+    <>
+       <Box
+      backgroundImage="url('/assets/background-image.png')"
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+        />
+    </>
   );
 };
 
