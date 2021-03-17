@@ -1,15 +1,10 @@
-import { Box, Flex, Heading } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
 
-import AccessibleLink from "../AccessibleLink";
 import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   return (
     <Flex as="header" width="full" align="center">
-      <AccessibleLink href="/">
-        <Heading as="h1">CLIMB</Heading>
-      </AccessibleLink>
-
       <Box marginLeft="auto">
         <ThemeToggle />
       </Box>
