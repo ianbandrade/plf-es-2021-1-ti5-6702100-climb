@@ -59,11 +59,11 @@ const customTheme = extendTheme({
   },
   components: {
     /** Example */
-    // Button: {
-    //   baseStyle: {
-    //     borderRadius: 24,
-    //   },
-    // },
+    Box: {
+      baseStyle: {
+        borderRadius: 15,
+      },
+    },
   },
 });
 
