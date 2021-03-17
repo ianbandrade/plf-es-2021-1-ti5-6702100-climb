@@ -22,7 +22,7 @@ const LoginForm = () => {
       <Flex flexDirection="column" justifyContent="space-between" alignContent="space-around" >
         <Text fontSize="4xl" color={ labelTextColor} >Entrar</Text>
         <FormLabel mb="5%" color={labelTextColor }>Login</FormLabel>
-        <Input color={inputTextColor } backgroundColor={inputBackGroundColor} mb="5%" placeholder="Login" />
+        <Input color={inputTextColor } backgroundColor={inputBackGroundColor} mb="5%" placeholder="Login"  />
         <FormLabel mb="5%" color={labelTextColor }>Senha</FormLabel >
         <Input color={inputTextColor } backgroundColor={inputBackGroundColor}  mb="5%"placeholder="Senha" type="password" />
         <Button mb="5%" backgroundColor={labelTextColor} >Entrar</Button>
