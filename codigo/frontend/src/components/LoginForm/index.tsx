@@ -4,29 +4,30 @@ import {
   Input,
   Text,
   Button,
-  Flex,
+  InputGroup,
+  InputLeftAddon,
+  useStyleConfig,
 } from "@chakra-ui/react";
-
-import { useColorMode } from "@chakra-ui/color-mode";
-
-
+import { EmailIcon, LockIcon  } from '@chakra-ui/icons';
 
 const LoginForm = () => {
-    const { colorMode, toggleColorMode } = useColorMode();
-    const labelTextColor = colorMode === 'light'? '#D8DEE9': "#4C566A"
-    const inputBackGroundColor = "white"
-    const inputTextColor = "#4C566A"
-    
+  const styles = useStyleConfig("FormControl");
+
   return (
-    <FormControl w="25%" h="100%" mr="64px" p="12px" backgroundColor={colorMode === 'light'? '#4C566A': "#D8DEE9"}>
-      <Flex flexDirection="column" justifyContent="space-between" alignContent="space-around" >
-        <Text fontSize="4xl" color={ labelTextColor} >Entrar</Text>
-        <FormLabel mb="5%" color={labelTextColor }>Login</FormLabel>
-        <Input color={inputTextColor } backgroundColor={inputBackGroundColor} mb="5%" placeholder="Login"  />
-        <FormLabel mb="5%" color={labelTextColor }>Senha</FormLabel >
-        <Input color={inputTextColor } backgroundColor={inputBackGroundColor}  mb="5%"placeholder="Senha" type="password" />
-        <Button mb="5%" backgroundColor={labelTextColor} >Entrar</Button>
-      </Flex>
+    <FormControl as="form" sx={styles}>
+      <Text as="text">Entrar</Text>
+      <FormLabel>Email</FormLabel>
+      <InputGroup >
+        <InputLeftAddon as="inputGroup" children={<EmailIcon />}/>
+        <Input as="input" placeholder="Email" />
+      </InputGroup>
+      <FormLabel>Senha</FormLabel>
+      <InputGroup >
+        <InputLeftAddon as="inputGroup" children={<LockIcon />}/>
+        <Input as="input" placeholder="Senha" type="password" />
+      </InputGroup>
+      
+      <Button as="button">Entrar</Button>
     </FormControl>
   );
 };
