@@ -1,15 +1,14 @@
+import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import {
+  Button,
   FormControl,
   FormLabel,
   Input,
-  Text,
-  Button,
   InputGroup,
   InputLeftAddon,
+  Text,
   useStyleConfig,
 } from "@chakra-ui/react";
-import { EmailIcon, LockIcon } from "@chakra-ui/icons";
-
 import { colors } from "../../styles/customTheme";
 
 const INPUT_GROUP = "inputGroup";
@@ -27,7 +26,11 @@ const LoginForm = () => {
         <InputLeftAddon as={INPUT_GROUP} children={<EmailIcon />} />
         <Input as="input" placeholder="Email" />
       </InputGroup>
-      <FormLabel>Senha</FormLabel>
+      <FormLabel>Senha</FormLabel
+      
+      
+      
+      >
       <InputGroup>
         <InputLeftAddon as={INPUT_GROUP} children={<LockIcon />} />
         <Input as="input" placeholder="Senha" type="password" />

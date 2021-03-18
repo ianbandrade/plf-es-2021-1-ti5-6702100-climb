@@ -1,8 +1,7 @@
 import { Box } from "@chakra-ui/layout";
 import { ReactNode } from "react";
-
-import Header from "./Header";
 import Footer from "./Footer";
+import Header from "./Header";
 import Meta from "./Meta";
 
 type LayoutProps = {

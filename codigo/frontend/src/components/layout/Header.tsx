@@ -1,5 +1,4 @@
 import { Box, Flex } from "@chakra-ui/layout";
-
 import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
