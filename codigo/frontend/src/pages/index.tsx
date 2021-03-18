@@ -1,5 +1,4 @@
-import { Box } from "@chakra-ui/layout";
-import { useColorMode, Flex } from "@chakra-ui/react";
+import { Flex, useColorMode } from "@chakra-ui/react";
 import LoginForm from "../components/LoginForm";
 import LoginContent from "../components/LoginContent";
 
