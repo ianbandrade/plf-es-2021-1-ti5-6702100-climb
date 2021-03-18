@@ -7,12 +7,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({name: 'user'})
+@Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false, type: 'varchar', length: 200 , unique: true})
+  @Column({ nullable: false, type: 'varchar', length: 200, unique: true})
   email: string;
 
   @Column({ nullable: false, type: 'varchar', length: 200 })

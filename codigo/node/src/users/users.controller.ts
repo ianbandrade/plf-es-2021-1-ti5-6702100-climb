@@ -1,12 +1,26 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Get } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
+import { ReturnUserDto } from './dto/return-user.dto';
 
 @Controller('users')
 export class UsersController {
-    constructor(@Inject() private usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
-    @Get()
-    getAll() {
-        return this.usersService.getAll();
-    }
+  @Get()
+  async getAll() {
+    return await this.usersService.getAll();
+  }
+
+  @Post()
+  async createAdminUser(
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
+  ): Promise<ReturnUserDto> {
+    console.log("Criando")
+    const user = await this.usersService.createAdminUser(createUserDto);
+    return {
+      user,
+      message: 'Administrator registred sucssefuly',
+    };
+  }
 }
