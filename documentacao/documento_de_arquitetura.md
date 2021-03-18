@@ -41,6 +41,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **26/02/2021** | Gabriel Chaves  | Remoção de falsas restrições arquiteturais                                                                         | 1.2.1      |
 | **04/03/2021** | Ian Bitencourt  | Alteração das características do Modelo Arquitetural do projeto seguindo as considerações feitas pelos professores | 1.2.2      |
 | **04/03/2021** | Arthur Rocha    | Correção de requisitos                                                                                             | 1.2.3      |
+| **18/03/2021** | Gabriel Chaves  | Adição da imagem da Visão Geral da Solução                                                                         | 2.0.0      |
 
 ## SUMÁRIO
 
@@ -174,13 +175,9 @@ Os objetivos específicos são:
 
 # 3. Modelagem e projeto arquitetural
 
-_Apresente uma visão geral da solução proposta para o projeto e explique brevemente esse diagrama de visão geral, de forma textual. Esse diagrama não precisa seguir os padrões da UML, e deve ser completo e tão simples quanto possível, apresentando a macroarquitetura da solução._
+![Visão Geral da Solução](imagens/visao.jpg 'Visão Geral da Solução')
 
-![Visão Geral da Solução](imagens/visao.png 'Visão Geral da Solução')
-
-**Figura 1 - Visão Geral da Solução (fonte: https://medium.com)**
-
-Obs: substitua esta imagem por outra, adequada ao seu projeto (cada arquitetura é única).
+**Figura 1 - Visão Geral da Solução**
 
 ## 3.1. Visão de Negócio (Funcionalidades)
 
