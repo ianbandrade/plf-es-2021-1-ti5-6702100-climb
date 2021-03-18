@@ -26,11 +26,7 @@ const LoginForm = () => {
         <InputLeftAddon as={INPUT_GROUP} children={<EmailIcon />} />
         <Input as="input" placeholder="Email" />
       </InputGroup>
-      <FormLabel>Senha</FormLabel
-      
-      
-      
-      >
+      <FormLabel>Senha</FormLabel>
       <InputGroup>
         <InputLeftAddon as={INPUT_GROUP} children={<LockIcon />} />
         <Input as="input" placeholder="Senha" type="password" />
