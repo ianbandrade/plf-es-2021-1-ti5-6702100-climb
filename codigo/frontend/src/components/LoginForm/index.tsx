@@ -10,12 +10,14 @@ import {
 } from "@chakra-ui/react";
 import { EmailIcon, LockIcon  } from '@chakra-ui/icons';
 
+import {colors} from '../../styles/customTheme';
+
 const LoginForm = () => {
   const styles = useStyleConfig("FormControl");
 
   return (
     <FormControl as="form" sx={styles}>
-      <Text as="text">Entrar</Text>
+      <Text fontWeight={'semibold'}  as="text">Entrar</Text>
       <FormLabel>Email</FormLabel>
       <InputGroup >
         <InputLeftAddon as="inputGroup" children={<EmailIcon />}/>
@@ -27,7 +29,11 @@ const LoginForm = () => {
         <Input as="input" placeholder="Senha" type="password" />
       </InputGroup>
       
-      <Button as="button">Entrar</Button>
+      <Button _hover={
+        {
+          backgroundColor: 'rgba(129, 161, 193, 0.9);',
+        }
+      } bgColor={colors.aurora.Nord9} textColor={colors.light.Nord4} as="button">Entrar</Button>
     </FormControl>
   );
 };

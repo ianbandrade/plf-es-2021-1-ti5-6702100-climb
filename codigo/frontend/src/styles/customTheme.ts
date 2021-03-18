@@ -65,37 +65,46 @@ const customTheme = extendTheme({
     FormControl: {
       parts: ["text", "label", "inputGroup","input", "button"],
       baseStyle: (props) => ({
-        backgroundColor: mode(colors.dark.Nord2, colors.light.Nord4)(props),
+        backgroundColor: mode(colors.dark.Nord2, colors.light.Nord6)(props),
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
 
+        maxWidth: '390px',
+        maxHeight: '450px',
+
+        minWidth: '350px',
+        minHeight: '400px',
+        
+        borderRadius: 20,
+
         text: {
           fontSize: "40px",
-          color: mode(colors.light.Nord4, colors.dark.Nord2)(props),
-          marginBottom: "5%",
+          color: mode(colors.light.Nord6, colors.dark.Nord2)(props),
+          fontWeight: 'semibold',
+          marginBottom: '5',
         },
         label: {
-          color: mode(colors.light.Nord4, colors.dark.Nord2)(props),
-          marginBottom: "5%",
-          fontSize: '18px'
+          color: mode(colors.light.Nord6, colors.dark.Nord2)(props),
+          fontSize: '15px',
+          fontWeight: 'lighter'
         },
         inputGroup: {
-          backgroundColor: mode(colors.light.Nord4, colors.dark.Nord2)(props)
+          backgroundColor: mode(colors.light.Nord6, colors.dark.Nord2)(props),
+          marginBottom: "12%",
+          height: '40px',
         },
         input: {
-          color: mode(colors.light.Nord4, colors.dark.Nord2)(props),
-          marginBottom: "5%",
+          color: mode(colors.dark.Nord2, colors.light.Nord6)(props),
+          backgroundColor: mode(colors.light.Nord4, colors.dark.Nord0)(props),
+          height: '40px',
           _placeholder: {
-            color: mode(colors.light.Nord4, colors.dark.Nord2)(props),
+            color: mode(colors.dark.Nord2, colors.light.Nord6)(props),
           },
         },
         button: {
-          backgroundColor: mode(colors.light.Nord4, colors.dark.Nord2)(props),
-          _hover: {
-            backgroundColor: mode(colors.light.Nord6, colors.dark.Nord0)(props),
-          },
-        },
+          height: '40px',
+        }
       }),
       sizes: {
         md: {
