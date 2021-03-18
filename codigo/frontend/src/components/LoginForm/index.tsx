@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
 
-const INPUT_GROUP = "input_group";
+const INPUT_GROUP = "i";
 
 const LoginForm = () => {
   const styles = useStyleConfig("FormControl");
