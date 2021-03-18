@@ -10,7 +10,6 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-
   return (
     <Box margin="0 auto" maxWidth={2048} transition="0.5s ease-out">
       <Meta />

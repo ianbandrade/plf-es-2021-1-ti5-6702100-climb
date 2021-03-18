@@ -8,32 +8,41 @@ import {
   InputLeftAddon,
   useStyleConfig,
 } from "@chakra-ui/react";
-import { EmailIcon, LockIcon  } from '@chakra-ui/icons';
+import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 
-import {colors} from '../../styles/customTheme';
+import { colors } from "../../styles/customTheme";
+
+const INPUT_GROUP = "inputGroup";
 
 const LoginForm = () => {
   const styles = useStyleConfig("FormControl");
 
   return (
     <FormControl as="form" sx={styles}>
-      <Text fontWeight={'semibold'}  as="text">Entrar</Text>
+      <Text fontWeight={"semibold"} as="text">
+        Entrar
+      </Text>
       <FormLabel>Email</FormLabel>
-      <InputGroup >
-        <InputLeftAddon as="inputGroup" children={<EmailIcon />}/>
+      <InputGroup>
+        <InputLeftAddon as={INPUT_GROUP} children={<EmailIcon />} />
         <Input as="input" placeholder="Email" />
       </InputGroup>
       <FormLabel>Senha</FormLabel>
-      <InputGroup >
-        <InputLeftAddon as="inputGroup" children={<LockIcon />}/>
+      <InputGroup>
+        <InputLeftAddon as={INPUT_GROUP} children={<LockIcon />} />
         <Input as="input" placeholder="Senha" type="password" />
       </InputGroup>
-      
-      <Button _hover={
-        {
-          backgroundColor: 'rgba(129, 161, 193, 0.9);',
-        }
-      } bgColor={colors.aurora.Nord9} textColor={colors.light.Nord4} as="button">Entrar</Button>
+
+      <Button
+        _hover={{
+          backgroundColor: "rgba(129, 161, 193, 0.9);",
+        }}
+        bgColor={colors.aurora.Nord9}
+        textColor={colors.light.Nord4}
+        as="button"
+      >
+        Entrar
+      </Button>
     </FormControl>
   );
 };
