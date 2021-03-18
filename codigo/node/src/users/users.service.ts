@@ -11,11 +11,11 @@ export class UsersService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
   ) {}
-    
+
   getAll() {
     throw new Error('Method not implemented.');
   }
-  
+
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException('As senhas não conferem');

@@ -11,9 +11,9 @@ import {
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    async getAll(): Promise<User[]> {
-        return await User.find()
-    }
+  async getAll(): Promise<User[]> {
+    return await User.find();
+  }
 
   async createUser(
     createUserDto: CreateUserDto,

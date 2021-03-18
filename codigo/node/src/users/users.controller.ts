@@ -16,7 +16,7 @@ export class UsersController {
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
-    console.log("Criando")
+    console.log('Criando');
     const user = await this.usersService.createAdminUser(createUserDto);
     return {
       user,
