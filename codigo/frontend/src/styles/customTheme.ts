@@ -88,7 +88,7 @@ const customTheme = extendTheme({
           fontSize: "15px",
           fontWeight: "lighter",
         },
-        group: {
+        inputGroup: {
           backgroundColor: mode(colors.light.Nord6, colors.dark.Nord2)(props),
           marginBottom: "12%",
           height: "40px",

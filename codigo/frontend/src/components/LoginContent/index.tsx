@@ -1,8 +1,10 @@
-import { Flex, Image, Box, Text } from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/color-mode";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
+
+const LIGHT = "light";
 
 const LoginContent = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   return (
     <Flex
       flexDirection="column"
@@ -15,9 +17,9 @@ const LoginContent = () => {
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
         <Image
           src={
-            colorMode === "light"
-              ? "/assets/svg/light-flat.svg"
-              : "/assets/svg/dark-flat.svg"
+            colorMode === LIGHT
+              ? "/assets/icon/light-flat.svg"
+              : "/assets/icon/dark-flat.svg"
           }
           alt="Logo"
         />
