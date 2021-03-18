@@ -20,12 +20,12 @@ const LoginForm = () => {
       <Text fontWeight={'semibold'}  as="text">Entrar</Text>
       <FormLabel>Email</FormLabel>
       <InputGroup >
-        <InputLeftAddon as="inputGroup" children={<EmailIcon />}/>
+        <InputLeftAddon as="group" children={<EmailIcon />}/>
         <Input as="input" placeholder="Email" />
       </InputGroup>
       <FormLabel>Senha</FormLabel>
       <InputGroup >
-        <InputLeftAddon as="inputGroup" children={<LockIcon />}/>
+        <InputLeftAddon as="group" children={<LockIcon />}/>
         <Input as="input" placeholder="Senha" type="password" />
       </InputGroup>
       

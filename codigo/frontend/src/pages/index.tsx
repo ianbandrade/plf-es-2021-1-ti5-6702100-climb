@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/layout";
 import { useColorMode, Flex } from "@chakra-ui/react";
 import LoginForm from "../components/LoginForm";
+import LoginContent from "../components/LoginContent";
 
 const Home = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -8,12 +9,12 @@ const Home = () => {
     <>
       <Flex
         justifyContent="space-between"
-        alignItems="center"
+        alignItems="flex-start"
         backgroundImage="url('/assets/background-image.png')"
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
       >
-        <h1>oi</h1>
+        <LoginContent />
         <LoginForm />
       </Flex>
     </>

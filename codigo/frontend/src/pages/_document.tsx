@@ -25,7 +25,11 @@ class MyDocument extends Document {
           <meta name="format-detection" content="telephone=no" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="theme-color" content="#F2F2F2" />
-
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Alatsi&display=swap"
+            rel="stylesheet"
+          />
           {/* add your own app-icon */}
           {/* <link
             rel="apple-touch-icon"
