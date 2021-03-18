@@ -11,20 +11,26 @@ import {
 } from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
 
-const INPUT_GROUP = "inputGroup";
+const INPUT_GROUP = "input_group";
 
 const LoginForm = () => {
   const styles = useStyleConfig("FormControl");
 
   return (
-    <FormControl as="form" sx={styles}>
+    <FormControl
+      as="form"
+      sx={styles}
+      fontFamily="Alatsi"
+      boxShadow="dark-lg"
+      rounded="md"
+    >
       <Text fontWeight={"semibold"} as="text">
         Entrar
       </Text>
-      <FormLabel>Email</FormLabel>
+      <FormLabel>E-mail</FormLabel>
       <InputGroup>
         <InputLeftAddon as={INPUT_GROUP} children={<EmailIcon />} />
-        <Input as="input" placeholder="Email" />
+        <Input as="input" placeholder="E-mail" />
       </InputGroup>
       <FormLabel>Senha</FormLabel>
       <InputGroup>
@@ -38,7 +44,10 @@ const LoginForm = () => {
         }}
         bgColor={colors.aurora.Nord9}
         textColor={colors.light.Nord4}
+        boxShadow="2xl"
+        rounded="md"
         as="button"
+        size="lg"
       >
         Entrar
       </Button>

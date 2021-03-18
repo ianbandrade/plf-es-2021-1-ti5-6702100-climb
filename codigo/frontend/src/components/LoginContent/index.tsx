@@ -1,5 +1,6 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { colors } from "../../styles/customTheme";
 
 const LIGHT = "light";
 
@@ -11,7 +12,7 @@ const LoginContent = () => {
       justifyContent="flex-start"
       alignItems="flex-start"
       w="45%"
-      h="500px"
+      h={"auto"}
       ml="3%"
     >
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
@@ -28,8 +29,18 @@ const LoginContent = () => {
         </Text>
       </Flex>
 
-      <Box>
-        <Text fontSize="2xl" textAlign="start">
+      <Box rounded="lg">
+        <Text
+          fontSize="3xl"
+          textAlign="start"
+          fontWeight="extrabold"
+          maxWidth={600}
+          color={
+            colorMode === LIGHT
+              ? `${colors.dark.Nord0}`
+              : `${colors.light.Nord6}`
+          }
+        >
           Mais além do princípio de prazer, o limite teórico das ruturas de
           campo interpretativas se acompanha então de inconvenientes não
           negligenciáveis que delimita o campo de intervenção do analista

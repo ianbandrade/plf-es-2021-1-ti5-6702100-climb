@@ -18,6 +18,8 @@ const Page404 = () => {
           textAlign="center"
           fontFamily="Alatsi"
           alignItems="center"
+          boxShadow="2xl"
+          rounded="md"
           p={16}
           borderRadius={20}
           bgColor={
@@ -45,7 +47,7 @@ const Page404 = () => {
           <Link href="/">
             <Button
               size="lg"
-              fontSize={"3xl"}
+              fontSize="3xl"
               fontWeight={500}
               borderRadius={15}
               mt={5}
