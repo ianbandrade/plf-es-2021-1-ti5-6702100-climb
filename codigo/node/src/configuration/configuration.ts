@@ -8,4 +8,15 @@ export default () => ({
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'postgres',
   },
+  versionControl: {
+    github: {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    },
+    gitlab: {
+      clientID: process.env.GITLAB_CLIENT_ID,
+      clientSecret: process.env.GITLAB_CLIENT_SECRET,
+      redirectURI: process.env.GITLAB_REDIRECT_URI,
+    },
+  },
 });
