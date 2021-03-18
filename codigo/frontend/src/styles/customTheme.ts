@@ -82,7 +82,7 @@ const customTheme = extendTheme({
           fontSize: "40px",
           color: mode(colors.light.Nord6, colors.dark.Nord2)(props),
           fontWeight: 'semibold',
-          marginBottom: '5',
+          marginBottom: '5%',
         },
         label: {
           color: mode(colors.light.Nord6, colors.dark.Nord2)(props),
@@ -103,6 +103,7 @@ const customTheme = extendTheme({
           },
         },
         button: {
+          marginTop: '4%', 
           height: '40px',
         }
       }),
