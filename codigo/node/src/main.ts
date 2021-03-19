@@ -15,6 +15,7 @@ export async function bootstrap() {
   const swaggerDocumentOptions = new DocumentBuilder()
     .setTitle('Climb API')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerDocumentOptions);

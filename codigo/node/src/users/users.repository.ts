@@ -1,3 +1,4 @@
+import { CredentialsDto } from './../auth/dto/credentials.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,10 +12,6 @@ import {
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async getAll(): Promise<User[]> {
-    return await User.find();
-  }
-
   async createUser(
     createUserDto: CreateUserDto,
     role: UserRole,
@@ -43,6 +40,17 @@ export class UserRepository extends Repository<User> {
           'Error while saving user in the database',
         );
       }
+    }
+  }
+
+  async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
+    const { email, password } = credentialsDto;
+    const user = await this.findOne({ email, status: true });
+
+    if (user && (await user.checkPassword(password))) {
+      return user;
+    } else {
+      return null;
     }
   }
 
