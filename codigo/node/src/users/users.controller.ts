@@ -1,9 +1,15 @@
+import { ReturnAllUserDto } from './dto/return-all-users.dto';
+import { UpdateUserDto } from './dto/update-users.dto';
 import {
   Controller,
   Post,
   Body,
   ValidationPipe,
   UseGuards,
+  Get,
+  Param,
+  Patch,
+  Delete,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -27,6 +33,7 @@ import {
 
 @ApiTags('Users')
 @Controller('users')
+@UseGuards(AuthGuard(), RolesGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -41,11 +48,43 @@ export class UsersController {
   @ApiBadRequestResponse({ description: 'BadRequest.' })
   @ApiBearerAuth()
   @Role(UserRole.ADMIN)
-  @UseGuards(AuthGuard(), RolesGuard)
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
     const user = await this.usersService.createAdminUser(createUserDto);
     return { user };
+  }
+
+  @Get()
+  @Role(UserRole.ADMIN)
+  async getAllUsers(): Promise<ReturnAllUserDto> {
+    const users = await this.usersService.findAllUsers();
+    return { users };
+  }
+
+  @Get(':id')
+  @Role(UserRole.ADMIN)
+  async findUserById(@Param('id') id): Promise<ReturnUserDto> {
+    const user = await this.usersService.findUserById(id);
+    return { user };
+  }
+
+  @Patch(':id')
+  @Role(UserRole.ADMIN)
+  async updateUser(
+    @Body(ValidationPipe) updateUserDto: UpdateUserDto,
+    @Param('id') id: string,
+  ) {
+    return this.usersService.updateUser(updateUserDto, id);
+  }
+
+  @Delete(':id')
+  @Role(UserRole.ADMIN)
+  async deleteUser(@Param('id') id: string) {
+    await this.usersService.deleteUser(id);
+
+    return {
+      message: 'User removed successfully',
+    };
   }
 }

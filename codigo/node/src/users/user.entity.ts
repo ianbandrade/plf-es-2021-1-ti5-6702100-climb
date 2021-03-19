@@ -31,11 +31,17 @@ export class User extends BaseEntity {
   @Column({ nullable: false })
   salt: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 64 })
-  confirmationToken: string;
+  @Column({ nullable: true })
+  gitHubAccount: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 64 })
-  recoverToken: string;
+  @Column({ nullable: true })
+  gitLabAccount: string;
+
+  @Column({ nullable: true })
+  gitHubToken: string;
+
+  @Column({ nullable: true })
+  gitLabToken: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -47,4 +53,11 @@ export class User extends BaseEntity {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
   }
+
+  static readonly publicAtributes: (keyof User)[] = [
+    'email',
+    'name',
+    'role',
+    'id',
+  ];
 }

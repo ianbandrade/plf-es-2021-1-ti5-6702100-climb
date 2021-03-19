@@ -9,7 +9,7 @@ export class CreateUserDto {
   @IsEmail(
     {},
     {
-      message: 'Insert a valid emaiml address',
+      message: 'Insert a valid email address',
     },
   )
   @MaxLength(200, {
