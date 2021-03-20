@@ -10,6 +10,7 @@ import {
   Param,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -30,6 +31,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+import { FindUsersQueryDto } from './dto/find-users-query.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -57,9 +59,10 @@ export class UsersController {
 
   @Get()
   @Role(UserRole.ADMIN)
-  async getAllUsers(): Promise<ReturnAllUserDto> {
-    const users = await this.usersService.findAllUsers();
-    return { users };
+  async findUsers(
+    @Query() query: FindUsersQueryDto,
+  ): Promise<ReturnAllUserDto> {
+    return await this.usersService.findUsers(query);
   }
 
   @Get(':id')

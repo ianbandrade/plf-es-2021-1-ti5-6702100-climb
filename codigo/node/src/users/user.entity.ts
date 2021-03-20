@@ -32,22 +32,22 @@ export class User extends BaseEntity {
   salt: string;
 
   @Column({ nullable: true })
-  gitHubAccount: string;
+  gitHubAccount?: string;
 
   @Column({ nullable: true })
-  gitLabAccount: string;
+  gitLabAccount?: string;
 
   @Column({ nullable: true })
-  gitHubToken: string;
+  gitHubToken?: string;
 
   @Column({ nullable: true })
-  gitLabToken: string;
+  gitLabToken?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
