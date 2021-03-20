@@ -42,6 +42,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **04/03/2021** | Ian Bitencourt  | Alteração das características do Modelo Arquitetural do projeto seguindo as considerações feitas pelos professores | 1.2.2      |
 | **04/03/2021** | Arthur Rocha    | Correção de requisitos                                                                                             | 1.2.3      |
 | **18/03/2021** | Gabriel Chaves  | Adição da imagem da Visão Geral da Solução                                                                         | 2.0.0      |
+| **18/03/2021** | Ian Bittencourt | Adição de novas história de usuários, bem como definições e aberviaturas                                           | 2.1.0      |
 
 ## SUMÁRIO
 
@@ -91,13 +92,19 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 
 Os objetivos específicos são:
 
-1.  Desenvolver uma aplicação que fique alocada em um ambiente local (_on-premise_);
-2.  Desfrutar de uma alta usabilidade, focada numa interface amigável para a implantação de serviços sem uma equipe especializada;
-3.  Implementar o serviço de hospedagem _PaaS_.
+1. Desenvolver uma aplicação que fique alocada em um ambiente local (_on-premise_);
+2. Desfrutar de uma alta usabilidade, focada numa interface amigável para a implantação de serviços sem uma equipe especializada;
+3. Implementar o serviço de hospedagem _PaaS_.
 
 ## 1.3. Definições e Abreviaturas
 
-- **_PaaS:_** vindo do inglês, _Platform as a Service_ é um serviço de hospedagem e implementação de hardware e software.
+- **_PaaS_:** vindo do inglês, _Platform as a Service_ é um serviço de hospedagem e implementação vde hardware e software;
+
+- **_rollback_:** vindo do inglês, reversão, é a possibilidade de desfazer uma ação (no contexto, uma implantação);
+
+- **Usuários diretos:** usuários que interagem diretamente com o sistema, na operação e execução de uma implantação;
+
+- **Usuários indiretos:** usuários que interagem com a aplicação já implantada (serviço).
 
 <a name="requisitos"></a>
 
@@ -134,15 +141,15 @@ Os objetivos específicos são:
 
 ## 2.3. Restrições Arquiteturais
 
-1.  O software front-end web deve ser desenvolvido em React/Next.js;
-2.  O software front-end mobile deve ser desenvolvido em Flutter;
-3.  O software back-end de comunicação com front-end deve ser desenvolvido em Nest.js;
-4.  O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
-5.  A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
-6.  A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
-7.  A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
-8.  A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
-9.  Para a persistência de dados deve ser utilizado o PostgreSQL;
+1. O software front-end web deve ser desenvolvido em React/Next.js;
+2. O software front-end mobile deve ser desenvolvido em Flutter;
+3. O software back-end de comunicação com front-end deve ser desenvolvido em Nest.js;
+4. O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
+5. A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
+6. A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
+7. A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
+8. A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
+9. Para a persistência de dados deve ser utilizado o PostgreSQL;
 10. Para o cache de consultas à API deve ser utilizado o Redis;
 11. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
 12. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
@@ -192,16 +199,14 @@ Os objetivos específicos são:
 
 ### Histórias de Usuário
 
-Atores:
-   - Administrador
-   - Usuário direto
-   - Usuário indireto
-
-- Como usuário direto eu quero poder implantar minhas aplicações clonadas diretamente do GitHub ou GitLab.
-- Como usuário direto eu quero poder configurar o ambiente em que minha aplicação esta rodando.
-- Como usuário indireto eu quero poder acessar as aplicações implantadas pelos usuários diretos.
-- Como usuário direto eu quero conseguir monitorar os recursos utilizados por minhas aplicações.
-- ...
+- Como usuário direto, eu quero poder implantar minhas aplicações clonadas diretamente do GitHub ou GitLab;
+- Como administrador, eu quero cadastrar usuários diretos;
+- Como usuário direto, eu quero ver as minhas aplicações implantadas serem atualizadas a partir dos seus repositórios fonte;
+- Como usuário direto, eu poder personalizar, para cada aplicação, seus domĩnios;
+- Como usuário direto, eu quero poder configurar o ambiente em que minha aplicação esta rodando;
+- Como usuário indireto, eu quero poder acessar as aplicações implantadas pelos usuários diretos;
+- Como usuário direto, eu quero conseguir monitorar e gerenciar os recursos utilizados por minhas aplicações;
+- Como usuário direto, eu quero conseguir desfazer alguma implantação.
 
 ## 3.2. Visão Lógica
 
@@ -277,7 +282,7 @@ _Apresente as medidas registradas na coleta de dados. O que não for possível q
 | **Riscos:**                  | Não existe |
 | ---------------------------- | ---------- |
 | **Pontos de Sensibilidade:** | Não existe |
-| _ **Tradeoff** _ **:**       | Não existe |
+| _**Tradeoff**_ **:**         | Não existe |
 
 Evidências dos testes realizados
 
