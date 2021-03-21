@@ -239,7 +239,7 @@ Ex: conforme diagrama apresentado na Figura X, as entidades participantes da sol
 
 _Caso julgue necessário para explicar a arquitetura, apresente o diagrama de classes ou diagrama de Entidade/Relacionamentos ou tabelas do banco de dados. Este modelo pode ser essencial caso a arquitetura utilize uma solução de banco de dados distribuídos ou um banco NoSQL._
 
-![Diagrama de Entidade Relacionamento (ER) ](imagens/der.png 'Diagrama de Entidade Relacionamento (ER) ')
+![Diagrama de Entidade Relacionamento (ER) ](imagens/diagrama_de_entidade_relacionamento.png 'Diagrama de Entidade Relacionamento (ER) ')
 
 **Figura 4 – Diagrama de Entidade Relacionamento (ER) - exemplo. Fonte: o próprio autor.**
 
