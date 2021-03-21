@@ -182,7 +182,7 @@ Os objetivos específicos são:
 
 # 3. Modelagem e projeto arquitetural
 
-![Visão Geral da Solução](imagens/visao.jpg 'Visão Geral da Solução')
+![Visão Geral da Solução](imagens/diagrama_de_visao_geral.png 'Visão Geral da Solução')
 
 **Figura 1 - Visão Geral da Solução**
 
@@ -214,7 +214,7 @@ _Apresente os artefatos que serão utilizados descrevendo em linhas gerais as mo
 
 ### Diagrama de Classes
 
-![Diagrama de classes](imagens/classes.gif 'Diagrama de classes')
+![Diagrama de classes](imagens/diagrama_de_classe.png 'Diagrama de classes')
 
 **Figura 2 – Diagrama de classes (exemplo). Fonte: o próprio autor.**
 
@@ -224,7 +224,7 @@ Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
 
 _Apresente o diagrama de componentes da aplicação, indicando, os elementos da arquitetura e as interfaces entre eles. Liste os estilos/padrões arquiteturais utilizados e faça uma descrição sucinta dos componentes indicando o papel de cada um deles dentro da arquitetura/estilo/padrão arquitetural. Indique também quais componentes serão reutilizados (navegadores, SGBDs, middlewares, etc), quais componentes serão adquiridos por serem proprietários e quais componentes precisam ser desenvolvidos._
 
-![Diagrama de componentes](imagens/componentes.png 'Diagrama de componentes')
+![Diagrama de componentes](imagens/diagrama_de_componentes.png 'Diagrama de componentes')
 
 **Figura 3 – Diagrama de Componentes (exemplo). Fonte: o próprio autor.**
 
