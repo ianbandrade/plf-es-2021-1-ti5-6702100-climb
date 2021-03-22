@@ -230,18 +230,11 @@ _Apresente o diagrama de componentes da aplicação, indicando, os elementos da 
 
 _Apresente uma descrição detalhada dos artefatos que constituem o diagrama de implantação._
 
-Ex: conforme diagrama apresentado na Figura X, as entidades participantes da solução são:
+Ex: conforme diagrama apresentado na Figura 3, as entidades participantes da solução são:
 
 - **Componente 1** - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nunc magna, accumsan eget porta a, tincidunt sed mauris. Suspendisse orci nulla, sagittis a lorem laoreet, tincidunt imperdiet ipsum. Morbi malesuada pretium suscipit.
 - **Componente 2** - Praesent nec nisi hendrerit, ullamcorper tortor non, rutrum sem. In non lectus tortor. Nulla vel tincidunt eros.
 
-## 3.3. Modelo de dados (opcional)
-
-_Caso julgue necessário para explicar a arquitetura, apresente o diagrama de classes ou diagrama de Entidade/Relacionamentos ou tabelas do banco de dados. Este modelo pode ser essencial caso a arquitetura utilize uma solução de banco de dados distribuídos ou um banco NoSQL._
-
-![Diagrama de Entidade Relacionamento (ER) ](imagens/diagrama_de_entidade_relacionamento.png 'Diagrama de Entidade Relacionamento (ER) ')
-
-**Figura 4 – Diagrama de Entidade Relacionamento (ER) - exemplo. Fonte: o próprio autor.**
 
 Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
 
