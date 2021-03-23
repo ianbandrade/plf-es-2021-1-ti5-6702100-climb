@@ -1,12 +1,7 @@
 import RegularHeader from "./RegularHeader";
-import { Flex, Tabs, TabList, Tab } from "@chakra-ui/react";
-import Link from "next/link";
-
-import { colors } from "../../styles/customTheme";
-import { useColorMode } from "@chakra-ui/color-mode";
+import { Flex, Tabs, TabList } from "@chakra-ui/react";
 import TabContainer from "../TabContainer";
 const BASE_URL = "/admin";
-const LIGHT = "light";
 
 const AdminHeader = () => {
   return (
