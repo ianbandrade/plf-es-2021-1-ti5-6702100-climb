@@ -67,7 +67,7 @@ export class UsersController {
 
   @Get(':id')
   @Role(UserRole.ADMIN)
-  async findUserById(@Param('id') id): Promise<ReturnUserDto> {
+  async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
     const user = await this.usersService.findUserById(id);
     return { user };
   }
