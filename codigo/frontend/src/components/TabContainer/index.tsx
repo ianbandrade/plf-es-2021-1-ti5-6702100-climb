@@ -14,16 +14,19 @@ interface TabContainerProps {
 const TabContainer = ({ text, url }: TabContainerProps) => {
   const { colorMode } = useColorMode();
   function setTabColor() {
-    if (colorMode === "light") return colors.dark.Nord0;
+    if (colorMode === "light") return colors.dark.Nord2;
     else return colors.light.Nord4;
   }
 
   function setTabTextColor() {
-    if (colorMode !== "light") return colors.dark.Nord0;
-    else return colors.light.Nord4;
+    if (colorMode !== "light") return colors.dark.Nord2;
+    else return colors.light.Nord6;
   }
   return (
-    <Tab _selected={{ bgColor: setTabColor(), color: setTabTextColor() }}>
+    <Tab
+      _selected={{ bgColor: setTabColor(), color: setTabTextColor() }}
+      color={setTabColor()}
+    >
       <Link href={url}>
         <a>{text}</a>
       </Link>
