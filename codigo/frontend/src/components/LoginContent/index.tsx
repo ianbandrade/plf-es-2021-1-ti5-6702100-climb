@@ -1,7 +1,7 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
-
+import Logo from "../Logo";
 const LIGHT = "light";
 
 const LoginContent = () => {
@@ -15,20 +15,7 @@ const LoginContent = () => {
       h={"auto"}
       ml="3%"
     >
-      <Flex flexDirection="column" justifyContent="center" alignItems="center">
-        <Image
-          src={
-            colorMode === LIGHT
-              ? "/assets/icon/light-flat.svg"
-              : "/assets/icon/dark-flat.svg"
-          }
-          alt="Logo"
-        />
-        <Text fontSize="6xl" fontFamily="Alatsi">
-          CLIMB
-        </Text>
-      </Flex>
-
+      <Logo />
       <Box rounded="lg">
         <Text
           fontSize="3xl"
