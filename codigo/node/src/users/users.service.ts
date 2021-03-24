@@ -1,7 +1,6 @@
 import { UpdateUserDto } from './dto/update-users.dto';
 import {
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
