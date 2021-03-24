@@ -3,7 +3,7 @@ import { IsString, IsEmail, IsOptional } from 'class-validator';
 export class UpdateUserDto {
   @IsOptional()
   @IsString({
-    message: 'User name should be a string',
+    message: 'Nome do usuário tem que ser uma string',
   })
   name: string;
 
@@ -11,7 +11,7 @@ export class UpdateUserDto {
   @IsEmail(
     {},
     {
-      message: 'Insert a valid email address',
+      message: 'Insira um email válido',
     },
   )
   email: string;

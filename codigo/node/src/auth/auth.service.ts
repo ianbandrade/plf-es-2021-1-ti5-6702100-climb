@@ -22,7 +22,7 @@ export class AuthService {
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException(
-        'The password confirmations is wrong',
+        'A senha de confirmação esta errada',
       );
     } else {
       return this.userRepository.createUser(createUserDto, UserRole.USER);
@@ -33,7 +33,7 @@ export class AuthService {
     const user = await this.userRepository.checkCredentials(credentialsDto);
 
     if (user === null) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Credenciais inválidas');
     }
 
     const jwtPayload = {

@@ -68,7 +68,7 @@ export class UsersController {
     await this.usersService.deleteUser(id);
 
     return {
-      message: 'User removed successfully',
+      message: 'Usuário removido com sucesso',
     };
   }
 }

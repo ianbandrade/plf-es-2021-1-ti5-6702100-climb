@@ -67,10 +67,10 @@ export class UserRepository extends Repository<User> {
       return user;
     } catch (error) {
       if (error.code.toString() === '23505') {
-        throw new ConflictException('Email address already used');
+        throw new ConflictException('Email já cadastrado');
       } else {
         throw new InternalServerErrorException(
-          'Error while saving user in the database',
+          'Erro ao salvar o usuário na base de dados',
         );
       }
     }

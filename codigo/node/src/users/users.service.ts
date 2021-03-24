@@ -22,7 +22,7 @@ export class UsersService {
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException(
-        'The password confirmations is wrong',
+        'A senha de confirmação esta errada',
       );
     } else {
       return this.userRepository.createUser(createUserDto, UserRole.ADMIN);
@@ -39,7 +39,7 @@ export class UsersService {
       select: User.publicAtributes,
     });
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('Usuário não foi encontrado');
 
     return user;
   }
@@ -50,14 +50,14 @@ export class UsersService {
       const user = await this.findUserById(id);
       return user;
     } else {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não foi encontrado');
     }
   }
 
   async deleteUser(userId: string) {
     const result = await this.userRepository.delete({ id: userId });
     if (result.affected === 0) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não foi encontrado');
     }
   }
 }

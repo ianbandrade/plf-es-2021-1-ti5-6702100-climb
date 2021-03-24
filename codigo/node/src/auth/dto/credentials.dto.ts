@@ -2,24 +2,24 @@ import { IsNotEmpty, IsEmail, MaxLength, MinLength } from 'class-validator';
 
 export class CredentialsDto {
   @IsNotEmpty({
-    message: 'Email can not be empty',
+    message: 'Email não pode ser vazio',
   })
   @IsEmail(
     {},
     {
-      message: 'Insert a valid email address',
+      message: 'Insira um email válido',
     },
   )
   @MaxLength(200, {
-    message: 'Email address must be less than 200 characters',
+    message: 'O email deve ter no máximo 200 caracteres',
   })
   email: string;
 
   @IsNotEmpty({
-    message: 'Password can not be empty',
+    message: 'A senha não pode ser vazia',
   })
   @MinLength(6, {
-    message: 'Password must be at least 6 characters',
+    message: 'A senha deve ter no mínimo 6 caracteres',
   })
   password: string;
 }
