@@ -8,4 +8,10 @@ export default () => ({
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'postgres',
   },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'secretKey',
+    signOptions: {
+      expiresIn: process.env.JWT_EXPIRES_IN || 18000,
+    },
+  },
 });
