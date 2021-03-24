@@ -19,36 +19,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../auth/role.decorator';
 import { UserRole } from './user-roles.enum';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiConflictResponse,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiInternalServerErrorResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-  ApiUnprocessableEntityResponse,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 
 @ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  @ApiBody({ type: CreateUserDto })
-  @ApiCreatedResponse({ description: 'Created.', type: ReturnUserDto })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
-  @ApiForbiddenResponse({ description: 'Forbidden.' })
-  @ApiUnprocessableEntityResponse({ description: 'Unprocessable Entity.' })
-  @ApiConflictResponse({ description: 'Conflict.' })
-  @ApiInternalServerErrorResponse({ description: 'Internal Server Error.' })
-  @ApiBadRequestResponse({ description: 'BadRequest.' })
-  @ApiBearerAuth()
   @Role(UserRole.ADMIN)
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
