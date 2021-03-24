@@ -18,8 +18,8 @@ const mockUserRepository = () => ({
 });
 
 describe('UsersService', () => {
-  let userRepository: UserRepository;
-  let service: UsersService;
+  let userRepository: any;
+  let service: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
