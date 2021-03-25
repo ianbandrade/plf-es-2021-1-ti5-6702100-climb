@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 const BASE_URL = "/user";
 const pages = [
-  { url: `${BASE_URL}/profile`, text: "Usuários" },
+  { url: `${BASE_URL}`, text: "Perfil" },
   { url: `${BASE_URL}/apps`, text: "Aplicações" },
   {
     url: `${BASE_URL}/monitor`,
