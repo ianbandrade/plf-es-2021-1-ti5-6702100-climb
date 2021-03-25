@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Center, Flex, Text } from "@chakra-ui/layout";
-import { Button, Image } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 import { RiHome2Fill } from "react-icons/ri";
 import { colors } from ".././styles/customTheme";
@@ -12,7 +12,13 @@ const Page404 = () => {
 
   return (
     <>
-      <Center>
+      <Center
+        width="600px"
+        height="500px"
+        position="absolute"
+        top="calc(50vh - 300px)"
+        left="calc(50vw - 300px)"
+      >
         <Flex
           flexDirection="column"
           textAlign="center"
@@ -28,22 +34,8 @@ const Page404 = () => {
               : `${colors.dark.Nord1}`
           }
         >
-          <Image
-            boxSize="80px"
-            src={
-              colorMode === LIGHT
-                ? "/assets/icon/dark-circle.svg"
-                : "/assets/icon/light-circle.svg"
-            }
-            alt="Logo"
-          />
-          <Text mt={5} fontSize="4xl" fontWeight="thin">
-            404
-          </Text>
-          <Text fontSize="9xl">Opsss...</Text>
-          <Text fontSize="5xl" fontWeight="light">
-            P&aacute;gina n&atilde;o encontrada!
-          </Text>
+          <Text fontSize="8xl">Opsss...</Text>
+          <Text fontSize="4xl">P&aacute;gina n&atilde;o encontrada!</Text>
           <Link href="/">
             <Button
               size="lg"

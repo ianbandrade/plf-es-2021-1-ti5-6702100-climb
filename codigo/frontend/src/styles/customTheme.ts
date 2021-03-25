@@ -62,7 +62,7 @@ const customTheme = extendTheme({
       },
     },
     FormControl: {
-      parts: ["text", "label", "input_group", "input", "button"],
+      parts: ["text", "label", "i", "input", "button"],
       baseStyle: (props) => ({
         backgroundColor: mode(colors.dark.Nord2, colors.light.Nord6)(props),
         display: "flex",
@@ -88,7 +88,7 @@ const customTheme = extendTheme({
           fontSize: "15px",
           fontWeight: "lighter",
         },
-        input_group: {
+        i: {
           backgroundColor: mode(colors.light.Nord6, colors.dark.Nord2)(props),
           marginBottom: "12%",
           height: "40px",

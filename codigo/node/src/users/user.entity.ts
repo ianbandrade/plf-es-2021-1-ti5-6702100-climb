@@ -6,13 +6,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false, type: 'varchar', length: 200, unique: true})
+  @Column({ nullable: false, type: 'varchar', length: 200, unique: true })
   email: string;
 
   @Column({ nullable: false, type: 'varchar', length: 200 })
@@ -30,15 +31,33 @@ export class User extends BaseEntity {
   @Column({ nullable: false })
   salt: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 64 })
-  confirmationToken: string;
+  @Column({ nullable: true })
+  gitHubAccount?: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 64 })
-  recoverToken: string;
+  @Column({ nullable: true })
+  gitLabAccount?: string;
+
+  @Column({ nullable: true })
+  gitHubToken?: string;
+
+  @Column({ nullable: true })
+  gitLabToken?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
+
+  async checkPassword(password: string): Promise<boolean> {
+    const hash = await bcrypt.hash(password, this.salt);
+    return hash === this.password;
+  }
+
+  static readonly publicAtributes: (keyof User)[] = [
+    'email',
+    'name',
+    'role',
+    'id',
+  ];
 }

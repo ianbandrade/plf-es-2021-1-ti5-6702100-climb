@@ -19,4 +19,10 @@ export default () => ({
       redirectURI: process.env.GITLAB_REDIRECT_URI,
     },
   },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'secretKey',
+    signOptions: {
+      expiresIn: process.env.JWT_EXPIRES_IN || 18000,
+    },
+  },
 });

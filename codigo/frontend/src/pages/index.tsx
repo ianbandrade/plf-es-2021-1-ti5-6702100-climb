@@ -1,9 +1,8 @@
-import { Flex, useColorMode } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import LoginForm from "../components/LoginForm";
 import LoginContent from "../components/LoginContent";
 
 const Home = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
       <Flex
