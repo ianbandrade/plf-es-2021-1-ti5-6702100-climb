@@ -40,6 +40,8 @@ const Header = () => {
       align="center"
       height="140px"
       backgroundColor={setHeaderBgColor()}
+      boxShadow={isAdminPage || isUserPage ? "inner" : ""}
+      rounded={isAdminPage || isUserPage ? "md" : ""}
       padding={isAdminPage || isUserPage ? "26px" : "0"}
       paddingTop={isAdminPage || isUserPage ? "32px" : "0"}
     >
