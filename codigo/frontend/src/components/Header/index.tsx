@@ -1,10 +1,10 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex } from "@chakra-ui/layout";
 import { useRouter } from "next/router";
+import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
 import AdminHeader from "./AdminHeader";
 import RegularHeader from "./RegularHeader";
-import { colors } from "../../styles/customTheme";
 
 const LIGHT = "light";
 

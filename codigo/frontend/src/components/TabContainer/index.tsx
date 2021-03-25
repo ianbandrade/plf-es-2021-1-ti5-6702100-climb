@@ -1,8 +1,7 @@
+import { useColorMode } from "@chakra-ui/color-mode";
 import { Tab } from "@chakra-ui/react";
 import Link from "next/link";
-
 import { colors } from "../../styles/customTheme";
-import { useColorMode } from "@chakra-ui/color-mode";
 
 const LIGHT = "light";
 
@@ -26,6 +25,8 @@ const TabContainer = ({ text, url }: TabContainerProps) => {
     <Tab
       _selected={{ bgColor: setTabColor(), color: setTabTextColor() }}
       color={setTabColor()}
+      mr="4%"
+      mb="2%"
     >
       <Link href={url}>
         <a>{text}</a>

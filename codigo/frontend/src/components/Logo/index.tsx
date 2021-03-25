@@ -1,5 +1,5 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/color-mode";
+import { Flex, Image, Text } from "@chakra-ui/react";
 
 const LIGHT = "light";
 
