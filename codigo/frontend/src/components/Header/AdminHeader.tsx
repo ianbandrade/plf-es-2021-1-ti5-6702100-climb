@@ -1,28 +1,18 @@
 import RegularHeader from "./RegularHeader";
 import { Flex, Tabs, TabList } from "@chakra-ui/react";
 import TabContainer from "../TabContainer";
-import {useState,useEffect} from "react";
-const BASE_URL = "/admin";
+import { useRouter } from "next/router";
 
-const pages = [{url:"users", text: "Usuários"}
-              ,{url:"apps", text:"Aplicações"},{
-                url:"monitor", text: "Monitoramento"}];
+const BASE_URL = "/admin";
+const pages = [{url:`${BASE_URL}/users`, text: "Usuários"}
+              ,{url:`${BASE_URL}/apps`, text:"Aplicações"},{
+                url:`${BASE_URL}/monitor`, text: "Monitoramento"}];
 
 const AdminHeader = () => {
 
-  const [path,setPath] = useState("");
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    setPath(window.location.pathname.split("/").pop() || "");
-  });
-
-  
-  useEffect(() => {
-    setIndex(pages.findIndex(page => page.url === path) || 0);
-  },[path]);
-
-  const renderedTabs = pages.map(page => <TabContainer key={page.url} text={page.text} url={`${BASE_URL}/${page.url}`} />)
+  const router = useRouter();
+  const index = pages.findIndex(page => page.url === router.pathname);
+  const renderedTabs = pages.map(page => <TabContainer key={page.url} text={page.text} url={page.url} />)
 
   return (
     <Flex flexDirection="column">
