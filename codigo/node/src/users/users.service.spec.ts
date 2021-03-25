@@ -4,7 +4,6 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-
 import { User } from './user.entity';
 import { UserRole } from './user-roles.enum';
 import { UsersService } from './users.service';
@@ -54,6 +53,7 @@ describe('UsersService', () => {
         name: 'Mock User',
         password: 'mockPassword',
         passwordConfirmation: 'mockPassword',
+        role: UserRole.USER,
       };
     });
 
@@ -116,7 +116,7 @@ describe('UsersService', () => {
         email: '',
         limit: 1,
         page: 1,
-        role: '',
+        role: null,
         sort: '',
         status: true,
       };

@@ -31,10 +31,10 @@ export class UsersController {
 
   @Post()
   @Role(UserRole.ADMIN)
-  async createAdminUser(
+  async createUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
-    const user = await this.usersService.createAdminUser(createUserDto);
+    const user = await this.usersService.createUser(createUserDto);
     return { user };
   }
 

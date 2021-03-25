@@ -2,7 +2,6 @@ import { CredentialsDto } from './../auth/dto/credentials.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserRole } from './user-roles.enum';
 import * as bcrypt from 'bcrypt';
 import {
   ConflictException,
@@ -46,11 +45,8 @@ export class UserRepository extends Repository<User> {
     return { users, total };
   }
 
-  async createUser(
-    createUserDto: CreateUserDto,
-    role: UserRole,
-  ): Promise<User> {
-    const { email, name, password } = createUserDto;
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { email, name, password, role } = createUserDto;
 
     const user = this.create();
     user.email = email;

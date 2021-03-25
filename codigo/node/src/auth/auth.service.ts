@@ -1,14 +1,7 @@
 import { CredentialsDto } from './dto/credentials.dto';
-import {
-  Injectable,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from '../users/users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { User } from '../users/user.entity';
-import { UserRole } from '../users/user-roles.enum';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -18,16 +11,6 @@ export class AuthService {
     private userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
-
-  async signUp(createUserDto: CreateUserDto): Promise<User> {
-    if (createUserDto.password != createUserDto.passwordConfirmation) {
-      throw new UnprocessableEntityException(
-        'A senha de confirmação esta errada',
-      );
-    } else {
-      return this.userRepository.createUser(createUserDto, UserRole.USER);
-    }
-  }
 
   async signIn(credentialsDto: CredentialsDto) {
     const user = await this.userRepository.checkCredentials(credentialsDto);
