@@ -1,19 +1,17 @@
+import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 import {
   Flex,
-  Button,
   Table,
-  Thead,
-  Th,
   Tbody,
-  Tr,
   Td,
+  Th,
+  Thead,
   Tooltip,
-  background,
+  Tr,
+  useColorMode,
 } from "@chakra-ui/react";
-import { useColorMode } from "@chakra-ui/react";
-import { colors } from "../../styles/customTheme";
-import { EditIcon, DeleteIcon, Icon } from "@chakra-ui/icons";
 import { FiUserPlus } from "react-icons/fi";
+import { colors } from "../../styles/customTheme";
 const LIGHT = "light";
 
 const Users = () => {
@@ -42,6 +40,7 @@ const Users = () => {
               height: "40px",
               width: "160px",
               cursor: "pointer",
+              color: colors.light.Nord6,
               backgroundColor: colors.aurora.Nord14,
               borderRadius: "8px",
             }}

@@ -1,12 +1,16 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex } from "@chakra-ui/layout";
 import { useRouter } from "next/router";
+import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
 import AdminHeader from "./AdminHeader";
 import RegularHeader from "./RegularHeader";
 import { colors } from "../../styles/customTheme";
 import UserHeader from "./UserHeader";
 import { Avatar, AvatarBadge } from "@chakra-ui/react";
+
+
+
 const LIGHT = "light";
 
 const Header = () => {
