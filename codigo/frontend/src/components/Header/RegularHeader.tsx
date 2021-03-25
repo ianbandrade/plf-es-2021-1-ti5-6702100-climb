@@ -1,14 +1,14 @@
+import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Image, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { useColorMode } from "@chakra-ui/color-mode";
 
 const LIGHT = "light";
 
 const RegularHeader = () => {
   const { colorMode } = useColorMode();
   return (
-    <Box marginRight="auto">
+    <Box mr="auto" ml="5%" mt="2%">
       <Link href="/">
         <a>
           <Flex
