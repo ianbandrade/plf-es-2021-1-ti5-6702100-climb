@@ -4,9 +4,11 @@ import { UserRepository } from './users.repository';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { PassportModule } from '@nestjs/passport';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([UserRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
