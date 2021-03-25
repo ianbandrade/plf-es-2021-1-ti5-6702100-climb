@@ -25,4 +25,8 @@ export default () => ({
       expiresIn: process.env.JWT_EXPIRES_IN || 18000,
     },
   },
+  encryption: {
+    key: process.env.ENCRYPTION_KEY || 'a'.repeat(64),
+    iv: process.env.ENCRYPTION_IV || 'a'.repeat(32),
+  },
 });

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { WinstonModule } from 'nest-winston';
 
@@ -15,6 +16,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
 @Module({
   imports: [
     ConfigurationModule,
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync(typeOrmConfig),
     WinstonModule.forRoot(winstonConfig),
     VersionControlModule,
@@ -29,4 +31,5 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+}
