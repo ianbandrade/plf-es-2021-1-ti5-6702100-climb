@@ -55,6 +55,9 @@ export class User extends BaseEntity {
   }
 
   static readonly publicAtributes: (keyof User)[] = [
+    'gitHubAccount',
+    'gitLabAccount',
+    'status',
     'email',
     'name',
     'role',

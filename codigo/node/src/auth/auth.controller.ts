@@ -12,7 +12,7 @@ import { CredentialsDto } from './dto/credentials.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/user.entity';
 import { GetUser } from './get-user.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -37,6 +37,7 @@ export class AuthController {
   }
 
   @Get('/me')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard())
   getMe(@GetUser() user: User): User {
     return user;

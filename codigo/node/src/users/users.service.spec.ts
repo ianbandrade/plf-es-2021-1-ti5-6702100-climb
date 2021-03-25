@@ -78,7 +78,7 @@ describe('UsersService', () => {
       expect(userRepository.findOne).not.toHaveBeenCalled();
 
       const result = await service.findUserById('mockId');
-      const select = ['email', 'name', 'role', 'id'];
+      const select = ['gitHubAccount', 'gitLabAccount', 'status', 'email', 'name', 'role', 'id'];
       expect(userRepository.findOne).toHaveBeenCalledWith('mockId', { select });
       expect(result).toEqual('mockUser');
     });
