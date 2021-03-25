@@ -8,6 +8,11 @@ export default () => ({
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'postgres',
   },
+  admin: {
+    email: process.env.ADMIN_EMAIL || 'admin@example.com',
+    name: process.env.ADMIN_NAME || 'admin',
+    password: process.env.ADMIN_PASSWORD || 'admin',
+  },
   versionControl: {
     github: {
       clientID: process.env.GITHUB_CLIENT_ID,

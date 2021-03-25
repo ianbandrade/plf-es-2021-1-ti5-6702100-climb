@@ -2,6 +2,7 @@ import { UpdateUserDto } from './dto/update-users.dto';
 import {
   Injectable,
   NotFoundException,
+  OnModuleInit,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,13 +12,30 @@ import { User } from './user.entity';
 import { UserRole } from './user-roles.enum';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { ReturnAllUserDto } from './dto/return-all-users.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    private configService: ConfigService,
   ) {}
+
+  onModuleInit() {
+    this.userRepository.find().then((users) => {
+      if (users.length === 0) {
+        this.createAdminUser({
+          email: this.configService.get<string>('admin.email'),
+          name: this.configService.get<string>('admin.name'),
+          password: this.configService.get<string>('admin.password'),
+          passwordConfirmation: this.configService.get<string>(
+            'admin.password',
+          ),
+        });
+      }
+    });
+  }
 
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
