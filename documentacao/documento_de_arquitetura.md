@@ -43,6 +43,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **04/03/2021** | Arthur Rocha    | Correção de requisitos                                                                                             | 1.2.3      |
 | **18/03/2021** | Gabriel Chaves  | Adição da imagem da Visão Geral da Solução                                                                         | 2.0.0      |
 | **18/03/2021** | Ian Bittencourt | Adição de novas história de usuários, bem como definições e aberviaturas                                           | 2.1.0      |
+| **25/03/2021** | Gabriel Chaves  | Adição de uma breve explicação da Visão Geral da Solução                                                           | 2.1.1      |
 
 ## SUMÁRIO
 
@@ -185,6 +186,8 @@ Os objetivos específicos são:
 ![Visão Geral da Solução](imagens/diagrama_de_visao_geral.png 'Visão Geral da Solução')
 
 **Figura 1 - Visão Geral da Solução**
+
+O projeto terá dois tipos de front-end, web e móvel nativo, sendo que o móvel usará uma comunicação em tempo real. Eles se comunicarão com uma aplicação de back-end, na qual possui a função de servir os dados referentes aos usuários, realizar integrações com o GitHub e Gitlab, e encaminhar solicitações de orquestração das aplicações dos usuários para outro serviço de back-end. Este outro serviço tem como objetivo realizar o gerenciamento da orquestração das aplicações, utilizando para isso o Kubernetes em conjunto com o Traefik, que serão monitorados pela dupla Prometheus e Grafana.
 
 ## 3.1. Visão de Negócio (Funcionalidades)
 
