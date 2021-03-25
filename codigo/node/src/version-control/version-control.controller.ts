@@ -7,13 +7,13 @@ import { StatePipe } from './pipes/statePipe.pipe';
 @ApiTags('Version Control')
 @Controller('version-control')
 export class VersionControlController {
-  constructor(
-    private versionControlService: VersionControlService,
-  ) {
-  }
+  constructor(private versionControlService: VersionControlService) {}
 
   @Get('github')
-  async github(@Query('code') code: string, @Query('state', new StatePipe()) id: string) {
+  async github(
+    @Query('code') code: string,
+    @Query('state', new StatePipe()) id: string,
+  ) {
     await this.versionControlService.github(code, id);
 
     return {
@@ -22,7 +22,10 @@ export class VersionControlController {
   }
 
   @Get('gitlab')
-  async gitlab(@Query('code') code: string, @Query('state', new StatePipe()) id: string) {
+  async gitlab(
+    @Query('code') code: string,
+    @Query('state', new StatePipe()) id: string,
+  ) {
     await this.versionControlService.gitlab(code, id);
 
     return {

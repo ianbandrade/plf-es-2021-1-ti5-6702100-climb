@@ -1,4 +1,9 @@
-import { HttpService, Injectable, InternalServerErrorException, NotAcceptableException } from '@nestjs/common';
+import {
+  HttpService,
+  Injectable,
+  InternalServerErrorException,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -22,17 +27,23 @@ export class VersionControlService {
     private httpService: HttpService,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {
-  }
+  ) {}
 
   async github(code: string, id: string) {
     this.checkUser(id);
 
-    const accessToken = await this.getAccessToken('https://github.com/login/oauth/access_token', {
-      client_id: this.configService.get<string>('versionControl.github.clientID'),
-      client_secret: this.configService.get<string>('versionControl.github.clientSecret'),
-      code,
-    });
+    const accessToken = await this.getAccessToken(
+      'https://github.com/login/oauth/access_token',
+      {
+        client_id: this.configService.get<string>(
+          'versionControl.github.clientID',
+        ),
+        client_secret: this.configService.get<string>(
+          'versionControl.github.clientSecret',
+        ),
+        code,
+      },
+    );
 
     await this.usersRepository.update(id, {
       gitHubAccount: await this.getGitHubAccount(accessToken),
@@ -43,13 +54,22 @@ export class VersionControlService {
   async gitlab(code: string, id: string) {
     this.checkUser(id);
 
-    const accessToken = await this.getAccessToken('https://gitlab.com/oauth/token', {
-      client_id: this.configService.get<string>('versionControl.gitlab.clientID'),
-      client_secret: this.configService.get<string>('versionControl.gitlab.clientSecret'),
-      redirect_uri: this.configService.get<string>('versionControl.gitlab.redirectURI'),
-      grant_type: 'authorization_code',
-      code,
-    });
+    const accessToken = await this.getAccessToken(
+      'https://gitlab.com/oauth/token',
+      {
+        client_id: this.configService.get<string>(
+          'versionControl.gitlab.clientID',
+        ),
+        client_secret: this.configService.get<string>(
+          'versionControl.gitlab.clientSecret',
+        ),
+        redirect_uri: this.configService.get<string>(
+          'versionControl.gitlab.redirectURI',
+        ),
+        grant_type: 'authorization_code',
+        code,
+      },
+    );
 
     await this.usersRepository.update(id, {
       gitLabAccount: await this.getGitLabAccount(accessToken),
@@ -63,12 +83,14 @@ export class VersionControlService {
     const usersChunks = chunkArray(allUsers, 25);
 
     for (const users of usersChunks) {
-      Promise.allSettled(users.map(async (user: User) => {
-        this.usersRepository.update(user.id, {
-          gitHubAccount: await this.getGitHubAccount(user.gitHubToken),
-          gitLabAccount: await this.getGitLabAccount(user.gitLabToken),
-        });
-      }));
+      Promise.allSettled(
+        users.map(async (user: User) => {
+          this.usersRepository.update(user.id, {
+            gitHubAccount: await this.getGitHubAccount(user.gitHubToken),
+            gitLabAccount: await this.getGitLabAccount(user.gitLabToken),
+          });
+        }),
+      );
     }
   }
 
@@ -76,33 +98,44 @@ export class VersionControlService {
     const user = await this.usersRepository.findOne(id);
 
     if (!user) {
-      throw new NotAcceptableException('Não foi possível identificar o usuário');
+      throw new NotAcceptableException(
+        'Não foi possível identificar o usuário',
+      );
     }
   }
 
-  private async getAccessToken(tokenURI: string, params: tokenParams): Promise<string> {
+  private async getAccessToken(
+    tokenURI: string,
+    params: tokenParams,
+  ): Promise<string> {
     const requestConfig = { params, headers: { accept: 'application/json' } };
 
-    return this.httpService.post(tokenURI, null, requestConfig).toPromise()
-      .then(response => response.data.access_token)
+    return this.httpService
+      .post(tokenURI, null, requestConfig)
+      .toPromise()
+      .then((response) => response.data.access_token)
       .catch(() => {
         throw new InternalServerErrorException();
       });
   }
 
   private async getGitHubAccount(token: string) {
-    return this.httpService.get('https://api.github.com/user', {
-      headers: { Authorization: `Bearer ${token}` },
-    }).toPromise()
-      .then(response => response.data.login)
+    return this.httpService
+      .get('https://api.github.com/user', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .toPromise()
+      .then((response) => response.data.login)
       .catch(() => null);
   }
 
   private async getGitLabAccount(token: string) {
-    return this.httpService.get('https://gitlab.com/api/v4/user', {
-      headers: { Authorization: `Bearer ${token}` },
-    }).toPromise()
-      .then(response => response.data.username)
+    return this.httpService
+      .get('https://gitlab.com/api/v4/user', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .toPromise()
+      .then((response) => response.data.username)
       .catch(() => null);
   }
 }

@@ -14,5 +14,4 @@ import { VersionControlService } from './version-control.service';
   controllers: [VersionControlController],
   providers: [VersionControlService],
 })
-export class VersionControlModule {
-}
+export class VersionControlModule {}
