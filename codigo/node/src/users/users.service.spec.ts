@@ -8,6 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { ConfigModule } from '@nestjs/config';
 
 const mockUserRepository = () => ({
   createUser: jest.fn(),
@@ -23,6 +24,7 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule],
       providers: [
         UsersService,
         {
