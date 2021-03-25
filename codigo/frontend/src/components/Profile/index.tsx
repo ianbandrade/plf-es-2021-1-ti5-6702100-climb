@@ -29,6 +29,10 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
     return colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
   }
 
+  function handleButtonHover() {
+    return colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
+  }
+
   return (
     <Flex ml="150px" mt="30px">
       <Flex>
@@ -38,6 +42,7 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
         <Heading>{name}</Heading>
         <Flex mt="15px" justifyContent="space-between" width="250px">
           <Button
+            _hover={{ bgColor: handleButtonHover() }}
             bgColor={handleButtonBgColor()}
             color={handleButtonTextColor()}
           >
@@ -45,6 +50,7 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
             GitHub
           </Button>
           <Button
+            _hover={{ bgColor: handleButtonHover() }}
             bgColor={handleButtonBgColor()}
             color={handleButtonTextColor()}
           >
