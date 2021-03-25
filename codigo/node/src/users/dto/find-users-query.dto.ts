@@ -1,16 +1,11 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseQueryParametersDto } from 'src/shared/dto/base-query-parameters.dto';
 
 export class FindUsersQueryDto extends BaseQueryParametersDto {
-  @ApiPropertyOptional()
-  name: string;
+  name?: string;
 
-  @ApiPropertyOptional()
-  email: string;
+  email?: string;
 
-  @ApiPropertyOptional()
-  status: boolean;
+  status?: boolean;
 
-  @ApiPropertyOptional()
-  role: string;
+  role?: string;
 }

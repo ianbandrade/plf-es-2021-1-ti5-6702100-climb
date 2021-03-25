@@ -1,12 +1,7 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-
 export abstract class BaseQueryParametersDto {
-  @ApiPropertyOptional()
-  sort: string;
+  sort?: string;
 
-  @ApiPropertyOptional()
-  page: number;
+  page?: number;
 
-  @ApiPropertyOptional()
-  limit: number;
+  limit?: number;
 }
