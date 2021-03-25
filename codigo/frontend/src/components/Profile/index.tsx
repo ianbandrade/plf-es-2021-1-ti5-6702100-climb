@@ -1,8 +1,7 @@
-import { Flex, Avatar, Heading, Button } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icons";
+import { Avatar, Button, Flex, Heading, useColorMode } from "@chakra-ui/react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
-import { useColorMode } from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
 const LIGHT = "light";
 
@@ -36,7 +35,12 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
   return (
     <Flex ml="150px" mt="30px">
       <Flex>
-        <Avatar width="100px" height="100px" mr="18px" />
+        <Avatar
+          width="100px"
+          height="100px"
+          mr="18px"
+          bgColor={colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1}
+        />
       </Flex>
       <Flex flexDirection="column">
         <Heading>{name}</Heading>

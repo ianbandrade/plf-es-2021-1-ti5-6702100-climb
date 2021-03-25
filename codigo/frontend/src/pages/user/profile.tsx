@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
-import Profile from "../../components/Profile";
 import { useState } from "react";
+import Profile from "../../components/Profile";
+
 interface User {
   name: string;
   userName: string;
@@ -9,8 +10,10 @@ interface User {
   image?: string;
 }
 
+const LIGHT = "light";
+
 const UserPage = () => {
-  const [user, setUser] = useState<User>({
+  const [user] = useState<User>({
     name: "João Guilherme Martins Borborema",
     userName: "JoaoGuiMB",
   });
