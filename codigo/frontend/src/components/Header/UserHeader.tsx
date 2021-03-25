@@ -1,11 +1,11 @@
-import RegularHeader from "./RegularHeader";
-import { Flex, Tabs, TabList } from "@chakra-ui/react";
-import TabContainer from "../TabContainer";
+import { Flex, TabList, Tabs } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import TabContainer from "../TabContainer";
+import RegularHeader from "./RegularHeader";
 
 const BASE_URL = "/user";
 const pages = [
-  { url: `${BASE_URL}`, text: "Perfil" },
+  { url: `${BASE_URL}/profile`, text: "Perfil" },
   { url: `${BASE_URL}/apps`, text: "Aplicações" },
   {
     url: `${BASE_URL}/monitor`,
@@ -23,7 +23,7 @@ const UserHeader = () => {
   return (
     <Flex flexDirection="column">
       <RegularHeader />
-      <Tabs variant="soft-rounded" mt="12px" index={index}>
+      <Tabs variant="soft-rounded" mt="12px" ml="3%" index={index}>
         <TabList>{renderedTabs}</TabList>
       </Tabs>
     </Flex>

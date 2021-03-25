@@ -1,14 +1,15 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex } from "@chakra-ui/layout";
+import { Avatar, AvatarBadge } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
 import AdminHeader from "./AdminHeader";
 import RegularHeader from "./RegularHeader";
 import UserHeader from "./UserHeader";
-import { Avatar, AvatarBadge } from "@chakra-ui/react";
 
 const LIGHT = "light";
+const DARK = "dark";
 
 const Header = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const Header = () => {
   function setHeaderBgColor() {
     if ((isAdminPage || isUserPage) && colorMode === LIGHT) {
       return colors.light.Nord5;
-    } else if ((isAdminPage || isUserPage) && colorMode === "dark") {
+    } else if ((isAdminPage || isUserPage) && colorMode === DARK) {
       return colors.dark.Nord2;
     }
   }
@@ -45,8 +46,19 @@ const Header = () => {
       {handleRenderHeader()}
       <Box marginLeft="auto">
         {isUserPage && (
-          <Avatar mr="18px">
-            <AvatarBadge boxSize="1em" bg="green.500" />
+          <Avatar
+            mr="35px"
+            bgColor={
+              colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1
+            }
+          >
+            <AvatarBadge
+              boxSize="1em"
+              bg={colors.aurora.Nord14}
+              borderColor={
+                colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1
+              }
+            />
           </Avatar>
         )}
         <ThemeToggle />
