@@ -39,13 +39,7 @@ export class UserRepository extends Repository<User> {
     if (queryDto.limit) query.take(+queryDto.limit);
     if (queryDto.sort) query.orderBy(JSON.parse(queryDto.sort));
 
-    query.select([
-      'user.id',
-      'user.name',
-      'user.email',
-      'user.role',
-      'user.status',
-    ]);
+    query.select(User.publicAttributes.map((userKey) => `user.${userKey}`));
 
     const [users, total] = await query.getManyAndCount();
 

@@ -54,7 +54,7 @@ export class UsersService implements OnModuleInit {
 
   async findUserById(userId: string): Promise<User> {
     const user = await this.userRepository.findOne(userId, {
-      select: User.publicAtributes,
+      select: User.publicAttributes,
     });
 
     if (!user) throw new NotFoundException('Usuário não foi encontrado');

@@ -8,15 +8,30 @@ export default () => ({
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'postgres',
   },
+  admin: {
+    email: process.env.ADMIN_EMAIL || 'admin@example.com',
+    name: process.env.ADMIN_NAME || 'admin',
+    password: process.env.ADMIN_PASSWORD || 'admin',
+  },
+  versionControl: {
+    github: {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    },
+    gitlab: {
+      clientID: process.env.GITLAB_CLIENT_ID,
+      clientSecret: process.env.GITLAB_CLIENT_SECRET,
+      redirectURI: process.env.GITLAB_REDIRECT_URI,
+    },
+  },
   jwt: {
     secret: process.env.JWT_SECRET || 'secretKey',
     signOptions: {
       expiresIn: process.env.JWT_EXPIRES_IN || 18000,
     },
   },
-  admin: {
-    email: process.env.ADMIN_EMAIL || 'admin@example.com',
-    name: process.env.ADMIN_NAME || 'admin',
-    password: process.env.ADMIN_PASSWORD || 'admin',
+  encryption: {
+    key: process.env.ENCRYPTION_KEY || 'a'.repeat(64),
+    iv: process.env.ENCRYPTION_IV || 'a'.repeat(32),
   },
 });

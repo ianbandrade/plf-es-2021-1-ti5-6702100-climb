@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { encryptionTransformer } from 'src/shared/transformers/encryption.transformer';
 
 @Entity()
 export class User extends BaseEntity {
@@ -37,10 +38,10 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   gitLabAccount?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, transformer: encryptionTransformer })
   gitHubToken?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, transformer: encryptionTransformer })
   gitLabToken?: string;
 
   @CreateDateColumn()
@@ -54,7 +55,10 @@ export class User extends BaseEntity {
     return hash === this.password;
   }
 
-  static readonly publicAtributes: (keyof User)[] = [
+  static readonly publicAttributes: (keyof User)[] = [
+    'gitHubAccount',
+    'gitLabAccount',
+    'status',
     'email',
     'name',
     'role',
