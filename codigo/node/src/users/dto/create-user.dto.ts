@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { UserRole } from '../user-roles.enum';
 export class CreateUserDto {
   @IsNotEmpty({
     message: 'Email não pode ser vazio',
@@ -37,4 +44,10 @@ export class CreateUserDto {
     message: 'A confirmação de senha deve ter no mínimo 6 caracteres',
   })
   passwordConfirmation: string;
+
+  @IsNotEmpty({
+    message: 'O cargo não pode ser vazio',
+  })
+  @IsEnum(UserRole)
+  role: UserRole;
 }

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { ConfigModule } from '@nestjs/config';
+import { User } from './user.entity';
 
 const mockUserRepository = () => ({
   createUser: jest.fn(),
@@ -80,7 +81,7 @@ describe('UsersService', () => {
       expect(userRepository.findOne).not.toHaveBeenCalled();
 
       const result = await service.findUserById('mockId');
-      const select = ['email', 'name', 'role', 'id'];
+      const select = User.publicAttributes;
       expect(userRepository.findOne).toHaveBeenCalledWith('mockId', { select });
       expect(result).toEqual('mockUser');
     });

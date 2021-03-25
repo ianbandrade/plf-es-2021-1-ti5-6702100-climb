@@ -54,10 +54,15 @@ export class User extends BaseEntity {
     return hash === this.password;
   }
 
-  static readonly publicAtributes: (keyof User)[] = [
-    'email',
-    'name',
-    'role',
-    'id',
-  ];
+  static get publicAttributes(): (keyof User)[] {
+    return [
+      'id',
+      'name',
+      'email',
+      'role',
+      'status',
+      'gitHubAccount',
+      'gitLabAccount',
+    ];
+  }
 }
