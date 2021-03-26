@@ -22,7 +22,7 @@ const Header = () => {
     if ((isAdminPage || isUserPage) && colorMode === LIGHT) {
       return colors.light.Nord5;
     } else if ((isAdminPage || isUserPage) && colorMode === DARK) {
-      return colors.dark.Nord2;
+      return colors.dark.Nord1;
     }
   }
 
@@ -40,6 +40,8 @@ const Header = () => {
       align="center"
       height="140px"
       backgroundColor={setHeaderBgColor()}
+      boxShadow={isAdminPage || isUserPage ? "base" : ""}
+      rounded={isAdminPage || isUserPage ? "md" : ""}
       padding={isAdminPage || isUserPage ? "26px" : "0"}
       paddingTop={isAdminPage || isUserPage ? "32px" : "0"}
     >
