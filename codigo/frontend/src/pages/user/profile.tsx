@@ -18,7 +18,7 @@ const UserPage = () => {
     userName: "JoaoGuiMB",
   });
   return (
-    <Flex width="100vw" height="75vh">
+    <Flex width="100vw">
       <Profile user={user} />
     </Flex>
   );
