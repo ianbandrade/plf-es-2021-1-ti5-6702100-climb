@@ -33,6 +33,22 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
       avatarBg: colors.dark.Nord1
     }
 
+  const sites = [{ site: "GitHub", "icon": AiFillGithub },
+  { site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329"}]
+
+  const integrationButtons = sites
+    .map(integration =>
+      <Button
+        _hover={{ bgColor: color.buttonHv }}
+        bgColor={color.buttonBg}
+        color={color.buttonTxt}
+        key={integration.site}
+      >
+        <Icon as={integration.icon} mr="10px" boxSize="24px" color={integration.iconColor} />
+        {integration.site}
+      </Button>
+    )
+
   return (
     <Flex ml="150px" mt="30px">
       <Flex>
@@ -46,22 +62,7 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
       <Flex flexDirection="column">
         <Heading>{name}</Heading>
         <Flex mt="15px" justifyContent="space-between" width="250px">
-          <Button
-            _hover={{ bgColor: color.buttonHv}}
-            bgColor={color.buttonBg}
-            color={color.buttonTxt}
-          >
-            <Icon as={AiFillGithub} mr="10px" boxSize="24px" />
-            GitHub
-          </Button>
-          <Button
-            _hover={{ bgColor: color.buttonHv}}
-            bgColor={color.buttonBg}
-            color={color.buttonTxt}
-          >
-            <Icon as={RiGitlabFill} mr="10px" boxSize="24px" color="#E24329" />
-            GitLab
-          </Button>
+          {integrationButtons}
         </Flex>
       </Flex>
     </Flex>
