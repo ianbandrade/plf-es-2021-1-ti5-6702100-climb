@@ -13,6 +13,11 @@ import {
 import { FiUserPlus } from "react-icons/fi";
 import { colors } from "../../styles/customTheme";
 const LIGHT = "light";
+interface User {
+  displayName: "João Guilherme Martins Borborema",
+  mail: "jborborema@sga.pucminas.br",
+  userName: "JoaoGuiMB"
+}
 
 const Users = () => {
   const { colorMode } = useColorMode();
@@ -20,6 +25,43 @@ const Users = () => {
   function setTableBgColor() {
     return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
   }
+
+  const usersList: User[] = [
+    {
+      displayName: "João Guilherme Martins BorboremaJoão Guilherme Martins BorboremaJoão Guilherme Martins Borborema",
+      mail: "jborborema@sga.pucminas.brjborborema@sga.pucminas.brjborborema@sga.pucminas.br",
+      userName: "JoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMB"
+    }
+  ];
+
+  const cellItemLength  = "36ch";
+
+  const userCells = usersList.map(user => (
+    <Tr key={user.mail}>
+      <Td maxWidth={cellItemLength} isTruncated title={user.displayName}>{user.displayName}</Td>
+      <Td maxWidth={cellItemLength} isTruncated title={user.mail}>{user.mail}</Td>
+      <Td maxWidth={cellItemLength} isTruncated title={user.mail}>{user.userName}</Td>
+      <Td>
+        <Flex justifyContent="space-around">
+          <Tooltip label="Editar usuário" placement="top">
+            <EditIcon
+              color={colors.aurora.Nord13}
+              _hover={{ cursor: "pointer" }}
+              onClick={() => alert("oi")}
+              boxSize="18px"
+            />
+          </Tooltip>
+          <Tooltip label="Deletar usuário" placement="top">
+            <DeleteIcon
+              color={colors.aurora.Nord11}
+              _hover={{ cursor: "pointer" }}
+              onClick={() => alert("oi")}
+              boxSize="18px"
+            />
+          </Tooltip>
+        </Flex>
+      </Td>
+    </Tr>));
 
   return (
     <Flex justifyContent="center" alignItems="center" mt="4%">
@@ -74,106 +116,7 @@ const Users = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>João Guilherme Martins Borborema</Td>
-              <Td>jborborema@sga.pucminas.br</Td>
-              <Td>JoaoGuiMB</Td>
-              <Td>
-                <Flex justifyContent="space-around">
-                  <Tooltip label="Editar usuário" placement="top">
-                    <EditIcon
-                      color={colors.aurora.Nord13}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                  <Tooltip label="Deletar usuário" placement="top">
-                    <DeleteIcon
-                      color={colors.aurora.Nord11}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                </Flex>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>João Guilherme Martins Borborema</Td>
-              <Td>jborborema@sga.pucminas.br</Td>
-              <Td>JoaoGuiMB</Td>
-              <Td>
-                <Flex justifyContent="space-around">
-                  <Tooltip label="Editar usuário" placement="top">
-                    <EditIcon
-                      color={colors.aurora.Nord13}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                  <Tooltip label="Deletar usuário" placement="top">
-                    <DeleteIcon
-                      color={colors.aurora.Nord11}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                </Flex>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>João Guilherme Martins Borborema</Td>
-              <Td>jborborema@sga.pucminas.br</Td>
-              <Td>JoaoGuiMB</Td>
-              <Td>
-                <Flex justifyContent="space-around">
-                  <Tooltip label="Editar usuário" placement="top">
-                    <EditIcon
-                      color={colors.aurora.Nord13}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                  <Tooltip label="Deletar usuário" placement="top">
-                    <DeleteIcon
-                      color={colors.aurora.Nord11}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                </Flex>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>João Guilherme Martins Borborema</Td>
-              <Td>jborborema@sga.pucminas.br</Td>
-              <Td>JoaoGuiMB</Td>
-              <Td>
-                <Flex justifyContent="space-around">
-                  <Tooltip label="Editar usuário" placement="top">
-                    <EditIcon
-                      color={colors.aurora.Nord13}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                  <Tooltip label="Deletar usuário" placement="top">
-                    <DeleteIcon
-                      color={colors.aurora.Nord11}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => alert("oi")}
-                      boxSize="18px"
-                    />
-                  </Tooltip>
-                </Flex>
-              </Td>
-            </Tr>
+            {userCells}
           </Tbody>
         </Table>
       </Flex>
