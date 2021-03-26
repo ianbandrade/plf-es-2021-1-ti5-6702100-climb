@@ -20,17 +20,18 @@ interface ProfileProps {
 const Profile = ({ user: { name, userName } }: ProfileProps) => {
   const { colorMode } = useColorMode();
 
-  function handleButtonBgColor() {
-    return colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
-  }
-
-  function handleButtonTextColor() {
-    return colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-  }
-
-  function handleButtonHover() {
-    return colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
-  }
+  const color = colorMode === LIGHT ?
+    {
+      buttonBg: colors.dark.Nord2,
+      buttonTxt: colors.light.Nord6,
+      buttonHv: colors.dark.Nord0,
+      avatarBg: colors.light.Nord4
+    } : {
+      buttonBg: colors.light.Nord6,
+      buttonTxt: colors.dark.Nord2,
+      buttonHv: colors.light.Nord4,
+      avatarBg: colors.dark.Nord1
+    }
 
   return (
     <Flex ml="150px" mt="30px">
@@ -39,24 +40,24 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
           width="100px"
           height="100px"
           mr="18px"
-          bgColor={colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1}
+          bgColor={color.avatarBg}
         />
       </Flex>
       <Flex flexDirection="column">
         <Heading>{name}</Heading>
         <Flex mt="15px" justifyContent="space-between" width="250px">
           <Button
-            _hover={{ bgColor: handleButtonHover() }}
-            bgColor={handleButtonBgColor()}
-            color={handleButtonTextColor()}
+            _hover={{ bgColor: color.buttonHv}}
+            bgColor={color.buttonBg}
+            color={color.buttonTxt}
           >
             <Icon as={AiFillGithub} mr="10px" boxSize="24px" />
             GitHub
           </Button>
           <Button
-            _hover={{ bgColor: handleButtonHover() }}
-            bgColor={handleButtonBgColor()}
-            color={handleButtonTextColor()}
+            _hover={{ bgColor: color.buttonHv}}
+            bgColor={color.buttonBg}
+            color={color.buttonTxt}
           >
             <Icon as={RiGitlabFill} mr="10px" boxSize="24px" color="#E24329" />
             GitLab

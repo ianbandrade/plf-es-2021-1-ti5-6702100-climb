@@ -10,8 +10,6 @@ interface User {
   image?: string;
 }
 
-const LIGHT = "light";
-
 const UserPage = () => {
   const [user] = useState<User>({
     name: "João Guilherme Martins Borborema",
