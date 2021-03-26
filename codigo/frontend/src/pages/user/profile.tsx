@@ -10,15 +10,13 @@ interface User {
   image?: string;
 }
 
-const LIGHT = "light";
-
 const UserPage = () => {
   const [user] = useState<User>({
     name: "João Guilherme Martins Borborema",
     userName: "JoaoGuiMB",
   });
   return (
-    <Flex width="100vw" height="75vh">
+    <Flex width="100vw">
       <Profile user={user} />
     </Flex>
   );
