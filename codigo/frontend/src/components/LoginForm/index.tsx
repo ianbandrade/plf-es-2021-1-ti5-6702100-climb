@@ -1,56 +1,48 @@
-import { EmailIcon, LockIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Text,
-  useStyleConfig,
-} from "@chakra-ui/react";
+import { ReactNode } from "react";
+import { FormControl, Text } from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
+import { useColorMode } from "@chakra-ui/color-mode";
 
-const INPUT_GROUP = "i";
+const LIGHT = "light";
+interface LoginFormProps {
+  formTitle: string;
+  children?: ReactNode;
+}
 
-const LoginForm = () => {
-  const styles = useStyleConfig("FormControl");
-
+const LoginForm = ({ formTitle, children }: LoginFormProps) => {
+  const { colorMode } = useColorMode();
+  const formColor =
+    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
+  const textColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
   return (
     <FormControl
       as="form"
-      sx={styles}
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      backgroundColor={formColor}
+      maxWidth="390px"
+      maxHeight="450px"
+      minWidth="350px"
+      minHeight="400px"
+      width="25%"
+      mr="8%"
+      padding="25px"
+      borderRadius="20"
       fontFamily="Alatsi"
       boxShadow="dark-lg"
       rounded="md"
     >
-      <Text fontWeight={"semibold"} as="text">
-        Entrar
-      </Text>
-      <FormLabel>E-mail</FormLabel>
-      <InputGroup>
-        <InputLeftAddon as={INPUT_GROUP} children={<EmailIcon />} />
-        <Input as="input" placeholder="E-mail" />
-      </InputGroup>
-      <FormLabel>Senha</FormLabel>
-      <InputGroup>
-        <InputLeftAddon as={INPUT_GROUP} children={<LockIcon />} />
-        <Input as="input" placeholder="Senha" type="password" />
-      </InputGroup>
-
-      <Button
-        _hover={{
-          backgroundColor: "rgba(129, 161, 193, 0.9);",
-        }}
-        bgColor={colors.aurora.Nord9}
-        textColor={colors.light.Nord4}
-        boxShadow="2xl"
-        rounded="md"
-        as="button"
-        size="lg"
+      <Text
+        fontWeight={"semibold"}
+        fontSize="40px"
+        marginBottom="5%"
+        color={textColor}
       >
-        Entrar
-      </Button>
+        {formTitle}
+      </Text>
+      {children}
     </FormControl>
   );
 };
