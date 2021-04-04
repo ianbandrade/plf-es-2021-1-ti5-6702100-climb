@@ -16,6 +16,7 @@ interface InputProps {
     inputBgColor?: string;
     marginBottom?: string;
   };
+  type: string;
 }
 
 const InputComponent = ({
@@ -25,6 +26,7 @@ const InputComponent = ({
   value,
   onChangeInput,
   style,
+  type,
 }: InputProps) => {
   return (
     <>
@@ -39,6 +41,7 @@ const InputComponent = ({
       >
         <InputLeftAddon children={icon} />
         <Input
+          type={type}
           placeholder={placeholder}
           color={style?.inputTextColor}
           backgroundColor={style?.inputBgColor}

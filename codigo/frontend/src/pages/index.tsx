@@ -54,6 +54,7 @@ const Home = () => {
           }}
         >
           <Input
+            type="text"
             label="E-mail"
             placeholder="E-mail"
             icon={<EmailIcon />}
@@ -67,6 +68,7 @@ const Home = () => {
             }}
           />
           <Input
+            type={"password"}
             label="Senha"
             placeholder="Senha"
             icon={<LockIcon />}

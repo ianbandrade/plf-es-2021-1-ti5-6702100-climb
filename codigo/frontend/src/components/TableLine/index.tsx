@@ -11,8 +11,8 @@ interface TableLineProps {
 const TableLine = ({ user }: TableLineProps) => {
   return (
     <Tr key={Math.random()}>
-      <Td maxWidth={cellItemLength} isTruncated title={user.displayName}>
-        {user.displayName}
+      <Td maxWidth={cellItemLength} isTruncated title={user.name}>
+        {user.name}
       </Td>
       <Td maxWidth={cellItemLength} isTruncated title={user.email}>
         {user.email}

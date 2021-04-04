@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
+import { Icon } from "@chakra-ui/icons";
 import {
   Flex,
   Table,
@@ -30,9 +30,11 @@ import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 const LIGHT = "light";
 
 export interface User {
-  displayName: string;
+  name: string;
   email: string;
   userName: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 const NUMBER_OF_USERS_PER_PAGE = 5;
@@ -50,62 +52,62 @@ const Users = () => {
 
   const usersList: User[] = [
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "asdasd",
+      name: "asdasd",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "adsdorema",
+      name: "adsdorema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "asdasdsadema",
+      name: "asdasdsadema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "Jauuuuuuborema",
+      name: "Jauuuuuuborema",
       email: "jborborema@sga.pucminas",
       userName: "qqqqqq",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "JoaoGuiMB",
     },
     {
-      displayName: "João Guilherme Martins Borborema",
+      name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
       userName: "asdasdsd",
     },
@@ -154,9 +156,11 @@ const Users = () => {
     for (let i = 1; i < data.length; i++) {
       const user = data[i];
       const newUser: User = {
-        displayName: user[0],
+        name: user[0],
         email: user[1],
         userName: user[2],
+        password: user[3],
+        confirmPassword: user[3],
       };
       newUsers.push(newUser);
     }
@@ -201,9 +205,11 @@ const Users = () => {
 
   function saveUser() {
     const newUser: User = {
-      displayName: nameField,
+      name: nameField,
       email: emailField,
       userName: "",
+      password: passField,
+      confirmPassword: confirmPassField,
     };
     setUsers([...users, newUser]);
     onClose();
@@ -226,6 +232,7 @@ const Users = () => {
       <ModalComponent isOpen={isOpen} onClose={onClose}>
         <Form style={{ bgColor: formColor, textColor }}>
           <Input
+            type={"text"}
             label="Nome"
             placeholder="Nome"
             style={inputStyle}
@@ -234,6 +241,7 @@ const Users = () => {
             value={nameField}
           />
           <Input
+            type={"email"}
             label="E-mail"
             placeholder="Email"
             style={inputStyle}
@@ -242,6 +250,7 @@ const Users = () => {
             value={emailField}
           />
           <Input
+            type={"password"}
             label="Senha"
             placeholder="Senha"
             style={inputStyle}
@@ -250,6 +259,7 @@ const Users = () => {
             value={passField}
           />
           <Input
+            type={"password"}
             label="Confirma senha"
             placeholder="Confirma senha"
             style={inputStyle}
