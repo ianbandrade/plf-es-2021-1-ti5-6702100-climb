@@ -1,3 +1,4 @@
+import { useState, useEffect, ReactNode } from "react";
 import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -8,15 +9,22 @@ import {
   Thead,
   Tooltip,
   Tr,
+  Tfoot,
   useColorMode,
+  Button,
+  Heading,
 } from "@chakra-ui/react";
 import { FiUserPlus } from "react-icons/fi";
 import { colors } from "../../styles/customTheme";
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+import CSVReader from "react-csv-reader";
+
 const LIGHT = "light";
+
 interface User {
-  displayName: "João Guilherme Martins Borborema",
-  mail: "jborborema@sga.pucminas.br",
-  userName: "JoaoGuiMB"
+  displayName: string;
+  email: string;
+  userName: string;
 }
 
 const Users = () => {
@@ -28,43 +36,155 @@ const Users = () => {
 
   const usersList: User[] = [
     {
-      displayName: "João Guilherme Martins BorboremaJoão Guilherme Martins BorboremaJoão Guilherme Martins Borborema",
-      mail: "jborborema@sga.pucminas.brjborborema@sga.pucminas.brjborborema@sga.pucminas.br",
-      userName: "JoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMBJoaoGuiMB"
-    }
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "asdasd",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "adsdorema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "asdasdsadema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "Jauuuuuuborema",
+      email: "jborborema@sga.pucminas",
+      userName: "qqqqqq",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "JoaoGuiMB",
+    },
+    {
+      displayName: "João Guilherme Martins Borborema",
+      email: "jborborema@sga.pucminas",
+      userName: "asdasdsd",
+    },
   ];
 
-  const cellItemLength  = "36ch";
+  const [users, setUsers] = useState(usersList);
+  const [numberOfPages, setNumberOfPages] = useState(
+    Math.ceil(users.length / 5)
+  );
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const userCells = usersList.map(user => (
-    <Tr key={user.mail}>
-      <Td maxWidth={cellItemLength} isTruncated title={user.displayName}>{user.displayName}</Td>
-      <Td maxWidth={cellItemLength} isTruncated title={user.mail}>{user.mail}</Td>
-      <Td maxWidth={cellItemLength} isTruncated title={user.mail}>{user.userName}</Td>
-      <Td>
-        <Flex justifyContent="space-around">
-          <Tooltip label="Editar usuário" placement="top">
-            <EditIcon
-              color={colors.aurora.Nord13}
-              _hover={{ cursor: "pointer" }}
-              onClick={() => alert("oi")}
-              boxSize="18px"
-            />
-          </Tooltip>
-          <Tooltip label="Deletar usuário" placement="top">
-            <DeleteIcon
-              color={colors.aurora.Nord11}
-              _hover={{ cursor: "pointer" }}
-              onClick={() => alert("oi")}
-              boxSize="18px"
-            />
-          </Tooltip>
-        </Flex>
-      </Td>
-    </Tr>));
+  function handleNextPage() {
+    setCurrentPage((prevState) => prevState + 1);
+  }
+
+  function handlePrevPage() {
+    setCurrentPage((prevState) => prevState - 1);
+  }
+
+  const cellItemLength = "36ch";
+
+  function handleRenderUsers() {
+    let userToRender = [];
+
+    for (
+      let i = (currentPage - 1) * 5;
+      i < currentPage * 5 && i < users.length;
+      i++
+    ) {
+      const user = users[i];
+      const newUserToRender = (
+        <Tr key={Math.random()}>
+          <Td maxWidth={cellItemLength} isTruncated title={user.displayName}>
+            {user.displayName}
+          </Td>
+          <Td maxWidth={cellItemLength} isTruncated title={user.email}>
+            {user.email}
+          </Td>
+          <Td maxWidth={cellItemLength} isTruncated title={user.email}>
+            {user.userName}
+          </Td>
+          <Td>
+            <Flex justifyContent="space-around">
+              <Tooltip label="Editar usuário" placement="top">
+                <EditIcon
+                  color={colors.aurora.Nord13}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => alert("oi")}
+                  boxSize="18px"
+                />
+              </Tooltip>
+              <Tooltip label="Deletar usuário" placement="top">
+                <DeleteIcon
+                  color={colors.aurora.Nord11}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => alert("oi")}
+                  boxSize="18px"
+                />
+              </Tooltip>
+            </Flex>
+          </Td>
+        </Tr>
+      );
+      userToRender.push(newUserToRender);
+    }
+
+    return userToRender;
+  }
+
+  function handleImportUsers(data: any[], fileInfo: Object) {
+    let newUsers: User[] = [];
+    for (let i = 1; i < data.length; i++) {
+      const user = data[i];
+      const newUser: User = {
+        displayName: user[0],
+        email: user[1],
+        userName: user[2],
+      };
+      newUsers.push(newUser);
+    }
+    setUsers((users) => users.concat(newUsers));
+    const newPageNumber = Math.floor(data.length / 5);
+    setNumberOfPages((prevState) => prevState + newPageNumber);
+  }
+
+  const parserOptions = {
+    header: false,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+  };
 
   return (
-    <Flex justifyContent="center" alignItems="center" mt="4%">
+    <Flex justifyContent="center" alignItems="center" mt="2%">
       <Flex flexDirection="column" alignItems="flex-end">
         <Flex justifyContent="space-between" alignItems="center" mb="3%">
           <Icon
@@ -87,14 +207,14 @@ const Users = () => {
               borderRadius: "8px",
             }}
           >
-            Importar Usuários
-            <input
-              type="file"
-              style={{
-                width: "100px",
-                backgroundColor: colors.aurora.Nord14,
-                display: "none",
-              }}
+            <CSVReader
+              label="Importar Usuários"
+              onFileLoaded={(data: any[], fileInfo: Object) =>
+                handleImportUsers(data, fileInfo)
+              }
+              parserOptions={parserOptions}
+              inputStyle={{ display: "none", cursor: "pointer", width: "100%" }}
+              accept=".csv"
             />
           </label>
         </Flex>
@@ -115,9 +235,33 @@ const Users = () => {
               <Th>Ações</Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {userCells}
-          </Tbody>
+          <Tbody>{handleRenderUsers()}</Tbody>
+          <Tfoot>
+            <Tr width="100%">
+              <Th>
+                {currentPage === 1 ? (
+                  ""
+                ) : (
+                  <Button onClick={() => handlePrevPage()}>
+                    <AiOutlineArrowLeft />
+                  </Button>
+                )}
+              </Th>
+              <Th display="flex" justifyContent="center" mr="30%">
+                <Heading fontSize="22px">{currentPage}</Heading>
+              </Th>
+              <Th></Th>
+              <Th>
+                {currentPage === numberOfPages ? (
+                  ""
+                ) : (
+                  <Button onClick={() => handleNextPage()}>
+                    <AiOutlineArrowRight />
+                  </Button>
+                )}
+              </Th>
+            </Tr>
+          </Tfoot>
         </Table>
       </Flex>
     </Flex>
