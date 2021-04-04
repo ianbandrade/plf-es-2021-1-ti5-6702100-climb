@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState } from "react";
 import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -247,7 +247,7 @@ const Users = () => {
                   </Button>
                 )}
               </Th>
-              <Th display="flex" justifyContent="center" mr="30%">
+              <Th display="flex" justifyContent="center">
                 <Heading fontSize="22px">{currentPage}</Heading>
               </Th>
               <Th></Th>
