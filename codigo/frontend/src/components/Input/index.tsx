@@ -14,6 +14,7 @@ interface InputProps {
     inputTextColor?: string;
     labelColor?: string;
     inputBgColor?: string;
+    marginBottom?: string;
   };
 }
 
@@ -33,7 +34,7 @@ const InputComponent = ({
       <InputGroup
         backgroundColor={style?.labelColor}
         height="40px"
-        mb="12%"
+        mb={style?.marginBottom}
         rounded="md"
       >
         <InputLeftAddon children={icon} />
@@ -45,7 +46,7 @@ const InputComponent = ({
             color: style?.inputTextColor,
           }}
           value={value}
-          onChange={(e: any) => onChangeInput(e)}
+          onChange={(e) => onChangeInput(e)}
         />
       </InputGroup>
     </>

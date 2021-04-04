@@ -37,14 +37,16 @@ const Form = ({ children, style, formTitle }: FormProps) => {
       boxShadow={style?.boxShadow}
       rounded={style?.rounded}
     >
-      <Text
-        fontWeight={"semibold"}
-        fontSize="40px"
-        marginBottom="5%"
-        color={style?.textColor}
-      >
-        {formTitle}
-      </Text>
+      {formTitle && (
+        <Text
+          fontWeight={"semibold"}
+          fontSize="40px"
+          marginBottom="5%"
+          color={style?.textColor}
+        >
+          {formTitle}
+        </Text>
+      )}
       {children}
     </FormControl>
   );

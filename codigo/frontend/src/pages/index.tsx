@@ -20,13 +20,13 @@ const Home = () => {
     setPassword(e.target.value);
   }
   function submitForm(e: React.FormEvent) {}
-
   const { colorMode } = useColorMode();
+  //Form
   const formColor =
     colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
   const textColor =
     colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-
+  //Input
   const inputTextColor =
     colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
   const labelColor =
@@ -63,6 +63,7 @@ const Home = () => {
               inputBgColor,
               inputTextColor,
               labelColor,
+              marginBottom: "12%",
             }}
           />
           <Input
@@ -75,6 +76,7 @@ const Home = () => {
               inputBgColor,
               inputTextColor,
               labelColor,
+              marginBottom: "12%",
             }}
           />
           <Button

@@ -15,11 +15,18 @@ import {
 } from "@chakra-ui/react";
 import { FiUserPlus } from "react-icons/fi";
 import { colors } from "../../styles/customTheme";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineArrowRight,
+  AiOutlineUser,
+} from "react-icons/ai";
 import CSVReader from "react-csv-reader";
 import TableLine from "../../components/TableLine";
 import ModalComponent from "../../components/Modal";
 import Form from "../../components/Form";
+import Input from "../../components/Input";
+import { EmailIcon, LockIcon } from "@chakra-ui/icons";
+
 const LIGHT = "light";
 
 export interface User {
@@ -108,6 +115,12 @@ const Users = () => {
   const [numberOfPages, setNumberOfPages] = useState(
     Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE)
   );
+
+  const [nameField, setNameField] = useState("");
+  const [emailField, setEmailField] = useState("");
+  const [passField, setPassField] = useState("");
+  const [confirmPassField, setConfirmPassField] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
 
   function handleNextPage() {
@@ -158,13 +171,116 @@ const Users = () => {
     skipEmptyLines: true,
   };
 
+  const inputTextColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+  const labelColor =
+    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
+  const inputBgColor =
+    colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
+  const iconInputColor =
+    colorMode === LIGHT ? colors.dark.Nord0 : colors.dark.Nord2;
+  const inputStyle = {
+    inputTextColor,
+    labelColor,
+    inputBgColor,
+    marginBottom: "5%",
+  };
+
+  function handleChangeName(e: any) {
+    setNameField(e.target.value);
+  }
+  function handleChangeEmail(e: any) {
+    setEmailField(e.target.value);
+  }
+  function handleChangPass(e: any) {
+    setPassField(e.target.value);
+  }
+  function handleChangeConfirmPass(e: any) {
+    setConfirmPassField(e.target.value);
+  }
+
+  function saveUser() {
+    const newUser: User = {
+      displayName: nameField,
+      email: emailField,
+      userName: "",
+    };
+    setUsers([...users, newUser]);
+    onClose();
+    cleanFields();
+  }
+  function cleanFields() {
+    setNameField("");
+    setEmailField("");
+    setPassField("");
+    setConfirmPassField("");
+  }
+
+  function closeModal() {
+    onClose();
+    cleanFields();
+  }
+
   return (
     <>
       <ModalComponent isOpen={isOpen} onClose={onClose}>
         <Form style={{ bgColor: formColor, textColor }}>
-          <h1>a</h1>
+          <Input
+            label="Nome"
+            placeholder="Nome"
+            style={inputStyle}
+            icon={<AiOutlineUser color={iconInputColor} />}
+            onChangeInput={handleChangeName}
+            value={nameField}
+          />
+          <Input
+            label="E-mail"
+            placeholder="Email"
+            style={inputStyle}
+            icon={<EmailIcon color={iconInputColor} />}
+            onChangeInput={handleChangeEmail}
+            value={emailField}
+          />
+          <Input
+            label="Senha"
+            placeholder="Senha"
+            style={inputStyle}
+            icon={<LockIcon color={iconInputColor} />}
+            onChangeInput={handleChangPass}
+            value={passField}
+          />
+          <Input
+            label="Confirma senha"
+            placeholder="Confirma senha"
+            style={inputStyle}
+            icon={<LockIcon color={iconInputColor} />}
+            onChangeInput={handleChangeConfirmPass}
+            value={confirmPassField}
+          />
         </Form>
-        <Button>oit</Button>
+        <Flex justify="flex-end" mb="5%">
+          <Button
+            bgColor={colors.aurora.Nord11}
+            color={inputTextColor}
+            _hover={{
+              bgColor: colors.aurora.Nord11,
+            }}
+            mr="8%"
+            onClick={() => saveUser()}
+          >
+            Salvar
+          </Button>
+          <Button
+            onClick={() => closeModal()}
+            bgColor={colors.aurora.Nord14}
+            color={inputTextColor}
+            _hover={{
+              bgColor: colors.aurora.Nord14,
+            }}
+          >
+            Cancelar
+          </Button>
+        </Flex>
       </ModalComponent>
       <Flex justifyContent="center" alignItems="center" mt="2%">
         <Flex flexDirection="column" alignItems="flex-end">
