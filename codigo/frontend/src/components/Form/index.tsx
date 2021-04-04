@@ -4,24 +4,27 @@ import { colors } from "../../styles/customTheme";
 import { useColorMode } from "@chakra-ui/color-mode";
 
 const LIGHT = "light";
-interface LoginFormProps {
-  formTitle: string;
+interface FormProps {
   children?: ReactNode;
+  formTitle?: string;
+  style?: {
+    bgColor?: string;
+    textColor?: string;
+    boxShadow?: string;
+    rounded?: string;
+  };
 }
 
-const LoginForm = ({ formTitle, children }: LoginFormProps) => {
+const Form = ({ children, style, formTitle }: FormProps) => {
   const { colorMode } = useColorMode();
-  const formColor =
-    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
-  const textColor =
-    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+
   return (
     <FormControl
       as="form"
       display="flex"
       flexDirection="column"
       justifyContent="center"
-      backgroundColor={formColor}
+      backgroundColor={style?.bgColor}
       maxWidth="390px"
       maxHeight="450px"
       minWidth="350px"
@@ -31,14 +34,14 @@ const LoginForm = ({ formTitle, children }: LoginFormProps) => {
       padding="25px"
       borderRadius="20"
       fontFamily="Alatsi"
-      boxShadow="dark-lg"
-      rounded="md"
+      boxShadow={style?.boxShadow}
+      rounded={style?.rounded}
     >
       <Text
         fontWeight={"semibold"}
         fontSize="40px"
         marginBottom="5%"
-        color={textColor}
+        color={style?.textColor}
       >
         {formTitle}
       </Text>
@@ -47,4 +50,4 @@ const LoginForm = ({ formTitle, children }: LoginFormProps) => {
   );
 };
 
-export default LoginForm;
+export default Form;

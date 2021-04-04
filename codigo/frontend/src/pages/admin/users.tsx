@@ -4,31 +4,38 @@ import {
   Flex,
   Table,
   Tbody,
-  Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
   Tfoot,
   useColorMode,
   Button,
   Heading,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiUserPlus } from "react-icons/fi";
 import { colors } from "../../styles/customTheme";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import CSVReader from "react-csv-reader";
-
+import TableLine from "../../components/TableLine";
+import ModalComponent from "../../components/Modal";
+import Form from "../../components/Form";
 const LIGHT = "light";
 
-interface User {
+export interface User {
   displayName: string;
   email: string;
   userName: string;
 }
 
+const NUMBER_OF_USERS_PER_PAGE = 5;
+
 const Users = () => {
   const { colorMode } = useColorMode();
+  const formColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+  const textColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
 
   function setTableBgColor() {
     return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
@@ -99,7 +106,7 @@ const Users = () => {
 
   const [users, setUsers] = useState(usersList);
   const [numberOfPages, setNumberOfPages] = useState(
-    Math.ceil(users.length / 5)
+    Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE)
   );
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -111,50 +118,18 @@ const Users = () => {
     setCurrentPage((prevState) => prevState - 1);
   }
 
-  const cellItemLength = "36ch";
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   function handleRenderUsers() {
     let userToRender = [];
 
     for (
-      let i = (currentPage - 1) * 5;
-      i < currentPage * 5 && i < users.length;
+      let i = (currentPage - 1) * NUMBER_OF_USERS_PER_PAGE;
+      i < currentPage * NUMBER_OF_USERS_PER_PAGE && i < users.length;
       i++
     ) {
       const user = users[i];
-      const newUserToRender = (
-        <Tr key={Math.random()}>
-          <Td maxWidth={cellItemLength} isTruncated title={user.displayName}>
-            {user.displayName}
-          </Td>
-          <Td maxWidth={cellItemLength} isTruncated title={user.email}>
-            {user.email}
-          </Td>
-          <Td maxWidth={cellItemLength} isTruncated title={user.email}>
-            {user.userName}
-          </Td>
-          <Td>
-            <Flex justifyContent="space-around">
-              <Tooltip label="Editar usuário" placement="top">
-                <EditIcon
-                  color={colors.aurora.Nord13}
-                  _hover={{ cursor: "pointer" }}
-                  onClick={() => alert("oi")}
-                  boxSize="18px"
-                />
-              </Tooltip>
-              <Tooltip label="Deletar usuário" placement="top">
-                <DeleteIcon
-                  color={colors.aurora.Nord11}
-                  _hover={{ cursor: "pointer" }}
-                  onClick={() => alert("oi")}
-                  boxSize="18px"
-                />
-              </Tooltip>
-            </Flex>
-          </Td>
-        </Tr>
-      );
+      const newUserToRender = <TableLine user={user} key={i} />;
       userToRender.push(newUserToRender);
     }
 
@@ -173,7 +148,7 @@ const Users = () => {
       newUsers.push(newUser);
     }
     setUsers((users) => users.concat(newUsers));
-    const newPageNumber = Math.floor(data.length / 5);
+    const newPageNumber = Math.floor(data.length / NUMBER_OF_USERS_PER_PAGE);
     setNumberOfPages((prevState) => prevState + newPageNumber);
   }
 
@@ -184,87 +159,100 @@ const Users = () => {
   };
 
   return (
-    <Flex justifyContent="center" alignItems="center" mt="2%">
-      <Flex flexDirection="column" alignItems="flex-end">
-        <Flex justifyContent="space-between" alignItems="center" mb="3%">
-          <Icon
-            as={FiUserPlus}
-            boxSize="25px"
-            color={colors.aurora.Nord14}
-            _hover={{ cursor: "pointer" }}
-            mr="12px"
-          />
-          <label
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "40px",
-              width: "160px",
-              cursor: "pointer",
-              color: colors.light.Nord6,
-              backgroundColor: colors.aurora.Nord14,
-              borderRadius: "8px",
-            }}
-          >
-            <CSVReader
-              label="Importar Usuários"
-              onFileLoaded={(data: any[], fileInfo: Object) =>
-                handleImportUsers(data, fileInfo)
-              }
-              parserOptions={parserOptions}
-              inputStyle={{ display: "none", cursor: "pointer", width: "100%" }}
-              accept=".csv"
+    <>
+      <ModalComponent isOpen={isOpen} onClose={onClose}>
+        <Form style={{ bgColor: formColor, textColor }}>
+          <h1>a</h1>
+        </Form>
+        <Button>oit</Button>
+      </ModalComponent>
+      <Flex justifyContent="center" alignItems="center" mt="2%">
+        <Flex flexDirection="column" alignItems="flex-end">
+          <Flex justifyContent="space-between" alignItems="center" mb="3%">
+            <Icon
+              as={FiUserPlus}
+              boxSize="25px"
+              color={colors.aurora.Nord14}
+              _hover={{ cursor: "pointer" }}
+              mr="12px"
+              onClick={onOpen}
             />
-          </label>
-        </Flex>
+            <label
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "40px",
+                width: "160px",
+                cursor: "pointer",
+                color: colors.light.Nord6,
+                backgroundColor: colors.aurora.Nord14,
+                borderRadius: "8px",
+              }}
+            >
+              <CSVReader
+                label="Importar Usuários"
+                onFileLoaded={(data: any[], fileInfo: Object) =>
+                  handleImportUsers(data, fileInfo)
+                }
+                parserOptions={parserOptions}
+                inputStyle={{
+                  display: "none",
+                  cursor: "pointer",
+                  width: "100%",
+                }}
+                accept=".csv"
+              />
+            </label>
+          </Flex>
 
-        <Table
-          boxShadow="dark-lg"
-          variant="striped"
-          bgColor={setTableBgColor()}
-          borderRadius="6px"
-          maxH="600px"
-          size="lg"
-        >
-          <Thead>
-            <Tr>
-              <Th>Nome</Th>
-              <Th>Email</Th>
-              <Th>Usuário</Th>
-              <Th>Ações</Th>
-            </Tr>
-          </Thead>
-          <Tbody>{handleRenderUsers()}</Tbody>
-          <Tfoot>
-            <Tr width="100%">
-              <Th>
-                {currentPage === 1 ? (
-                  ""
-                ) : (
-                  <Button onClick={() => handlePrevPage()}>
-                    <AiOutlineArrowLeft />
-                  </Button>
-                )}
-              </Th>
-              <Th display="flex" justifyContent="center">
-                <Heading fontSize="22px">{currentPage}</Heading>
-              </Th>
-              <Th></Th>
-              <Th>
-                {currentPage === numberOfPages ? (
-                  ""
-                ) : (
-                  <Button onClick={() => handleNextPage()}>
-                    <AiOutlineArrowRight />
-                  </Button>
-                )}
-              </Th>
-            </Tr>
-          </Tfoot>
-        </Table>
+          <Table
+            boxShadow="dark-lg"
+            variant="striped"
+            bgColor={setTableBgColor()}
+            borderRadius="6px"
+            maxH="600px"
+            size="lg"
+          >
+            <Thead>
+              <Tr>
+                <Th>Nome</Th>
+                <Th>Email</Th>
+                <Th>Usuário</Th>
+                <Th>Ações</Th>
+              </Tr>
+            </Thead>
+            <Tbody>{handleRenderUsers()}</Tbody>
+            <Tfoot>
+              <Tr width="100%">
+                <Th>
+                  {currentPage === 1 ? (
+                    ""
+                  ) : (
+                    <Button onClick={() => handlePrevPage()}>
+                      <AiOutlineArrowLeft />
+                    </Button>
+                  )}
+                </Th>
+                <Th display="flex" justifyContent="center">
+                  <Heading fontSize="22px">{currentPage}</Heading>
+                </Th>
+                <Th></Th>
+                <Th>
+                  {currentPage === numberOfPages ? (
+                    ""
+                  ) : (
+                    <Button onClick={() => handleNextPage()}>
+                      <AiOutlineArrowRight />
+                    </Button>
+                  )}
+                </Th>
+              </Tr>
+            </Tfoot>
+          </Table>
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 
