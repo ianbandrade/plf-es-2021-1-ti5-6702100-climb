@@ -1,18 +1,20 @@
 import { CredentialsDto } from './../auth/dto/credentials.dto';
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, QueryFailedError, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import {
+  BadRequestException,
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
-import { ReturnAllUserDto } from './dto/return-all-users.dto';
+import { ReturnManyUsersDto } from './dto/return-many-users.dto';
+import { CreateManyUsersDto } from './dto/create-many-users.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturnAllUserDto> {
+  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturnManyUsersDto> {
     queryDto.status = queryDto.status === undefined ? true : queryDto.status;
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
@@ -69,6 +71,39 @@ export class UserRepository extends Repository<User> {
           'Erro ao salvar o usuário na base de dados',
         );
       }
+    }
+  }
+
+  async createManyUsers(
+    createManyUsersDto: CreateManyUsersDto,
+  ): Promise<boolean> {
+    try {
+      await this.createQueryBuilder()
+        .insert()
+        .values(
+          await Promise.all(
+            createManyUsersDto.users.map(async (userData) => {
+              const { email, name, password, role } = userData;
+
+              const user = {} as User;
+              user.email = email;
+              user.name = name;
+              user.role = role;
+              user.status = true;
+              user.salt = await bcrypt.genSalt();
+              user.password = await this.hashPassword(password, user.salt);
+              return user;
+            }),
+          ),
+        )
+        .execute();
+      return true;
+    } catch (e) {
+      const { code, message, detail } = e;
+      if (code.toString() === '23502') throw new BadRequestException(message);
+      if (code.toString() === '23505')
+        throw new ConflictException(detail, message);
+      else throw new InternalServerErrorException(detail, message);
     }
   }
 
