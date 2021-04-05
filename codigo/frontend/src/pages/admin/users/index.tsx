@@ -177,6 +177,10 @@ const Users = () => {
     return userToRender;
   }
 
+  function updateNumberOfPages() {
+    setNumberOfPages(Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE));
+  }
+
   function saveUser() {
     const newUser: User = {
       name: nameField,
@@ -188,6 +192,7 @@ const Users = () => {
     setUsers([...users, newUser]);
     handleCloseModal();
     cleanFields();
+    updateNumberOfPages();
   }
   function updateUser() {
     const updatedUser: User = {
@@ -200,12 +205,14 @@ const Users = () => {
     );
     setUsers(newArray);
     handleCloseModal();
+    updateNumberOfPages();
   }
 
   function deleteUser() {
     const newArray = users.filter((el, i) => selectedUser !== i);
     setUsers(newArray);
     setIsDeleteModalOpen(false);
+    updateNumberOfPages();
   }
 
   function handleConfirmModal() {
