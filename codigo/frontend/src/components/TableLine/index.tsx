@@ -6,11 +6,14 @@ const cellItemLength = "36ch";
 
 interface TableLineProps {
   user: User;
+  updateUser: (user: User, index: number) => void;
+  deleteUser: (user: User, index: number) => void;
+  index: number;
 }
 
-const TableLine = ({ user }: TableLineProps) => {
+const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
   return (
-    <Tr key={Math.random()}>
+    <Tr key={index}>
       <Td maxWidth={cellItemLength} isTruncated title={user.name}>
         {user.name}
       </Td>
@@ -26,16 +29,16 @@ const TableLine = ({ user }: TableLineProps) => {
             <EditIcon
               color={colors.aurora.Nord13}
               _hover={{ cursor: "pointer" }}
-              onClick={() => alert("oi")}
               boxSize="18px"
+              onClick={() => updateUser(user, index)}
             />
           </Tooltip>
           <Tooltip label="Deletar usuário" placement="top">
             <DeleteIcon
               color={colors.aurora.Nord11}
               _hover={{ cursor: "pointer" }}
-              onClick={() => alert("oi")}
               boxSize="18px"
+              onClick={() => deleteUser(user, index)}
             />
           </Tooltip>
         </Flex>

@@ -11,20 +11,20 @@ import {
   useColorMode,
   Button,
   Heading,
-  useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { FiUserPlus } from "react-icons/fi";
-import { colors } from "../../styles/customTheme";
+import { colors } from "../../../styles/customTheme";
 import {
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
 import CSVReader from "react-csv-reader";
-import TableLine from "../../components/TableLine";
-import ModalComponent from "../../components/Modal";
-import Form from "../../components/Form";
-import Input from "../../components/Input";
+import TableLine from "../../../components/TableLine";
+import ModalComponent from "../../../components/Modal";
+import Form from "../../../components/Form";
+import Input from "../../../components/Input";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 
 const LIGHT = "light";
@@ -45,6 +45,20 @@ const Users = () => {
     colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
   const textColor =
     colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+  const inputTextColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+  const labelColor =
+    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
+  const inputBgColor =
+    colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
+  const iconInputColor =
+    colorMode === LIGHT ? colors.dark.Nord0 : colors.dark.Nord2;
+  const inputStyle = {
+    inputTextColor,
+    labelColor,
+    inputBgColor,
+    marginBottom: "5%",
+  };
 
   function setTableBgColor() {
     return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
@@ -117,13 +131,19 @@ const Users = () => {
   const [numberOfPages, setNumberOfPages] = useState(
     Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE)
   );
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [nameField, setNameField] = useState("");
   const [emailField, setEmailField] = useState("");
   const [passField, setPassField] = useState("");
   const [confirmPassField, setConfirmPassField] = useState("");
+  const [userNameField, setUserNameField] = useState("");
+  const [selectedUser, setSelectedUser] = useState(0);
+  const [selectedUserName, setSelectedUserName] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   function handleNextPage() {
     setCurrentPage((prevState) => prevState + 1);
@@ -132,8 +152,6 @@ const Users = () => {
   function handlePrevPage() {
     setCurrentPage((prevState) => prevState - 1);
   }
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   function handleRenderUsers() {
     let userToRender = [];
@@ -144,11 +162,77 @@ const Users = () => {
       i++
     ) {
       const user = users[i];
-      const newUserToRender = <TableLine user={user} key={i} />;
+      const newUserToRender = (
+        <TableLine
+          index={i}
+          user={user}
+          key={i}
+          updateUser={(user: User) => handleUpdateUser(user, i)}
+          deleteUser={(user: User) => handleDeleteUser(user, i)}
+        />
+      );
       userToRender.push(newUserToRender);
     }
 
     return userToRender;
+  }
+
+  function saveUser() {
+    const newUser: User = {
+      name: nameField,
+      email: emailField,
+      userName: "",
+      password: passField,
+      confirmPassword: confirmPassField,
+    };
+    setUsers([...users, newUser]);
+    handleCloseModal();
+    cleanFields();
+  }
+  function updateUser() {
+    const updatedUser: User = {
+      name: nameField,
+      email: emailField,
+      userName: userNameField,
+    };
+    const newArray = users.map((el, i) =>
+      i === selectedUser ? Object.assign({}, el, updatedUser) : el
+    );
+    setUsers(newArray);
+    handleCloseModal();
+  }
+
+  function deleteUser() {
+    const newArray = users.filter((el, i) => selectedUser !== i);
+    setUsers(newArray);
+    setIsDeleteModalOpen(false);
+  }
+
+  function handleConfirmModal() {
+    if (isAddUserModalOpen) {
+      saveUser();
+    }
+    if (isUpdateModalOpen) {
+      updateUser();
+    }
+    if (isDeleteModalOpen) {
+      deleteUser();
+    }
+  }
+
+  function handleUpdateUser(user: User, index: number) {
+    setIsUpdateModalOpen(true);
+    setNameField(user.name);
+    setEmailField(user.email);
+    setUserNameField(user.userName);
+    setSelectedUser(index);
+  }
+
+  function handleDeleteUser(user: User, index: number) {
+    console.log(user);
+    setSelectedUser(index);
+    setSelectedUserName(user.name);
+    setIsDeleteModalOpen(true);
   }
 
   function handleImportUsers(data: any[], fileInfo: Object) {
@@ -175,21 +259,6 @@ const Users = () => {
     skipEmptyLines: true,
   };
 
-  const inputTextColor =
-    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-  const labelColor =
-    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
-  const inputBgColor =
-    colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
-  const iconInputColor =
-    colorMode === LIGHT ? colors.dark.Nord0 : colors.dark.Nord2;
-  const inputStyle = {
-    inputTextColor,
-    labelColor,
-    inputBgColor,
-    marginBottom: "5%",
-  };
-
   function handleChangeName(e: any) {
     setNameField(e.target.value);
   }
@@ -203,18 +272,26 @@ const Users = () => {
     setConfirmPassField(e.target.value);
   }
 
-  function saveUser() {
-    const newUser: User = {
-      name: nameField,
-      email: emailField,
-      userName: "",
-      password: passField,
-      confirmPassword: confirmPassField,
-    };
-    setUsers([...users, newUser]);
-    onClose();
+  function handleUserNameField(e: any) {
+    setUserNameField(e.target.value);
+  }
+
+  function openAddUserModal() {
+    setIsAddUserModalOpen(true);
+  }
+  function handleCloseModal() {
+    if (isAddUserModalOpen) {
+      setIsAddUserModalOpen(false);
+    }
+    if (isUpdateModalOpen) {
+      setIsUpdateModalOpen(false);
+    }
+    if (isDeleteModalOpen) {
+      setIsDeleteModalOpen(false);
+    }
     cleanFields();
   }
+
   function cleanFields() {
     setNameField("");
     setEmailField("");
@@ -222,14 +299,41 @@ const Users = () => {
     setConfirmPassField("");
   }
 
-  function closeModal() {
-    onClose();
-    cleanFields();
-  }
-
   return (
     <>
-      <ModalComponent isOpen={isOpen} onClose={onClose}>
+      <ModalComponent
+        isOpen={isDeleteModalOpen}
+        onClose={() => handleCloseModal()}
+      >
+        <Text>Você deseja deletar {selectedUserName} ?</Text>
+        <Flex justify="flex-end" mb="5%">
+          <Button
+            bgColor={colors.aurora.Nord14}
+            color={inputTextColor}
+            _hover={{
+              bgColor: colors.aurora.Nord14,
+            }}
+            mr="8%"
+            onClick={() => handleConfirmModal()}
+          >
+            Sim
+          </Button>
+          <Button
+            onClick={() => handleCloseModal()}
+            bgColor={colors.aurora.Nord11}
+            color={inputTextColor}
+            _hover={{
+              bgColor: colors.aurora.Nord11,
+            }}
+          >
+            Não
+          </Button>
+        </Flex>
+      </ModalComponent>
+      <ModalComponent
+        isOpen={isAddUserModalOpen || isUpdateModalOpen}
+        onClose={() => handleCloseModal()}
+      >
         <Form style={{ bgColor: formColor, textColor }}>
           <Input
             type={"text"}
@@ -249,24 +353,40 @@ const Users = () => {
             onChangeInput={handleChangeEmail}
             value={emailField}
           />
-          <Input
-            type={"password"}
-            label="Senha"
-            placeholder="Senha"
-            style={inputStyle}
-            icon={<LockIcon color={iconInputColor} />}
-            onChangeInput={handleChangPass}
-            value={passField}
-          />
-          <Input
-            type={"password"}
-            label="Confirma senha"
-            placeholder="Confirma senha"
-            style={inputStyle}
-            icon={<LockIcon color={iconInputColor} />}
-            onChangeInput={handleChangeConfirmPass}
-            value={confirmPassField}
-          />
+          {!isUpdateModalOpen && (
+            <>
+              <Input
+                type={"password"}
+                label="Senha"
+                placeholder="Senha"
+                style={inputStyle}
+                icon={<LockIcon color={iconInputColor} />}
+                onChangeInput={handleChangPass}
+                value={passField}
+              />
+              <Input
+                type={"password"}
+                label="Confirma senha"
+                placeholder="Confirma senha"
+                style={inputStyle}
+                icon={<LockIcon color={iconInputColor} />}
+                onChangeInput={handleChangeConfirmPass}
+                value={confirmPassField}
+              />
+            </>
+          )}
+
+          {isUpdateModalOpen && (
+            <Input
+              type={"text"}
+              label="Nome do usuário"
+              placeholder="Nome do usuário"
+              style={inputStyle}
+              icon={<AiOutlineUser color={iconInputColor} />}
+              onChangeInput={handleUserNameField}
+              value={userNameField}
+            />
+          )}
         </Form>
         <Flex justify="flex-end" mb="5%">
           <Button
@@ -276,12 +396,12 @@ const Users = () => {
               bgColor: colors.aurora.Nord11,
             }}
             mr="8%"
-            onClick={() => saveUser()}
+            onClick={() => handleConfirmModal()}
           >
             Salvar
           </Button>
           <Button
-            onClick={() => closeModal()}
+            onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord14}
             color={inputTextColor}
             _hover={{
@@ -292,6 +412,7 @@ const Users = () => {
           </Button>
         </Flex>
       </ModalComponent>
+
       <Flex justifyContent="center" alignItems="center" mt="2%">
         <Flex flexDirection="column" alignItems="flex-end">
           <Flex justifyContent="space-between" alignItems="center" mb="3%">
@@ -301,7 +422,7 @@ const Users = () => {
               color={colors.aurora.Nord14}
               _hover={{ cursor: "pointer" }}
               mr="12px"
-              onClick={onOpen}
+              onClick={() => openAddUserModal()}
             />
             <label
               style={{
