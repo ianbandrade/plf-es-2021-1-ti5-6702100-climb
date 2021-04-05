@@ -19,6 +19,7 @@
     "next": "10.0.5",
     "next-pwa": "^5.0.5",
     "react": "^17.0.1",
+    "react-csv-reader": "^3.3.0",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0"
   },

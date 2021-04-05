@@ -4,46 +4,49 @@ import { colors } from "../../styles/customTheme";
 import { useColorMode } from "@chakra-ui/color-mode";
 const LIGHT = "light";
 
-interface LoginInput {
+interface InputProps {
   placeholder: string;
   icon?: ReactNode;
   label: string;
   value?: string;
   onChangeInput: Function;
+  style?: {
+    inputTextColor?: string;
+    labelColor?: string;
+    inputBgColor?: string;
+    marginBottom?: string;
+  };
+  type: string;
 }
 
-const LoginInput = ({
+const InputComponent = ({
   label,
   placeholder,
   icon,
   value,
   onChangeInput,
-}: LoginInput) => {
-  const { colorMode } = useColorMode();
-  const formColor =
-    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
-  const textColor =
-    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-  const inputBgColor =
-    colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord0;
+  style,
+  type,
+}: InputProps) => {
   return (
     <>
-      <FormLabel color={textColor} fontSize="15px" fontWeight="light">
+      <FormLabel color={style?.labelColor} fontSize="15px" fontWeight="light">
         {label}
       </FormLabel>
       <InputGroup
-        backgroundColor={textColor}
+        backgroundColor={style?.labelColor}
         height="40px"
-        mb="12%"
+        mb={style?.marginBottom}
         rounded="md"
       >
         <InputLeftAddon children={icon} />
         <Input
+          type={type}
           placeholder={placeholder}
-          color={formColor}
-          backgroundColor={inputBgColor}
+          color={style?.inputTextColor}
+          backgroundColor={style?.inputBgColor}
           _placeholder={{
-            color: formColor,
+            color: style?.inputTextColor,
           }}
           value={value}
           onChange={(e) => onChangeInput(e)}
@@ -53,4 +56,4 @@ const LoginInput = ({
   );
 };
 
-export default LoginInput;
+export default InputComponent;

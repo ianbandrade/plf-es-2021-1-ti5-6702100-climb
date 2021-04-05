@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Flex } from "@chakra-ui/react";
-import LoginForm from "../components/LoginForm";
+import { Flex, useColorMode } from "@chakra-ui/react";
+import Form from "../components/Form";
 import LoginContent from "../components/LoginContent";
-import LoginInput from "../components/LoginInput";
+import Input from "../components/Input";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import { colors } from "../styles/customTheme";
+
+const LIGHT = "light";
 
 const Home = () => {
   const [email, setEmail] = useState();
@@ -18,6 +20,19 @@ const Home = () => {
     setPassword(e.target.value);
   }
   function submitForm(e: React.FormEvent) {}
+  const { colorMode } = useColorMode();
+  //Form
+  const formColor =
+    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
+  const textColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+  //Input
+  const inputTextColor =
+    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
+  const labelColor =
+    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
+  const inputBgColor =
+    colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord0;
 
   return (
     <>
@@ -29,20 +44,42 @@ const Home = () => {
         backgroundRepeat="no-repeat"
       >
         <LoginContent />
-        <LoginForm formTitle="Entrar">
-          <LoginInput
+        <Form
+          formTitle="Entrar"
+          style={{
+            bgColor: formColor,
+            textColor: textColor,
+            boxShadow: "dark-lg",
+            rounded: "md",
+          }}
+        >
+          <Input
+            type="text"
             label="E-mail"
             placeholder="E-mail"
             icon={<EmailIcon />}
             value={email}
             onChangeInput={handleChangeEmail}
+            style={{
+              inputBgColor,
+              inputTextColor,
+              labelColor,
+              marginBottom: "12%",
+            }}
           />
-          <LoginInput
+          <Input
+            type={"password"}
             label="Senha"
             placeholder="Senha"
             icon={<LockIcon />}
             value={password}
             onChangeInput={handleChangePass}
+            style={{
+              inputBgColor,
+              inputTextColor,
+              labelColor,
+              marginBottom: "12%",
+            }}
           />
           <Button
             type="submit"
@@ -60,7 +97,7 @@ const Home = () => {
           >
             Entrar
           </Button>
-        </LoginForm>
+        </Form>
       </Flex>
     </>
   );
