@@ -11,7 +11,7 @@ export default () => ({
   admin: {
     email: process.env.ADMIN_EMAIL || 'admin@example.com',
     name: process.env.ADMIN_NAME || 'admin',
-    password: process.env.ADMIN_PASSWORD || 'admin',
+    password: process.env.ADMIN_PASSWORD || 'password',
   },
   versionControl: {
     github: {

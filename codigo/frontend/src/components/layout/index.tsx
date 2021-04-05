@@ -12,10 +12,11 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const isAdminPage = router.pathname.includes("/admin");
+  const isUserPage = router.pathname.includes("/user");
   return (
     <Box margin="0 auto" maxWidth={2048} transition="0.5s ease-out">
       <Meta />
-      <Box margin={isAdminPage ? "0" : "8"}>
+      <Box margin={isAdminPage || isUserPage ? "0" : "8"}>
         <Header />
         <Box as="main" marginY={22}>
           {children}

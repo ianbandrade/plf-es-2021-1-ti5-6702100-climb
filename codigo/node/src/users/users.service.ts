@@ -25,25 +25,26 @@ export class UsersService implements OnModuleInit {
   onModuleInit() {
     this.userRepository.find().then((users) => {
       if (users.length === 0) {
-        this.createAdminUser({
+        this.createUser({
           email: this.configService.get<string>('admin.email'),
           name: this.configService.get<string>('admin.name'),
           password: this.configService.get<string>('admin.password'),
           passwordConfirmation: this.configService.get<string>(
             'admin.password',
           ),
+          role: UserRole.ADMIN,
         });
       }
     });
   }
 
-  async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password != createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException(
         'A senha de confirmação esta errada',
       );
     } else {
-      return this.userRepository.createUser(createUserDto, UserRole.ADMIN);
+      return this.userRepository.createUser(createUserDto);
     }
   }
 
