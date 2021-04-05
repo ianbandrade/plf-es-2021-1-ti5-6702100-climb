@@ -30,7 +30,7 @@ export class VersionControlService {
   ) {}
 
   async github(code: string, id: string) {
-    this.checkUser(id);
+    await this.checkUser(id);
 
     const accessToken = await this.getAccessToken(
       'https://github.com/login/oauth/access_token',
@@ -52,7 +52,7 @@ export class VersionControlService {
   }
 
   async gitlab(code: string, id: string) {
-    this.checkUser(id);
+    await this.checkUser(id);
 
     const accessToken = await this.getAccessToken(
       'https://gitlab.com/oauth/token',
