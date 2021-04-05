@@ -1,33 +1,35 @@
-import { useState } from "react";
-import { Icon } from "@chakra-ui/icons";
+import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Flex,
+  Heading,
+  Spacer,
   Table,
   Tbody,
+  Td,
+  Text,
+  Tfoot,
   Th,
   Thead,
   Tr,
-  Tfoot,
   useColorMode,
-  Button,
-  Heading,
-  Text,
 } from "@chakra-ui/react";
-import { FiUserPlus } from "react-icons/fi";
-import { colors } from "../../../styles/customTheme";
+import { useState } from "react";
+import CSVReader from "react-csv-reader";
 import {
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
-import CSVReader from "react-csv-reader";
-import TableLine from "../../../components/TableLine";
-import ModalComponent from "../../../components/Modal";
+import { FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
-import { EmailIcon, LockIcon } from "@chakra-ui/icons";
+import ModalComponent from "../../../components/Modal";
+import TableLine from "../../../components/TableLine";
+import { colors } from "../../../styles/customTheme";
 
 const LIGHT = "light";
+const disabled: boolean = true;
 
 export interface User {
   name: string;
@@ -163,13 +165,15 @@ const Users = () => {
     ) {
       const user = users[i];
       const newUserToRender = (
-        <TableLine
-          index={i}
-          user={user}
-          key={i}
-          updateUser={(user: User) => handleUpdateUser(user, i)}
-          deleteUser={(user: User) => handleDeleteUser(user, i)}
-        />
+        <>
+          <TableLine
+            index={i}
+            user={user}
+            key={i}
+            updateUser={(updatedUser) => handleUpdateUser(updatedUser, i)}
+            deleteUser={(deletedUser) => handleDeleteUser(deletedUser, i)}
+          />
+        </>
       );
       userToRender.push(newUserToRender);
     }
@@ -209,7 +213,7 @@ const Users = () => {
   }
 
   function deleteUser() {
-    const newArray = users.filter((el, i) => selectedUser !== i);
+    const newArray = users.filter((_el, i) => selectedUser !== i);
     setUsers(newArray);
     setIsDeleteModalOpen(false);
     updateNumberOfPages();
@@ -255,7 +259,7 @@ const Users = () => {
       };
       newUsers.push(newUser);
     }
-    setUsers((users) => users.concat(newUsers));
+    setUsers((userLis) => userLis.concat(newUsers));
     const newPageNumber = Math.floor(data.length / NUMBER_OF_USERS_PER_PAGE);
     setNumberOfPages((prevState) => prevState + newPageNumber);
   }
@@ -269,12 +273,15 @@ const Users = () => {
   function handleChangeName(e: any) {
     setNameField(e.target.value);
   }
+
   function handleChangeEmail(e: any) {
     setEmailField(e.target.value);
   }
+
   function handleChangPass(e: any) {
     setPassField(e.target.value);
   }
+
   function handleChangeConfirmPass(e: any) {
     setConfirmPassField(e.target.value);
   }
@@ -286,6 +293,7 @@ const Users = () => {
   function openAddUserModal() {
     setIsAddUserModalOpen(true);
   }
+
   function handleCloseModal() {
     if (isAddUserModalOpen) {
       setIsAddUserModalOpen(false);
@@ -465,42 +473,52 @@ const Users = () => {
             variant="striped"
             bgColor={setTableBgColor()}
             borderRadius="6px"
-            maxH="600px"
-            size="lg"
+            h={"50%"}
           >
             <Thead>
-              <Tr>
+              <Tr height="5px">
                 <Th>Nome</Th>
                 <Th>Email</Th>
                 <Th>Usuário</Th>
                 <Th>Ações</Th>
               </Tr>
             </Thead>
-            <Tbody>{handleRenderUsers()}</Tbody>
+            <Tbody>{handleRenderUsers()} </Tbody>
             <Tfoot>
-              <Tr width="100%">
-                <Th>
-                  {currentPage === 1 ? (
-                    ""
-                  ) : (
-                    <Button onClick={() => handlePrevPage()}>
-                      <AiOutlineArrowLeft />
-                    </Button>
-                  )}
-                </Th>
-                <Th display="flex" justifyContent="center">
-                  <Heading fontSize="22px">{currentPage}</Heading>
-                </Th>
-                <Th></Th>
-                <Th>
-                  {currentPage === numberOfPages ? (
-                    ""
-                  ) : (
-                    <Button onClick={() => handleNextPage()}>
-                      <AiOutlineArrowRight />
-                    </Button>
-                  )}
-                </Th>
+              <Tr height="5px">
+                <Td colSpan={4}>
+                  <Flex alignItems="center">
+                    {currentPage === 1 ? (
+                      <Button
+                        isDisabled={disabled}
+                        onClick={() => handlePrevPage()}
+                      >
+                        <AiOutlineArrowLeft />
+                      </Button>
+                    ) : (
+                      <Button onClick={() => handlePrevPage()}>
+                        <AiOutlineArrowLeft />
+                      </Button>
+                    )}
+
+                    <Spacer />
+                    <Heading fontSize="22px">{currentPage}</Heading>
+                    <Spacer />
+
+                    {currentPage === numberOfPages ? (
+                      <Button
+                        isDisabled={disabled}
+                        onClick={() => handlePrevPage()}
+                      >
+                        <AiOutlineArrowRight />
+                      </Button>
+                    ) : (
+                      <Button onClick={() => handleNextPage()}>
+                        <AiOutlineArrowRight />
+                      </Button>
+                    )}
+                  </Flex>
+                </Td>
               </Tr>
             </Tfoot>
           </Table>
