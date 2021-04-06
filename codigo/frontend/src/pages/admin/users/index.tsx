@@ -7,7 +7,6 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Tfoot,
   Th,
   Thead,
@@ -56,7 +55,8 @@ const Users = () => {
   const inputBgColor =
     colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
   const iconInputColor =
-    colorMode === LIGHT ? colors.dark.Nord0 : colors.dark.Nord2;
+    colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord2;
+
   const inputStyle = {
     inputTextColor,
     labelColor,
@@ -419,14 +419,15 @@ const Users = () => {
   return (
     <>
       <ModalComponent
+        title="Deletar"
         isOpen={isDeleteModalOpen}
+        userName={selectedUserName}
         onClose={() => handleCloseModal()}
       >
-        <Text>Você deseja deletar {selectedUserName} ?</Text>
-        <Flex justify="flex-end" mb="5%">
+        <Flex justify="flex-end" mb={5} mt={5}>
           <Button
             bgColor={colors.aurora.Nord14}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
@@ -438,7 +439,7 @@ const Users = () => {
           <Button
             onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
@@ -447,7 +448,9 @@ const Users = () => {
           </Button>
         </Flex>
       </ModalComponent>
+
       <ModalComponent
+        title={isAddUserModalOpen ? "Adicionar" : "Editar"}
         isOpen={isAddUserModalOpen || isUpdateModalOpen}
         onClose={() => handleCloseModal()}
       >
@@ -513,7 +516,7 @@ const Users = () => {
         <Flex justify="flex-end" mb="5%">
           <Button
             bgColor={colors.aurora.Nord11}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
@@ -525,7 +528,7 @@ const Users = () => {
           <Button
             onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord14}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
@@ -580,11 +583,11 @@ const Users = () => {
             variant="striped"
             bgColor={setTableBgColor()}
             borderRadius="6px"
-
             maxH="600px"
             minW="1000px"
             size="lg"
             h={"50%"}
+
           >
             <Thead>
               <Tr height="5px">
