@@ -12,6 +12,7 @@ import {
   Thead,
   Tr,
   useColorMode,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -21,7 +22,7 @@ import {
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
-import { FiUserPlus } from "react-icons/fi";
+import { FiHelpCircle, FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
@@ -137,6 +138,7 @@ const Users = () => {
   );
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [nameField, setNameField] = useState("");
   const [emailField, setEmailField] = useState("");
   const [passField, setPassField] = useState("");
@@ -192,8 +194,9 @@ const Users = () => {
   function updateNumberOfPages() {
     setNumberOfPages(Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE));
   }
+
   function isAddUserValid(newUser: User) {
-    const { password, confirmPassword } = newUser;
+    const { password } = newUser;
     const fieldsAndValues = Object.entries(newUser);
 
     let invalidFields = [];
@@ -205,6 +208,7 @@ const Users = () => {
         invalidFields.push(fields[0]);
       }
     }
+
     if (invalidFields.length > 0) {
       let aux = {
         name: false,
@@ -213,6 +217,7 @@ const Users = () => {
         password: false,
         confirmPassword: false,
       };
+
       for (let field of invalidFields) {
         let tranlatedField = null;
         console.log(field);
@@ -242,7 +247,6 @@ const Users = () => {
           title: `Campo ${tranlatedField} está vazio`,
           status: "error",
           duration: 2000,
-          isClosable: true,
         });
       }
       setIsInputInvalid(aux);
@@ -260,7 +264,6 @@ const Users = () => {
         title: `Campo senha e confirmar senha estão divergentes`,
         status: "error",
         duration: 2000,
-        isClosable: true,
       });
       setIsInputInvalid(aux);
       return false;
@@ -275,8 +278,8 @@ const Users = () => {
       password: passField,
       confirmPassword: confirmPassField,
     };
-    if (!isAddUserValid(newUser)) {
-    } else {
+
+    if (isAddUserValid(newUser)) {
       setUsers([...users, newUser]);
       handleCloseModal();
       cleanFields();
@@ -286,21 +289,22 @@ const Users = () => {
         description: `${newUser.name} cadastrado com sucesso`,
         status: "success",
         duration: 9000,
-        isClosable: true,
       });
     }
   }
+
   function updateUser() {
     const updatedUser: User = {
       name: nameField,
       email: emailField,
       userName: userNameField,
     };
-    if (!isAddUserValid(updatedUser)) {
-    } else {
+
+    if (isAddUserValid(updatedUser)) {
       const newArray = users.map((el, i) =>
         i === selectedUser ? Object.assign({}, el, updatedUser) : el
       );
+
       setUsers(newArray);
       handleCloseModal();
       updateNumberOfPages();
@@ -308,7 +312,15 @@ const Users = () => {
   }
 
   function deleteUser() {
+    console.log(selectedUser);
     const newArray = users.filter((_el, i) => selectedUser !== i);
+
+    toast({
+      title: `Usuário ${selectedUserName} foi deletado com sucesso!`,
+      status: "success",
+      duration: 2000,
+    });
+
     setUsers(newArray);
     setIsDeleteModalOpen(false);
     updateNumberOfPages();
@@ -393,12 +405,15 @@ const Users = () => {
     if (isAddUserModalOpen) {
       setIsAddUserModalOpen(false);
     }
+
     if (isUpdateModalOpen) {
       setIsUpdateModalOpen(false);
     }
+
     if (isDeleteModalOpen) {
       setIsDeleteModalOpen(false);
     }
+
     setIsInputInvalid({
       name: false,
       userName: false,
@@ -576,6 +591,21 @@ const Users = () => {
                 accept=".csv"
               />
             </label>
+
+            <Icon
+              as={FiHelpCircle}
+              boxSize="20px"
+              color={colors.aurora.Nord12}
+              _hover={{ cursor: "pointer" }}
+              ml="5%"
+              onClick={onOpen}
+            />
+
+            <ModalComponent
+              isOpen={isOpen}
+              onClose={onClose}
+              title="Exemplo CSV"
+            />
           </Flex>
 
           <Table
@@ -587,7 +617,6 @@ const Users = () => {
             minW="1000px"
             size="lg"
             h={"50%"}
-
           >
             <Thead>
               <Tr height="5px">
