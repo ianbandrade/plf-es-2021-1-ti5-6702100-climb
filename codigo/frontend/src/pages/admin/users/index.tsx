@@ -312,14 +312,15 @@ const Users = () => {
   }
 
   function deleteUser() {
+    console.log(selectedUser);
     const newArray = users.filter((_el, i) => selectedUser !== i);
-    if (selectedUser) {
-      toast({
-        title: `Usuário ${selectedUserName} foi deletado com sucesso!`,
-        status: "success",
-        duration: 2000,
-      });
-    }
+
+    toast({
+      title: `Usuário ${selectedUserName} foi deletado com sucesso!`,
+      status: "success",
+      duration: 2000,
+    });
+
     setUsers(newArray);
     setIsDeleteModalOpen(false);
     updateNumberOfPages();
