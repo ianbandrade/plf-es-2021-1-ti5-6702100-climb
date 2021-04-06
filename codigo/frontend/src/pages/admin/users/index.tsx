@@ -476,7 +476,7 @@ const Users = () => {
             variant="striped"
             bgColor={setTableBgColor()}
             borderRadius="6px"
-            h={500}
+            h={400}
           >
             <Thead>
               <Tr height="5px">

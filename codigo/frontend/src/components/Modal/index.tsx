@@ -16,7 +16,7 @@ interface ModalComponentProps {
   isOpen: boolean;
   onClose: () => void;
   userName?: string;
-  children: ReactNode[];
+  children: ReactNode | ReactNode[];
 }
 
 const LIGHT = "light";
