@@ -12,6 +12,7 @@ import {
   Thead,
   Tr,
   useColorMode,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import CSVReader from "react-csv-reader";
@@ -33,7 +34,7 @@ const disabled: boolean = true;
 export interface User {
   name: string;
   email: string;
-  userName: string;
+  userName?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -42,6 +43,7 @@ const NUMBER_OF_USERS_PER_PAGE = 5;
 
 const Users = () => {
   const { colorMode } = useColorMode();
+  const toast = useToast();
   const formColor =
     colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
   const textColor =
@@ -146,7 +148,13 @@ const Users = () => {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+  const [isInputInvalid, setIsInputInvalid] = useState({
+    name: false,
+    email: false,
+    userName: false,
+    password: false,
+    confirmPassword: false,
+  });
   function handleNextPage() {
     setCurrentPage((prevState) => prevState + 1);
   }
@@ -184,19 +192,103 @@ const Users = () => {
   function updateNumberOfPages() {
     setNumberOfPages(Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE));
   }
+  function isAddUserValid(newUser: User) {
+    const { password, confirmPassword } = newUser;
+    const fieldsAndValues = Object.entries(newUser);
+
+    let invalidFields = [];
+    for (let i = 0; i < fieldsAndValues.length; i++) {
+      const fields = fieldsAndValues[i];
+
+      if (fields[1].length === 0) {
+        console.log(fields);
+        invalidFields.push(fields[0]);
+      }
+    }
+    if (invalidFields.length > 0) {
+      let aux = {
+        name: false,
+        email: false,
+        userName: false,
+        password: false,
+        confirmPassword: false,
+      };
+      for (let field of invalidFields) {
+        let tranlatedField = null;
+        console.log(field);
+        switch (field) {
+          case "name":
+            aux.name = true;
+            tranlatedField = "Nome";
+            break;
+          case "email":
+            aux.email = true;
+            tranlatedField = "Email";
+            break;
+          case "userName":
+            aux.userName = true;
+            tranlatedField = "Usuaŕio";
+            break;
+          case "password":
+            aux.password = true;
+            tranlatedField = "Senha";
+            break;
+          case "confirmPassword":
+            aux.confirmPassword = true;
+            tranlatedField = "Confirmar senha";
+            break;
+        }
+        toast({
+          title: `Campo ${tranlatedField} está vazio`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+      setIsInputInvalid(aux);
+      return false;
+      // TODO = add more validation to password
+    } else if (password !== confirmPassField) {
+      let aux = {
+        name: false,
+        email: false,
+        userName: false,
+        password: true,
+        confirmPassword: true,
+      };
+      toast({
+        title: `Campo senha e confirmar senha estão divergentes`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setIsInputInvalid(aux);
+      return false;
+    }
+    return true;
+  }
 
   function saveUser() {
     const newUser: User = {
       name: nameField,
       email: emailField,
-      userName: "",
       password: passField,
       confirmPassword: confirmPassField,
     };
-    setUsers([...users, newUser]);
-    handleCloseModal();
-    cleanFields();
-    updateNumberOfPages();
+    if (!isAddUserValid(newUser)) {
+    } else {
+      setUsers([...users, newUser]);
+      handleCloseModal();
+      cleanFields();
+      updateNumberOfPages();
+      toast({
+        title: "Usuário criado com sucesso",
+        description: `${newUser.name} cadastrado com sucesso`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   }
   function updateUser() {
     const updatedUser: User = {
@@ -204,12 +296,15 @@ const Users = () => {
       email: emailField,
       userName: userNameField,
     };
-    const newArray = users.map((el, i) =>
-      i === selectedUser ? Object.assign({}, el, updatedUser) : el
-    );
-    setUsers(newArray);
-    handleCloseModal();
-    updateNumberOfPages();
+    if (!isAddUserValid(updatedUser)) {
+    } else {
+      const newArray = users.map((el, i) =>
+        i === selectedUser ? Object.assign({}, el, updatedUser) : el
+      );
+      setUsers(newArray);
+      handleCloseModal();
+      updateNumberOfPages();
+    }
   }
 
   function deleteUser() {
@@ -235,7 +330,7 @@ const Users = () => {
     setIsUpdateModalOpen(true);
     setNameField(user.name);
     setEmailField(user.email);
-    setUserNameField(user.userName);
+    setUserNameField(user.userName || "");
     setSelectedUser(index);
   }
 
@@ -304,6 +399,13 @@ const Users = () => {
     if (isDeleteModalOpen) {
       setIsDeleteModalOpen(false);
     }
+    setIsInputInvalid({
+      name: false,
+      userName: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+    });
     cleanFields();
   }
 
@@ -357,6 +459,7 @@ const Users = () => {
             type={"text"}
             label="Nome"
             placeholder="Nome"
+            validate={isInputInvalid.name}
             style={inputStyle}
             icon={<AiOutlineUser color={iconInputColor} />}
             onChangeInput={handleChangeName}
@@ -365,6 +468,7 @@ const Users = () => {
           <Input
             type={"email"}
             label="E-mail"
+            validate={isInputInvalid.email}
             placeholder="Email"
             style={inputStyle}
             icon={<EmailIcon color={iconInputColor} />}
@@ -376,6 +480,7 @@ const Users = () => {
               <Input
                 type={"password"}
                 label="Senha"
+                validate={isInputInvalid.password}
                 placeholder="Senha"
                 style={inputStyle}
                 icon={<LockIcon color={iconInputColor} />}
@@ -385,6 +490,7 @@ const Users = () => {
               <Input
                 type={"password"}
                 label="Confirma senha"
+                validate={isInputInvalid.confirmPassword}
                 placeholder="Confirma senha"
                 style={inputStyle}
                 icon={<LockIcon color={iconInputColor} />}
@@ -402,6 +508,7 @@ const Users = () => {
               style={inputStyle}
               icon={<AiOutlineUser color={iconInputColor} />}
               onChangeInput={handleUserNameField}
+              validate={isInputInvalid.userName}
               value={userNameField}
             />
           )}
@@ -476,7 +583,11 @@ const Users = () => {
             variant="striped"
             bgColor={setTableBgColor()}
             borderRadius="6px"
-            h={400}
+            maxH="600px"
+            minW="1000px"
+            size="lg"
+            h={"50%"}
+
           >
             <Thead>
               <Tr height="5px">

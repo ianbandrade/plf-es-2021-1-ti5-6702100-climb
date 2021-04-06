@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import { FormLabel, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
-import { colors } from "../../styles/customTheme";
-import { useColorMode } from "@chakra-ui/color-mode";
-const LIGHT = "light";
+import { MutableRefObject } from "react";
 
 interface InputProps {
   placeholder: string;
@@ -17,6 +15,8 @@ interface InputProps {
     marginBottom?: string;
   };
   type: string;
+  required?: boolean;
+  validate?: boolean;
 }
 
 const InputComponent = ({
@@ -27,6 +27,8 @@ const InputComponent = ({
   onChangeInput,
   style,
   type,
+  required,
+  validate,
 }: InputProps) => {
   return (
     <>
@@ -41,6 +43,8 @@ const InputComponent = ({
       >
         <InputLeftAddon children={icon} />
         <Input
+          isInvalid={validate}
+          required={required}
           type={type}
           placeholder={placeholder}
           color={style?.inputTextColor}
