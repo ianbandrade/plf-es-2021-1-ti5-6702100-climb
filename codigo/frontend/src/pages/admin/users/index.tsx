@@ -1,10 +1,12 @@
 import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Code,
   Flex,
   Heading,
   Spacer,
   Table,
+  TableCaption,
   Tbody,
   Td,
   Tfoot,
@@ -433,7 +435,7 @@ const Users = () => {
   return (
     <>
       <ModalComponent
-        title="Deletar"
+        title="Deletar usuário"
         isOpen={isDeleteModalOpen}
         userName={selectedUserName}
         onClose={() => handleCloseModal()}
@@ -464,7 +466,7 @@ const Users = () => {
       </ModalComponent>
 
       <ModalComponent
-        title={isAddUserModalOpen ? "Adicionar" : "Editar"}
+        title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
         isOpen={isAddUserModalOpen || isUpdateModalOpen}
         onClose={() => handleCloseModal()}
       >
@@ -604,7 +606,36 @@ const Users = () => {
               isOpen={isOpen}
               onClose={onClose}
               title="Exemplo CSV"
-            />
+              width={750}
+            >
+              <Table variant="unstyled" m={[5, 2]}>
+                <TableCaption>
+                  Os itens devem ser separados por <Code>;</Code>
+                </TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Nome;</Th>
+                    <Th>Email;</Th>
+                    <Th>Usuário;</Th>
+                    <Th>Senha</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>Joaquim da Silva Lobo;</Td>
+                    <Td>joaquim@climb.com;</Td>
+                    <Td>joaquimsl;</Td>
+                    <Td>senha123</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Patrick Antonio;</Td>
+                    <Td>patricka@climb.com;</Td>
+                    <Td>patrick123;</Td>
+                    <Td>423!@$fpass</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </ModalComponent>
           </Flex>
 
           <Table

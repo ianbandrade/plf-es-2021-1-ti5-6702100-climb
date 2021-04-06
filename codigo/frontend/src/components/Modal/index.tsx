@@ -16,6 +16,7 @@ interface ModalComponentProps {
   isOpen: boolean;
   onClose: () => void;
   userName?: string;
+  width?: number;
   children: ReactNode | ReactNode[];
 }
 
@@ -23,6 +24,7 @@ const LIGHT = "light";
 
 const ModalComponent = ({
   title,
+  width,
   userName,
   isOpen,
   onClose,
@@ -35,6 +37,7 @@ const ModalComponent = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
+        minW={width}
         bgColor={formColor}
         display="flex"
         justifyContent="center"
@@ -61,7 +64,6 @@ const ModalComponent = ({
           ) : (
             ""
           )}
-
           {children}
         </ModalBody>
       </ModalContent>
