@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './configuration/configs/winston.config';
+import * as cookieParser from 'cookie-parser';
 
 export async function bootstrap() {
   const logger = WinstonModule.createLogger(winstonConfig);
@@ -12,6 +13,8 @@ export async function bootstrap() {
     cors: true,
     logger,
   });
+
+  app.use(cookieParser());
 
   const configService = app.get(ConfigService);
 
