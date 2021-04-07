@@ -36,6 +36,7 @@ const Form = ({ children, style, formTitle }: FormProps) => {
       fontFamily="Alatsi"
       boxShadow={style?.boxShadow}
       rounded={style?.rounded}
+      onSubmit={(e) => e.preventDefault()}
     >
       {formTitle && (
         <Text

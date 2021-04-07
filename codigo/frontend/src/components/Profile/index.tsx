@@ -7,13 +7,23 @@ const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
 const GITLAB_OAUTH = "https://gitlab.com/oauth/authorize?";
 
-const GITHUB_PARAMS = `client_id=${process.env.GITHUB_CLIENT_ID}
-                      &scope=${process.env.GITHUB_SCOPE}
-                      &redirect_uri=${process.env.GITHUB_REDIRECT_URI}`;
 
-const GITLAB_PARAMS = `client_id=${process.env.GITLAB_CLIENT_ID}
-                      &scope=${process.env.GITLAB_SCOPE}
-                      &redirect_uri=${process.env.GITLAB_REDIRECT_URI}`
+
+const GITHUB_PARAMS = new URLSearchParams({
+  client_id: process.env.GITHUB_CLIENT_ID || "",
+  scope: process.env.GITHUB_SCOPE  || "",
+  redirect_uri: process.env.GITHUB_REDIRECT_URI  || "",
+  state: "" || "",
+}).toString()
+
+
+const GITLAB_PARAMS = new URLSearchParams({
+  client_id: process.env.GITLAB_CLIENT_ID || "",
+  scope: process.env.GITLAB_SCOPE || "",
+  redirect_uri: process.env.GITLAB_REDIRECT_URI || "",
+  state: "" || "",
+  response_type: "code",
+}).toString();
 
 interface User {
   name: string;
@@ -30,8 +40,6 @@ interface ProfileProps {
 const Profile = ({ user: { name, userName } }: ProfileProps) => {
   const { colorMode } = useColorMode();
 
-  
-
   const color = colorMode === LIGHT ?
     {
       buttonBg: colors.dark.Nord2,
@@ -45,8 +53,13 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
       avatarBg: colors.dark.Nord1
     }
 
-  const sites = [{ site: "GitHub", "icon": AiFillGithub, as: "a",href: `${GITHUB_OAUTH}${GITHUB_PARAMS}`, callback: () => {}},
-  { site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329", as: "a",href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`, callback: () => {}}]
+  const sites = [{
+    site: "GitHub", "icon": AiFillGithub,
+    as: "a", href: `${GITHUB_OAUTH}${GITHUB_PARAMS}`,
+  },
+  {
+    site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329", as: "a", href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`,
+  }]
 
   const integrationButtons = sites
     .map(integration =>
@@ -57,7 +70,7 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
         key={integration.site}
         as="a"
         href={integration.href}
-        onClick={() => integration.callback}
+
       >
         <Icon as={integration.icon} mr="10px" boxSize="24px" color={integration.iconColor} />
         {integration.site}
