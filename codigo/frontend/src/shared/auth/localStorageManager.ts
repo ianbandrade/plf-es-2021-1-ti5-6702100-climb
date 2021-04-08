@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import { User } from "../interfaces/User";
+import { User } from "../interfaces/user";
 
 export const TOKEN_KEY = 'accessToken';
 

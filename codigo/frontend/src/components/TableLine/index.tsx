@@ -1,6 +1,6 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Flex, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { User } from "../../shared/interfaces/User";
+import { User } from "../../shared/interfaces/user";
 import { colors } from "../../styles/customTheme";
 
 const cellWidth = "36ch";

@@ -5,7 +5,7 @@ import { RiGitlabFill } from "react-icons/ri";
 import { colors } from "../../styles/customTheme";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { User } from "../../shared/interfaces/User";
+import { User } from "../../shared/interfaces/user";
 import apiClient from "../../shared/api/api-client";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../shared/auth/localStorageManager";
