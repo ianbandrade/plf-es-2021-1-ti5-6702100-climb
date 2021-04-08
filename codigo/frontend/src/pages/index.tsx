@@ -7,17 +7,21 @@ import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import { colors } from "../styles/customTheme";
 import axios from "axios";
+import { useRouter } from "next/router";
+import jwtDecode from "jwt-decode";
 
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
 const AUTHURL = `/auth/signin`;
-const backend = axios.create({url: `http://${process.env.NEXT_PUBLIC_API_HOST}`});
+const backend = axios.create({baseURL: `http://${process.env.NEXT_PUBLIC_API_HOST}`});
+
 
 const Home = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toast = useToast();
+  const router = useRouter();
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -27,18 +31,29 @@ const Home = () => {
   }
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
-    if (isEmailOrPassEmpty()) return showToast({ title: "Prencha os campos de e-mail e senha", status: "warning", id: "login" });
-    if (isInvalidMail()) return showToast({ title: "E-mail inválido", status: "warning", id: "login" });
+    if (isEmailOrPassEmpty()) return showToast({ title: "Prencha os campos de e-mail e senha", status: "warning", id: "empty" });
+    if (isInvalidMail()) return showToast({ title: "E-mail inválido", status: "warning", id: "mail" });
+    if(isInvalidPassword()) return showToast({ title: "A senha deve conter 6 ou mais caracteres", status: "warning", id: "password" });
+
 
     const body = { email: email.replace(" ", ""), password: password }
-    backend.post(AUTHURL, body, { withCredentials: true }).then(
+    backend.post(AUTHURL, body).then(
       res => {
         if (res.status === 201) {
-          showToast({ title: "Acesso autorizado", status: "success", id: "login" })
+          if(res.data?.token){
+            const user = jwtDecode(res.data.token);
+            showToast({ title: "Acesso autorizado", status: "success", id: "login", position: "bottom-left" });
+            console.log(user);
+            //router.push("user/profile");
+          }
         }
       }
-    ).catch(e => showToast({ title: "Falha na conexão", description: e.message, status: "error", id: "login" }))
+    ).catch(e => 
+        getValue(e.response.data).forEach((description,i) => showToast({title: "Messagem",description, status: "error", id: i}))
+      )
   }
+
+  const getValue = ({message} : {message: string[]}) => new Array().concat(message ?? []);
 
   const showToast = (data: UseToastOptions) => {
     if (data.id)
@@ -49,6 +64,7 @@ const Home = () => {
 
   const isEmailOrPassEmpty = () => !(email && password);
   const isInvalidMail = () => !/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email)
+  const isInvalidPassword = () => password.length < 6
 
   const { colorMode } = useColorMode();
 
