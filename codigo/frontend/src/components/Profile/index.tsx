@@ -64,7 +64,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
           );
         })
         .catch((e) => {
-          getMessages(e?.response.data).forEach((description, i) =>
+          getMessages(e?.response?.data).forEach((description, i) =>
             toast({
               title: "Erro!",
               description,
@@ -105,14 +105,14 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   const integrationButtons = sites
     .map(integration =>
       <Button
-        _hover={{ bgColor: color.buttonHv }}
+        _hover={{ bgColor: !integration.nick ? color.buttonHv : undefined }}
         bgColor={!integration.nick ? color.buttonBg : undefined}
         color={!integration.nick ? color.buttonTxt : color.buttonBg}
         key={integration.site}
         as="a"
         href={integration.href}
-        variant={!integration.nick ? 'solid' : 'link'}
-        pointerEvents={!integration.nick ? 'auto' : 'none'}
+        variant={!integration.nick ? 'solid' : 'ghost'}
+        // pointerEvents={!integration.nick ? 'auto' : 'none'}
         marginRight={4}
       >
         <Icon as={integration.icon} mr="10px" boxSize="24px" color={integration.iconColor} />

@@ -2,6 +2,7 @@ import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Avatar, AvatarBadge } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { logout } from "../../shared/auth/localStorageManager";
 import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
 import AdminHeader from "./AdminHeader";
@@ -53,6 +54,11 @@ const Header = () => {
             bgColor={
               colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1
             }
+            _hover={{ cursor: 'pointer' }}
+            onClick={() => {
+              logout();
+              router.replace('/');
+            }}
           >
             <AvatarBadge
               boxSize="1em"
