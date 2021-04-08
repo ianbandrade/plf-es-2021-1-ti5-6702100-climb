@@ -1,5 +1,6 @@
 
 import apiClient from "../api/api-client";
+import { CreateManyUsers } from "../interfaces/create-many";
 import { CreateUser } from "../interfaces/create-user";
 import { FindUsersQuery } from "../interfaces/find-users-query";
 import { UpdateUser } from "../interfaces/update-user";
@@ -19,7 +20,7 @@ class UserService {
     return apiClient.post(this.DEFAULT_PATH, createUser);
   }
 
-  async createMany(createUsers: CreateUser[]){
+  async createMany(createUsers: CreateManyUsers){
     return apiClient.post(`${this.DEFAULT_PATH}/batch`, createUsers);
   }
 

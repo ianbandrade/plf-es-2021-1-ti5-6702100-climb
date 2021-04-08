@@ -59,21 +59,21 @@ const Users = () => {
   } =
     colorMode === LIGHT
       ? {
-          formColor: colors.light.Nord6,
-          textColor: colors.light.Nord6,
-          inputTextColor: colors.light.Nord6,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.dark.Nord2,
-          iconInputColor: colors.dark.Nord0,
-        }
+        formColor: colors.light.Nord6,
+        textColor: colors.light.Nord6,
+        inputTextColor: colors.light.Nord6,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.dark.Nord2,
+        iconInputColor: colors.dark.Nord0,
+      }
       : {
-          formColor: colors.dark.Nord2,
-          textColor: colors.dark.Nord2,
-          inputTextColor: colors.dark.Nord2,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.light.Nord4,
-          iconInputColor: colors.dark.Nord2,
-        };
+        formColor: colors.dark.Nord2,
+        textColor: colors.dark.Nord2,
+        inputTextColor: colors.dark.Nord2,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.light.Nord4,
+        iconInputColor: colors.dark.Nord2,
+      };
 
   const inputStyle = {
     inputTextColor,
@@ -115,7 +115,7 @@ const Users = () => {
 
   useEffect(() => {
     async function fetchData() {
-      await userService.getAll({role:UserRole.USER})
+      await userService.getAll({ role: UserRole.USER })
         .then((res) => {
           if (res.status === 200) {
             const { data } = res;
@@ -236,25 +236,8 @@ const Users = () => {
       });
       setIsInputInvalid(aux);
       return false;
-    } else if (
-      !password?.match(
-        "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"
-      )
-    ) {
-      aux.password = true;
-      aux.confirmPassword = true;
-      setIsInputInvalid(aux);
-      toast({
-        title: "Atenção!",
-        description:
-          "A senha deve ter no mínimo 6 caracteres, números, letras maiusculas e minusculas e caracteres especiais",
-        status: "warning",
-        duration: 5000,
-        position: "bottom-left",
-      });
-
-      return false;
     }
+
     return true;
   }
 
@@ -400,17 +383,20 @@ const Users = () => {
       };
       newUsers.push(newUser);
     }
+
+    const requestBody = {
+      users: newUsers,
+    }
+
     //change to passwordConfirmation
-    await userService.createMany(newUsers).then((res) => {
-      if (res.status === 200) {
-        userService.getAll({role:UserRole.USER}).then(({data})=>{
-          setUsers(data.users);
-          const newPageNumber = Math.floor(
-            data.length / NUMBER_OF_USERS_PER_PAGE
-            );
-            setNumberOfPages((prevState) => prevState + newPageNumber);
-        })
-      }
+    await userService.createMany(requestBody).then((res) => {
+      userService.getAll({ role: UserRole.USER }).then(({ data }) => {
+        setUsers(data.users);
+        const newPageNumber = Math.floor(
+          data.length / NUMBER_OF_USERS_PER_PAGE
+        );
+        setNumberOfPages((prevState) => prevState + newPageNumber);
+      })
     });
   }
 
