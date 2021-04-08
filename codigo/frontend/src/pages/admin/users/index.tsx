@@ -534,25 +534,25 @@ const Users = () => {
         </Form>
         <Flex justify="flex-end" mb="5%">
           <Button
+            onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
             color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
             mr="8%"
-            onClick={() => handleConfirmModal()}
           >
-            Salvar
+            Cancelar
           </Button>
           <Button
-            onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord14}
             color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
+            onClick={() => handleConfirmModal()}
           >
-            Cancelar
+            Salvar
           </Button>
         </Flex>
       </ModalComponent>
