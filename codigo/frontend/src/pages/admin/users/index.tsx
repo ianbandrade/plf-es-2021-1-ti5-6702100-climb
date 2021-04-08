@@ -254,7 +254,7 @@ const Users = () => {
       setIsInputInvalid(aux);
       return false;
       // TODO = add more validation to password
-    } else if (password !== confirmPassField) {
+    } else if (!isUpdateModalOpen && password !== confirmPassField) {
       let aux = {
         name: false,
         email: false,
@@ -262,6 +262,7 @@ const Users = () => {
         password: true,
         confirmPassword: true,
       };
+
       toast({
         title: `Campo senha e confirmar senha estão divergentes`,
         status: "error",
