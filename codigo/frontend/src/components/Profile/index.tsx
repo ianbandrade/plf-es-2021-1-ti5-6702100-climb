@@ -8,8 +8,9 @@ import axios from "axios";
 import { User } from "../../shared/interfaces/user";
 import apiClient from "../../shared/api/api-client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getCurrentUser } from "../../shared/auth/localStorageManager";
+import { setCurrentUser } from "../../shared/auth/localStorageManager";
 import { getMessages } from "../../shared/utils/toast-messages";
+import { authService } from "../../shared/services/authService";
 
 const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
@@ -37,7 +38,7 @@ interface ProfileProps {
   setUser: Dispatch<SetStateAction<User>>;
 }
 
-const Profile = ({ user: { name, gitHubAccount, gitLabAccount }, setUser }: ProfileProps) => {
+const Profile = ({ user, setUser }: ProfileProps) => {
   const toast = useToast();
   const router = useRouter();
   const { code, state } = router.query;
@@ -48,18 +49,22 @@ const Profile = ({ user: { name, gitHubAccount, gitLabAccount }, setUser }: Prof
 
       apiClient
         .post(`/version-control/${state}`, body)
-        .then((res) => {
-          getMessages(res.data).forEach((description, i) => {
+        .then(async (res) => {
+          const me = await authService.me().then(response => response.data) ?? user;
+          setCurrentUser(me)
+          setUser(me);
+
+          getMessages(res.data).forEach((description, i) =>
             toast({
               title: "Sucesso!",
               description,
               status: "success",
               id: i,
             })
-          });
+          );
         })
         .catch((e) => {
-          getMessages(e.response.data).forEach((description, i) =>
+          getMessages(e?.response.data).forEach((description, i) =>
             toast({
               title: "Erro!",
               description,
@@ -90,23 +95,23 @@ const Profile = ({ user: { name, gitHubAccount, gitLabAccount }, setUser }: Prof
   const sites = [{
     site: "GitHub", "icon": AiFillGithub,
     as: "a", href: `${GITHUB_OAUTH}${GITHUB_PARAMS}`,
-    nick: gitHubAccount
+    nick: user.gitHubAccount
   },
   {
     site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329", as: "a", href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`,
-    nick: gitLabAccount
+    nick: user.gitLabAccount
   }]
 
   const integrationButtons = sites
     .map(integration =>
       <Button
         _hover={{ bgColor: color.buttonHv }}
-        bgColor={color.buttonBg}
-        color={color.buttonTxt}
+        bgColor={!integration.nick ? color.buttonBg : undefined}
+        color={!integration.nick ? color.buttonTxt : color.buttonBg}
         key={integration.site}
         as="a"
         href={integration.href}
-        disabled={!!integration.nick}
+        variant={!integration.nick ? 'solid' : 'link'}
         pointerEvents={!integration.nick ? 'auto' : 'none'}
         marginRight={4}
       >
@@ -126,7 +131,7 @@ const Profile = ({ user: { name, gitHubAccount, gitLabAccount }, setUser }: Prof
         />
       </Flex>
       <Flex flexDirection="column">
-        <Heading>{name}</Heading>
+        <Heading>{user.name}</Heading>
         <Flex mt="15px" justifyContent="space-between" width="250px">
           {integrationButtons}
         </Flex>

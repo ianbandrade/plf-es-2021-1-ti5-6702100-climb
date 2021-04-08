@@ -85,7 +85,7 @@ const Home = () => {
         }
       })
       .catch((e) =>
-        getMessages(e.response.data).forEach((description, i) =>
+        getMessages(e?.response.data).forEach((description, i) =>
           showToast({
             title: "Erro!",
             description: `${description}`,

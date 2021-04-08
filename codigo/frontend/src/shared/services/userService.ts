@@ -12,23 +12,23 @@ class UserService {
   }
 
   async get(id:string){
-    return  apiClient.get(`${this.DEFAULT_PATH}/${id}`);
+    return apiClient.get(`${this.DEFAULT_PATH}/${id}`);
   }
 
   async create(createUser: CreateUser){
-    return  apiClient.post(this.DEFAULT_PATH, createUser);
+    return apiClient.post(this.DEFAULT_PATH, createUser);
   }
 
   async createMany(createUsers: CreateUser[]){
-    return  apiClient.post(`${this.DEFAULT_PATH}/batch`, createUsers);
+    return apiClient.post(`${this.DEFAULT_PATH}/batch`, createUsers);
   }
 
   async update(updateUser: UpdateUser){
-    return  apiClient.patch(this.DEFAULT_PATH, updateUser);
+    return apiClient.patch(this.DEFAULT_PATH, updateUser);
   }
 
   async delete(id:string){
-    return  apiClient.delete(`${this.DEFAULT_PATH}/${id}`);
+    return apiClient.delete(`${this.DEFAULT_PATH}/${id}`);
   }
 }
 
