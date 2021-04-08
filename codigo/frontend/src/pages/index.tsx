@@ -6,15 +6,13 @@ import {
   useToast,
   UseToastOptions,
 } from "@chakra-ui/react";
-import axios from "axios";
-import jwtDecode from "jwt-decode";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import apiClient from "../shared/api/api-client";
-import { login } from "../shared/auth/localStorageManager";
+import { isAuthenticated, login } from "../shared/auth/localStorageManager";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 
@@ -22,13 +20,18 @@ const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
 const AUTHURL = `/auth/signin`;
-
+const PROFILE_PATH = 'user/profile';
 
 const Home = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toast = useToast();
   const router = useRouter();
+
+  useEffect(()=>{
+    if(isAuthenticated()) {
+      router.push(PROFILE_PATH)
+    }},[])
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -77,7 +80,7 @@ const Home = () => {
               id: "login",
               position: "bottom-left",
             });
-            router.push("user/profile");
+            router.push(PROFILE_PATH);
           }
         }
       })

@@ -33,10 +33,11 @@ import TableLine from "../../../components/TableLine";
 import { colors } from "../../../styles/customTheme";
 import { getMessages } from "../../../shared/utils/toast-messages";
 import apiClient from "../../../shared/api/api-client";
-import { User } from "../../../shared/interfaces/User";
+import { User } from "../../../shared/interfaces/user";
 import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UserRole } from "../../../shared/enum/user-role";
 import { UpdateUser } from "../../../shared/interfaces/update-user";
+import { userService } from "../../../shared/services/userService";
 
 const LIGHT = "light";
 const disabled: boolean = true;
@@ -114,8 +115,7 @@ const Users = () => {
 
   useEffect(() => {
     async function fetchData() {
-      await apiClient
-        .get(`${USERS_BASE_PATH}?role=USER`)
+      await userService.getAll({role:UserRole.USER})
         .then((res) => {
           if (res.status === 200) {
             const { data } = res;
@@ -268,8 +268,7 @@ const Users = () => {
     };
 
     if (isAddUserValid(newUser)) {
-      apiClient
-        .post(USERS_BASE_PATH, newUser)
+      userService.create(newUser)
         .then((res) => {
           if (res.status === 201) {
             const user = res.data.user as User;
@@ -307,8 +306,7 @@ const Users = () => {
     };
 
     if (true) { //Mudar
-      await apiClient
-        .patch(`${USERS_BASE_PATH}/${userId}`, updatedUser)
+      await userService.update(updatedUser)
         .then((res) => {
           if (res.status === 201) {
             const { data } = res;
@@ -334,8 +332,7 @@ const Users = () => {
   }
 
   async function deleteUser() {
-    await apiClient
-      .delete(`${USERS_BASE_PATH}/${userId}`)
+    await userService.delete(userId)
       .then((res) => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
 
@@ -404,9 +401,9 @@ const Users = () => {
       newUsers.push(newUser);
     }
     //change to passwordConfirmation
-    await apiClient.post(`${USERS_BASE_PATH}/batch`).then((res) => {
+    await userService.createMany(newUsers).then((res) => {
       if (res.status === 200) {
-        apiClient.get("users").then(({data})=>{
+        userService.getAll({role:UserRole.USER}).then(({data})=>{
           setUsers(data.users);
           const newPageNumber = Math.floor(
             data.length / NUMBER_OF_USERS_PER_PAGE
