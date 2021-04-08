@@ -210,16 +210,15 @@ const Users = () => {
         invalidFields.push(fields[0]);
       }
     }
+    let aux = {
+      name: false,
+      email: false,
+      userName: false,
+      password: false,
+      confirmPassword: false,
+    };
 
     if (invalidFields.length > 0) {
-      let aux = {
-        name: false,
-        email: false,
-        userName: false,
-        password: false,
-        confirmPassword: false,
-      };
-
       for (let field of invalidFields) {
         let tranlatedField = null;
         console.log(field);
@@ -255,20 +254,29 @@ const Users = () => {
       return false;
       // TODO = add more validation to password
     } else if (!isUpdateModalOpen && password !== confirmPassField) {
-      let aux = {
-        name: false,
-        email: false,
-        userName: false,
-        password: true,
-        confirmPassword: true,
-      };
-
+      aux.password = true;
+      aux.confirmPassword = true;
       toast({
         title: `Campo senha e confirmar senha estão divergentes`,
         status: "error",
         duration: 2000,
       });
       setIsInputInvalid(aux);
+      return false;
+    } else if (
+      !password?.match(
+        "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+      )
+    ) {
+      aux.password = true;
+      aux.confirmPassword = true;
+      setIsInputInvalid(aux);
+      toast({
+        title: `A senha deve ter no mínimo 8 caracteres, números, letras maiusculas e minusculas e caracteres especiais`,
+        status: "error",
+        duration: 2000,
+      });
+
       return false;
     }
     return true;
