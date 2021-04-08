@@ -1,6 +1,6 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Flex, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { User } from "../../pages/admin/users";
+import { User } from "../../shared/interfaces/User";
 import { colors } from "../../styles/customTheme";
 
 const cellWidth = "36ch";
@@ -13,6 +13,7 @@ interface TableLineProps {
 }
 
 const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
+  console.log(user)
   return (
     <Tr key={index} h="auto">
       <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.name}>
@@ -22,10 +23,10 @@ const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
         {user.email}
       </Td>
       <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.email}>
-        {user.githubAcc ?? "-"}
+        {user.gitHubAccount ?? "-"}
       </Td>
       <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.email}>
-        {user.gitlabAcc ?? "-"}
+        {user.gitLabAccount ?? "-"}
       </Td>
       <Td>
         <Flex justifyContent="space-around">

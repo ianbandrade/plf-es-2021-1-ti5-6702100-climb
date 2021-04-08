@@ -5,6 +5,10 @@ import { RiGitlabFill } from "react-icons/ri";
 import { colors } from "../../styles/customTheme";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { User } from "../../shared/interfaces/User";
+import apiClient from "../../shared/api/api-client";
+import { useEffect, useState } from "react";
+import { getCurrentUser } from "../../shared/auth/localStorageManager";
 
 const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
@@ -27,32 +31,18 @@ const GITLAB_PARAMS = new URLSearchParams({
   redirect_uri: redirectUrl,
 }).toString();
 
-interface User {
-  name: string;
-  userName: string;
-  githubAcc?: string;
-  gitlabAcc?: string;
-  image?: string;
-}
-
 interface ProfileProps {
   user: User;
 }
 
-const Profile = ({ user: { name, userName } }: ProfileProps) => {
+const Profile = ({ user: { name, gitHubAccount, gitLabAccount } }: ProfileProps) => {
 
   const router = useRouter();
   const { code, state } = router.query;
 
   if (code) {
-    const message = axios.post(`http://${process.env.NEXT_PUBLIC_API_HOST}/auth/signin`, {
-      "email": "admin@example.com",
-      "password": "password"
-    }).then(response => response.data?.token).then(token =>
-      axios.post(`http://${process.env.NEXT_PUBLIC_API_HOST}/version-control/${state}`,
-        { code, redirectUrl, }, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).then(response => response.data?.message));
+      apiClient.post(`/version-control/${state}`,
+        { code, redirectUrl, }).then(response => response.data?.message);
   }
 
   const { colorMode } = useColorMode();
@@ -73,11 +63,14 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
   const sites = [{
     site: "GitHub", "icon": AiFillGithub,
     as: "a", href: `${GITHUB_OAUTH}${GITHUB_PARAMS}`,
+    nick: gitHubAccount
   },
   {
     site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329", as: "a", href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`,
+    nick: gitLabAccount
   }]
 
+  console.log({gitHubAccount,gitLabAccount})
 
   const integrationButtons = sites
     .map(integration =>
@@ -88,10 +81,11 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
         key={integration.site}
         as="a"
         href={integration.href}
+        disabled={!!integration.nick}
 
       >
         <Icon as={integration.icon} mr="10px" boxSize="24px" color={integration.iconColor} />
-        {integration.site}
+        {integration.nick ?? integration.site}
       </Button>
     )
 

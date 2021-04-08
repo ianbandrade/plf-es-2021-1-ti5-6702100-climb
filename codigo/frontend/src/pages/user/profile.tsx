@@ -1,20 +1,16 @@
 import { Flex } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Profile from "../../components/Profile";
+import { getCurrentUser } from "../../shared/auth/localStorageManager";
+import { User } from "../../shared/interfaces/User";
 
-interface User {
-  name: string;
-  userName: string;
-  githubAcc?: string;
-  gitlabAcc?: string;
-  image?: string;
-}
+const UserPage = () => {  
+  const [user, setUser] = useState<User>({} as User);
+  
+  useEffect(()=>{
+    setUser(getCurrentUser())
+  },[]); 
 
-const UserPage = () => {
-  const [user] = useState<User>({
-    name: "João Guilherme Martins Borborema",
-    userName: "JoaoGuiMB",
-  });
   return (
     <Flex width="100vw">
       <Profile user={user} />

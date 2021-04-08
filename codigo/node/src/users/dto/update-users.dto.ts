@@ -5,7 +5,7 @@ export class UpdateUserDto {
   @IsString({
     message: 'Nome do usuário tem que ser uma string',
   })
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsEmail(
@@ -14,11 +14,11 @@ export class UpdateUserDto {
       message: 'Insira um email válido',
     },
   )
-  email: string;
+  email?: string;
 
   @IsOptional()
-  role: UserRole;
+  role?: UserRole;
 
   @IsOptional()
-  status: boolean;
+  status?: boolean;
 }

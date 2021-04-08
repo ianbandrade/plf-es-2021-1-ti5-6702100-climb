@@ -31,28 +31,18 @@ import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
 import TableLine from "../../../components/TableLine";
 import { colors } from "../../../styles/customTheme";
-import axios from "axios";
-import { getCiphers } from "crypto";
+import { getMessages } from "../../../shared/utils/toast-messages";
+import apiClient from "../../../shared/api/api-client";
+import { User } from "../../../shared/interfaces/User";
+import { CreateUser } from "../../../shared/interfaces/create-user";
+import { UserRole } from "../../../shared/enum/user-role";
+import { UpdateUser } from "../../../shared/interfaces/update-user";
+
 const LIGHT = "light";
 const disabled: boolean = true;
 
-export interface User {
-  id?: string;
-  name: string;
-  email: string;
-  githubAcc?: string;
-  gitlabAcc?: string;
-  password?: string;
-  confirmPassword?: string;
-  role?: string;
-}
-
 const NUMBER_OF_USERS_PER_PAGE = 5;
 const USERS_BASE_PATH = "/users";
-
-const backend = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API_HOST}`,
-});
 
 const Users = () => {
   const { colorMode } = useColorMode();
@@ -95,80 +85,7 @@ const Users = () => {
     return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
   }
 
-  const usersList: User[] = [
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "asdasd",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "adsdorema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "asdasdsadema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "Jauuuuuuborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "qqqqqq",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "JoaoGuiMB",
-      gitlabAcc: "teste",
-    },
-    {
-      name: "João Guilherme Martins Borborema",
-      email: "jborborema@sga.pucminas",
-      githubAcc: "asdasdsd",
-      gitlabAcc: "teste",
-    },
-  ];
+  const usersList: User[] = []
 
   const [users, setUsers] = useState(usersList);
   const [numberOfPages, setNumberOfPages] = useState(
@@ -177,6 +94,7 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [userId, setId] = useState("");
   const [nameField, setNameField] = useState("");
   const [emailField, setEmailField] = useState("");
   const [passField, setPassField] = useState("");
@@ -196,16 +114,16 @@ const Users = () => {
 
   useEffect(() => {
     async function fetchData() {
-      await backend
+      await apiClient
         .get(`${USERS_BASE_PATH}?role=USER`)
         .then((res) => {
           if (res.status === 200) {
             const { data } = res;
-            setUsers([...users, data.users]);
+            setUsers(data.users);
           }
         })
         .catch((e) => {
-          getValue(e.response.data).forEach((description, i) =>
+          getMessages(e.response.data).forEach((description, i) =>
             toast({
               title: "Messagem",
               description,
@@ -256,7 +174,7 @@ const Users = () => {
     setNumberOfPages(Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE));
   }
 
-  function isAddUserValid(newUser: User) {
+  function isAddUserValid(newUser: CreateUser) {
     const { password } = newUser;
     const fieldsAndValues = Object.entries(newUser);
 
@@ -265,7 +183,6 @@ const Users = () => {
       const fields = fieldsAndValues[i];
 
       if (fields[1].length === 0) {
-        console.log(fields);
         invalidFields.push(fields[0]);
       }
     }
@@ -279,7 +196,6 @@ const Users = () => {
     if (invalidFields.length > 0) {
       for (let field of invalidFields) {
         let tranlatedField = null;
-        console.log(field);
         switch (field) {
           case "name":
             aux.name = true;
@@ -343,20 +259,21 @@ const Users = () => {
   }
 
   function saveUser() {
-    const newUser: User = {
+    const newUser: CreateUser = {
       name: nameField,
       email: emailField,
       password: passField,
-      confirmPassword: confirmPassField,
-      role: "USER",
+      passwordConfirmation: confirmPassField,
+      role: UserRole.USER,
     };
 
     if (isAddUserValid(newUser)) {
-      backend
+      apiClient
         .post(USERS_BASE_PATH, newUser)
         .then((res) => {
           if (res.status === 201) {
-            setUsers([...users, newUser]);
+            const user = res.data.user as User;
+            setUsers([...users, user]);
             handleCloseModal();
             updateNumberOfPages();
             cleanFields();
@@ -371,7 +288,7 @@ const Users = () => {
           }
         })
         .catch((e) => {
-          getValue(e.response.data).forEach((description, i) =>
+          getMessages(e.response.data).forEach((description, i) =>
             toast({
               title: "Messagem",
               description,
@@ -382,19 +299,16 @@ const Users = () => {
         });
     }
   }
-  const getValue = ({ message }: { message: string[] }) =>
-    new Array().concat(message ?? []);
 
   async function updateUser() {
-    const updatedUser: User = {
+    const updatedUser: UpdateUser = {
       name: nameField,
       email: emailField,
-      id: "",
     };
 
-    if (isAddUserValid(updatedUser)) {
-      await backend
-        .patch(`${USERS_BASE_PATH}?id=${updatedUser.id}`, updatedUser)
+    if (true) { //Mudar
+      await apiClient
+        .patch(`${USERS_BASE_PATH}/${userId}`, updatedUser)
         .then((res) => {
           if (res.status === 201) {
             const { data } = res;
@@ -407,7 +321,7 @@ const Users = () => {
           }
         })
         .catch((e) => {
-          getValue(e.response.data).forEach((description, i) =>
+          getMessages(e.response.data).forEach((description, i) =>
             toast({
               title: "Messagem",
               description,
@@ -420,8 +334,8 @@ const Users = () => {
   }
 
   async function deleteUser() {
-    await backend
-      .delete(`${USERS_BASE_PATH}?id={}`)
+    await apiClient
+      .delete(`${USERS_BASE_PATH}/${userId}`)
       .then((res) => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
 
@@ -438,7 +352,7 @@ const Users = () => {
         updateNumberOfPages();
       })
       .catch((e) => {
-        getValue(e.response.data).forEach((description, i) =>
+        getMessages(e.response.data).forEach((description, i) =>
           toast({
             title: "Messagem",
             description,
@@ -465,6 +379,8 @@ const Users = () => {
     setIsUpdateModalOpen(true);
     setNameField(user.name);
     setEmailField(user.email);
+    setId(user.id)
+    console.log(user)
     setSelectedUser(index);
   }
 
@@ -472,29 +388,33 @@ const Users = () => {
     console.log(user);
     setSelectedUser(index);
     setSelectedUserName(user.name);
+    setId(user.id);
     setIsDeleteModalOpen(true);
   }
 
   async function handleImportUsers(data: any[], fileInfo: Object) {
-    let newUsers: User[] = [];
+    let newUsers: CreateUser[] = [];
     for (let i = 1; i < data.length; i++) {
       const user = data[i];
-      const newUser: User = {
+      const newUser: CreateUser = {
         name: user[0],
         email: user[1],
         password: user[2],
-        confirmPassword: user[2],
+        passwordConfirmation: user[2],
+        role: UserRole.USER
       };
       newUsers.push(newUser);
     }
     //change to passwordConfirmation
-    await backend.post(`${USERS_BASE_PATH}/batch`).then((res) => {
+    await apiClient.post(`${USERS_BASE_PATH}/batch`).then((res) => {
       if (res.status === 200) {
-        setUsers((userLis) => userLis.concat(newUsers));
-        const newPageNumber = Math.floor(
-          data.length / NUMBER_OF_USERS_PER_PAGE
-        );
-        setNumberOfPages((prevState) => prevState + newPageNumber);
+        apiClient.get("users").then(({data})=>{
+          setUsers(data.users);
+          const newPageNumber = Math.floor(
+            data.length / NUMBER_OF_USERS_PER_PAGE
+            );
+            setNumberOfPages((prevState) => prevState + newPageNumber);
+        })
       }
     });
   }

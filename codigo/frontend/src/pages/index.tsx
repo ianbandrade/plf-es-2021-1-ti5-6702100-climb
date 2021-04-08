@@ -13,15 +13,16 @@ import { useState } from "react";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
+import apiClient from "../shared/api/api-client";
+import { login } from "../shared/auth/localStorageManager";
+import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
 const AUTHURL = `/auth/signin`;
-const backend = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API_HOST}`,
-});
+
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -63,12 +64,12 @@ const Home = () => {
       });
 
     const body = { email: email.replace(" ", ""), password: password };
-    backend
+    apiClient
       .post(AUTHURL, body)
       .then((res) => {
         if (res.status === 201) {
           if (res.data?.token) {
-            const user = jwtDecode(res.data.token);
+            login(res.data.token)
             showToast({
               title: "Sucesso!",
               description: "Acesso autorizado",
@@ -76,13 +77,12 @@ const Home = () => {
               id: "login",
               position: "bottom-left",
             });
-            console.log(user);
-            //router.push("user/profile");
+            router.push("user/profile");
           }
         }
       })
       .catch((e) =>
-        getValue(e.response.data).forEach((description, i) =>
+        getMessages(e.response.data).forEach((description, i) =>
           showToast({
             title: "Erro!",
             description: `${description}`,
@@ -93,9 +93,6 @@ const Home = () => {
         )
       );
   }
-
-  const getValue = ({ message }: { message: string[] }) =>
-    new Array().concat(message ?? []);
 
   const showToast = (data: UseToastOptions) => {
     if (data.id) if (toast.isActive(data.id)) return;
