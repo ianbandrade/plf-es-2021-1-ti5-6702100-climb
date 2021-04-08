@@ -24,7 +24,7 @@ import {
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
-import { FiHelpCircle, FiUserPlus } from "react-icons/fi";
+import { FiAlertCircle, FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
@@ -604,7 +604,7 @@ const Users = () => {
             </label>
 
             <Icon
-              as={FiHelpCircle}
+              as={FiAlertCircle}
               boxSize="20px"
               color={colors.aurora.Nord12}
               _hover={{ cursor: "pointer" }}
