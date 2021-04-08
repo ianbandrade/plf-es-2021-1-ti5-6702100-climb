@@ -29,8 +29,8 @@ export class VersionControlService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async github(code: string, id: string) {
-    await this.checkUser(id);
+  async github(user: User, code: string) {
+    await this.checkUser(user.id);
 
     const accessToken = await this.getAccessToken(
       'https://github.com/login/oauth/access_token',
@@ -45,14 +45,14 @@ export class VersionControlService {
       },
     );
 
-    await this.usersRepository.update(id, {
+    await this.usersRepository.update(user.id, {
       gitHubAccount: await this.getGitHubAccount(accessToken),
       gitHubToken: accessToken,
     });
   }
 
-  async gitlab(code: string, id: string) {
-    await this.checkUser(id);
+  async gitlab(user: User, code: string, redirectUrl: string) {
+    await this.checkUser(user.id);
 
     const accessToken = await this.getAccessToken(
       'https://gitlab.com/oauth/token',
@@ -63,15 +63,13 @@ export class VersionControlService {
         client_secret: this.configService.get<string>(
           'versionControl.gitlab.clientSecret',
         ),
-        redirect_uri: this.configService.get<string>(
-          'versionControl.gitlab.redirectURI',
-        ),
+        redirect_uri: redirectUrl,
         grant_type: 'authorization_code',
         code,
       },
     );
 
-    await this.usersRepository.update(id, {
+    await this.usersRepository.update(user.id, {
       gitLabAccount: await this.getGitLabAccount(accessToken),
       gitLabToken: accessToken,
     });
@@ -113,9 +111,13 @@ export class VersionControlService {
     return this.httpService
       .post(tokenURI, null, requestConfig)
       .toPromise()
-      .then((response) => response.data.access_token)
+      .then((response) => {
+        const token = response.data?.access_token;
+        if (!token) throw new Error();
+        return token;
+      })
       .catch(() => {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException('Não foi possível receber o token do provedor');
       });
   }
 

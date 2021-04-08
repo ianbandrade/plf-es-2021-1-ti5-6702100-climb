@@ -1,32 +1,32 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-
+import { Body, Controller, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/users/user.entity';
+import { GitRequest } from './dto/git-request.dto';
 import { VersionControlService } from './version-control.service';
-import { StatePipe } from './pipes/statePipe.pipe';
 
 @ApiTags('Version Control')
 @Controller('version-control')
 export class VersionControlController {
   constructor(private versionControlService: VersionControlService) {}
 
-  @Get('github')
-  async github(
-    @Query('code') code: string,
-    @Query('state', new StatePipe()) id: string,
-  ) {
-    await this.versionControlService.github(code, id);
+  @Post('github')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async github(@GetUser() user: User, @Body(ValidationPipe) { code }: GitRequest) {
+    await this.versionControlService.github(user, code);
 
     return {
       message: 'Conta do GitHub associada com sucesso',
     };
   }
 
-  @Get('gitlab')
-  async gitlab(
-    @Query('code') code: string,
-    @Query('state', new StatePipe()) id: string,
-  ) {
-    await this.versionControlService.gitlab(code, id);
+  @Post('gitlab')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async gitlab(@GetUser() user: User, @Body(ValidationPipe) { code, redirectUrl }: GitRequest) {
+    await this.versionControlService.gitlab(user, code, redirectUrl);
 
     return {
       message: 'Conta do GitLab associada com sucesso',
