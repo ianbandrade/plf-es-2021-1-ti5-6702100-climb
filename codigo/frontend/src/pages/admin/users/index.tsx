@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -18,7 +17,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
 import {
   AiOutlineArrowLeft,
@@ -30,20 +29,18 @@ import Form from "../../../components/Form";
 import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
 import TableLine from "../../../components/TableLine";
-import { colors } from "../../../styles/customTheme";
-import { getMessages } from "../../../shared/utils/toast-messages";
-import apiClient from "../../../shared/api/api-client";
-import { User } from "../../../shared/interfaces/user";
-import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UserRole } from "../../../shared/enum/user-role";
+import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UpdateUser } from "../../../shared/interfaces/update-user";
+import { User } from "../../../shared/interfaces/user";
 import { userService } from "../../../shared/services/userService";
+import { getMessages } from "../../../shared/utils/toast-messages";
+import { colors } from "../../../styles/customTheme";
 
 const LIGHT = "light";
 const disabled: boolean = true;
 
 const NUMBER_OF_USERS_PER_PAGE = 5;
-const USERS_BASE_PATH = "/users";
 
 const Users = () => {
   const { colorMode } = useColorMode();
@@ -59,21 +56,21 @@ const Users = () => {
   } =
     colorMode === LIGHT
       ? {
-        formColor: colors.light.Nord6,
-        textColor: colors.light.Nord6,
-        inputTextColor: colors.light.Nord6,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.dark.Nord2,
-        iconInputColor: colors.dark.Nord0,
-      }
+          formColor: colors.light.Nord6,
+          textColor: colors.light.Nord6,
+          inputTextColor: colors.light.Nord6,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.dark.Nord2,
+          iconInputColor: colors.dark.Nord0,
+        }
       : {
-        formColor: colors.dark.Nord2,
-        textColor: colors.dark.Nord2,
-        inputTextColor: colors.dark.Nord2,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.light.Nord4,
-        iconInputColor: colors.dark.Nord2,
-      };
+          formColor: colors.dark.Nord2,
+          textColor: colors.dark.Nord2,
+          inputTextColor: colors.dark.Nord2,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.light.Nord4,
+          iconInputColor: colors.dark.Nord2,
+        };
 
   const inputStyle = {
     inputTextColor,
@@ -86,7 +83,7 @@ const Users = () => {
     return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
   }
 
-  const usersList: User[] = []
+  const usersList: User[] = [];
 
   const [users, setUsers] = useState(usersList);
   const [numberOfPages, setNumberOfPages] = useState(
@@ -115,7 +112,8 @@ const Users = () => {
 
   useEffect(() => {
     async function fetchData() {
-      await userService.getAll({ role: UserRole.USER })
+      await userService
+        .getAll({ role: UserRole.USER })
         .then((res) => {
           const { data } = res;
           setUsers(data.users);
@@ -249,7 +247,8 @@ const Users = () => {
     };
 
     if (isAddUserValid(newUser)) {
-      userService.create(newUser)
+      userService
+        .create(newUser)
         .then((res) => {
           const user = res.data.user as User;
           setUsers([...users, user]);
@@ -284,15 +283,26 @@ const Users = () => {
       email: emailField,
     };
 
-    if (true) { //Mudar
-      await userService.update(userId, updatedUser)
-        .then((res) => {
+    if (true) {
+      //Mudar
+      await userService
+        .update(userId, updatedUser)
+        .then(() => {
           const newArray = users.map((el, i) =>
             i === selectedUser ? Object.assign({}, el, updatedUser) : el
           );
           setUsers(newArray);
           updateNumberOfPages();
           handleCloseModal();
+
+          toast({
+            title: "Sucesso!",
+            description: `${nameField}  atualizado`,
+            status: "success",
+            id: `${userId}`,
+            position: "bottom-left",
+            duration: 2000,
+          });
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>
@@ -301,6 +311,8 @@ const Users = () => {
               description,
               status: "error",
               id: i,
+              position: "bottom-left",
+              duration: 2000,
             })
           );
         });
@@ -308,7 +320,8 @@ const Users = () => {
   }
 
   async function deleteUser() {
-    await userService.delete(userId)
+    await userService
+      .delete(userId)
       .then((res) => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
 
@@ -352,7 +365,7 @@ const Users = () => {
     setIsUpdateModalOpen(true);
     setNameField(user.name);
     setEmailField(user.email);
-    setId(user.id)
+    setId(user.id);
     setSelectedUser(index);
   }
 
@@ -372,14 +385,14 @@ const Users = () => {
         email: user[1],
         password: user[2],
         passwordConfirmation: user[2],
-        role: UserRole.USER
+        role: UserRole.USER,
       };
       newUsers.push(newUser);
     }
 
     const requestBody = {
       users: newUsers,
-    }
+    };
 
     //change to passwordConfirmation
     await userService.createMany(requestBody).then((res) => {
@@ -389,7 +402,7 @@ const Users = () => {
           data.length / NUMBER_OF_USERS_PER_PAGE
         );
         setNumberOfPages((prevState) => prevState + newPageNumber);
-      })
+      });
     });
   }
 
