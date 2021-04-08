@@ -4,16 +4,16 @@ import Profile from "../../components/Profile";
 import { getCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/User";
 
-const UserPage = () => {  
+const UserPage = () => {
   const [user, setUser] = useState<User>({} as User);
-  
+
   useEffect(()=>{
     setUser(getCurrentUser())
-  },[]); 
+  },[]);
 
   return (
     <Flex width="100vw">
-      <Profile user={user} />
+      <Profile user={user} setUser={setUser} />
     </Flex>
   );
 };

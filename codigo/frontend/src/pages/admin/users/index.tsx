@@ -125,7 +125,7 @@ const Users = () => {
         .catch((e) => {
           getMessages(e.response.data).forEach((description, i) =>
             toast({
-              title: "Messagem",
+              title: "Erro!",
               description,
               status: "error",
               id: i,
@@ -290,7 +290,7 @@ const Users = () => {
         .catch((e) => {
           getMessages(e.response.data).forEach((description, i) =>
             toast({
-              title: "Messagem",
+              title: "Erro!",
               description,
               status: "error",
               id: i,
@@ -323,7 +323,7 @@ const Users = () => {
         .catch((e) => {
           getMessages(e.response.data).forEach((description, i) =>
             toast({
-              title: "Messagem",
+              title: "Erro!",
               description,
               status: "error",
               id: i,
@@ -354,7 +354,7 @@ const Users = () => {
       .catch((e) => {
         getMessages(e.response.data).forEach((description, i) =>
           toast({
-            title: "Messagem",
+            title: "Erro!",
             description,
             status: "error",
             id: i,
@@ -380,12 +380,10 @@ const Users = () => {
     setNameField(user.name);
     setEmailField(user.email);
     setId(user.id)
-    console.log(user)
     setSelectedUser(index);
   }
 
   function handleDeleteUser(user: User, index: number) {
-    console.log(user);
     setSelectedUser(index);
     setSelectedUserName(user.name);
     setId(user.id);

@@ -13,7 +13,6 @@ interface TableLineProps {
 }
 
 const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
-  console.log(user)
   return (
     <Tr key={index} h="auto">
       <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.name}>

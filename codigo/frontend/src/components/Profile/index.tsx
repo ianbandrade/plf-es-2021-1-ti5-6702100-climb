@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/icons";
-import { Avatar, Button, Flex, Heading, useColorMode } from "@chakra-ui/react";
+import { Avatar, Button, Flex, Heading, toast, useColorMode, useToast } from "@chakra-ui/react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import { colors } from "../../styles/customTheme";
@@ -7,8 +7,9 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { User } from "../../shared/interfaces/User";
 import apiClient from "../../shared/api/api-client";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { getCurrentUser } from "../../shared/auth/localStorageManager";
+import { getMessages } from "../../shared/utils/toast-messages";
 
 const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
@@ -33,17 +34,43 @@ const GITLAB_PARAMS = new URLSearchParams({
 
 interface ProfileProps {
   user: User;
+  setUser: Dispatch<SetStateAction<User>>;
 }
 
-const Profile = ({ user: { name, gitHubAccount, gitLabAccount } }: ProfileProps) => {
-
+const Profile = ({ user: { name, gitHubAccount, gitLabAccount }, setUser }: ProfileProps) => {
+  const toast = useToast();
   const router = useRouter();
   const { code, state } = router.query;
 
-  if (code) {
-      apiClient.post(`/version-control/${state}`,
-        { code, redirectUrl, }).then(response => response.data?.message);
-  }
+  useEffect(() => {
+    if (code) {
+      const body = { code, redirectUrl };
+
+      apiClient
+        .post(`/version-control/${state}`, body)
+        .then((res) => {
+          getMessages(res.data).forEach((description, i) => {
+            toast({
+              title: "Sucesso!",
+              description,
+              status: "success",
+              id: i,
+            })
+          });
+        })
+        .catch((e) => {
+          getMessages(e.response.data).forEach((description, i) =>
+            toast({
+              title: "Erro!",
+              description,
+              status: "error",
+              id: i,
+            })
+          );
+        });
+    }
+  }, [code]);
+
 
   const { colorMode } = useColorMode();
 
@@ -70,8 +97,6 @@ const Profile = ({ user: { name, gitHubAccount, gitLabAccount } }: ProfileProps)
     nick: gitLabAccount
   }]
 
-  console.log({gitHubAccount,gitLabAccount})
-
   const integrationButtons = sites
     .map(integration =>
       <Button
@@ -82,7 +107,8 @@ const Profile = ({ user: { name, gitHubAccount, gitLabAccount } }: ProfileProps)
         as="a"
         href={integration.href}
         disabled={!!integration.nick}
-
+        pointerEvents={!integration.nick ? 'auto' : 'none'}
+        marginRight={4}
       >
         <Icon as={integration.icon} mr="10px" boxSize="24px" color={integration.iconColor} />
         {integration.nick ?? integration.site}
