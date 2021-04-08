@@ -21,6 +21,11 @@ export class AuthService {
 
     const jwtPayload = {
       id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      gitHubAccount: user.gitHubAccount,
+      gitLabAccount: user.gitLabAccount,
     };
     const token = this.jwtService.sign(jwtPayload);
 
