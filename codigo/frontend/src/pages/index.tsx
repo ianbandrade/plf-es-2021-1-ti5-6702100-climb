@@ -88,6 +88,7 @@ const Home = () => {
             description: `${description}`,
             status: "error",
             id: i,
+            position: "bottom-left",
           })
         )
       );
