@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -30,47 +31,58 @@ import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
 import TableLine from "../../../components/TableLine";
 import { colors } from "../../../styles/customTheme";
-
+import axios from "axios";
+import { getCiphers } from "crypto";
 const LIGHT = "light";
 const disabled: boolean = true;
 
 export interface User {
+  id?: string;
   name: string;
   email: string;
   githubAcc?: string;
   gitlabAcc?: string;
   password?: string;
   confirmPassword?: string;
+  role?: string;
 }
 
 const NUMBER_OF_USERS_PER_PAGE = 5;
+const USERS_BASE_PATH = "/users";
+
+const backend = axios.create({
+  baseURL: `http://${process.env.NEXT_PUBLIC_API_HOST}`,
+});
 
 const Users = () => {
   const { colorMode } = useColorMode();
   const toast = useToast();
 
-  const { formColor,
+  const {
+    formColor,
     textColor,
     inputTextColor,
     labelColor,
     inputBgColor,
-    iconInputColor } = colorMode === LIGHT ?
-      {
-        formColor: colors.light.Nord6,
-        textColor: colors.light.Nord6,
-        inputTextColor: colors.light.Nord6,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.dark.Nord2,
-        iconInputColor: colors.dark.Nord0,
-      } : {
-        formColor: colors.dark.Nord2,
-        textColor: colors.dark.Nord2,
-        inputTextColor: colors.dark.Nord2,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.light.Nord4,
-        iconInputColor: colors.dark.Nord2,
-      }
-
+    iconInputColor,
+  } =
+    colorMode === LIGHT
+      ? {
+          formColor: colors.light.Nord6,
+          textColor: colors.light.Nord6,
+          inputTextColor: colors.light.Nord6,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.dark.Nord2,
+          iconInputColor: colors.dark.Nord0,
+        }
+      : {
+          formColor: colors.dark.Nord2,
+          textColor: colors.dark.Nord2,
+          inputTextColor: colors.dark.Nord2,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.light.Nord4,
+          iconInputColor: colors.dark.Nord2,
+        };
 
   const inputStyle = {
     inputTextColor,
@@ -181,6 +193,31 @@ const Users = () => {
     password: false,
     confirmPassword: false,
   });
+
+  useEffect(() => {
+    async function fetchData() {
+      await backend
+        .get(`${USERS_BASE_PATH}?role=USER`)
+        .then((res) => {
+          if (res.status === 200) {
+            const { data } = res;
+            setUsers([...users, data.users]);
+          }
+        })
+        .catch((e) => {
+          getValue(e.response.data).forEach((description, i) =>
+            toast({
+              title: "Messagem",
+              description,
+              status: "error",
+              id: i,
+            })
+          );
+        });
+    }
+    fetchData();
+  }, []);
+
   function handleNextPage() {
     setCurrentPage((prevState) => prevState + 1);
   }
@@ -285,7 +322,7 @@ const Users = () => {
       return false;
     } else if (
       !password?.match(
-        "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+        "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"
       )
     ) {
       aux.password = true;
@@ -294,7 +331,7 @@ const Users = () => {
       toast({
         title: "Atenção!",
         description:
-          "A senha deve ter no mínimo 8 caracteres, números, letras maiusculas e minusculas e caracteres especiais",
+          "A senha deve ter no mínimo 6 caracteres, números, letras maiusculas e minusculas e caracteres especiais",
         status: "warning",
         duration: 5000,
         position: "bottom-left",
@@ -311,55 +348,105 @@ const Users = () => {
       email: emailField,
       password: passField,
       confirmPassword: confirmPassField,
+      role: "USER",
     };
 
     if (isAddUserValid(newUser)) {
-      setUsers([...users, newUser]);
-      handleCloseModal();
-      cleanFields();
-      updateNumberOfPages();
-      toast({
-        title: "Sucesso!",
-        description: `${newUser.name} cadastrado com sucesso`,
-        status: "success",
-        duration: 9000,
-        position: "bottom-left",
-      });
+      backend
+        .post(USERS_BASE_PATH, newUser)
+        .then((res) => {
+          if (res.status === 201) {
+            setUsers([...users, newUser]);
+            handleCloseModal();
+            updateNumberOfPages();
+            cleanFields();
+
+            toast({
+              title: "Sucesso!",
+              description: `${newUser.name} cadastrado com sucesso`,
+              status: "success",
+              duration: 9000,
+              position: "bottom-left",
+            });
+          }
+        })
+        .catch((e) => {
+          getValue(e.response.data).forEach((description, i) =>
+            toast({
+              title: "Messagem",
+              description,
+              status: "error",
+              id: i,
+            })
+          );
+        });
     }
   }
+  const getValue = ({ message }: { message: string[] }) =>
+    new Array().concat(message ?? []);
 
-  function updateUser() {
+  async function updateUser() {
     const updatedUser: User = {
       name: nameField,
       email: emailField,
+      id: "",
     };
 
     if (isAddUserValid(updatedUser)) {
-      const newArray = users.map((el, i) =>
-        i === selectedUser ? Object.assign({}, el, updatedUser) : el
-      );
-
-      setUsers(newArray);
-      handleCloseModal();
-      updateNumberOfPages();
+      await backend
+        .patch(`${USERS_BASE_PATH}?id=${updatedUser.id}`, updatedUser)
+        .then((res) => {
+          if (res.status === 201) {
+            const { data } = res;
+            const newArray = users.map((el, i) =>
+              i === selectedUser ? Object.assign({}, el, updatedUser) : el
+            );
+            setUsers(newArray);
+            updateNumberOfPages();
+            handleCloseModal();
+          }
+        })
+        .catch((e) => {
+          getValue(e.response.data).forEach((description, i) =>
+            toast({
+              title: "Messagem",
+              description,
+              status: "error",
+              id: i,
+            })
+          );
+        });
     }
   }
 
-  function deleteUser() {
-    console.log(selectedUser);
-    const newArray = users.filter((_el, i) => selectedUser !== i);
+  async function deleteUser() {
+    await backend
+      .delete(`${USERS_BASE_PATH}?id={}`)
+      .then((res) => {
+        const newArray = users.filter((_el, i) => selectedUser !== i);
 
-    toast({
-      title: "Sucesso!",
-      description: `Usuário ${selectedUserName} foi deletado`,
-      status: "success",
-      duration: 2000,
-      position: "bottom-left",
-    });
+        toast({
+          title: "Sucesso!",
+          description: `Usuário ${selectedUserName} foi deletado`,
+          status: "success",
+          duration: 2000,
+          position: "bottom-left",
+        });
 
-    setUsers(newArray);
-    setIsDeleteModalOpen(false);
-    updateNumberOfPages();
+        setUsers(newArray);
+        setIsDeleteModalOpen(false);
+        updateNumberOfPages();
+      })
+      .catch((e) => {
+        getValue(e.response.data).forEach((description, i) =>
+          toast({
+            title: "Messagem",
+            description,
+            status: "error",
+            id: i,
+          })
+        );
+      });
   }
 
   function handleConfirmModal() {
@@ -388,7 +475,7 @@ const Users = () => {
     setIsDeleteModalOpen(true);
   }
 
-  function handleImportUsers(data: any[], fileInfo: Object) {
+  async function handleImportUsers(data: any[], fileInfo: Object) {
     let newUsers: User[] = [];
     for (let i = 1; i < data.length; i++) {
       const user = data[i];
@@ -400,9 +487,16 @@ const Users = () => {
       };
       newUsers.push(newUser);
     }
-    setUsers((userLis) => userLis.concat(newUsers));
-    const newPageNumber = Math.floor(data.length / NUMBER_OF_USERS_PER_PAGE);
-    setNumberOfPages((prevState) => prevState + newPageNumber);
+    //change to passwordConfirmation
+    await backend.post(`${USERS_BASE_PATH}/batch`).then((res) => {
+      if (res.status === 200) {
+        setUsers((userLis) => userLis.concat(newUsers));
+        const newPageNumber = Math.floor(
+          data.length / NUMBER_OF_USERS_PER_PAGE
+        );
+        setNumberOfPages((prevState) => prevState + newPageNumber);
+      }
+    });
   }
 
   const parserOptions = {
