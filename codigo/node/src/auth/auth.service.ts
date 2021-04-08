@@ -12,7 +12,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   async signIn(
     credentialsDto: CredentialsDto,
@@ -34,5 +34,9 @@ export class AuthService {
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${+this.configService.get(
       'jwt.signOptions.expiresIn',
     )}`;
+  }
+
+  getCookieForLogOut(): string {
+    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
   }
 }

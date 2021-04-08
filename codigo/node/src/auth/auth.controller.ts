@@ -27,6 +27,7 @@ export class AuthController {
   ): Promise<{ token: string }> {
     const { token, cookie } = await this.authService.signIn(credentiaslsDto);
     response.setHeader('Set-Cookie', cookie);
+    response.send({ token });
     return { token };
   }
 
@@ -35,5 +36,14 @@ export class AuthController {
   @UseGuards(AuthGuard())
   getMe(@GetUser() user: User): User {
     return user;
+  }
+
+  @UseGuards(AuthGuard())
+  @Post('logout')
+  async logOut(@Res() response: Response) {
+    return response.setHeader(
+      'Set-Cookie',
+      this.authService.getCookieForLogOut(),
+    );
   }
 }
