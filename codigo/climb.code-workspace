@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "./frontend"
+    },
+    {
+      "path": "./node"
+    }
+  ],
+  "settings": {},
+  "extensions": {
+    "recommendations": [
+      "ms-azuretools.vscode-docker",
+      "editorconfig.editorconfig",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode"
+    ]
+  }
+}
