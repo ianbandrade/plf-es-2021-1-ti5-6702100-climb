@@ -70,7 +70,6 @@ const Home = () => {
     apiClient
       .post(AUTHURL, body)
       .then((res) => {
-        if (res.status === 201) {
           if (res.data?.token) {
             login(res.data.token)
             showToast({
@@ -82,7 +81,6 @@ const Home = () => {
             });
             router.push(PROFILE_PATH);
           }
-        }
       })
       .catch((e) =>
         getMessages(e?.response?.data).forEach((description, i) =>

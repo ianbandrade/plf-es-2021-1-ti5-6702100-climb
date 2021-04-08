@@ -117,10 +117,8 @@ const Users = () => {
     async function fetchData() {
       await userService.getAll({ role: UserRole.USER })
         .then((res) => {
-          if (res.status === 200) {
-            const { data } = res;
-            setUsers(data.users);
-          }
+          const { data } = res;
+          setUsers(data.users);
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>
@@ -253,21 +251,19 @@ const Users = () => {
     if (isAddUserValid(newUser)) {
       userService.create(newUser)
         .then((res) => {
-          if (res.status === 201) {
-            const user = res.data.user as User;
-            setUsers([...users, user]);
-            handleCloseModal();
-            updateNumberOfPages();
-            cleanFields();
+          const user = res.data.user as User;
+          setUsers([...users, user]);
+          handleCloseModal();
+          updateNumberOfPages();
+          cleanFields();
 
-            toast({
-              title: "Sucesso!",
-              description: `${newUser.name} cadastrado com sucesso`,
-              status: "success",
-              duration: 9000,
-              position: "bottom-left",
-            });
-          }
+          toast({
+            title: "Sucesso!",
+            description: `${newUser.name} cadastrado com sucesso`,
+            status: "success",
+            duration: 9000,
+            position: "bottom-left",
+          });
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>
@@ -289,17 +285,14 @@ const Users = () => {
     };
 
     if (true) { //Mudar
-      await userService.update(updatedUser)
+      await userService.update(userId, updatedUser)
         .then((res) => {
-          if (res.status === 201) {
-            const { data } = res;
-            const newArray = users.map((el, i) =>
-              i === selectedUser ? Object.assign({}, el, updatedUser) : el
-            );
-            setUsers(newArray);
-            updateNumberOfPages();
-            handleCloseModal();
-          }
+          const newArray = users.map((el, i) =>
+            i === selectedUser ? Object.assign({}, el, updatedUser) : el
+          );
+          setUsers(newArray);
+          updateNumberOfPages();
+          handleCloseModal();
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>

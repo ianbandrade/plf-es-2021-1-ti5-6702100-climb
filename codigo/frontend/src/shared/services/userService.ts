@@ -24,8 +24,8 @@ class UserService {
     return apiClient.post(`${this.DEFAULT_PATH}/batch`, createUsers);
   }
 
-  async update(updateUser: UpdateUser){
-    return apiClient.patch(this.DEFAULT_PATH, updateUser);
+  async update(userId: string, updateUser: UpdateUser){
+    return apiClient.patch(`${this.DEFAULT_PATH}/${userId}`, updateUser);
   }
 
   async delete(id:string){
