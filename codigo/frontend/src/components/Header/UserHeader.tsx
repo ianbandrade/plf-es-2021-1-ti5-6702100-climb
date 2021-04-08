@@ -1,5 +1,7 @@
 import { Flex, TabList, Tabs } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { getCurrentUser } from "../../shared/auth/localStorageManager";
 import TabContainer from "../TabContainer";
 import RegularHeader from "./RegularHeader";
 
@@ -7,15 +9,23 @@ const BASE_URL = "/user";
 const pages = [
   { url: `${BASE_URL}/profile`, text: "Perfil" },
   { url: `${BASE_URL}/apps`, text: "Aplicações" },
-  {
-    url: `${BASE_URL}/monitor`,
-    text: "Monitoramento",
-  },
+  { url: `${BASE_URL}/monitor`, text: "Monitoramento" },
 ];
 
 const UserHeader = () => {
   const router = useRouter();
   const index = pages.findIndex((page) => page.url === router.pathname);
+
+  useEffect(() => {
+    const currentUser = getCurrentUser();
+
+    if (currentUser.role === 'ADMIN') {
+      pages.push(
+        { url: `/admin/users`, text: "Administração" },
+      )
+    }
+  }, [])
+
   const renderedTabs = pages.map((page) => (
     <TabContainer key={page.url} text={page.text} url={page.url} />
   ));
