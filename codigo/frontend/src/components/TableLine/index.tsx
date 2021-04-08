@@ -1,8 +1,9 @@
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Flex, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { User } from "../../pages/admin/users";
-import { DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
 import { colors } from "../../styles/customTheme";
-const cellItemLength = "36ch";
+
+const cellWidth = "36ch";
 
 interface TableLineProps {
   user: User;
@@ -13,14 +14,14 @@ interface TableLineProps {
 
 const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
   return (
-    <Tr key={index}>
-      <Td maxWidth={cellItemLength} isTruncated title={user.name}>
+    <Tr key={index} h="auto">
+      <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.name}>
         {user.name}
       </Td>
-      <Td maxWidth={cellItemLength} isTruncated title={user.email}>
+      <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.email}>
         {user.email}
       </Td>
-      <Td maxWidth={cellItemLength} isTruncated title={user.email}>
+      <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.email}>
         {user.userName}
       </Td>
       <Td>

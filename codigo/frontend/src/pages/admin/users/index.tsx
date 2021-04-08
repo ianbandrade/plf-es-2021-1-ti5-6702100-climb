@@ -1,38 +1,43 @@
-import { useState } from "react";
-import { Icon } from "@chakra-ui/icons";
+import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
 import {
+  Button,
+  Code,
   Flex,
+  Heading,
+  Spacer,
   Table,
+  TableCaption,
   Tbody,
+  Td,
+  Tfoot,
   Th,
   Thead,
   Tr,
-  Tfoot,
   useColorMode,
-  Button,
-  Heading,
-  Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { FiUserPlus } from "react-icons/fi";
-import { colors } from "../../../styles/customTheme";
+import { useState } from "react";
+import CSVReader from "react-csv-reader";
 import {
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
-import CSVReader from "react-csv-reader";
-import TableLine from "../../../components/TableLine";
-import ModalComponent from "../../../components/Modal";
+import { FiHelpCircle, FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
-import { EmailIcon, LockIcon } from "@chakra-ui/icons";
+import ModalComponent from "../../../components/Modal";
+import TableLine from "../../../components/TableLine";
+import { colors } from "../../../styles/customTheme";
 
 const LIGHT = "light";
+const disabled: boolean = true;
 
 export interface User {
   name: string;
   email: string;
-  userName: string;
+  userName?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -41,6 +46,7 @@ const NUMBER_OF_USERS_PER_PAGE = 5;
 
 const Users = () => {
   const { colorMode } = useColorMode();
+  const toast = useToast();
   const formColor =
     colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
   const textColor =
@@ -52,7 +58,8 @@ const Users = () => {
   const inputBgColor =
     colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
   const iconInputColor =
-    colorMode === LIGHT ? colors.dark.Nord0 : colors.dark.Nord2;
+    colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord2;
+
   const inputStyle = {
     inputTextColor,
     labelColor,
@@ -133,6 +140,7 @@ const Users = () => {
   );
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [nameField, setNameField] = useState("");
   const [emailField, setEmailField] = useState("");
   const [passField, setPassField] = useState("");
@@ -144,7 +152,13 @@ const Users = () => {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+  const [isInputInvalid, setIsInputInvalid] = useState({
+    name: false,
+    email: false,
+    userName: false,
+    password: false,
+    confirmPassword: false,
+  });
   function handleNextPage() {
     setCurrentPage((prevState) => prevState + 1);
   }
@@ -163,13 +177,15 @@ const Users = () => {
     ) {
       const user = users[i];
       const newUserToRender = (
-        <TableLine
-          index={i}
-          user={user}
-          key={i}
-          updateUser={(user: User) => handleUpdateUser(user, i)}
-          deleteUser={(user: User) => handleDeleteUser(user, i)}
-        />
+        <>
+          <TableLine
+            index={i}
+            user={user}
+            key={i}
+            updateUser={(updatedUser) => handleUpdateUser(updatedUser, i)}
+            deleteUser={(deletedUser) => handleDeleteUser(deletedUser, i)}
+          />
+        </>
       );
       userToRender.push(newUserToRender);
     }
@@ -181,35 +197,133 @@ const Users = () => {
     setNumberOfPages(Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE));
   }
 
+  function isAddUserValid(newUser: User) {
+    const { password } = newUser;
+    const fieldsAndValues = Object.entries(newUser);
+
+    let invalidFields = [];
+    for (let i = 0; i < fieldsAndValues.length; i++) {
+      const fields = fieldsAndValues[i];
+
+      if (fields[1].length === 0) {
+        console.log(fields);
+        invalidFields.push(fields[0]);
+      }
+    }
+
+    if (invalidFields.length > 0) {
+      let aux = {
+        name: false,
+        email: false,
+        userName: false,
+        password: false,
+        confirmPassword: false,
+      };
+
+      for (let field of invalidFields) {
+        let tranlatedField = null;
+        console.log(field);
+        switch (field) {
+          case "name":
+            aux.name = true;
+            tranlatedField = "Nome";
+            break;
+          case "email":
+            aux.email = true;
+            tranlatedField = "Email";
+            break;
+          case "userName":
+            aux.userName = true;
+            tranlatedField = "Usuaŕio";
+            break;
+          case "password":
+            aux.password = true;
+            tranlatedField = "Senha";
+            break;
+          case "confirmPassword":
+            aux.confirmPassword = true;
+            tranlatedField = "Confirmar senha";
+            break;
+        }
+        toast({
+          title: `Campo ${tranlatedField} está vazio`,
+          status: "error",
+          duration: 2000,
+        });
+      }
+      setIsInputInvalid(aux);
+      return false;
+      // TODO = add more validation to password
+    } else if (!isUpdateModalOpen && password !== confirmPassField) {
+      let aux = {
+        name: false,
+        email: false,
+        userName: false,
+        password: true,
+        confirmPassword: true,
+      };
+
+      toast({
+        title: `Campo senha e confirmar senha estão divergentes`,
+        status: "error",
+        duration: 2000,
+      });
+      setIsInputInvalid(aux);
+      return false;
+    }
+    return true;
+  }
+
   function saveUser() {
     const newUser: User = {
       name: nameField,
       email: emailField,
-      userName: "",
       password: passField,
       confirmPassword: confirmPassField,
     };
-    setUsers([...users, newUser]);
-    handleCloseModal();
-    cleanFields();
-    updateNumberOfPages();
+
+    if (isAddUserValid(newUser)) {
+      setUsers([...users, newUser]);
+      handleCloseModal();
+      cleanFields();
+      updateNumberOfPages();
+      toast({
+        title: "Usuário criado com sucesso",
+        description: `${newUser.name} cadastrado com sucesso`,
+        status: "success",
+        duration: 9000,
+      });
+    }
   }
+
   function updateUser() {
     const updatedUser: User = {
       name: nameField,
       email: emailField,
       userName: userNameField,
     };
-    const newArray = users.map((el, i) =>
-      i === selectedUser ? Object.assign({}, el, updatedUser) : el
-    );
-    setUsers(newArray);
-    handleCloseModal();
-    updateNumberOfPages();
+
+    if (isAddUserValid(updatedUser)) {
+      const newArray = users.map((el, i) =>
+        i === selectedUser ? Object.assign({}, el, updatedUser) : el
+      );
+
+      setUsers(newArray);
+      handleCloseModal();
+      updateNumberOfPages();
+    }
   }
 
   function deleteUser() {
-    const newArray = users.filter((el, i) => selectedUser !== i);
+    console.log(selectedUser);
+    const newArray = users.filter((_el, i) => selectedUser !== i);
+
+    toast({
+      title: `Usuário ${selectedUserName} foi deletado com sucesso!`,
+      status: "success",
+      duration: 2000,
+    });
+
     setUsers(newArray);
     setIsDeleteModalOpen(false);
     updateNumberOfPages();
@@ -231,7 +345,7 @@ const Users = () => {
     setIsUpdateModalOpen(true);
     setNameField(user.name);
     setEmailField(user.email);
-    setUserNameField(user.userName);
+    setUserNameField(user.userName || "");
     setSelectedUser(index);
   }
 
@@ -255,7 +369,7 @@ const Users = () => {
       };
       newUsers.push(newUser);
     }
-    setUsers((users) => users.concat(newUsers));
+    setUsers((userLis) => userLis.concat(newUsers));
     const newPageNumber = Math.floor(data.length / NUMBER_OF_USERS_PER_PAGE);
     setNumberOfPages((prevState) => prevState + newPageNumber);
   }
@@ -269,12 +383,15 @@ const Users = () => {
   function handleChangeName(e: any) {
     setNameField(e.target.value);
   }
+
   function handleChangeEmail(e: any) {
     setEmailField(e.target.value);
   }
+
   function handleChangPass(e: any) {
     setPassField(e.target.value);
   }
+
   function handleChangeConfirmPass(e: any) {
     setConfirmPassField(e.target.value);
   }
@@ -286,16 +403,27 @@ const Users = () => {
   function openAddUserModal() {
     setIsAddUserModalOpen(true);
   }
+
   function handleCloseModal() {
     if (isAddUserModalOpen) {
       setIsAddUserModalOpen(false);
     }
+
     if (isUpdateModalOpen) {
       setIsUpdateModalOpen(false);
     }
+
     if (isDeleteModalOpen) {
       setIsDeleteModalOpen(false);
     }
+
+    setIsInputInvalid({
+      name: false,
+      userName: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+    });
     cleanFields();
   }
 
@@ -309,14 +437,15 @@ const Users = () => {
   return (
     <>
       <ModalComponent
+        title="Deletar usuário"
         isOpen={isDeleteModalOpen}
+        userName={selectedUserName}
         onClose={() => handleCloseModal()}
       >
-        <Text>Você deseja deletar {selectedUserName} ?</Text>
-        <Flex justify="flex-end" mb="5%">
+        <Flex justify="flex-end" mb={5} mt={5}>
           <Button
             bgColor={colors.aurora.Nord14}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
@@ -328,7 +457,7 @@ const Users = () => {
           <Button
             onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
@@ -337,7 +466,9 @@ const Users = () => {
           </Button>
         </Flex>
       </ModalComponent>
+
       <ModalComponent
+        title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
         isOpen={isAddUserModalOpen || isUpdateModalOpen}
         onClose={() => handleCloseModal()}
       >
@@ -346,6 +477,7 @@ const Users = () => {
             type={"text"}
             label="Nome"
             placeholder="Nome"
+            validate={isInputInvalid.name}
             style={inputStyle}
             icon={<AiOutlineUser color={iconInputColor} />}
             onChangeInput={handleChangeName}
@@ -354,6 +486,7 @@ const Users = () => {
           <Input
             type={"email"}
             label="E-mail"
+            validate={isInputInvalid.email}
             placeholder="Email"
             style={inputStyle}
             icon={<EmailIcon color={iconInputColor} />}
@@ -365,6 +498,7 @@ const Users = () => {
               <Input
                 type={"password"}
                 label="Senha"
+                validate={isInputInvalid.password}
                 placeholder="Senha"
                 style={inputStyle}
                 icon={<LockIcon color={iconInputColor} />}
@@ -374,6 +508,7 @@ const Users = () => {
               <Input
                 type={"password"}
                 label="Confirma senha"
+                validate={isInputInvalid.confirmPassword}
                 placeholder="Confirma senha"
                 style={inputStyle}
                 icon={<LockIcon color={iconInputColor} />}
@@ -391,6 +526,7 @@ const Users = () => {
               style={inputStyle}
               icon={<AiOutlineUser color={iconInputColor} />}
               onChangeInput={handleUserNameField}
+              validate={isInputInvalid.userName}
               value={userNameField}
             />
           )}
@@ -398,7 +534,7 @@ const Users = () => {
         <Flex justify="flex-end" mb="5%">
           <Button
             bgColor={colors.aurora.Nord11}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
@@ -410,7 +546,7 @@ const Users = () => {
           <Button
             onClick={() => handleCloseModal()}
             bgColor={colors.aurora.Nord14}
-            color={inputTextColor}
+            color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
@@ -458,6 +594,50 @@ const Users = () => {
                 accept=".csv"
               />
             </label>
+
+            <Icon
+              as={FiHelpCircle}
+              boxSize="20px"
+              color={colors.aurora.Nord12}
+              _hover={{ cursor: "pointer" }}
+              ml="5%"
+              onClick={onOpen}
+            />
+
+            <ModalComponent
+              isOpen={isOpen}
+              onClose={onClose}
+              title="Exemplo CSV"
+              width={750}
+            >
+              <Table variant="unstyled" m={[5, 2]}>
+                <TableCaption>
+                  Os itens devem ser separados por <Code>;</Code>
+                </TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Nome;</Th>
+                    <Th>Email;</Th>
+                    <Th>Usuário;</Th>
+                    <Th>Senha</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>Joaquim da Silva Lobo;</Td>
+                    <Td>joaquim@climb.com;</Td>
+                    <Td>joaquimsl;</Td>
+                    <Td>senha123</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Patrick Antonio;</Td>
+                    <Td>patricka@climb.com;</Td>
+                    <Td>patrick123;</Td>
+                    <Td>423!@$fpass</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </ModalComponent>
           </Flex>
 
           <Table
@@ -466,41 +646,54 @@ const Users = () => {
             bgColor={setTableBgColor()}
             borderRadius="6px"
             maxH="600px"
+            minW="1000px"
             size="lg"
+            h={"50%"}
           >
             <Thead>
-              <Tr>
+              <Tr height="5px">
                 <Th>Nome</Th>
                 <Th>Email</Th>
                 <Th>Usuário</Th>
                 <Th>Ações</Th>
               </Tr>
             </Thead>
-            <Tbody>{handleRenderUsers()}</Tbody>
+            <Tbody>{handleRenderUsers()} </Tbody>
             <Tfoot>
-              <Tr width="100%">
-                <Th>
-                  {currentPage === 1 ? (
-                    ""
-                  ) : (
-                    <Button onClick={() => handlePrevPage()}>
-                      <AiOutlineArrowLeft />
-                    </Button>
-                  )}
-                </Th>
-                <Th display="flex" justifyContent="center">
-                  <Heading fontSize="22px">{currentPage}</Heading>
-                </Th>
-                <Th></Th>
-                <Th>
-                  {currentPage === numberOfPages ? (
-                    ""
-                  ) : (
-                    <Button onClick={() => handleNextPage()}>
-                      <AiOutlineArrowRight />
-                    </Button>
-                  )}
-                </Th>
+              <Tr height="5px">
+                <Td colSpan={4}>
+                  <Flex alignItems="center">
+                    {currentPage === 1 ? (
+                      <Button
+                        isDisabled={disabled}
+                        onClick={() => handlePrevPage()}
+                      >
+                        <AiOutlineArrowLeft />
+                      </Button>
+                    ) : (
+                      <Button onClick={() => handlePrevPage()}>
+                        <AiOutlineArrowLeft />
+                      </Button>
+                    )}
+
+                    <Spacer />
+                    <Heading fontSize="22px">{currentPage}</Heading>
+                    <Spacer />
+
+                    {currentPage === numberOfPages ? (
+                      <Button
+                        isDisabled={disabled}
+                        onClick={() => handlePrevPage()}
+                      >
+                        <AiOutlineArrowRight />
+                      </Button>
+                    ) : (
+                      <Button onClick={() => handleNextPage()}>
+                        <AiOutlineArrowRight />
+                      </Button>
+                    )}
+                  </Flex>
+                </Td>
               </Tr>
             </Tfoot>
           </Table>

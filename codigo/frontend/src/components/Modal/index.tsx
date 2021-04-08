@@ -1,26 +1,35 @@
 import {
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useColorMode,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { colors } from "../../styles/customTheme";
 
 interface ModalComponentProps {
+  title: string;
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode[];
+  userName?: string;
+  width?: number;
+  children: ReactNode | ReactNode[];
 }
 
 const LIGHT = "light";
 
-const ModalComponent = ({ isOpen, onClose, children }: ModalComponentProps) => {
+const ModalComponent = ({
+  title,
+  width,
+  userName,
+  isOpen,
+  onClose,
+  children,
+}: ModalComponentProps) => {
   const { colorMode } = useColorMode();
   const formColor =
     colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
@@ -28,16 +37,35 @@ const ModalComponent = ({ isOpen, onClose, children }: ModalComponentProps) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
+        minW={width}
         bgColor={formColor}
         display="flex"
         justifyContent="center"
         alignItems="center"
       >
-        <ModalHeader alignSelf="flex-start" ml="6%">
-          CADASTRO DE USUÁRIO
+        <ModalHeader display="flex" alignContent="space-between">
+          <Text>{title}</Text>
+          <ModalCloseButton />
         </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>{children}</ModalBody>
+
+        <ModalBody>
+          {userName ? (
+            <Text
+              maxW={350}
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              Você deseja deletar{" "}
+              {userName.length < 19
+                ? `${userName}?`
+                : `${userName.slice(0, 19)}...?`}
+            </Text>
+          ) : (
+            ""
+          )}
+          {children}
+        </ModalBody>
       </ModalContent>
     </Modal>
   );
