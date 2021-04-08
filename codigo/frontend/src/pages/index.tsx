@@ -10,7 +10,9 @@ import axios from "axios";
 
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
-const AUTHURL = `http://${process.env.NEXT_PUBLIC_API_HOST}/auth/signin`;
+
+const AUTHURL = `/auth/signin`;
+const backend = axios.create({url: `http://${process.env.NEXT_PUBLIC_API_HOST}`});
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -29,10 +31,11 @@ const Home = () => {
     if (isInvalidMail()) return showToast({ title: "E-mail inválido", status: "warning", id: "login" });
 
     const body = { email: email.replace(" ", ""), password: password }
-    axios.post(`${AUTHURL}`, body).then(
+    backend.post(AUTHURL, body, { withCredentials: true }).then(
       res => {
-        if (res.status === 201)
-          showToast({ title: "Acesso autorizado", status: "success" })
+        if (res.status === 201) {
+          showToast({ title: "Acesso autorizado", status: "success", id: "login" })
+        }
       }
     ).catch(e => showToast({ title: "Falha na conexão", description: e.message, status: "error", id: "login" }))
   }

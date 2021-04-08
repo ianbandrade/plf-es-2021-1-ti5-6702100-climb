@@ -44,18 +44,29 @@ const NUMBER_OF_USERS_PER_PAGE = 5;
 const Users = () => {
   const { colorMode } = useColorMode();
   const toast = useToast();
-  const formColor =
-    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-  const textColor =
-    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-  const inputTextColor =
-    colorMode === LIGHT ? colors.light.Nord6 : colors.dark.Nord2;
-  const labelColor =
-    colorMode === LIGHT ? colors.dark.Nord2 : colors.light.Nord6;
-  const inputBgColor =
-    colorMode === LIGHT ? colors.dark.Nord0 : colors.light.Nord4;
-  const iconInputColor =
-    colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord2;
+
+  const { formColor,
+    textColor,
+    inputTextColor,
+    labelColor,
+    inputBgColor,
+    iconInputColor } = colorMode === LIGHT ?
+      {
+        formColor: colors.light.Nord6,
+        textColor: colors.light.Nord6,
+        inputTextColor: colors.light.Nord6,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.dark.Nord2,
+        iconInputColor: colors.dark.Nord0,
+      } : {
+        formColor: colors.dark.Nord2,
+        textColor: colors.dark.Nord2,
+        inputTextColor: colors.dark.Nord2,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.light.Nord4,
+        iconInputColor: colors.dark.Nord2,
+      }
+
 
   const inputStyle = {
     inputTextColor,

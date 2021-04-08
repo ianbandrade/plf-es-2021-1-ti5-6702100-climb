@@ -3,26 +3,28 @@ import { Avatar, Button, Flex, Heading, useColorMode } from "@chakra-ui/react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import { colors } from "../../styles/customTheme";
+import { useRouter } from "next/router";
+import axios from "axios";
+
 const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
 const GITLAB_OAUTH = "https://gitlab.com/oauth/authorize?";
 
-
+const redirectUrl = process.env.NEXT_PUBLIC_GIT_REDIRECT_URL || "";
 
 const GITHUB_PARAMS = new URLSearchParams({
-  client_id: process.env.GITHUB_CLIENT_ID || "",
-  scope: process.env.GITHUB_SCOPE  || "",
-  redirect_uri: process.env.GITHUB_REDIRECT_URI  || "",
-  state: "" || "",
-}).toString()
-
+  state: 'github',
+  scope: process.env.NEXT_PUBLIC_GITHUB_SCOPE || "",
+  client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || "",
+  redirect_uri: redirectUrl,
+}).toString();
 
 const GITLAB_PARAMS = new URLSearchParams({
-  client_id: process.env.GITLAB_CLIENT_ID || "",
-  scope: process.env.GITLAB_SCOPE || "",
-  redirect_uri: process.env.GITLAB_REDIRECT_URI || "",
-  state: "" || "",
-  response_type: "code",
+  state: 'gitlab',
+  response_type: 'code',
+  scope: process.env.NEXT_PUBLIC_GITLAB_SCOPE || "",
+  client_id: process.env.NEXT_PUBLIC_GITLAB_CLIENT_ID || "",
+  redirect_uri: redirectUrl,
 }).toString();
 
 interface User {
@@ -38,6 +40,21 @@ interface ProfileProps {
 }
 
 const Profile = ({ user: { name, userName } }: ProfileProps) => {
+
+  const router = useRouter();
+  const { code, state } = router.query;
+
+  if (code) {
+    const message = axios.post(`http://${process.env.NEXT_PUBLIC_API_HOST}/auth/signin`, {
+      "email": "admin@example.com",
+      "password": "password"
+    }).then(response => response.data?.token).then(token =>
+      axios.post(`http://${process.env.NEXT_PUBLIC_API_HOST}/version-control/${state}`,
+        { code, redirectUrl, }, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(response => response.data?.message));
+  }
+
   const { colorMode } = useColorMode();
 
   const color = colorMode === LIGHT ?
@@ -60,6 +77,7 @@ const Profile = ({ user: { name, userName } }: ProfileProps) => {
   {
     site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329", as: "a", href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`,
   }]
+
 
   const integrationButtons = sites
     .map(integration =>
