@@ -7,12 +7,12 @@ import { User } from "../../shared/interfaces/user";
 const UserPage = () => {
   const [user, setUser] = useState<User>({} as User);
 
-  useEffect(()=>{
-    setUser(getCurrentUser())
-  },[]);
+  useEffect(() => {
+    setUser(getCurrentUser());
+  }, []);
 
   return (
-    <Flex width="100vw">
+    <Flex>
       <Profile user={user} setUser={setUser} />
     </Flex>
   );
