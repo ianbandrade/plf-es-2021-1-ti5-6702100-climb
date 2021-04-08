@@ -31,7 +31,7 @@ const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
         <Flex justifyContent="space-around">
           <Tooltip label="Editar usuário" placement="top">
             <EditIcon
-              color={colors.aurora.Nord13}
+              color={colors.aurora.Nord15}
               _hover={{ cursor: "pointer" }}
               boxSize="18px"
               onClick={() => updateUser(user, index)}
