@@ -1,5 +1,5 @@
 import { CredentialsDto } from './../auth/dto/credentials.dto';
-import { EntityRepository, QueryFailedError, Repository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -11,6 +11,7 @@ import {
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { ReturnManyUsersDto } from './dto/return-many-users.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
+import { PostgresError } from 'pg-error-enum';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -64,7 +65,7 @@ export class UserRepository extends Repository<User> {
       delete user.salt;
       return user;
     } catch (error) {
-      if (error.code.toString() === '23505') {
+      if (error.code.toString() === PostgresError.UNIQUE_VIOLATION) {
         throw new ConflictException('Email já cadastrado');
       } else {
         throw new InternalServerErrorException(
@@ -100,8 +101,9 @@ export class UserRepository extends Repository<User> {
       return true;
     } catch (e) {
       const { code, message, detail } = e;
-      if (code.toString() === '23502') throw new BadRequestException(message);
-      if (code.toString() === '23505')
+      if (code.toString() === PostgresError.NOT_NULL_VIOLATION)
+        throw new BadRequestException(message);
+      if (code.toString() === PostgresError.UNIQUE_VIOLATION)
         throw new ConflictException(detail, message);
       else throw new InternalServerErrorException(detail, message);
     }
