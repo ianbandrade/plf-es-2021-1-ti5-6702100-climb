@@ -22,7 +22,10 @@ const TableLine = ({ user, index, updateUser, deleteUser }: TableLineProps) => {
         {user.email}
       </Td>
       <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.email}>
-        {user.userName}
+        {user.githubAcc ?? "-"}
+      </Td>
+      <Td minW={cellWidth} maxW={cellWidth} isTruncated title={user.email}>
+        {user.gitlabAcc ?? "-"}
       </Td>
       <Td>
         <Flex justifyContent="space-around">

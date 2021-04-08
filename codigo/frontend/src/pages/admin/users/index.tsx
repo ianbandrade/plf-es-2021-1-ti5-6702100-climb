@@ -37,7 +37,8 @@ const disabled: boolean = true;
 export interface User {
   name: string;
   email: string;
-  userName?: string;
+  githubAcc?: string;
+  gitlabAcc?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -75,62 +76,74 @@ const Users = () => {
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "asdasd",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "adsdorema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "asdasdsadema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "Jauuuuuuborema",
       email: "jborborema@sga.pucminas",
-      userName: "qqqqqq",
+      githubAcc: "qqqqqq",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "JoaoGuiMB",
+      githubAcc: "JoaoGuiMB",
+      gitlabAcc: "teste",
     },
     {
       name: "João Guilherme Martins Borborema",
       email: "jborborema@sga.pucminas",
-      userName: "asdasdsd",
+      githubAcc: "asdasdsd",
+      gitlabAcc: "teste",
     },
   ];
 
@@ -145,7 +158,6 @@ const Users = () => {
   const [emailField, setEmailField] = useState("");
   const [passField, setPassField] = useState("");
   const [confirmPassField, setConfirmPassField] = useState("");
-  const [userNameField, setUserNameField] = useState("");
   const [selectedUser, setSelectedUser] = useState(0);
   const [selectedUserName, setSelectedUserName] = useState("");
 
@@ -155,7 +167,6 @@ const Users = () => {
   const [isInputInvalid, setIsInputInvalid] = useState({
     name: false,
     email: false,
-    userName: false,
     password: false,
     confirmPassword: false,
   });
@@ -213,7 +224,6 @@ const Users = () => {
     let aux = {
       name: false,
       email: false,
-      userName: false,
       password: false,
       confirmPassword: false,
     };
@@ -230,10 +240,6 @@ const Users = () => {
           case "email":
             aux.email = true;
             tranlatedField = "Email";
-            break;
-          case "userName":
-            aux.userName = true;
-            tranlatedField = "Usuaŕio";
             break;
           case "password":
             aux.password = true;
@@ -315,7 +321,6 @@ const Users = () => {
     const updatedUser: User = {
       name: nameField,
       email: emailField,
-      userName: userNameField,
     };
 
     if (isAddUserValid(updatedUser)) {
@@ -362,7 +367,6 @@ const Users = () => {
     setIsUpdateModalOpen(true);
     setNameField(user.name);
     setEmailField(user.email);
-    setUserNameField(user.userName || "");
     setSelectedUser(index);
   }
 
@@ -380,9 +384,8 @@ const Users = () => {
       const newUser: User = {
         name: user[0],
         email: user[1],
-        userName: user[2],
-        password: user[3],
-        confirmPassword: user[3],
+        password: user[2],
+        confirmPassword: user[2],
       };
       newUsers.push(newUser);
     }
@@ -413,10 +416,6 @@ const Users = () => {
     setConfirmPassField(e.target.value);
   }
 
-  function handleUserNameField(e: any) {
-    setUserNameField(e.target.value);
-  }
-
   function openAddUserModal() {
     setIsAddUserModalOpen(true);
   }
@@ -436,7 +435,6 @@ const Users = () => {
 
     setIsInputInvalid({
       name: false,
-      userName: false,
       email: false,
       password: false,
       confirmPassword: false,
@@ -534,19 +532,6 @@ const Users = () => {
               />
             </>
           )}
-
-          {isUpdateModalOpen && (
-            <Input
-              type={"text"}
-              label="Nome do usuário"
-              placeholder="Nome do usuário"
-              style={inputStyle}
-              icon={<AiOutlineUser color={iconInputColor} />}
-              onChangeInput={handleUserNameField}
-              validate={isInputInvalid.userName}
-              value={userNameField}
-            />
-          )}
         </Form>
         <Flex justify="flex-end" mb="5%">
           <Button
@@ -625,7 +610,7 @@ const Users = () => {
               isOpen={isOpen}
               onClose={onClose}
               title="Exemplo CSV"
-              width={750}
+              width={650}
             >
               <Table variant="unstyled" m={[5, 2]}>
                 <TableCaption>
@@ -635,7 +620,6 @@ const Users = () => {
                   <Tr>
                     <Th>Nome;</Th>
                     <Th>Email;</Th>
-                    <Th>Usuário;</Th>
                     <Th>Senha</Th>
                   </Tr>
                 </Thead>
@@ -643,13 +627,11 @@ const Users = () => {
                   <Tr>
                     <Td>Joaquim da Silva Lobo;</Td>
                     <Td>joaquim@climb.com;</Td>
-                    <Td>joaquimsl;</Td>
                     <Td>senha123</Td>
                   </Tr>
                   <Tr>
                     <Td>Patrick Antonio;</Td>
                     <Td>patricka@climb.com;</Td>
-                    <Td>patrick123;</Td>
                     <Td>423!@$fpass</Td>
                   </Tr>
                 </Tbody>
@@ -664,6 +646,7 @@ const Users = () => {
             borderRadius="6px"
             maxH="600px"
             minW="1000px"
+            maxW="500px"
             size="lg"
             h={"50%"}
           >
@@ -671,14 +654,15 @@ const Users = () => {
               <Tr height="5px">
                 <Th>Nome</Th>
                 <Th>Email</Th>
-                <Th>Usuário</Th>
+                <Th>Github</Th>
+                <Th>Gitlab</Th>
                 <Th>Ações</Th>
               </Tr>
             </Thead>
             <Tbody>{handleRenderUsers()} </Tbody>
             <Tfoot>
               <Tr height="5px">
-                <Td colSpan={4}>
+                <Td colSpan={5}>
                   <Flex alignItems="center">
                     {currentPage === 1 ? (
                       <Button
