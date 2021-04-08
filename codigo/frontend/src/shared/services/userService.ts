@@ -9,7 +9,11 @@ class UserService {
   private readonly DEFAULT_PATH = "users"
 
   async getAll(findUsersQuery:FindUsersQuery){
-    return (await apiClient.get(this.DEFAULT_PATH));
+    let querys = '';
+    
+    (Object.keys(findUsersQuery) as (keyof FindUsersQuery)[]).forEach(key => { querys += (findUsersQuery[key] ? `${key}=${findUsersQuery[key]}&`  : '') });
+
+    return (await apiClient.get(`${this.DEFAULT_PATH}?${querys}`));
   }
 
   async get(id:string){
