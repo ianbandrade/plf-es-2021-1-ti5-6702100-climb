@@ -49,28 +49,31 @@ const Users = () => {
   const { colorMode } = useColorMode();
   const toast = useToast();
 
-  const { formColor,
+  const {
+    formColor,
     textColor,
     inputTextColor,
     labelColor,
     inputBgColor,
-    iconInputColor } = colorMode === LIGHT ?
-      {
-        formColor: colors.light.Nord6,
-        textColor: colors.light.Nord6,
-        inputTextColor: colors.light.Nord6,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.dark.Nord2,
-        iconInputColor: colors.dark.Nord0,
-      } : {
-        formColor: colors.dark.Nord2,
-        textColor: colors.dark.Nord2,
-        inputTextColor: colors.dark.Nord2,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.light.Nord4,
-        iconInputColor: colors.dark.Nord2,
-      }
-
+    iconInputColor,
+  } =
+    colorMode === LIGHT
+      ? {
+          formColor: colors.light.Nord6,
+          textColor: colors.light.Nord6,
+          inputTextColor: colors.light.Nord6,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.dark.Nord2,
+          iconInputColor: colors.dark.Nord0,
+        }
+      : {
+          formColor: colors.dark.Nord2,
+          textColor: colors.dark.Nord2,
+          inputTextColor: colors.dark.Nord2,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.light.Nord4,
+          iconInputColor: colors.dark.Nord2,
+        };
 
   const inputStyle = {
     inputTextColor,
@@ -284,6 +287,7 @@ const Users = () => {
       setIsInputInvalid(aux);
       return false;
     } else if (
+      !isUpdateModalOpen &&
       !password?.match(
         "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
       )
