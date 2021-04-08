@@ -1,5 +1,5 @@
 import { User } from '../user.entity';
-export class ReturnAllUserDto {
+export class ReturnManyUsersDto {
   users: User[];
   total: number;
 }

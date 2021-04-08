@@ -1,4 +1,4 @@
-import { ReturnAllUserDto } from './dto/return-all-users.dto';
+import { ReturnManyUsersDto } from './dto/return-many-users.dto';
 import { UpdateUserDto } from './dto/update-users.dto';
 import {
   Controller,
@@ -21,6 +21,7 @@ import { Role } from '../auth/role.decorator';
 import { UserRole } from './user-roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { CreateManyUsersDto } from './dto/create-many-users.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -38,11 +39,19 @@ export class UsersController {
     return { user };
   }
 
+  @Post('batch')
+  @Role(UserRole.ADMIN)
+  async createManyUsers(
+    @Body(ValidationPipe) createManyUsersDto: CreateManyUsersDto,
+  ): Promise<boolean> {
+    return await this.usersService.createManyUsers(createManyUsersDto);
+  }
+
   @Get()
   @Role(UserRole.ADMIN)
   async findUsers(
     @Query() query: FindUsersQueryDto,
-  ): Promise<ReturnAllUserDto> {
+  ): Promise<ReturnManyUsersDto> {
     return await this.usersService.findUsers(query);
   }
 
