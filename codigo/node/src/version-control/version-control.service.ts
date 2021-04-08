@@ -117,7 +117,9 @@ export class VersionControlService {
         return token;
       })
       .catch(() => {
-        throw new InternalServerErrorException('Não foi possível receber o token do provedor');
+        throw new InternalServerErrorException(
+          'Não foi possível receber o token do provedor',
+        );
       });
   }
 

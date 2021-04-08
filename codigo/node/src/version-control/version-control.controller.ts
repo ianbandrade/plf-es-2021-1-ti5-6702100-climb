@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
@@ -14,7 +20,10 @@ export class VersionControlController {
   @Post('github')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  async github(@GetUser() user: User, @Body(ValidationPipe) { code }: GitRequest) {
+  async github(
+    @GetUser() user: User,
+    @Body(ValidationPipe) { code }: GitRequest,
+  ) {
     await this.versionControlService.github(user, code);
 
     return {
@@ -25,7 +34,10 @@ export class VersionControlController {
   @Post('gitlab')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  async gitlab(@GetUser() user: User, @Body(ValidationPipe) { code, redirectUrl }: GitRequest) {
+  async gitlab(
+    @GetUser() user: User,
+    @Body(ValidationPipe) { code, redirectUrl }: GitRequest,
+  ) {
     await this.versionControlService.gitlab(user, code, redirectUrl);
 
     return {
