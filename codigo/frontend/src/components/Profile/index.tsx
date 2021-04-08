@@ -1,16 +1,22 @@
 import { Icon } from "@chakra-ui/icons";
-import { Avatar, Button, Flex, Heading, toast, useColorMode, useToast } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Heading,
+  useColorMode,
+  useToast,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
-import { colors } from "../../styles/customTheme";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { User } from "../../shared/interfaces/user";
 import apiClient from "../../shared/api/api-client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { setCurrentUser } from "../../shared/auth/localStorageManager";
-import { getMessages } from "../../shared/utils/toast-messages";
+import { User } from "../../shared/interfaces/user";
 import { authService } from "../../shared/services/authService";
+import { getMessages } from "../../shared/utils/toast-messages";
+import { colors } from "../../styles/customTheme";
 
 const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
@@ -19,15 +25,15 @@ const GITLAB_OAUTH = "https://gitlab.com/oauth/authorize?";
 const redirectUrl = process.env.NEXT_PUBLIC_GIT_REDIRECT_URL || "";
 
 const GITHUB_PARAMS = new URLSearchParams({
-  state: 'github',
+  state: "github",
   scope: process.env.NEXT_PUBLIC_GITHUB_SCOPE || "",
   client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || "",
   redirect_uri: redirectUrl,
 }).toString();
 
 const GITLAB_PARAMS = new URLSearchParams({
-  state: 'gitlab',
-  response_type: 'code',
+  state: "gitlab",
+  response_type: "code",
   scope: process.env.NEXT_PUBLIC_GITLAB_SCOPE || "",
   client_id: process.env.NEXT_PUBLIC_GITLAB_CLIENT_ID || "",
   redirect_uri: redirectUrl,
@@ -50,8 +56,9 @@ const Profile = ({ user, setUser }: ProfileProps) => {
       apiClient
         .post(`/version-control/${state}`, body)
         .then(async (res) => {
-          const me = await authService.me().then(response => response.data) ?? user;
-          setCurrentUser(me)
+          const me =
+            (await authService.me().then((response) => response.data)) ?? user;
+          setCurrentUser(me);
           setUser(me);
 
           getMessages(res.data).forEach((description, i) =>
@@ -76,49 +83,82 @@ const Profile = ({ user, setUser }: ProfileProps) => {
     }
   }, [code]);
 
-
   const { colorMode } = useColorMode();
 
-  const color = colorMode === LIGHT ?
+  const color =
+    colorMode === LIGHT
+      ? {
+          buttonBg: colors.dark.Nord2,
+          buttonTxt: colors.light.Nord6,
+          buttonHv: colors.dark.Nord0,
+          avatarBg: colors.light.Nord4,
+        }
+      : {
+          buttonBg: colors.light.Nord6,
+          buttonTxt: colors.dark.Nord2,
+          buttonHv: colors.light.Nord4,
+          avatarBg: colors.dark.Nord1,
+        };
+
+  const sites = [
     {
-      buttonBg: colors.dark.Nord2,
-      buttonTxt: colors.light.Nord6,
-      buttonHv: colors.dark.Nord0,
-      avatarBg: colors.light.Nord4
-    } : {
-      buttonBg: colors.light.Nord6,
-      buttonTxt: colors.dark.Nord2,
-      buttonHv: colors.light.Nord4,
-      avatarBg: colors.dark.Nord1
-    }
+      site: "GitHub",
+      icon: AiFillGithub,
+      as: "a",
+      href: `${GITHUB_OAUTH}${GITHUB_PARAMS}`,
+      nick: user.gitHubAccount,
+    },
+    {
+      site: "GitLab",
+      icon: RiGitlabFill,
+      iconColor: "#E24329",
+      as: "a",
+      href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`,
+      nick: user.gitLabAccount,
+    },
+  ];
 
-  const sites = [{
-    site: "GitHub", "icon": AiFillGithub,
-    as: "a", href: `${GITHUB_OAUTH}${GITHUB_PARAMS}`,
-    nick: user.gitHubAccount
-  },
-  {
-    site: "GitLab", icon: RiGitlabFill, iconColor: "#E24329", as: "a", href: `${GITLAB_OAUTH}${GITLAB_PARAMS}`,
-    nick: user.gitLabAccount
-  }]
-
-  const integrationButtons = sites
-    .map(integration =>
+  const integrationButtons = sites.map((integration) =>
+    integration.nick ? (
       <Button
         _hover={{ bgColor: !integration.nick ? color.buttonHv : undefined }}
         bgColor={!integration.nick ? color.buttonBg : undefined}
         color={!integration.nick ? color.buttonTxt : color.buttonBg}
+        disabled={!!integration.nick}
+        key={integration.site}
+        variant={!integration.nick ? "solid" : "ghost"}
+        marginRight={4}
+      >
+        <Icon
+          as={integration.icon}
+          mr="5px"
+          boxSize="24px"
+          color={integration.iconColor}
+        />
+        {integration.nick ?? integration.site}
+      </Button>
+    ) : (
+      <Button
+        _hover={{ bgColor: !integration.nick ? color.buttonHv : undefined }}
+        bgColor={!integration.nick ? color.buttonBg : undefined}
+        color={!integration.nick ? color.buttonTxt : color.buttonBg}
+        disabled={!!integration.nick}
         key={integration.site}
         as="a"
         href={integration.href}
-        variant={!integration.nick ? 'solid' : 'ghost'}
-        // pointerEvents={!integration.nick ? 'auto' : 'none'}
+        variant={!integration.nick ? "solid" : "ghost"}
         marginRight={4}
       >
-        <Icon as={integration.icon} mr="10px" boxSize="24px" color={integration.iconColor} />
+        <Icon
+          as={integration.icon}
+          mr="5px"
+          boxSize="24px"
+          color={integration.iconColor}
+        />
         {integration.nick ?? integration.site}
       </Button>
     )
+  );
 
   return (
     <Flex ml="150px" mt="30px">
