@@ -245,21 +245,24 @@ const Users = () => {
             break;
         }
         toast({
-          title: `Campo ${tranlatedField} está vazio`,
-          status: "error",
+          title: "Atenção!",
+          description: `Campo '${tranlatedField}' está vazio`,
+          status: "warning",
           duration: 2000,
+          position: "bottom-left",
         });
       }
       setIsInputInvalid(aux);
       return false;
-      // TODO = add more validation to password
     } else if (!isUpdateModalOpen && password !== confirmPassField) {
       aux.password = true;
       aux.confirmPassword = true;
       toast({
-        title: `Campo senha e confirmar senha estão divergentes`,
-        status: "error",
+        title: "Atenção!",
+        description: `O campo 'Senha' e 'Confirmar senha' estão diferentes`,
+        status: "warning",
         duration: 2000,
+        position: "bottom-left",
       });
       setIsInputInvalid(aux);
       return false;
@@ -272,9 +275,12 @@ const Users = () => {
       aux.confirmPassword = true;
       setIsInputInvalid(aux);
       toast({
-        title: `A senha deve ter no mínimo 8 caracteres, números, letras maiusculas e minusculas e caracteres especiais`,
-        status: "error",
-        duration: 2000,
+        title: "Atenção!",
+        description:
+          "A senha deve ter no mínimo 8 caracteres, números, letras maiusculas e minusculas e caracteres especiais",
+        status: "warning",
+        duration: 5000,
+        position: "bottom-left",
       });
 
       return false;
@@ -296,10 +302,11 @@ const Users = () => {
       cleanFields();
       updateNumberOfPages();
       toast({
-        title: "Usuário criado com sucesso",
+        title: "Sucesso!",
         description: `${newUser.name} cadastrado com sucesso`,
         status: "success",
         duration: 9000,
+        position: "bottom-left",
       });
     }
   }
@@ -327,9 +334,11 @@ const Users = () => {
     const newArray = users.filter((_el, i) => selectedUser !== i);
 
     toast({
-      title: `Usuário ${selectedUserName} foi deletado com sucesso!`,
+      title: "Sucesso!",
+      description: `Usuário ${selectedUserName} foi deletado`,
       status: "success",
       duration: 2000,
+      position: "bottom-left",
     });
 
     setUsers(newArray);
