@@ -6,6 +6,7 @@ import {
   useToast,
   UseToastOptions,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Form from "../components/Form";
@@ -67,8 +68,8 @@ const Home = () => {
       });
 
     const body = { email: email.replace(" ", ""), password: password };
-    apiClient
-      .post(AUTHURL, body)
+    axios
+      .post("api/login", body)
       .then((res) => {
         if (res.data?.token) {
           login(res.data.token);
