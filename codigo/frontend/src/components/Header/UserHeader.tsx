@@ -21,10 +21,10 @@ const UserHeader = () => {
   useEffect(() => {
     const currentUser = getCurrentUser();
 
-    if (currentUser.role === 'ADMIN') {
-      setPages([...pages, { url: `/admin/users`, text: "Administração" }])
+    if (currentUser.role === "ADMIN") {
+      setPages([...pages, { url: `/user/admin`, text: "Administração" }]);
     }
-  }, [])
+  }, []);
 
   const renderedTabs = pages.map((page) => (
     <TabContainer key={page.url} text={page.text} url={page.url} />
