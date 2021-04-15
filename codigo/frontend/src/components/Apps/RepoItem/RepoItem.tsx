@@ -43,6 +43,7 @@ export const RepoItem = (props: RepoItemProps) => {
                     <Text mt="1"
                         lineHeight="tight"
                         color={textColor}
+                        margin="auto 0"
                         isTruncated>
                         {`${props?.org}/${props.logicalName}`}
                     </Text>
