@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { logout } from "../../shared/auth/localStorageManager";
 import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
-import AdminHeader from "./AdminHeader";
 import RegularHeader from "./RegularHeader";
 import UserHeader from "./UserHeader";
 
@@ -14,22 +13,20 @@ const DARK = "dark";
 
 const Header = () => {
   const router = useRouter();
-  const isAdminPage = router.pathname.includes("/admin");
   const isUserPage = router.pathname.split("/")[1] === "user";
 
   const { colorMode } = useColorMode();
 
   function setHeaderBgColor() {
-    if ((isAdminPage || isUserPage) && colorMode === LIGHT) {
+    if (isUserPage && colorMode === LIGHT) {
       return colors.light.Nord5;
-    } else if ((isAdminPage || isUserPage) && colorMode === DARK) {
+    } else if (isUserPage && colorMode === DARK) {
       return colors.dark.Nord1;
     }
   }
 
   function handleRenderHeader() {
     if (router.pathname === "/") return "";
-    else if (isAdminPage) return <AdminHeader />;
     else if (isUserPage) return <UserHeader />;
     else return <RegularHeader />;
   }
@@ -41,10 +38,10 @@ const Header = () => {
       align="center"
       height="140px"
       backgroundColor={setHeaderBgColor()}
-      boxShadow={isAdminPage || isUserPage ? "base" : ""}
-      rounded={isAdminPage || isUserPage ? "md" : ""}
-      padding={isAdminPage || isUserPage ? "26px" : "0"}
-      paddingTop={isAdminPage || isUserPage ? "32px" : "0"}
+      boxShadow={isUserPage ? "base" : ""}
+      rounded={isUserPage ? "md" : ""}
+      padding={isUserPage ? "26px" : "0"}
+      paddingTop={isUserPage ? "32px" : "0"}
     >
       {handleRenderHeader()}
       <Box marginLeft="auto">
@@ -54,10 +51,10 @@ const Header = () => {
             bgColor={
               colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1
             }
-            _hover={{ cursor: 'pointer' }}
+            _hover={{ cursor: "pointer" }}
             onClick={() => {
               logout();
-              router.replace('/');
+              router.replace("/");
             }}
           >
             <AvatarBadge
