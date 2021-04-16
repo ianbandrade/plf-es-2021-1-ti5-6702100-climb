@@ -5,7 +5,7 @@ import { MutableRefObject } from "react";
 interface InputProps {
   placeholder: string;
   icon?: ReactNode;
-  label: string;
+  label?: string;
   value?: string;
   onChangeInput: Function;
   style?: {
