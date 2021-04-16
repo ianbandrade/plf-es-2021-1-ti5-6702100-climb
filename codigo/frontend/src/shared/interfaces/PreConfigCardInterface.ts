@@ -11,5 +11,9 @@ export interface PreConfigCardRequestProps {
   name: string;
   image: string;
   description: string;
+}
+
+export interface selectedObjectProps {
+  id: string;
   selected: boolean;
 }

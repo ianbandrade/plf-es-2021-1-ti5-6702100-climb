@@ -18,6 +18,10 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
 }) => {
   const { colorMode } = useColorMode();
 
+  const theme = (): string => {
+    return colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1;
+  };
+
   return (
     <Flex
       flexDirection="column"
@@ -28,14 +32,12 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
       p={5}
       mr={10}
       mb={10}
-      backgroundColor={
-        colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1
-      }
+      backgroundColor={theme()}
       alignItems="center"
       textAlign="center"
       borderRadius={10}
-      _hover={{ transition: "0.3s ease-out", boxShadow: "dark-lg" }}
-      {...(selected && { backgroundColor: "blue" })}
+      {...(selected && { boxShadow: "dark-lg", border: "2px solid" })}
+      _hover={{ transition: "0.3s ease-out", boxShadow: "2xl" }}
     >
       <Box>
         <Heading fontSize="3xl">{name}</Heading>
