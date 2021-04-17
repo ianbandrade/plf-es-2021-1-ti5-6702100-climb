@@ -2,7 +2,11 @@ import { Box, Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
 import PreConfigCard from "../../../components/PreConfigCard";
 import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
-import { PreConfigCardRequestProps } from "../../../shared/interfaces/PreConfigCardInterface";
+import {
+  PreConfigCardRequestProps,
+  selectedObjectProps,
+} from "../../../shared/interfaces/PreConfigCardInterface";
+
 const plugins: PreConfigCardRequestProps[] = [
   {
     id: "1",
@@ -21,11 +25,17 @@ const plugins: PreConfigCardRequestProps[] = [
 ];
 
 const Plugins = (): JSX.Element => {
-  const [id, setId] = useState<string>("");
+  const [selectedObject, setselectedObject] = useState<selectedObjectProps>({
+    id: "",
+    selected: false,
+  });
 
   const toggleCardSelect = (index: number): void => {
-    const currentId = plugins[index].id;
-    setId(currentId === id ? "" : currentId);
+    setselectedObject({
+      id: plugins[index].id,
+      selected: !selectedObject.selected,
+    });
+    console.log(selectedObject);
   };
 
   const renderCards = plugins.map(
@@ -42,7 +52,12 @@ const Plugins = (): JSX.Element => {
             name={plugin.name}
             description={plugin.description}
             image={plugin.image}
-            selected={id === plugin.id ? true : false}
+            selected={
+              selectedObject.id === plugin.id &&
+              selectedObject.selected === false
+                ? true
+                : false
+            }
           />
         </Flex>
       );

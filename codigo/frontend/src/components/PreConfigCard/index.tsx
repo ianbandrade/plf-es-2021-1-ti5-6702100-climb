@@ -36,10 +36,7 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
       alignItems="center"
       textAlign="center"
       borderRadius={10}
-      {...(selected && {
-        boxShadow: "dark-lg",
-        border: "2px solid",
-      })}
+      {...(selected && { boxShadow: "dark-lg", border: "2px solid" })}
       _hover={{ transition: "0.3s ease-out", boxShadow: "2xl" }}
     >
       <Box>
