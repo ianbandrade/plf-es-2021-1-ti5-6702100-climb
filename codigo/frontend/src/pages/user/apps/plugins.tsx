@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
 import PreConfigCard from "../../../components/PreConfigCard";
 import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
@@ -51,10 +51,10 @@ const Plugins = (): JSX.Element => {
   );
 
   return (
-    <Box display="flex" flexDirection="column" padding="12" width="full">
+    <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Plugins pré-configurados" />
       <Flex flexWrap="wrap">{renderCards}</Flex>
-    </Box>
+    </Flex>
   );
 };
 
