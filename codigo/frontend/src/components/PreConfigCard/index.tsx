@@ -1,11 +1,15 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Image,
+  Spacer,
   Text,
   useColorMode,
 } from "@chakra-ui/react";
+import React from "react";
+import { FiTool } from "react-icons/fi";
 import { PreConfigCardProps } from "../../shared/interfaces/PreConfigCardInterface";
 import { colors } from "../../styles/customTheme";
 
@@ -15,6 +19,7 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
   image,
   description,
   selected,
+  handleModal,
 }) => {
   const { colorMode } = useColorMode();
 
@@ -39,9 +44,32 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
       {...(selected && { boxShadow: "dark-lg", border: "2px solid" })}
       _hover={{ transition: "0.3s ease-out", boxShadow: "2xl" }}
     >
-      <Box>
-        <Heading fontSize="3xl">{name}</Heading>
-      </Box>
+      <Flex
+        {...(selected && {
+          width: "100%",
+        })}
+      >
+        <Box>
+          <Heading fontSize="3xl">{name}</Heading>
+        </Box>
+        <Spacer />
+        {selected && (
+          <Box>
+            <Button
+              borderRadius={10}
+              variant="ghost"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleModal();
+              }}
+              size="sm"
+            >
+              <FiTool />
+            </Button>
+          </Box>
+        )}
+      </Flex>
+
       <Image maxW={120} maxH={120} src={image} alt={`${name} icon`} />
       <Box>
         <Text>{description}</Text>

@@ -4,6 +4,7 @@ export interface PreConfigCardProps {
   image: string;
   description: string;
   selected: boolean;
+  handleModal: Function;
 }
 
 export interface PreConfigCardRequestProps {
