@@ -1,4 +1,4 @@
-import { Button, Flex, useBoolean } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Modal from "../../../components/Modal";
 import PreConfigCard from "../../../components/PreConfigCard";
@@ -57,19 +57,30 @@ const plugins: PreConfigCardRequestProps[] = [
 
 const Plugins = (): JSX.Element => {
   const [id, setId] = useState<string>("");
-  const [flag, setFlag] = useBoolean(false);
+  const [title, setTitle] = useState<string>("");
+  const [flag, setFlag] = useState<boolean>(false);
 
   const toggleCardSelect = (index: number): void => {
-    const selectedId = plugins[index].id;
+    let selectedId = plugins[index].id;
+    let selectedTitle = plugins[index].name;
+    setToggleStates(selectedId, selectedTitle);
+  };
+
+  const setToggleStates = (selectedId: string, selectedTitle: string): void => {
     setId(selectedId === id ? "" : selectedId);
+    setTitle(selectedTitle);
+    setFlag(true);
   };
 
   const renderCards = plugins.map(
     (plugin, index): JSX.Element => {
       return (
         <Flex
+          justifyContent="center"
           key={index}
-          onClick={() => toggleCardSelect(index)}
+          onClick={(): void => {
+            toggleCardSelect(index);
+          }}
           cursor="pointer"
         >
           <PreConfigCard
@@ -78,8 +89,6 @@ const Plugins = (): JSX.Element => {
             name={plugin.name}
             description={plugin.description}
             image={plugin.image}
-            selected={id === plugin.id}
-            handleModal={setFlag.toggle}
           />
         </Flex>
       );
@@ -91,18 +100,13 @@ const Plugins = (): JSX.Element => {
       <HeadingActionButton title="Plugins pré-configurados" />
       <Modal
         isOpen={flag}
-        title="Title"
-        onClose={setFlag.off}
+        title={title}
+        onClose={(): void => setFlag(false)}
         width={800}
         children
       />
       <Flex flexWrap="wrap" justifyContent="center">
         {renderCards}
-      </Flex>
-      <Flex justifyContent="flex-end">
-        <Button maxW={100} mr={20}>
-          Configurar
-        </Button>
       </Flex>
     </Flex>
   );
