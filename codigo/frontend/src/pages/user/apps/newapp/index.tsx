@@ -8,14 +8,22 @@ const data = {
       name: "GaMoCh",
       repositories: [
         {
-          name: "adsad-hello",
+          name: "express-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
           branchs: ["master", "develop"],
         },
         {
-          name: "express-hello",
+          name: "adasdasd-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
           branchs: ["master", "develop"],
+        },
+        {
+          name: "adasdasdasdasdasd-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "main",
+          branchs: ["main", "develop"],
         },
       ],
     },
@@ -25,6 +33,13 @@ const data = {
         {
           name: "test-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
+          branchs: ["master", "develop"],
+        },
+        {
+          name: "qqqq-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
           branchs: ["master", "develop"],
         },
       ],

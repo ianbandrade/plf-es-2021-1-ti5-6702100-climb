@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Flex, Select, Heading, useColorMode, Icon } from "@chakra-ui/react";
+import {
+  Flex,
+  Select,
+  Heading,
+  useColorMode,
+  Icon,
+  Button,
+} from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
 import Input from "../Input";
 import { AiFillGithub, AiOutlineSearch } from "react-icons/ai";
@@ -20,13 +27,17 @@ const RepositoriesCard = ({
   onSelectGit,
 }: RepositoriesProps) => {
   const { colorMode } = useColorMode();
-  const { cardColor } =
+  const { cardColor, inputBgColor, inputColor } =
     colorMode === LIGHT
       ? {
           cardColor: colors.light.Nord4,
+          inputBgColor: colors.dark.Nord0,
+          inputColor: colors.light.Nord6,
         }
       : {
           cardColor: colors.dark.Nord2,
+          inputBgColor: colors.light.Nord4,
+          inputColor: colors.dark.Nord2,
         };
 
   const [
@@ -38,7 +49,6 @@ const RepositoriesCard = ({
 
   function handleSelectOrganization(e: any) {
     const index = Number(e.target.value);
-    console.log(index);
     setActualOrganization(
       gitOrganizations === null ? null : gitOrganizations[index]
     );
@@ -60,12 +70,25 @@ const RepositoriesCard = ({
         Nova aplicação
       </Heading>
       <Flex width="100%" justifyContent="space-evenly" px="6">
-        <Select onChange={(e) => handleSelectOrganization(e)}>
+        <Select
+          ml="2"
+          onChange={(e) => handleSelectOrganization(e)}
+          bgColor={inputBgColor}
+          color={inputColor}
+        >
           {gitOrganizations === null
             ? ""
             : gitOrganizations?.map(
                 (organization: Organization, index: number) => {
-                  return <option value={index}>{organization.name} </option>;
+                  return (
+                    <option
+                      value={index}
+                      key={index}
+                      style={{ color: inputBgColor }}
+                    >
+                      {organization.name}{" "}
+                    </option>
+                  );
                 }
               )}
         </Select>
@@ -75,33 +98,39 @@ const RepositoriesCard = ({
           value=""
           icon={<AiOutlineSearch size="25" />}
           onChangeInput={() => {}}
+          style={{ inputBgColor: inputBgColor, inputTextColor: inputColor }}
         />
         <Flex ml={8} justifyContent="space-between">
-          <Icon
-            as={AiFillGithub}
-            boxSize="36px"
-            mr="3"
-            _hover={{ cursor: "pointer" }}
+          <Button
+            width="12"
+            height="12"
+            mr="4"
             onClick={() => onSelectGit("github")}
-          />
-          <Icon
-            as={RiGitlabFill}
-            boxSize="36px"
-            color={"#E24329"}
-            _hover={{ cursor: "pointer" }}
-            onClick={() => onSelectGit("gitlab")}
-          />
+          >
+            <Icon as={AiFillGithub} boxSize="36px" />
+          </Button>
+          <Button width="12" height="12" mr="2">
+            <Icon
+              as={RiGitlabFill}
+              boxSize="36px"
+              color={"#E24329"}
+              _hover={{ cursor: "pointer" }}
+              onClick={() => onSelectGit("gitlab")}
+            />
+          </Button>
         </Flex>
       </Flex>
       <Flex flexDirection="column" justifyContent="center" width="93%" mt="4">
         {gitOrganizations && actualOrganization !== null ? (
-          actualOrganization.repositories.map((repository: Repository) => (
-            <RepositoryItem
-              key={`${actualOrganization.name}/${repository}`}
-              organizationName={actualOrganization.name}
-              repository={repository}
-            />
-          ))
+          actualOrganization.repositories.map((repository: Repository) => {
+            return (
+              <RepositoryItem
+                key={`${actualOrganization.name}/${repository.name}`}
+                organizationName={actualOrganization.name}
+                repository={repository}
+              />
+            );
+          })
         ) : (
           <NotLinkedGit />
         )}

@@ -9,10 +9,12 @@ interface InputProps {
   value?: string;
   onChangeInput: Function;
   style?: {
+    marginLeft?: string;
     inputTextColor?: string;
     labelColor?: string;
     inputBgColor?: string;
     marginBottom?: string;
+    marginRight?: string;
   };
   type: string;
   required?: boolean;
@@ -38,7 +40,9 @@ const InputComponent = ({
       <InputGroup
         backgroundColor={style?.labelColor}
         height="40px"
+        ml={style?.marginLeft}
         mb={style?.marginBottom}
+        mr={style?.marginRight}
         rounded="md"
       >
         <InputLeftAddon children={icon} />

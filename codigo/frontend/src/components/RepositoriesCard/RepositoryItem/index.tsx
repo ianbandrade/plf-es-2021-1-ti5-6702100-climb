@@ -1,11 +1,23 @@
-import { Flex, Text, Icon, useColorMode } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import { useState } from "react";
+import {
+  Flex,
+  Text,
+  Icon,
+  Button,
+  useDisclosure,
+  useColorMode,
+  Modal,
+  ModalHeader,
+  ModalContent,
+  ModalOverlay,
+} from "@chakra-ui/react";
 import { Repository } from "../../../shared/interfaces/Repository";
 import { colors } from "../../../styles/customTheme";
 import { GoRepo } from "react-icons/go";
+import ModalConfig from "../ModalConfig";
 
 interface RepositoryItem {
-  organizationName: string | null;
+  organizationName: string;
   repository: Repository;
 }
 
@@ -26,31 +38,46 @@ const RepositoryItem = ({ repository, organizationName }: RepositoryItem) => {
           iconColor: colors.dark.Nord2,
         };
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <Flex
-      justifyContent="space-between"
-      alignItems="center"
-      width="100%"
-      height="12"
-      px="8"
-      mb="3"
-      bgColor={itemColor}
-      rounded="md"
-    >
-      <Flex justifyContent="space-between">
-        <Icon as={GoRepo} color={iconColor} boxSize="6" mr="4" />
-        <Text fontSize="md" alignSelf="center" color={textColor}>
-          {`${organizationName}/${repository.name}`}
-        </Text>
+    <>
+      <ModalConfig
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        repository={repository}
+        organizationName={organizationName}
+      />
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        width="100%"
+        height="12"
+        px="8"
+        mb="3"
+        bgColor={itemColor}
+        rounded="md"
+      >
+        <Flex justifyContent="space-between">
+          <Icon as={GoRepo} color={iconColor} boxSize="6" mr="4" />
+          <Text fontSize="md" alignSelf="center" color={textColor}>
+            {`${organizationName}/${repository.name}`}
+          </Text>
+        </Flex>
+        <Flex>
+          <Button
+            size="sm"
+            bgColor={colors.aurora.Nord14}
+            _hover={{ bgColor: colors.aurora.Nord14 }}
+            color={colors.light.Nord4}
+            onClick={onOpen}
+          >
+            Adicionar
+          </Button>
+        </Flex>
       </Flex>
-      <Flex>
-        <Icon
-          as={FiPlus}
-          color={colors.aurora.Nord14}
-          _hover={{ cursor: "pointer" }}
-        />
-      </Flex>
-    </Flex>
+    </>
   );
 };
 
