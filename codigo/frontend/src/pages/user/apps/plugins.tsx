@@ -1,5 +1,6 @@
 import { Button, Flex, useBoolean } from "@chakra-ui/react";
 import React, { useState } from "react";
+import Modal from "../../../components/Modal";
 import PreConfigCard from "../../../components/PreConfigCard";
 import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
 import { PreConfigCardRequestProps } from "../../../shared/interfaces/PreConfigCardInterface";
@@ -86,10 +87,18 @@ const Plugins = (): JSX.Element => {
   );
 
   return (
-    <Flex flexDirection="column" padding="12" width="full">
+    <Flex flexDir="column">
       <HeadingActionButton title="Plugins pré-configurados" />
-      {flag && <Button>dsajudsaujoidasods</Button>}
-      <Flex flexWrap="wrap">{renderCards}</Flex>
+      <Modal
+        isOpen={flag}
+        title="Title"
+        onClose={setFlag.off}
+        width={800}
+        children
+      />
+      <Flex flexWrap="wrap" justifyContent="center">
+        {renderCards}
+      </Flex>
       <Flex justifyContent="flex-end">
         <Button maxW={100} mr={20}>
           Configurar

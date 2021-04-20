@@ -31,7 +31,7 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
     <Flex
       flexDirection="column"
       maxW="sm"
-      maxH="sm"
+      maxH="md"
       boxShadow="base"
       overflow="hidden"
       p={5}
@@ -41,32 +41,37 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
       alignItems="center"
       textAlign="center"
       borderRadius={10}
-      {...(selected && { boxShadow: "dark-lg", border: "2px solid" })}
+      {...(selected && {
+        boxShadow: "dark-lg",
+        border: "0.5px solid",
+      })}
       _hover={{ transition: "0.3s ease-out", boxShadow: "2xl" }}
     >
       <Flex
         {...(selected && {
           width: "100%",
+          paddingLeft: "15px",
         })}
       >
-        <Box>
-          <Heading fontSize="3xl">{name}</Heading>
-        </Box>
+        <Flex>
+          <Heading fontSize="3xl" m="auto 0" textAlign="center">
+            {name}
+          </Heading>
+        </Flex>
         <Spacer />
         {selected && (
-          <Box>
-            <Button
-              borderRadius={10}
-              variant="ghost"
-              onClick={(event) => {
-                event.stopPropagation();
-                handleModal();
-              }}
-              size="sm"
-            >
-              <FiTool />
-            </Button>
-          </Box>
+          <Button
+            size="lg"
+            variant="ghost"
+            display="flex"
+            justifyContent="center"
+            onClick={(event) => {
+              event.stopPropagation();
+              handleModal();
+            }}
+          >
+            <FiTool />
+          </Button>
         )}
       </Flex>
 
