@@ -7,7 +7,12 @@
       "path": "./node"
     }
   ],
-  "settings": {},
+  "settings": { 
+    "workbench.colorTheme": "Nord",
+  "material-icon-theme.activeIconPack": "nest",
+  "material-icon-theme.folders.theme": "classic",
+  "workbench.iconTheme": "material-icon-theme"
+ },
   "extensions": {
     "recommendations": [
       "ms-azuretools.vscode-docker",

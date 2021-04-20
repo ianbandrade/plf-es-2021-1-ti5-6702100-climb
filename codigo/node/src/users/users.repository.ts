@@ -9,13 +9,13 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
-import { ReturnManyUsersDto } from './dto/return-many-users.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
 import { PostgresError } from 'pg-error-enum';
+import { ReturList } from 'src/shared/dto/return-list.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturnManyUsersDto> {
+  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturList<User>> {
     queryDto.status = queryDto.status === undefined ? true : queryDto.status;
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
@@ -45,7 +45,7 @@ export class UserRepository extends Repository<User> {
 
     const [users, total] = await query.getManyAndCount();
 
-    return { users, total };
+    return { items: users, total };
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards,
   ValidationPipe,
@@ -43,5 +44,12 @@ export class VersionControlController {
     return {
       message: 'Conta do GitLab associada com sucesso',
     };
+  }
+
+  @Get('repositories')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  repositories(@GetUser() user: User) {
+    return this.versionControlService.getUserRepositories(user);
   }
 }

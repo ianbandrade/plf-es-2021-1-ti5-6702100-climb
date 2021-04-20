@@ -11,9 +11,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { UserRole } from './user-roles.enum';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
-import { ReturnManyUsersDto } from './dto/return-many-users.dto';
 import { ConfigService } from '@nestjs/config';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
+import { ReturList } from 'src/shared/dto/return-list.dto';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
@@ -55,7 +55,7 @@ export class UsersService implements OnModuleInit {
     return await this.userRepository.createManyUsers(createManyUsersDto);
   }
 
-  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturnManyUsersDto> {
+  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturList<User>> {
     const users = await this.userRepository.findUsers(queryDto);
     return users;
   }
