@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
@@ -6,6 +7,11 @@ const data = {
     {
       name: "GaMoCh",
       repositories: [
+        {
+          name: "adsad-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          branchs: ["master", "develop"],
+        },
         {
           name: "express-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
@@ -28,13 +34,23 @@ const data = {
 };
 
 const NewApp = () => {
+  const [selectedOrganization, setSelectedOrganization] = useState<
+    "github" | "gitlab"
+  >("github");
+
+  function handleSelectGit(gitOrganization: string) {
+    gitOrganization === "github"
+      ? setSelectedOrganization("github")
+      : setSelectedOrganization("gitlab");
+  }
+
   return !data.github && !data.gitlab ? (
     <NotLinkedGit />
   ) : (
-    <Flex justifyContent="center" alignItems="center" mt="55">
+    <Flex justifyContent="center" alignItems="center" mt={"28"}>
       <RepositoriesCard
-        githubOrganizations={data.github}
-        gitlabOrganizations={data.gitlab}
+        gitOrganizations={data[selectedOrganization]}
+        onSelectGit={handleSelectGit}
       />
     </Flex>
   );

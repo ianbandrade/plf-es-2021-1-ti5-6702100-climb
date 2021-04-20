@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Flex, Select, Heading, useColorMode, Icon } from "@chakra-ui/react";
 import { colors } from "../../styles/customTheme";
 import Input from "../Input";
@@ -5,16 +6,18 @@ import { AiFillGithub, AiOutlineSearch } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import { Organization } from "../../shared/interfaces/Organization";
 import RepositoryItem from "./RepositoryItem";
+import NotLinkedGit from "../NotLinkedGit";
+import { Repository } from "../../shared/interfaces/Repository";
 
 const LIGHT = "light";
 interface RepositoriesProps {
-  githubOrganizations: Organization[] | null;
-  gitlabOrganizations: Organization[] | null;
+  gitOrganizations: Organization[] | null;
+  onSelectGit: Function;
 }
 
 const RepositoriesCard = ({
-  githubOrganizations,
-  gitlabOrganizations,
+  gitOrganizations,
+  onSelectGit,
 }: RepositoriesProps) => {
   const { colorMode } = useColorMode();
   const { cardColor } =
@@ -25,7 +28,22 @@ const RepositoriesCard = ({
       : {
           cardColor: colors.dark.Nord2,
         };
-  console.log(githubOrganizations);
+
+  const [
+    actualOrganization,
+    setActualOrganization,
+  ] = useState<Organization | null>(
+    gitOrganizations === null ? null : gitOrganizations[0]
+  );
+
+  function handleSelectOrganization(e: any) {
+    const index = Number(e.target.value);
+    console.log(index);
+    setActualOrganization(
+      gitOrganizations === null ? null : gitOrganizations[index]
+    );
+  }
+
   return (
     <Flex
       flexDirection="column"
@@ -35,19 +53,21 @@ const RepositoriesCard = ({
       width="60%"
       rounded={10}
       padding="5"
+      height="100%"
+      overflowY="auto"
     >
       <Heading fontSize="2xl" alignSelf="flex-start" pb="8">
         Nova aplicação
       </Heading>
       <Flex width="100%" justifyContent="space-evenly" px="6">
-        <Select placeholder="Selecione o repositório">
-          {githubOrganizations?.map((organization) => {
-            return organization.repositories.map((repository) => (
-              <option value={`${organization.name}/${repository.name}`}>
-                {organization.name}/{repository.name}
-              </option>
-            ));
-          })}
+        <Select onChange={(e) => handleSelectOrganization(e)}>
+          {gitOrganizations === null
+            ? ""
+            : gitOrganizations?.map(
+                (organization: Organization, index: number) => {
+                  return <option value={index}>{organization.name} </option>;
+                }
+              )}
         </Select>
         <Input
           type="text"
@@ -62,17 +82,29 @@ const RepositoriesCard = ({
             boxSize="36px"
             mr="3"
             _hover={{ cursor: "pointer" }}
+            onClick={() => onSelectGit("github")}
           />
           <Icon
             as={RiGitlabFill}
             boxSize="36px"
             color={"#E24329"}
             _hover={{ cursor: "pointer" }}
+            onClick={() => onSelectGit("gitlab")}
           />
         </Flex>
       </Flex>
-      <Flex flexDirection="column" width="100%">
-        <RepositoryItem organizations={githubOrganizations} />
+      <Flex flexDirection="column" justifyContent="center" width="93%" mt="4">
+        {gitOrganizations && actualOrganization !== null ? (
+          actualOrganization.repositories.map((repository: Repository) => (
+            <RepositoryItem
+              key={`${actualOrganization.name}/${repository}`}
+              organizationName={actualOrganization.name}
+              repository={repository}
+            />
+          ))
+        ) : (
+          <NotLinkedGit />
+        )}
       </Flex>
     </Flex>
   );

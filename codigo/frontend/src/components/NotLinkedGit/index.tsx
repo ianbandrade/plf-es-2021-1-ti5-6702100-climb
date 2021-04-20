@@ -12,7 +12,7 @@ const NotLinkedGit = () => {
     >
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
         <HiEmojiSad size="70" />
-        <Heading fontSize={30}>Nenhum repositório encontrado</Heading>
+        <Heading fontSize={30}>Organização de git não vinculada ainda</Heading>
       </Flex>
     </Flex>
   );
