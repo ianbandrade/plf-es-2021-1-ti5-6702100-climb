@@ -79,9 +79,9 @@ const AccordionInstance: React.FC<AccordionProps> = ({
   return (
     <>
       <Accordion width={750} mb={5} allowToggle>
-        {instances.map((instance, index) => {
+        {instances.map((instance, instanceIndex) => {
           return (
-            <AccordionItem key={index}>
+            <AccordionItem key={instanceIndex}>
               <Flex>
                 <AccordionButton
                   bgColor={
@@ -125,16 +125,14 @@ const AccordionInstance: React.FC<AccordionProps> = ({
                     {credentialText[instance.status]}
                   </Text>
                 ) : (
-                  instance.credentials?.map((credential) => {
+                  instance.credentials?.map((credential, credentialIndex) => {
                     return (
-                      <>
-                        <Flex alignItems="center">
-                          <Text fontWeight="bold" fontSize="xl" mr={2}>
-                            {credential.key}:
-                          </Text>
-                          <Text fontSize="md">{credential.value}</Text>
-                        </Flex>
-                      </>
+                      <Flex key={credentialIndex} alignItems="center">
+                        <Text fontWeight="bold" fontSize="xl" mr={2}>
+                          {credential.key}:
+                        </Text>
+                        <Text fontSize="md">{credential.value}</Text>
+                      </Flex>
                     );
                   })
                 )}
