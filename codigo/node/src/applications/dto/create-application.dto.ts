@@ -7,7 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
-import { Enviroment } from '../entities/enviroments.entity';
+import { Environment } from '../entities/environments/environments.entity';
 
 export class CreateApplicationDto {
   @IsNotEmpty({
@@ -50,5 +50,5 @@ export class CreateApplicationDto {
   repositoryURL: string;
 
   @IsArray()
-  environments: Enviroment[];
+  environments: Environment[];
 }

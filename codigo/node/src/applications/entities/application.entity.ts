@@ -1,15 +1,18 @@
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
-import { Enviroment } from './enviroments.entity';
+import { Environment } from './environments/environments.entity';
 import { User } from 'src/users/user.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
   ManyToOne,
   OneToMany,
+  UpdateDateColumn,
 } from 'typeorm';
+import { Deploys } from './deploys/deploys.entity';
 
 @Entity()
 export class Application extends BaseEntity {
@@ -44,11 +47,23 @@ export class Application extends BaseEntity {
   @Column({ nullable: false })
   userId: string;
 
-  @OneToMany(() => Enviroment, (enviroment) => enviroment.applicationId, {
+  @OneToMany(() => Environment, (Environment) => Environment.applicationId, {
     eager: true,
   })
   @JoinTable()
-  environments: Enviroment[];
+  environments: Environment[];
+
+  @OneToMany(() => Deploys, (deploy) => deploy.application, {
+    eager: true,
+  })
+  @JoinTable()
+  deploys: Deploys[];
+
+  @CreateDateColumn()
+  createdAt?: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 
   static get publicAttributes(): (keyof Application)[] {
     return [

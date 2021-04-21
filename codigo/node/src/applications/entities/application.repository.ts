@@ -7,7 +7,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { FindApplicationQueryDto } from '../dto/find-application-query.dto';
 import { User } from 'src/users/user.entity';
-import { Enviroment } from './enviroments.entity';
+import { Environment } from './environments/environments.entity';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
@@ -27,8 +27,8 @@ export class ApplicationRepository extends Repository<Application> {
 
     const application = this.create();
 
-    const mapedEnviroments = environments.map(async ({ key, value }) => {
-      const newEviroment = new Enviroment();
+    const mapedEnvironments = environments.map(async ({ key, value }) => {
+      const newEviroment = new Environment();
       newEviroment.key = key;
       newEviroment.value = value;
       return await newEviroment.save();
@@ -41,7 +41,7 @@ export class ApplicationRepository extends Repository<Application> {
     application.repositoryRef = repositoryRef;
     application.repositoryPath = repopsitoryPath;
     application.repositoryURL = repositoryURL;
-    application.environments = await Promise.all(mapedEnviroments);
+    application.environments = await Promise.all(mapedEnvironments);
     application.webhookToken = await bcrypt.genSalt();
     application.user = user;
 
@@ -64,7 +64,7 @@ export class ApplicationRepository extends Repository<Application> {
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
 
-    const { name, provider, status } = queryDto;
+    const { name, provider } = queryDto;
     const query = this.createQueryBuilder('application');
 
     query.andWhere('application.userId = :userId', {
@@ -79,10 +79,6 @@ export class ApplicationRepository extends Repository<Application> {
       query.andWhere('application.provider ILIKE :provider', {
         provider: `%${provider}%`,
       });
-    }
-
-    if (status) {
-      query.where('application.status = :status', { status });
     }
 
     if (queryDto.page && queryDto.limit)

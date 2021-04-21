@@ -59,4 +59,22 @@ export class ApplicationsController {
   remove(@GetUser() user: User, @Param('id') id: string) {
     return this.applicationsService.remove(id, user);
   }
+
+  @Get(':appId/builds')
+  @UseGuards(AuthGuard())
+  getBuilds(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.getBuilds(appId, user);
+  }
+
+  @Get('builds/:buildId')
+  @UseGuards(AuthGuard())
+  getBuild(@GetUser() user: User, @Param('buildId') buildId: string) {
+    return this.applicationsService.getOneBuild(buildId, user);
+  }
+
+  @Post(':appId/builds')
+  @UseGuards(AuthGuard())
+  createBuild(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.createBuild(appId, user);
+  }
 }

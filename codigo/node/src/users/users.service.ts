@@ -70,6 +70,14 @@ export class UsersService implements OnModuleInit {
     return user;
   }
 
+  async findCompleteUserById(userId: string): Promise<User> {
+    const user = await this.userRepository.findOne(userId);
+
+    if (!user) throw new NotFoundException('Usuário não foi encontrado');
+
+    return user;
+  }
+
   async updateUser(updateUserDto: UpdateUserDto, id: string) {
     const result = await this.userRepository.update({ id }, updateUserDto);
     if (result.affected > 0) {

@@ -1,14 +1,15 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Application } from './application.entity';
+import { Application } from '../application.entity';
 
 @Entity()
-export class Enviroment extends BaseEntity {
+export class Environment extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,4 +21,7 @@ export class Enviroment extends BaseEntity {
 
   @Column({ nullable: false })
   value: string;
+
+  @CreateDateColumn()
+  createdAt?: Date;
 }

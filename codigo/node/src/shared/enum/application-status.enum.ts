@@ -1,4 +1,4 @@
-export enum ApplicationStatusEnum {
+export enum DeployStatusEnum {
   SUCCESS = 'SUCCESS',
   FAIL = 'FAIL',
   CREATING = 'CREATING',

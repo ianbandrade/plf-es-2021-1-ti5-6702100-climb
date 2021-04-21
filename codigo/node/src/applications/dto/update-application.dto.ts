@@ -1,5 +1,5 @@
 import { IsArray, IsString, MaxLength } from 'class-validator';
-import { Enviroment } from '../entities/enviroments.entity';
+import { Environment } from '../entities/environments/environments.entity';
 
 export class UpdateApplicationDto {
   @MaxLength(50, {
@@ -15,5 +15,5 @@ export class UpdateApplicationDto {
   repositoryPath?: string;
 
   @IsArray()
-  environments?: Enviroment[];
+  environments?: Environment[];
 }
