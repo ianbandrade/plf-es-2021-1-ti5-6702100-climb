@@ -2,7 +2,7 @@ import axios from "axios";
 import { authService } from "../services/authService";
 
 const gitlabClient = axios.create({
-  baseURL: `https://api.github.com/graphql`,
+  baseURL: `https://gitlab.com/api/graphql`,
 });
 
 gitlabClient.interceptors.request.use(
