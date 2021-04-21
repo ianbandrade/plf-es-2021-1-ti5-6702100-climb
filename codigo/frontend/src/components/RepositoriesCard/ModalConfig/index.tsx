@@ -96,7 +96,7 @@ const ModalConfig = ({
   }
 
   return (
-    <Modal isOpen={isOpen} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -143,15 +143,13 @@ const ModalConfig = ({
                   color={inputColor}
                 >
                   {repository.branchs.map((branch: string, index: number) => (
-                    <>
-                      <option
-                        value={index}
-                        key={index}
-                        style={{ color: inputBgColor }}
-                      >
-                        {branch}
-                      </option>
-                    </>
+                    <option
+                      value={index}
+                      key={index}
+                      style={{ color: inputBgColor }}
+                    >
+                      {branch}
+                    </option>
                   ))}
                 </Select>
               </Flex>
@@ -189,6 +187,10 @@ const ModalConfig = ({
                         value={keyInput}
                         onChangeInput={(e: any) => setKeyInput(e.target.value)}
                         icon={<IoMdKey />}
+                        style={{
+                          inputBgColor: inputBgColor,
+                          inputTextColor: inputColor,
+                        }}
                       />
                       <Input
                         placeholder="Valor"
@@ -199,7 +201,11 @@ const ModalConfig = ({
                           setValueInput(e.target.value)
                         }
                         icon={<GiChest />}
-                        style={{ marginLeft: "4" }}
+                        style={{
+                          marginLeft: "4",
+                          inputBgColor: inputBgColor,
+                          inputTextColor: inputColor,
+                        }}
                       />
 
                       <Icon
@@ -221,23 +227,25 @@ const ModalConfig = ({
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {envs.length > 0
-                          ? envs.map((env: Env, index: number) => (
-                              <Tr key={index}>
-                                <Th textAlign="left">{env.key}</Th>
-                                <Th>{env.value}</Th>
-                                <Th>
-                                  <Icon
-                                    as={GiTrashCan}
-                                    boxSize="6"
-                                    color={colors.aurora.Nord11}
-                                    _hover={{ cursor: "pointer" }}
-                                    onClick={() => removeEnv(index)}
-                                  />
-                                </Th>
-                              </Tr>
-                            ))
-                          : ""}
+                        {envs.length > 0 ? (
+                          envs.map((env: Env, index: number) => (
+                            <Tr key={index}>
+                              <Th textAlign="left">{env.key}</Th>
+                              <Th>{env.value}</Th>
+                              <Th>
+                                <Icon
+                                  as={GiTrashCan}
+                                  boxSize="6"
+                                  color={colors.aurora.Nord11}
+                                  _hover={{ cursor: "pointer" }}
+                                  onClick={() => removeEnv(index)}
+                                />
+                              </Th>
+                            </Tr>
+                          ))
+                        ) : (
+                          <Tr></Tr>
+                        )}
                       </Tbody>
                     </Table>
                   </AccordionPanel>
