@@ -96,7 +96,7 @@ const ModalConfig = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} size="3xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -246,11 +246,13 @@ const ModalConfig = ({
             </FormControl>
           </Flex>
         </ModalBody>
-        <ModalFooter display="flex" justifyContent="space-between" mt="6">
+        <ModalFooter mt="6">
           <Button
             bgColor={colors.aurora.Nord11}
             color={colors.light.Nord6}
             _hover={{ bgColor: colors.aurora.Nord11 }}
+            mr="4"
+            onClick={() => onClose()}
           >
             Cancelar
           </Button>
