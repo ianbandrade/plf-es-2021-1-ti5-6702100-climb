@@ -13,6 +13,7 @@ import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import apiClient from "../shared/api/api-client";
 import { isAuthenticated, login } from "../shared/auth/localStorageManager";
+import { gitHubService } from "../shared/services/gitHubService";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 
@@ -20,7 +21,9 @@ const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
 const AUTHURL = `/auth/signin`;
-const PROFILE_PATH = 'user/profile';
+const PROFILE_PATH = "user/profile";
+
+gitHubService.getRepositories().then(console.log);
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -28,10 +31,11 @@ const Home = () => {
   const toast = useToast();
   const router = useRouter();
 
-  useEffect(()=>{
-    if(isAuthenticated()) {
-      router.push(PROFILE_PATH)
-    }},[])
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push(PROFILE_PATH);
+    }
+  }, []);
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -70,17 +74,17 @@ const Home = () => {
     apiClient
       .post(AUTHURL, body)
       .then((res) => {
-          if (res.data?.token) {
-            login(res.data.token)
-            showToast({
-              title: "Sucesso!",
-              description: "Acesso autorizado",
-              status: "success",
-              id: "login",
-              position: "bottom-left",
-            });
-            router.push(PROFILE_PATH);
-          }
+        if (res.data?.token) {
+          login(res.data.token);
+          showToast({
+            title: "Sucesso!",
+            description: "Acesso autorizado",
+            status: "success",
+            id: "login",
+            position: "bottom-left",
+          });
+          router.push(PROFILE_PATH);
+        }
       })
       .catch((e) =>
         getMessages(e?.response?.data).forEach((description, i) =>
