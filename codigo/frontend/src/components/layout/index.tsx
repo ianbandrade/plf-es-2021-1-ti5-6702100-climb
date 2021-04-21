@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
   const isAdminPage = router.pathname.includes("/admin");
   const isUserPage = router.pathname.includes("/user");
   return (
-    <Box margin="0 auto" maxWidth={2048} transition="0.5s ease-out">
+    <Box margin="0 auto" transition="0.5s ease-out">
       <Meta />
       <Box margin={isAdminPage || isUserPage ? "0" : "8"}>
         <Header />
