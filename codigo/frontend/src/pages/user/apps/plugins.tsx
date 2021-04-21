@@ -131,7 +131,13 @@ const Plugins = (): JSX.Element => {
         title={title}
         onClose={(): void => setFlag(false)}
         width={800}
-        children={<AccordionInstance instances={instancesArray} />} // Req of specific instances from ID
+        children={
+          <AccordionInstance
+            instances={instancesArray}
+            pluginId={id}
+            closeModal={setFlag}
+          />
+        } // Req of specific instances from ID
       />
 
       <Flex flexWrap="wrap" justifyContent="center">
