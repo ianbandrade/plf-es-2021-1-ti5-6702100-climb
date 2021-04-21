@@ -13,7 +13,6 @@ import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import apiClient from "../shared/api/api-client";
 import { isAuthenticated, login } from "../shared/auth/localStorageManager";
-import { gitHubService } from "../shared/services/gitHubService";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 
@@ -22,8 +21,6 @@ const DEFAULT_DURATION = 3600;
 
 const AUTHURL = `/auth/signin`;
 const PROFILE_PATH = "user/profile";
-
-gitHubService.getRepositories().then(console.log);
 
 const Home = () => {
   const [email, setEmail] = useState("");
