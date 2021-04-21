@@ -88,6 +88,7 @@ const AccordionInstance: React.FC<AccordionProps> = ({
           <AccordionItem key={instanceIndex}>
             <Flex>
               <AccordionButton
+                as="div"
                 bgColor={
                   colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1
                 }
