@@ -1,8 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
+import AccordionInstance from "../../../components/AccordionInstance";
 import Modal from "../../../components/Modal";
 import PreConfigCard from "../../../components/PreConfigCard";
 import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
+import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { PreConfigCardRequestProps } from "../../../shared/interfaces/PreConfigCardInterface";
 
 const plugins: PreConfigCardRequestProps[] = [
@@ -55,6 +57,31 @@ const plugins: PreConfigCardRequestProps[] = [
   },
 ];
 
+const instancesArray: Instance[] = [
+  {
+    id: "4123872f-1235-4f18-2153-41f5ff17947b",
+    name: "redis-tis",
+    status: "creating",
+    credentials: null,
+  },
+  {
+    id: "11231233-1235-4f18-2153-41f5ff17947b",
+    name: "redis-lab",
+    status: "success",
+    credentials: [
+      { key: "username", value: "xtpo" },
+      { key: "username", value: "xtpo" },
+      { key: "username", value: "xtpo" },
+    ],
+  },
+  {
+    id: "11231233-1235-4f18-2153-41f5ff17947b",
+    name: "redis-damd",
+    status: "fail",
+    credentials: null,
+  },
+];
+
 const Plugins = (): JSX.Element => {
   const [id, setId] = useState<string>("");
   const [title, setTitle] = useState<string>("");
@@ -69,6 +96,7 @@ const Plugins = (): JSX.Element => {
   const setToggleStates = (selectedId: string, selectedTitle: string): void => {
     setId(selectedId === id ? "" : selectedId);
     setTitle(selectedTitle);
+    // Req of specific instances from ID
     setFlag(true);
   };
 
@@ -103,8 +131,15 @@ const Plugins = (): JSX.Element => {
         title={title}
         onClose={(): void => setFlag(false)}
         width={800}
-        children
+        children={
+          <AccordionInstance
+            instances={instancesArray}
+            pluginId={id}
+            closeModal={setFlag}
+          />
+        } // Req of specific instances from ID
       />
+
       <Flex flexWrap="wrap" justifyContent="center">
         {renderCards}
       </Flex>

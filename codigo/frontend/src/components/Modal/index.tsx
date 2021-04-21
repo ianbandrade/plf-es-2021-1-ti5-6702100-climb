@@ -1,4 +1,5 @@
 import {
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -44,7 +45,7 @@ const ModalComponent = ({
         alignItems="center"
       >
         <ModalHeader display="flex" alignContent="space-between">
-          <Text>{title}</Text>
+          <Heading>{title}</Heading>
           <ModalCloseButton />
         </ModalHeader>
 
