@@ -679,7 +679,7 @@
 
 "@nestjs/schedule@^0.4.3":
   version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/schedule/-/schedule-0.4.3.tgz#e780bfc52c2505ec5bbd7261033a7749f0808a20"
+  resolved "https://registry.npmjs.org/@nestjs/schedule/-/schedule-0.4.3.tgz"
   integrity sha512-EowkpwD09lrdMFzjt/kNQgaq6MG0GrNadNoOEebbfyA0qBU0UTg7J+FVullTR9+5HtaegqqAuWDvZlVoGHYz+Q==
   dependencies:
     cron "1.7.2"
@@ -842,7 +842,7 @@
 
 "@types/cookie-parser@^1.4.2":
   version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@types/cookie-parser/-/cookie-parser-1.4.2.tgz#e4d5c5ffda82b80672a88a4281aaceefb1bd9df5"
+  resolved "https://registry.npmjs.org/@types/cookie-parser/-/cookie-parser-1.4.2.tgz"
   integrity sha512-uwcY8m6SDQqciHsqcKDGbo10GdasYsPCYkH3hVegj9qAah6pX5HivOnOuI3WYmyQMnOATV39zv/Ybs0bC/6iVg==
   dependencies:
     "@types/express" "*"
@@ -854,7 +854,7 @@
 
 "@types/cron@^1.7.2":
   version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@types/cron/-/cron-1.7.2.tgz#e9fb420da616920dae82d13adfca53282ffaab6e"
+  resolved "https://registry.npmjs.org/@types/cron/-/cron-1.7.2.tgz"
   integrity sha512-AEpNLRcsVSc5AdseJKNHpz0d4e8+ow+abTaC0fKDbAU86rF1evoFF0oC2fV9FdqtfVXkG2LKshpLTJCFOpyvTg==
   dependencies:
     "@types/node" "*"
@@ -1066,6 +1066,11 @@
   integrity sha512-EGkrJD5Uy+Pg0NUR8uA4bJ5WMfljyad0G+784vLCNUkD+QwOJXUbBYExXfVGf7YtyzdQp3L/XMYcliB987kL5Q==
   dependencies:
     source-map "^0.6.1"
+
+"@types/uuid@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.npmjs.org/@types/uuid/-/uuid-8.3.0.tgz"
+  integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
 "@types/validator@^13.1.3":
   version "13.1.3"
@@ -2207,7 +2212,7 @@ convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
 
 cookie-parser@^1.4.5:
   version "1.4.5"
-  resolved "https://registry.yarnpkg.com/cookie-parser/-/cookie-parser-1.4.5.tgz#3e572d4b7c0c80f9c61daf604e4336831b5d1d49"
+  resolved "https://registry.npmjs.org/cookie-parser/-/cookie-parser-1.4.5.tgz"
   integrity sha512-f13bPUj/gG/5mDr+xLmSxxDsB9DQiTIfhJS/sqjrmfAWiAN+x2O4i/XguTL9yDZ+/IFDanJ+5x7hC4CXT9Tdzw==
   dependencies:
     cookie "0.4.0"
@@ -2264,7 +2269,7 @@ create-require@^1.1.0:
 
 cron@1.7.2:
   version "1.7.2"
-  resolved "https://registry.yarnpkg.com/cron/-/cron-1.7.2.tgz#2ea1f35c138a07edac2ac5af5084ed6fee5723db"
+  resolved "https://registry.npmjs.org/cron/-/cron-1.7.2.tgz"
   integrity sha512-+SaJ2OfeRvfQqwXQ2kgr0Y5pzBR/lijf5OpnnaruwWnmI799JfWr2jN2ItOV9s3A/+TFOt6mxvKzQq5F0Jp6VQ==
   dependencies:
     moment-timezone "^0.5.x"
@@ -4746,14 +4751,14 @@ mkdirp@^0.5.1:
 
 moment-timezone@^0.5.x:
   version "0.5.33"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.33.tgz#b252fd6bb57f341c9b59a5ab61a8e51a73bbd22c"
+  resolved "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.5.33.tgz"
   integrity sha512-PTc2vcT8K9J5/9rDEPe5czSIKgLoGsH8UNpA4qZTVw0Vd/Uz19geE9abbIOQKaAQFcnQ3v5YEXrbSc5BpshH+w==
   dependencies:
     moment ">= 2.9.0"
 
 "moment@>= 2.9.0", moment@>=2.14.0:
   version "2.29.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
 ms@2.0.0:
@@ -5258,7 +5263,7 @@ pg-connection-string@^2.4.0:
 
 pg-error-enum@^0.5.0:
   version "0.5.0"
-  resolved "https://registry.yarnpkg.com/pg-error-enum/-/pg-error-enum-0.5.0.tgz#eb8f74deae1d50a52aaa0b4caddba1b4fd875a7f"
+  resolved "https://registry.npmjs.org/pg-error-enum/-/pg-error-enum-0.5.0.tgz"
   integrity sha512-/CVjofNfflumbGB9gv+FvEV8HFaujo2bm+ZzBlQ0W4FhpWTPTiaC/OiiUFcePx4xwikjFSIwlragrYkRd8e74A==
 
 pg-int8@1.0.1:
@@ -6649,7 +6654,7 @@ typedarray@^0.0.6:
 
 typeorm-encrypted@^0.5.6:
   version "0.5.6"
-  resolved "https://registry.yarnpkg.com/typeorm-encrypted/-/typeorm-encrypted-0.5.6.tgz#6e22a2742131aae664e1ae07f3d627af3bacda48"
+  resolved "https://registry.npmjs.org/typeorm-encrypted/-/typeorm-encrypted-0.5.6.tgz"
   integrity sha512-AXBEgTTGkG0fmRCVHyDhbgNGDhwz+XMzsWcr8SsXNOpZZvF2sAbUx/KVdKw5fBAR1i2HvnwNqAxQfW8YTAf8Tw==
 
 typeorm@^0.2.31:

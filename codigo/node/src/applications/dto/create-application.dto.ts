@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -6,40 +7,48 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
-import { Enviroments } from 'src/shared/interfaces/enviroments.interface';
+import { Enviroment } from '../entities/enviroments.entity';
 
 export class CreateApplicationDto {
   @IsNotEmpty({
-    message: 'Email não pode ser vazio',
+    message: 'Nome não pode ser vazio',
   })
   @MaxLength(50, {
-    message: 'O email deve ter no máximo 200 caracteres',
+    message: 'O nome da aplicação de ter no máx 50 caracteres',
   })
+  @IsString()
   name: string;
 
+  @IsNotEmpty({
+    message: 'O provedor não pode ser vazio',
+  })
   @IsEnum(ProvidersEnum)
   provider: ProvidersEnum;
 
   @IsNotEmpty({
-    message: 'Email não pode ser vazio',
+    message: 'Id do repositório não pode ser vazio',
   })
   @IsNumber()
   repositoryId: number;
 
   @IsNotEmpty({
-    message: 'Email não pode ser vazio',
+    message: 'O nome da branch não pode ser vazio',
   })
+  @IsString()
   repositoryRef: string;
 
   @IsNotEmpty({
-    message: 'Email não pode ser vazio',
+    message: 'O diretório não pode ser vazio',
   })
-  repopsitoryPath: string;
+  @IsString()
+  repositoryPath: string;
 
   @IsNotEmpty({
-    message: 'Email não pode ser vazio',
+    message: 'A URL do repositório não pode ser vazia',
   })
+  @IsString()
   repositoryURL: string;
 
-  environments: Enviroments[];
+  @IsArray()
+  environments: Enviroment[];
 }

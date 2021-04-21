@@ -1,7 +1,6 @@
 import {
   BaseEntity,
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
@@ -13,7 +12,7 @@ import { Application } from 'src/applications/entities/application.entity';
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @Column({ nullable: false, primary: true })
   id: string;
 
   @Column({ nullable: false, type: 'varchar', length: 200, unique: true })
@@ -53,7 +52,7 @@ export class User extends BaseEntity {
   updatedAt?: Date;
 
   @ManyToOne(() => Application, (application) => application.user)
-  applications: any;
+  applications: Application[];
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

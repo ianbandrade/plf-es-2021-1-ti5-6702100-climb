@@ -1,17 +1,19 @@
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
-import { Enviroments } from 'src/shared/interfaces/enviroments.interface';
+import { Enviroment } from './enviroments.entity';
 import { User } from 'src/users/user.entity';
 import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
+  JoinTable,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
 export class Application extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @Column({ nullable: false, primary: true })
   id: string;
 
   @Column({ nullable: false, type: 'varchar', length: 50 })
@@ -27,7 +29,7 @@ export class Application extends BaseEntity {
   repositoryRef: string;
 
   @Column({ nullable: false, type: 'varchar' })
-  repopsitoryPath: string;
+  repositoryPath: string;
 
   @Column({ nullable: false, type: 'varchar' })
   repositoryURL: string;
@@ -36,7 +38,27 @@ export class Application extends BaseEntity {
   webhookToken: string;
 
   @ManyToOne(() => User, (user) => user.applications)
+  @JoinColumn({ name: 'userId' })
   user: User;
 
-  environments: Enviroments[];
+  @Column({ nullable: false })
+  userId: string;
+
+  @OneToMany(() => Enviroment, (enviroment) => enviroment.applicationId, {
+    eager: true,
+  })
+  @JoinTable()
+  environments: Enviroment[];
+
+  static get publicAttributes(): (keyof Application)[] {
+    return [
+      'id',
+      'name',
+      'provider',
+      'repositoryId',
+      'repositoryPath',
+      'repositoryURL',
+      'userId',
+    ];
+  }
 }

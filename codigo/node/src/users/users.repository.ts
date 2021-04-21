@@ -12,6 +12,7 @@ import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
 import { PostgresError } from 'pg-error-enum';
 import { ReturList } from 'src/shared/dto/return-list.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -52,6 +53,7 @@ export class UserRepository extends Repository<User> {
     const { email, name, password, role } = createUserDto;
 
     const user = this.create();
+    user.id = uuidv4();
     user.email = email;
     user.name = name;
     user.role = role;
@@ -87,6 +89,7 @@ export class UserRepository extends Repository<User> {
               const { email, name, password, role } = userData;
 
               const user = {} as User;
+              user.id = uuidv4();
               user.email = email;
               user.name = name;
               user.role = role;
