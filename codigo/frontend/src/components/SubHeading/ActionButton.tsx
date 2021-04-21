@@ -6,9 +6,13 @@ import {
 } from "../../shared/interfaces/ActionButtonProps";
 import { colors } from "../../styles/customTheme";
 
+interface HeadingActionButtonProps{
+  title:string;
+}
+
 export const BASE_URL = "/user/apps";
 
-export const HeadingActionButton: React.FC<ActionButtonProps> = ({
+export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   title,
 }) => {
   const baseButtom = {
