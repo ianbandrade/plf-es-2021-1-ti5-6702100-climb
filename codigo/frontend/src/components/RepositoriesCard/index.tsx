@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Flex,
   Select,
@@ -42,6 +42,9 @@ const RepositoriesCard = ({
   const [filterInput, setFilterInput] = useState("");
 
   const [gitOrganizationsName, setgitOrganizationsName] = useState("GITHUB");
+  const [repositories, setRepositories] = useState(
+    gitOrganizations === null ? null : gitOrganizations[0].repositories
+  );
   const [
     actualOrganization,
     setActualOrganization,
@@ -58,31 +61,13 @@ const RepositoriesCard = ({
 
   function handleFilterChange(e: any) {
     setFilterInput(e.target.value);
-    const newFilteredRepositories = actualOrganization?.repositories.filter(
-      (repo) =>
-        repo.name.toLowerCase().indexOf(filterInput.toLowerCase()) !== -1
-    );
+    const newFilteredRepositories = repositories
+      ? repositories.filter((repo) =>
+          repo.name.toLowerCase().includes(filterInput.toLowerCase())
+        )
+      : [];
 
-    // console.log(newFilteredRepositories);
-
-    if (newFilteredRepositories && newFilteredRepositories.length > 0) {
-      setActualOrganization((prevState) => {
-        if (prevState?.repositories) {
-          prevState.repositories = newFilteredRepositories;
-        }
-        return prevState;
-      });
-    } else {
-      console.log("aqui");
-      setActualOrganization((prevState) => {
-        if (prevState?.repositories && gitOrganizations !== null) {
-          prevState.repositories =
-            gitOrganizations === null ? [] : gitOrganizations[0].repositories;
-        }
-        return prevState;
-      });
-      console.log(actualOrganization);
-    }
+    console.log(newFilteredRepositories);
   }
 
   function handleSelectGit(provider: string) {
@@ -151,7 +136,7 @@ const RepositoriesCard = ({
               boxSize="36px"
               color={"#E24329"}
               _hover={{ cursor: "pointer" }}
-              onClick={() => handleSelectGit("gitlab")}
+              onClick={() => handleSelectGit("GITLAB")}
             />
           </Button>
         </Flex>

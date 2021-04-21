@@ -34,7 +34,8 @@ import { GiStonePath, GiChest, GiTrashCan } from "react-icons/gi";
 import { colors } from "../../../styles/customTheme";
 import Enviroment from "../../../shared/interfaces/enviroment";
 import { CreateApplication } from "../../../shared/interfaces/create-application";
-import { CreateUser } from "../../../shared/interfaces/create-user";
+import api from "../../../shared/api/api-client";
+import { getMessages } from "../../../shared/utils/toast-messages";
 
 interface ModalConfigProps {
   isOpen: boolean;
@@ -118,9 +119,30 @@ const ModalConfig = ({
 
     if (validateFields(newApplication)) {
       //Make Request
-
-      onClose();
-      clearAllFields();
+      api
+        .post("applications", { body: newApplication })
+        .then(() => {
+          toast({
+            title: "Sucesso",
+            status: "success",
+            description: "Aplicação criada com sucesso",
+            duration: 2000,
+            position: "top-right",
+          });
+          onClose();
+          clearAllFields();
+        })
+        .catch((error) => {
+          getMessages(error?.response.data).forEach((description, i) => {
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            });
+          });
+        });
     }
 
     console.log(newApplication);
