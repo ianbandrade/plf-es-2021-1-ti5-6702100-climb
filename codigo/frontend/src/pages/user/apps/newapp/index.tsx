@@ -50,7 +50,60 @@ const data = {
       ],
     },
   ],
-  gitlab: null,
+  gitlab: [
+    {
+      name: "asdasd",
+      repositories: [
+        {
+          repositoryId: 1,
+          name: "edadasdsdxpress-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
+          branchs: ["master", "develop"],
+        },
+        {
+          repositoryId: 2,
+          name: "adasdasd-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
+          branchs: ["master", "develop"],
+        },
+        {
+          repositoryId: 3,
+          name: "adasdasdasdasdasd-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "main",
+          branchs: ["main", "develop"],
+        },
+      ],
+    },
+    {
+      name: "aaaaaaaaa",
+      repositories: [
+        {
+          repositoryId: 1,
+          name: "express-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
+          branchs: ["master", "develop"],
+        },
+        {
+          repositoryId: 2,
+          name: "adasdasd-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "master",
+          branchs: ["master", "develop"],
+        },
+        {
+          repositoryId: 3,
+          name: "adasdasdasdasdasd-hello",
+          url: "https://github.com/GaMoCh/express-hello.git",
+          ref: "main",
+          branchs: ["main", "develop"],
+        },
+      ],
+    },
+  ],
 };
 
 const NewApp = () => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Flex,
   Select,
@@ -41,37 +41,33 @@ const RepositoriesCard = ({
         };
   const [filterInput, setFilterInput] = useState("");
 
-  const [gitOrganizationsName, setgitOrganizationsName] = useState("GITHUB");
+  const [gitOrganizationsName, setgitOrganizationsName] = useState("github");
   const [repositories, setRepositories] = useState(
     gitOrganizations === null ? null : gitOrganizations[0].repositories
   );
-  const [
-    actualOrganization,
-    setActualOrganization,
-  ] = useState<Organization | null>(
-    gitOrganizations === null ? null : gitOrganizations[0]
-  );
+
+  const [orgIndex, setOrgIndex] = useState<number>(0);
 
   function handleSelectOrganization(e: any) {
     const index = Number(e.target.value);
-    setActualOrganization(
-      gitOrganizations === null ? null : gitOrganizations[index]
-    );
+    setOrgIndex(index);
   }
 
   function handleFilterChange(e: any) {
     setFilterInput(e.target.value);
-    const newFilteredRepositories = repositories
-      ? repositories.filter((repo) =>
-          repo.name.toLowerCase().includes(filterInput.toLowerCase())
-        )
-      : [];
+    const newFilteredRepositories =
+      gitOrganizations === null
+        ? null
+        : gitOrganizations[orgIndex]?.repositories.filter((repo) =>
+            repo.name.toLowerCase().includes(filterInput.toLowerCase())
+          );
 
-    console.log(newFilteredRepositories);
+    if (newFilteredRepositories) setRepositories(newFilteredRepositories);
   }
 
   function handleSelectGit(provider: string) {
     setgitOrganizationsName(provider);
+
     return onSelectGit(provider);
   }
 
@@ -136,23 +132,38 @@ const RepositoriesCard = ({
               boxSize="36px"
               color={"#E24329"}
               _hover={{ cursor: "pointer" }}
-              onClick={() => handleSelectGit("GITLAB")}
+              onClick={() => handleSelectGit("gitlab")}
             />
           </Button>
         </Flex>
       </Flex>
       <Flex flexDirection="column" justifyContent="center" width="93%" mt="4">
-        {gitOrganizations && actualOrganization !== null ? (
-          actualOrganization.repositories.map((repository: Repository) => {
-            return (
-              <RepositoryItem
-                key={`${actualOrganization.name}/${repository.name}`}
-                organizationName={actualOrganization.name}
-                provider={gitOrganizationsName}
-                repository={repository}
-              />
-            );
-          })
+        {gitOrganizations && gitOrganizations[orgIndex] !== null ? (
+          filterInput.length > 1 && repositories ? (
+            repositories.map((repository: Repository) => {
+              return (
+                <RepositoryItem
+                  key={`${gitOrganizations[orgIndex].name}/${repository.name}`}
+                  organizationName={gitOrganizations[orgIndex].name}
+                  provider={gitOrganizationsName}
+                  repository={repository}
+                />
+              );
+            })
+          ) : gitOrganizations === null ? null : (
+            gitOrganizations[orgIndex].repositories.map(
+              (repository: Repository) => {
+                return (
+                  <RepositoryItem
+                    key={`${gitOrganizations[orgIndex].name}/${repository.name}`}
+                    organizationName={gitOrganizations[orgIndex].name}
+                    provider={gitOrganizationsName}
+                    repository={repository}
+                  />
+                );
+              }
+            )
+          )
         ) : (
           <NotLinkedGit />
         )}

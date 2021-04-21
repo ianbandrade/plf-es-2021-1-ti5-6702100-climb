@@ -91,9 +91,18 @@ const ModalConfig = ({
       key: keyInput,
       value: valueInput,
     };
-
-    setEnvs([...envs, newEnv]);
-    clearEnvFields();
+    if (keyInput.length < 1) {
+      toast({
+        title: "Aviso!",
+        description: "Não é possível ter chave vazia",
+        status: "warning",
+        id: keyInput,
+        position: "bottom-left",
+      });
+    } else {
+      setEnvs([...envs, newEnv]);
+      clearEnvFields();
+    }
   }
 
   function removeEnv(index: number) {
@@ -275,13 +284,18 @@ const ModalConfig = ({
                 validate={invalidInputs.path}
               />
               <Accordion allowToggle>
-                <AccordionItem>
-                  <AccordionButton bgColor={envButtonColor}>
+                <AccordionItem
+                  border={"1px"}
+                  borderRadius={12}
+                  color={colors.dark.Nord2}
+                >
+                  <AccordionButton bgColor={envButtonColor} borderRadius={12}>
                     <Flex
                       flex="1"
                       justifyContent="space-between"
                       alignItems="center"
                       textAlign="left"
+                      color={inputBgColor}
                     >
                       Variáveis de ambiente
                       <AccordionIcon />
@@ -295,7 +309,7 @@ const ModalConfig = ({
                         required={true}
                         value={keyInput}
                         onChangeInput={(e: any) => setKeyInput(e.target.value)}
-                        icon={<IoMdKey />}
+                        icon={<IoMdKey color={inputBgColor} />}
                         style={{
                           inputBgColor: inputBgColor,
                           inputTextColor: inputColor,
@@ -309,7 +323,7 @@ const ModalConfig = ({
                         onChangeInput={(e: any) =>
                           setValueInput(e.target.value)
                         }
-                        icon={<GiChest />}
+                        icon={<GiChest color={inputBgColor} />}
                         style={{
                           marginLeft: "4",
                           inputBgColor: inputBgColor,
@@ -327,22 +341,24 @@ const ModalConfig = ({
                         onClick={() => handleAddEnv()}
                       />
                     </Flex>
-                    <Table mt="4">
+                    <Table mt="4" variant="striped">
                       <Thead>
                         <Tr>
                           <Th>Chave</Th>
                           <Th>Valor</Th>
-                          <Th></Th>
                         </Tr>
                       </Thead>
                       <Tbody>
                         {envs.length > 0 ? (
                           envs.map((env: Enviroment, index: number) => (
                             <Tr key={index}>
-                              <Th textAlign="left">{env.key}</Th>
-                              <Th>{env.value}</Th>
-                              <Th>
+                              <Th textAlign="left" maxW="52">
+                                {env.key}
+                              </Th>
+                              <Th maxW="52">{env.value}</Th>
+                              <Th textAlign="right">
                                 <Icon
+                                  alignSelf="flex-end"
                                   as={GiTrashCan}
                                   boxSize="6"
                                   color={colors.aurora.Nord11}
