@@ -70,7 +70,7 @@ const ModalConfig = ({
           addonInputColor: colors.dark.Nord2,
           inputBgColor: colors.light.Nord4,
           inputColor: colors.dark.Nord2,
-          envButtonColor: colors.dark.Nord0,
+          envButtonColor: colors.dark.Nord2,
         };
 
   const toast = useToast();
@@ -285,11 +285,15 @@ const ModalConfig = ({
               />
               <Accordion allowToggle>
                 <AccordionItem
-                  border={"1px"}
+                  border={`1px solid ${colors.light.Nord4} `}
                   borderRadius={12}
                   color={colors.dark.Nord2}
                 >
-                  <AccordionButton bgColor={envButtonColor} borderRadius={12}>
+                  <AccordionButton
+                    bgColor={envButtonColor}
+                    borderRadius={12}
+                    _hover={{ bgColor: envButtonColor }}
+                  >
                     <Flex
                       flex="1"
                       justifyContent="space-between"
@@ -341,11 +345,12 @@ const ModalConfig = ({
                         onClick={() => handleAddEnv()}
                       />
                     </Flex>
-                    <Table mt="4" variant="striped">
+                    <Table mt="4" variant="striped" bgColor={inputColor}>
                       <Thead>
                         <Tr>
                           <Th>Chave</Th>
                           <Th>Valor</Th>
+                          <Th></Th>
                         </Tr>
                       </Thead>
                       <Tbody>
