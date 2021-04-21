@@ -1,10 +1,10 @@
 import { Box, Flex } from "@chakra-ui/layout";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
-import { RepoItemProps } from "../../../shared/interfaces/RepoItemProps";
 import { RepoItem } from "../../../components/RepoItem/RepoItem";
-import { ActionButton } from "../../../components/SubHeading/ActionButton";
 import { IconType } from "react-icons/lib";
+import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
+import { RepoItemProps } from "../../../shared/interfaces/RepoItemProps";
 
 export const Apps = () => {
 
@@ -43,12 +43,11 @@ export const Apps = () => {
     )
 
   return (
-    <Box display="flex" flexDirection="column" padding="12" width="full" >
-      <ActionButton />
-      <Flex flexWrap="wrap">
-        {renderRepos}
-      </Flex >
-    </Box>)
-}
+    <Box display="flex" flexDirection="column" padding="12" width="full">
+      <HeadingActionButton title="Aplicações conectadas" />
+      <Flex flexWrap="wrap">{renderRepos}</Flex>
+    </Box>
+  );
+};
 
 export default Apps;
