@@ -1,14 +1,14 @@
 import axios from "axios";
 import { authService } from "../services/authService";
 
-const gitlabClient = axios.create({
+const githubClient = axios.create({
   baseURL: `https://api.github.com/graphql`,
 });
 
-gitlabClient.interceptors.request.use(
+githubClient.interceptors.request.use(
   async (config) => {
     const me = await authService.me();
-    const token = me.gitLabToken;
+    const token = me.gitHubToken;
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -21,4 +21,4 @@ gitlabClient.interceptors.request.use(
   }
 );
 
-export default gitlabClient;
+export default githubClient;
