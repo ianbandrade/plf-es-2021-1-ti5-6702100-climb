@@ -76,72 +76,75 @@ const AccordionInstance: React.FC<AccordionProps> = ({
     return tag[status];
   };
 
+  const toggleButton = (index: number) => {
+    console.log(instances[index].id);
+    // Req of specific action from ID
+  };
+
   return (
-    <>
-      <Accordion width={750} mb={5} allowToggle>
-        {instances.map((instance, instanceIndex) => {
-          return (
-            <AccordionItem key={instanceIndex}>
-              <Flex>
-                <AccordionButton
-                  bgColor={
-                    colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1
-                  }
-                >
-                  <Box flex="1" textAlign="left" margin="0 auto">
-                    <Heading>{instance.name}</Heading>
-                  </Box>
-                  <Tag
-                    mr={2}
-                    variant="solid"
-                    bgColor={wichTag(instance.status).color}
-                  >
-                    <TagLabel>{wichTag(instance.status).label}</TagLabel>
-                  </Tag>
-                  <Button
-                    mr={5}
-                    size="sm"
-                    variant="so"
-                    color={colors.light.Nord6}
-                    bgColor={colors.aurora.Nord11}
-                    onClick={(event): void => {
-                      event.stopPropagation();
-                      alert("HI ANDREW");
-                    }}
-                  >
-                    {action[instance.status]}
-                  </Button>
-                  <AccordionIcon />
-                </AccordionButton>
-              </Flex>
-              <AccordionPanel
-                pt={5}
+    <Accordion width={750} mb={5} allowToggle>
+      {instances.map((instance, instanceIndex) => {
+        return (
+          <AccordionItem key={instanceIndex}>
+            <Flex>
+              <AccordionButton
                 bgColor={
-                  colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord0
+                  colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1
                 }
               >
-                {instance.credentials === null ? (
-                  <Text fontWeight="bold" fontSize="md">
-                    {credentialText[instance.status]}
-                  </Text>
-                ) : (
-                  instance.credentials?.map((credential, credentialIndex) => {
-                    return (
-                      <Flex key={credentialIndex} alignItems="center">
-                        <Text fontWeight="bold" fontSize="xl" mr={2}>
-                          {credential.key}:
-                        </Text>
-                        <Text fontSize="md">{credential.value}</Text>
-                      </Flex>
-                    );
-                  })
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
-    </>
+                <Box flex="1" textAlign="left" margin="0 auto">
+                  <Heading>{instance.name}</Heading>
+                </Box>
+                <Tag
+                  mr={2}
+                  variant="solid"
+                  bgColor={wichTag(instance.status).color}
+                >
+                  <TagLabel>{wichTag(instance.status).label}</TagLabel>
+                </Tag>
+                <Button
+                  mr={5}
+                  size="sm"
+                  variant="so"
+                  color={colors.light.Nord6}
+                  bgColor={colors.aurora.Nord11}
+                  onClick={(event): void => {
+                    event.stopPropagation();
+                    toggleButton(instanceIndex);
+                  }}
+                >
+                  {action[instance.status]}
+                </Button>
+                <AccordionIcon />
+              </AccordionButton>
+            </Flex>
+            <AccordionPanel
+              pt={5}
+              bgColor={
+                colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord0
+              }
+            >
+              {instance.credentials === null ? (
+                <Text fontWeight="bold" fontSize="md">
+                  {credentialText[instance.status]}
+                </Text>
+              ) : (
+                instance.credentials?.map((credential, credentialIndex) => {
+                  return (
+                    <Flex key={credentialIndex} alignItems="center">
+                      <Text fontWeight="bold" fontSize="xl" mr={2}>
+                        {credential.key}:
+                      </Text>
+                      <Text fontSize="md">{credential.value}</Text>
+                    </Flex>
+                  );
+                })
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
   );
 };
 

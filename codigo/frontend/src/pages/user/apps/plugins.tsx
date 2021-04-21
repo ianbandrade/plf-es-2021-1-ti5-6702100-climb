@@ -96,6 +96,7 @@ const Plugins = (): JSX.Element => {
   const setToggleStates = (selectedId: string, selectedTitle: string): void => {
     setId(selectedId === id ? "" : selectedId);
     setTitle(selectedTitle);
+    // Req of specific instances from ID
     setFlag(true);
   };
 
@@ -130,7 +131,7 @@ const Plugins = (): JSX.Element => {
         title={title}
         onClose={(): void => setFlag(false)}
         width={800}
-        children={<AccordionInstance instances={instancesArray} />}
+        children={<AccordionInstance instances={instancesArray} />} // Req of specific instances from ID
       />
 
       <Flex flexWrap="wrap" justifyContent="center">
