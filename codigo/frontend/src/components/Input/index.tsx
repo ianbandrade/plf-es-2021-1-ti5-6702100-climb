@@ -19,6 +19,7 @@ interface InputProps {
   type: string;
   required?: boolean;
   validate?: boolean;
+  maxLength?: number;
 }
 
 const InputComponent = ({
@@ -31,6 +32,7 @@ const InputComponent = ({
   type,
   required,
   validate,
+  maxLength,
 }: InputProps) => {
   return (
     <>
@@ -47,6 +49,7 @@ const InputComponent = ({
       >
         <InputLeftAddon children={icon} />
         <Input
+          maxLength={maxLength ? maxLength : undefined}
           isInvalid={validate}
           required={required}
           type={type}

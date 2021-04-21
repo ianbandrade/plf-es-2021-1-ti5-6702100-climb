@@ -39,7 +39,9 @@ const RepositoriesCard = ({
           inputBgColor: colors.light.Nord4,
           inputColor: colors.dark.Nord2,
         };
+  const [filterInput, setFilterInput] = useState("");
 
+  const [gitOrganizationsName, setgitOrganizationsName] = useState("GITHUB");
   const [
     actualOrganization,
     setActualOrganization,
@@ -52,6 +54,40 @@ const RepositoriesCard = ({
     setActualOrganization(
       gitOrganizations === null ? null : gitOrganizations[index]
     );
+  }
+
+  function handleFilterChange(e: any) {
+    setFilterInput(e.target.value);
+    const newFilteredRepositories = actualOrganization?.repositories.filter(
+      (repo) =>
+        repo.name.toLowerCase().indexOf(filterInput.toLowerCase()) !== -1
+    );
+
+    // console.log(newFilteredRepositories);
+
+    if (newFilteredRepositories && newFilteredRepositories.length > 0) {
+      setActualOrganization((prevState) => {
+        if (prevState?.repositories) {
+          prevState.repositories = newFilteredRepositories;
+        }
+        return prevState;
+      });
+    } else {
+      console.log("aqui");
+      setActualOrganization((prevState) => {
+        if (prevState?.repositories && gitOrganizations !== null) {
+          prevState.repositories =
+            gitOrganizations === null ? [] : gitOrganizations[0].repositories;
+        }
+        return prevState;
+      });
+      console.log(actualOrganization);
+    }
+  }
+
+  function handleSelectGit(provider: string) {
+    setgitOrganizationsName(provider);
+    return onSelectGit(provider);
   }
 
   return (
@@ -95,9 +131,9 @@ const RepositoriesCard = ({
         <Input
           type="text"
           placeholder="Buscar por repositório"
-          value=""
+          value={filterInput}
           icon={<AiOutlineSearch size="25" />}
-          onChangeInput={() => {}}
+          onChangeInput={(e: any) => handleFilterChange(e)}
           style={{ inputBgColor: inputBgColor, inputTextColor: inputColor }}
         />
         <Flex ml={8} justifyContent="space-between">
@@ -105,7 +141,7 @@ const RepositoriesCard = ({
             width="12"
             height="12"
             mr="4"
-            onClick={() => onSelectGit("github")}
+            onClick={() => handleSelectGit("github")}
           >
             <Icon as={AiFillGithub} boxSize="36px" />
           </Button>
@@ -115,7 +151,7 @@ const RepositoriesCard = ({
               boxSize="36px"
               color={"#E24329"}
               _hover={{ cursor: "pointer" }}
-              onClick={() => onSelectGit("gitlab")}
+              onClick={() => handleSelectGit("gitlab")}
             />
           </Button>
         </Flex>
@@ -127,6 +163,7 @@ const RepositoriesCard = ({
               <RepositoryItem
                 key={`${actualOrganization.name}/${repository.name}`}
                 organizationName={actualOrganization.name}
+                provider={gitOrganizationsName}
                 repository={repository}
               />
             );

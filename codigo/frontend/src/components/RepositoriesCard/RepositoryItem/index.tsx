@@ -19,11 +19,16 @@ import ModalConfig from "../ModalConfig";
 interface RepositoryItem {
   organizationName: string;
   repository: Repository;
+  provider: string;
 }
 
 const LIGHT = "light";
 
-const RepositoryItem = ({ repository, organizationName }: RepositoryItem) => {
+const RepositoryItem = ({
+  repository,
+  organizationName,
+  provider,
+}: RepositoryItem) => {
   const { colorMode } = useColorMode();
   const { itemColor, textColor, iconColor } =
     colorMode === LIGHT
@@ -48,6 +53,7 @@ const RepositoryItem = ({ repository, organizationName }: RepositoryItem) => {
         onClose={onClose}
         repository={repository}
         organizationName={organizationName}
+        provider={provider}
       />
       <Flex
         justifyContent="space-between"

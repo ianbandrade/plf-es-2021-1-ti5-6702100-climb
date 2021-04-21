@@ -8,18 +8,21 @@ const data = {
       name: "GaMoCh",
       repositories: [
         {
+          repositoryId: 1,
           name: "express-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
           ref: "master",
           branchs: ["master", "develop"],
         },
         {
+          repositoryId: 2,
           name: "adasdasd-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
           ref: "master",
           branchs: ["master", "develop"],
         },
         {
+          repositoryId: 3,
           name: "adasdasdasdasdasd-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
           ref: "main",
@@ -31,12 +34,14 @@ const data = {
       name: "Mira",
       repositories: [
         {
+          repositoryId: 1,
           name: "test-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
           ref: "master",
           branchs: ["master", "develop"],
         },
         {
+          repositoryId: 2,
           name: "qqqq-hello",
           url: "https://github.com/GaMoCh/express-hello.git",
           ref: "master",
@@ -49,14 +54,12 @@ const data = {
 };
 
 const NewApp = () => {
-  const [selectedOrganization, setSelectedOrganization] = useState<
-    "github" | "gitlab"
-  >("github");
+  const [gitProvider, setGitProvider] = useState<"github" | "gitlab">("github");
 
-  function handleSelectGit(gitOrganization: string) {
-    gitOrganization === "github"
-      ? setSelectedOrganization("github")
-      : setSelectedOrganization("gitlab");
+  function handleSelectGit(gitProvider: string) {
+    gitProvider === "github"
+      ? setGitProvider("github")
+      : setGitProvider("gitlab");
   }
 
   return !data.github && !data.gitlab ? (
@@ -64,7 +67,7 @@ const NewApp = () => {
   ) : (
     <Flex justifyContent="center" alignItems="center" mt={"28"}>
       <RepositoriesCard
-        gitOrganizations={data[selectedOrganization]}
+        gitOrganizations={data[gitProvider]}
         onSelectGit={handleSelectGit}
       />
     </Flex>
