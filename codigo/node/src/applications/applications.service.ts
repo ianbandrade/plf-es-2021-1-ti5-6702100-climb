@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
+import { ProvidersEnum } from 'src/shared/enum/providers.enum';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
@@ -82,7 +83,7 @@ export class ApplicationsService {
     return deleteResult.affected > 0;
   }
 
-  async createBuild(id: string, user: User) {
+  async createDeploy(id: string, user: User) {
     const application = this.findOne(id, user);
     const fechedUser = this.userService.findCompleteUserById(user.id);
 
@@ -90,9 +91,11 @@ export class ApplicationsService {
       await application,
       await fechedUser,
     );
+
     this.amqpConnection.publish('amq.direct', 'apps.deploy.req', payload, {
       contentType: 'application/json',
     });
+
     return payload;
   }
 
@@ -113,7 +116,7 @@ export class ApplicationsService {
     deploy.save();
   }
 
-  async getOneBuild(id: string, user: User) {
+  async getOneDeploy(id: string, user: User) {
     const deploy = await this.deploysRepository.findOne(id);
 
     if (!deploy) throw new NotFoundException('Deploy não encontrado');
@@ -123,7 +126,7 @@ export class ApplicationsService {
     return deploy;
   }
 
-  async getBuilds(id: string, user: User): Promise<ReturList<Deploys>> {
+  async getDeploys(id: string, user: User): Promise<ReturList<Deploys>> {
     const { deploys } = await this.findOne(id, user);
 
     return { items: deploys, total: deploys.length };

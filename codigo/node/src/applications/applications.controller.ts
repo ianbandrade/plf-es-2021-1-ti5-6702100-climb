@@ -62,19 +62,19 @@ export class ApplicationsController {
 
   @Get(':appId/builds')
   @UseGuards(AuthGuard())
-  getBuilds(@GetUser() user: User, @Param('appId') appId: string) {
-    return this.applicationsService.getBuilds(appId, user);
+  getDeploys(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.getDeploys(appId, user);
   }
 
-  @Get('builds/:buildId')
+  @Get('builds/:deployId')
   @UseGuards(AuthGuard())
-  getBuild(@GetUser() user: User, @Param('buildId') buildId: string) {
-    return this.applicationsService.getOneBuild(buildId, user);
+  getDeploy(@GetUser() user: User, @Param('deployId') deployId: string) {
+    return this.applicationsService.getOneDeploy(deployId, user);
   }
 
   @Post(':appId/builds')
   @UseGuards(AuthGuard())
-  createBuild(@GetUser() user: User, @Param('appId') appId: string) {
-    return this.applicationsService.createBuild(appId, user);
+  createDeploy(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.createDeploy(appId, user);
   }
 }
