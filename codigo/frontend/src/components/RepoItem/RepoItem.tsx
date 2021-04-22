@@ -43,7 +43,7 @@ export const RepoItem = (props: RepoItemProps.Application) => {
           <Box>
             <Button
               as="a"
-              href={props?.url}
+              href={props?.repositoryURL}
               _hover={{ cursor: "pointer" }}
               background={colors.aurora.Nord14}
               color={colors.light.Nord6}
