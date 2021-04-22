@@ -247,7 +247,6 @@ const ModalConfig = ({
                   style={{
                     borderTopLeftRadius: 9,
                     borderBottomLeftRadius: 9,
-                    borderRight: 5,
                   }}
                   justifyContent="center"
                   alignContent="center"
