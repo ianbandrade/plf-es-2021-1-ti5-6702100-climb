@@ -6,7 +6,7 @@ import { colors } from "../../styles/customTheme"
 import { RepoItemProps } from "../../shared/interfaces/RepoItemProps"
 
 
-export const RepoItem = (props: RepoItemProps) => {
+export const RepoItem = (props: RepoItemProps.Application) => {
 
     const { colorMode } = useColorMode();
     const color = (light: boolean) => light ? colors.light.Nord4 : colors.dark.Nord2
@@ -16,10 +16,10 @@ export const RepoItem = (props: RepoItemProps) => {
 
     return (
         <>
-            <Box borderWidth="1px" borderRadius="lg"
+            <Flex borderWidth="1px" borderRadius="lg"
                 _hover={{ transition: "0.3s ease-out", boxShadow: "dark-lg" }}
-                overflow="hidden" display="flex" flexDirection="column" p="4" bg={bgcolor} width="sm" m="4">
-                <Box display="flex">
+                overflow="hidden"  flexDirection="column" p="4" bg={bgcolor} width="sm" m="4">
+                <Flex>
                     <Box>
                         <Text mt="1"
                             fontWeight="extrabold"
@@ -27,19 +27,19 @@ export const RepoItem = (props: RepoItemProps) => {
                             lineHeight="tight"
                             color={textColor}
                             isTruncated>
-                            {props?.title}
+                            {props?.name}
 
                         </Text>
                     </Box>
                     <Spacer />
                     <Box>
-                        <Button as="a" href={props?.link}
+                        <Button as="a" href={props?.url}
                             _hover={{}} background={colors.aurora.Nord14}
                             color={colors.light.Nord6}>
                             Acessar
                                 </Button>
                     </Box>
-                </Box>
+                </Flex>
                 <Flex>
                     <Icon
                         as={props.icon}
@@ -51,11 +51,11 @@ export const RepoItem = (props: RepoItemProps) => {
                         color={textColor}
                         margin="auto 0"
                         isTruncated>
-                        {`${props?.org}/${props.logicalName}`}
+                        {`${props.repository}`}
                     </Text>
                 </Flex>
 
-            </Box>
+            </Flex>
         </>
     )
 }
