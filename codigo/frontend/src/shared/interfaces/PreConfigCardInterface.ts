@@ -5,7 +5,7 @@ export interface PreConfigCardProps {
   description: string;
 }
 
-export interface PreConfigCardRequestProps {
+export interface Plugin {
   id: string;
   name: string;
   image: string;

@@ -1,4 +1,4 @@
-export type Status = "fail" | "success" | "creating";
+export type Status = "FAIL" | "SUCCESS" | "CREATING";
 
 export interface AccordionProps {
   instances: Instance[];
@@ -10,7 +10,7 @@ export interface Instance {
   id: string;
   name: string;
   status: Status;
-  credentials: null | Credential[];
+  credentials: Credential[];
 }
 
 interface Credential {
