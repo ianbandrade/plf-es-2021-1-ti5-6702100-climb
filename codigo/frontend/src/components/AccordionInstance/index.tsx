@@ -39,7 +39,7 @@ type TagObject = {
 };
 
 const REMOVE = "Remover";
-const CREATING = "creating";
+const CREATING = "CREATING";
 const LIGHT = "light";
 const FAIL_TEXT =
   "Falha ao executar aplicação pré-configurada. Remova esta aplicação e tente novamente.";
@@ -55,28 +55,28 @@ const AccordionInstance: React.FC<AccordionProps> = ({
   const [name, setName] = useState<string>("");
 
   const action: Action = {
-    fail: REMOVE,
-    success: REMOVE,
-    creating: "",
+    FAIL: REMOVE,
+    SUCCESS: REMOVE,
+    CREATING: "",
   };
 
   const credentialText: Credentials = {
-    success: "",
-    fail: FAIL_TEXT,
-    creating: CREATING_TEXT,
+    SUCCESS: "",
+    FAIL: FAIL_TEXT,
+    CREATING: CREATING_TEXT,
   };
 
   const wichTag = (status: Status): Tag => {
     const tag: TagObject = {
-      success: {
+      SUCCESS: {
         color: colors.aurora.Nord14,
         label: "Criado",
       },
-      fail: {
+      FAIL: {
         color: colors.aurora.Nord12,
         label: "Falhou",
       },
-      creating: {
+      CREATING: {
         color: colors.aurora.Nord9,
         label: "Em processamento",
       },
@@ -84,12 +84,16 @@ const AccordionInstance: React.FC<AccordionProps> = ({
     return tag[status];
   };
 
+  const isInputEmpty = (input: string): boolean => {
+    return input.length === 0 && input === "";
+  };
+
   const toggleButtonInterruptApp = (index: number): void => {
-    let current_instance_id = instances[index].id;
-    let appName = instances[index].name;
+    let current_instance_id = instances?.[index].id;
+    let appName = instances?.[index].name;
 
     api
-      .delete(`/plugins/${pluginId}/instances/${current_instance_id}`)
+      .delete(`/plugins/instances/${current_instance_id}`)
       .then(() => {
         closeModal(false);
         toast({
@@ -116,11 +120,7 @@ const AccordionInstance: React.FC<AccordionProps> = ({
 
   const toggleButtonCreateApp = (): void => {
     api
-      .post(`/plugins/${pluginId}/instances`, {
-        body: {
-          name,
-        },
-      })
+      .post(`/plugins/${pluginId}/instances`, { name })
       .then(() => {
         closeModal(false);
         toast({
@@ -175,7 +175,17 @@ const AccordionInstance: React.FC<AccordionProps> = ({
             color={colors.light.Nord6}
             _hover={{ bgColor: `${colors.aurora.Nord14}`, opacity: "0.85" }}
             onClick={(): void => {
-              toggleButtonCreateApp();
+              if (isInputEmpty(name)) {
+                toast({
+                  title: "Atenção!",
+                  description: `O campo 'Nome da aplicação' não pode ser vazio`,
+                  status: "warning",
+                  duration: 3000,
+                  position: "bottom-left",
+                });
+              } else {
+                toggleButtonCreateApp();
+              }
             }}
           >
             Adicionar aplicação
@@ -184,70 +194,80 @@ const AccordionInstance: React.FC<AccordionProps> = ({
       </Flex>
 
       <Accordion width={750} mb={5} allowToggle>
-        {instances.map((instance, instanceIndex) => {
-          return (
-            <AccordionItem key={instanceIndex}>
-              <Flex>
-                <AccordionButton
-                  as="div"
+        {instances?.length === 0 ? (
+          <Flex justifyContent="center">
+            <Text size="2xl" fontWeight="bold">
+              Ainda não existem aplicações pré-configuradas!
+            </Text>
+          </Flex>
+        ) : (
+          instances?.map((instance, instanceIndex) => {
+            return (
+              <AccordionItem key={instanceIndex}>
+                <Flex>
+                  <AccordionButton
+                    as="div"
+                    bgColor={
+                      colorMode === LIGHT
+                        ? colors.light.Nord5
+                        : colors.dark.Nord1
+                    }
+                  >
+                    <Box flex="1" textAlign="left" margin="0 auto">
+                      <Heading>{instance.name}</Heading>
+                    </Box>
+                    <Tag
+                      mr={2}
+                      variant="solid"
+                      bgColor={wichTag(instance.status).color}
+                    >
+                      <TagLabel>{wichTag(instance.status).label}</TagLabel>
+                    </Tag>
+                    {instance.status !== CREATING && (
+                      <Button
+                        mr={5}
+                        size="sm"
+                        variant="so"
+                        color={colors.light.Nord6}
+                        bgColor={colors.aurora.Nord11}
+                        onClick={(event: any): void => {
+                          event.stopPropagation();
+                          toggleButtonInterruptApp(instanceIndex);
+                        }}
+                      >
+                        {action[instance.status]}
+                      </Button>
+                    )}
+                    <AccordionIcon />
+                  </AccordionButton>
+                </Flex>
+                <AccordionPanel
+                  pt={5}
                   bgColor={
-                    colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1
+                    colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord0
                   }
                 >
-                  <Box flex="1" textAlign="left" margin="0 auto">
-                    <Heading>{instance.name}</Heading>
-                  </Box>
-                  <Tag
-                    mr={2}
-                    variant="solid"
-                    bgColor={wichTag(instance.status).color}
-                  >
-                    <TagLabel>{wichTag(instance.status).label}</TagLabel>
-                  </Tag>
-                  {instance.status !== CREATING && (
-                    <Button
-                      mr={5}
-                      size="sm"
-                      variant="so"
-                      color={colors.light.Nord6}
-                      bgColor={colors.aurora.Nord11}
-                      onClick={(event: any): void => {
-                        event.stopPropagation();
-                        toggleButtonInterruptApp(instanceIndex);
-                      }}
-                    >
-                      {action[instance.status]}
-                    </Button>
+                  {instance.credentials?.length === 0 ? (
+                    <Text fontWeight="bold" fontSize="md">
+                      {credentialText[instance.status]}
+                    </Text>
+                  ) : (
+                    instance.credentials?.map((credential, credentialIndex) => {
+                      return (
+                        <Flex key={credentialIndex} alignItems="center">
+                          <Text fontWeight="bold" fontSize="xl" mr={2}>
+                            {credential.key}:
+                          </Text>
+                          <Text fontSize="md">{credential.value}</Text>
+                        </Flex>
+                      );
+                    })
                   )}
-                  <AccordionIcon />
-                </AccordionButton>
-              </Flex>
-              <AccordionPanel
-                pt={5}
-                bgColor={
-                  colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord0
-                }
-              >
-                {instance.credentials === null ? (
-                  <Text fontWeight="bold" fontSize="md">
-                    {credentialText[instance.status]}
-                  </Text>
-                ) : (
-                  instance.credentials?.map((credential, credentialIndex) => {
-                    return (
-                      <Flex key={credentialIndex} alignItems="center">
-                        <Text fontWeight="bold" fontSize="xl" mr={2}>
-                          {credential.key}:
-                        </Text>
-                        <Text fontSize="md">{credential.value}</Text>
-                      </Flex>
-                    );
-                  })
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          );
-        })}
+                </AccordionPanel>
+              </AccordionItem>
+            );
+          })
+        )}
       </Accordion>
     </>
   );
