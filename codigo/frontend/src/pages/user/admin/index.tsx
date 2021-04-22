@@ -87,7 +87,7 @@ const Users = () => {
 
   const [users, setUsers] = useState(usersList);
   const [numberOfPages, setNumberOfPages] = useState(
-    Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE)
+    users ? Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE) : 0
   );
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -116,7 +116,8 @@ const Users = () => {
         .getAll({ role: UserRole.USER })
         .then((res) => {
           const { data } = res;
-          setUsers(data.users);
+          console.log(data);
+          setUsers(data.items);
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>
@@ -145,7 +146,7 @@ const Users = () => {
 
     for (
       let i = (currentPage - 1) * NUMBER_OF_USERS_PER_PAGE;
-      i < currentPage * NUMBER_OF_USERS_PER_PAGE && i < users.length;
+      i < currentPage * NUMBER_OF_USERS_PER_PAGE && users && i < users.length;
       i++
     ) {
       const user = users[i];
@@ -167,7 +168,9 @@ const Users = () => {
   }
 
   function updateNumberOfPages() {
-    setNumberOfPages(Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE));
+    setNumberOfPages(
+      users ? Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE) : 0
+    );
   }
 
   function isAddUserValid(newUser: CreateUser) {
@@ -251,6 +254,7 @@ const Users = () => {
         .create(newUser)
         .then((res) => {
           const user = res.data.user as User;
+          console.log(user);
           setUsers([...users, user]);
           handleCloseModal();
           updateNumberOfPages();
@@ -265,6 +269,7 @@ const Users = () => {
           });
         })
         .catch((e) => {
+          console.error(e);
           getMessages(e?.response?.data).forEach((description, i) =>
             toast({
               title: "Erro!",
@@ -397,7 +402,8 @@ const Users = () => {
     //change to passwordConfirmation
     await userService.createMany(requestBody).then((res) => {
       userService.getAll({ role: UserRole.USER }).then(({ data }) => {
-        setUsers(data.users);
+        console.log(data);
+        setUsers(data.items);
         const newPageNumber = Math.floor(
           data.length / NUMBER_OF_USERS_PER_PAGE
         );
