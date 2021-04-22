@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/icons";
 import {
   Avatar,
+  Box,
   Button,
   Flex,
   Heading,
@@ -8,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import apiClient from "../../shared/api/api-client";
@@ -121,13 +122,13 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   const integrationButtons = sites.map((integration) =>
     integration.nick ? (
       <Button
+        mb={5}
         _hover={{ bgColor: !integration.nick ? color.buttonHv : undefined }}
         bgColor={!integration.nick ? color.buttonBg : undefined}
         color={!integration.nick ? color.buttonTxt : color.buttonBg}
         disabled={!!integration.nick}
         key={integration.site}
         variant={!integration.nick ? "solid" : "ghost"}
-        marginRight={4}
       >
         <Icon
           as={integration.icon}
@@ -139,6 +140,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
       </Button>
     ) : (
       <Button
+        mb={5}
         _hover={{ bgColor: !integration.nick ? color.buttonHv : undefined }}
         bgColor={!integration.nick ? color.buttonBg : undefined}
         color={!integration.nick ? color.buttonTxt : color.buttonBg}
@@ -147,7 +149,6 @@ const Profile = ({ user, setUser }: ProfileProps) => {
         as="a"
         href={integration.href}
         variant={!integration.nick ? "solid" : "ghost"}
-        marginRight={4}
       >
         <Icon
           as={integration.icon}
@@ -162,20 +163,19 @@ const Profile = ({ user, setUser }: ProfileProps) => {
 
   return (
     <Flex ml="150px" mt="30px">
-      <Flex>
+      <Box>
         <Avatar
-          width="100px"
-          height="100px"
+          margin="0 auto"
+          width={160}
+          height={160}
           mr="18px"
           bgColor={color.avatarBg}
         />
-      </Flex>
-      <Flex flexDirection="column">
+      </Box>
+      <Box>
         <Heading>{user.name}</Heading>
-        <Flex mt="15px" justifyContent="space-between" width="250px">
-          {integrationButtons}
-        </Flex>
-      </Flex>
+        <Flex flexDirection="column">{integrationButtons}</Flex>
+      </Box>
     </Flex>
   );
 };
