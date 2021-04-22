@@ -1,14 +1,13 @@
 import { gitlabClient } from "../api/gitlab-client";
 import {
   GitlabRepositoriesGraphQLResponse,
-  GithubRepositoryGraphQLResponse,
   GitlabRepositoryGraphQLResponse,
-} from "../interfaces/repositories";
+} from "../interfaces/graphql-repositories";
 import {
   BasicRepository,
   RepositoriesList,
   Repository,
-} from "../interfaces/repositories-organization-list";
+} from "../interfaces/Repository";
 import { ropsitoriesNamesToList } from "../utils/reposities-names-to-list";
 
 class GitlabService {

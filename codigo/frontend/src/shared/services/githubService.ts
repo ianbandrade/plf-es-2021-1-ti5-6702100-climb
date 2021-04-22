@@ -2,12 +2,12 @@ import { githubClient } from "../api/github-client";
 import {
   GithubRepositoriesGraphQLResponse,
   GithubRepositoryGraphQLResponse,
-} from "../interfaces/repositories";
+} from "../interfaces/graphql-repositories";
 import {
   BasicRepository,
   RepositoriesList,
   Repository,
-} from "../interfaces/repositories-organization-list";
+} from "../interfaces/Repository";
 import { ropsitoriesNamesToList } from "../utils/reposities-names-to-list";
 
 class GithubService {
