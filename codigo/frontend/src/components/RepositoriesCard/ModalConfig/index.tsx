@@ -132,8 +132,7 @@ const ModalConfig = ({
       repositoryURL: repository.url,
       environments: envs,
     };
-    console.log(branchNameSelect);
-    console.log(newApplication);
+
     if (validateFields(newApplication)) {
       //Make Request
       apiClient

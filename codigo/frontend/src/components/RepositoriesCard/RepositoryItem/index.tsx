@@ -10,12 +10,15 @@ import {
   ModalHeader,
   ModalContent,
   ModalOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { Repository } from "../../../shared/interfaces/Repository";
 import { colors } from "../../../styles/customTheme";
 import { GoRepo } from "react-icons/go";
 import ModalConfig from "../ModalConfig";
 import { githubService } from "../../../shared/services/githubService";
+import { gitlabService } from "../../../shared/services/gitlabService";
+import { getMessages } from "../../../shared/utils/toast-messages";
 
 interface RepositoryItem {
   organizationName: string;
@@ -44,26 +47,33 @@ const RepositoryItem = ({
           iconColor: colors.dark.Nord2,
         };
 
+  const toast = useToast();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [repo, setRepo] = useState<Repository>(repository);
 
   async function handleClickAddRepo() {
-    setRepo({
-      repositoryId: "6",
-      name: repo.name,
-      defaultBranch: "master",
-      url: "masdmsadm",
-      branchs: ["master", "test"],
-    });
-    await githubService
-      .getRepository(organizationName, repository.name)
-      .then((res) => {
-        console.log(res);
-        setRepo(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (provider === "github") {
+      await githubService
+        .getRepository(organizationName, repository.name)
+        .then((res) => {
+          console.log(res);
+          setRepo(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      await gitlabService
+        .getRepository(organizationName, repository.name)
+        .then((res) => {
+          setRepo(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
     onOpen();
   }
 

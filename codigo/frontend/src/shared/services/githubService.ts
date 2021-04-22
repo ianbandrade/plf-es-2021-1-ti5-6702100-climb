@@ -49,13 +49,9 @@ class GithubService {
       ({ nameWithOwner, isEmpty }) => ({ name: nameWithOwner, isEmpty })
     );
 
-    debugger;
-
     if (!hasNextPage) {
       return [...repositories, ...pageRepositories];
     }
-
-    debugger;
 
     return [
       ...pageRepositories,
@@ -69,6 +65,7 @@ class GithubService {
     branchs: string[] = [],
     cursor?: string
   ): Promise<Repository> {
+    console.log({ owner, name });
     const { data } = await githubClient.post<GithubRepositoryGraphQLResponse>(
       "",
       {
@@ -97,7 +94,7 @@ class GithubService {
 
     const { refs, defaultBranchRef, url, id } = data.data.repository;
     branchs.push(...refs.nodes.map<string>(({ name }) => name));
-
+    console.log(data);
     if (refs.pageInfo.hasNextPage) {
       return this.getRepository(owner, name, branchs, refs.pageInfo.endCursor);
     }

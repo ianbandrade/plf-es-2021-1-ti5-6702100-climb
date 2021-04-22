@@ -47,18 +47,14 @@ class GitlabService {
     const { hasNextPage, endCursor } = response.data.data.projects.pageInfo;
     const pageRepositories: BasicRepository[] = response.data.data.projects.nodes.map(
       ({ name, namespace, repository }) => ({
-        name: `${name}/${namespace}`,
+        name: `${namespace.fullPath}/${name}`,
         isEmpty: repository.empty,
       })
     );
 
-    debugger;
-
     if (!hasNextPage) {
       return [...repositories, ...pageRepositories];
     }
-
-    debugger;
 
     return [
       ...pageRepositories,

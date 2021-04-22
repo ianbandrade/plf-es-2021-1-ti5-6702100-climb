@@ -44,7 +44,9 @@ const RepositoriesCard = ({
   const [gitOrganizationsName, setgitOrganizationsName] = useState("github");
 
   const [repositories, setRepositories] = useState(
-    gitOrganizations === null ? null : gitOrganizations[0].repositories
+    gitOrganizations === null || gitOrganizations?.length === 0
+      ? null
+      : gitOrganizations[0].repositories
   );
 
   const [orgIndex, setOrgIndex] = useState<number>(0);
@@ -71,7 +73,7 @@ const RepositoriesCard = ({
 
     return onSelectGit(provider);
   }
-
+  console.log(gitOrganizations);
   return (
     <Flex
       flexDirection="column"
@@ -148,7 +150,8 @@ const RepositoriesCard = ({
                 />
               );
             })
-          ) : gitOrganizations === null ? null : (
+          ) : gitOrganizations === null ||
+            gitOrganizations.length === 0 ? null : (
             gitOrganizations[orgIndex].repositories.map(
               (repository: Repository) => {
                 return (

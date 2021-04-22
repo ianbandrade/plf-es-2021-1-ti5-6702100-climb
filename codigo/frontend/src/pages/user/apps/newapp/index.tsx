@@ -5,76 +5,12 @@ import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 import { GitProviders } from "../../../../shared/interfaces/GitProviders";
 import { githubService } from "../../../../shared/services/githubService";
+import { gitlabService } from "../../../../shared/services/gitlabService";
 import { getMessages } from "../../../../shared/utils/toast-messages";
+
 const data = {
-  github: [
-    {
-      name: "GaMoCh",
-      repositories: [
-        {
-          name: "express-hello",
-          isEmpty: false,
-        },
-        {
-          name: "okoskd",
-          isEmpty: true,
-        },
-        {
-          name: "adasdasdasdasdasd-hello",
-          isEmpty: true,
-        },
-      ],
-    },
-    {
-      name: "Mira",
-      repositories: [
-        {
-          name: "test-hello",
-          isEmpty: true,
-        },
-        {
-          name: "qqqq-hello",
-          isEmpty: false,
-        },
-      ],
-    },
-  ],
-  gitlab: [
-    {
-      name: "asdasd",
-      repositories: [
-        {
-          name: "edadasdsdxpress-hello",
-          isEmpty: true,
-        },
-        {
-          name: "adasdasd-hello",
-          isEmpty: true,
-        },
-        {
-          name: "adasdasdasdasdasd-hello",
-          isEmpty: false,
-        },
-      ],
-    },
-    {
-      name: "aaaaaaaaa",
-      repositories: [
-        {
-          name: "express-hello",
-          isEmpty: true,
-        },
-        {
-          name: "adasdasd-hello",
-          isEmpty: true,
-        },
-        {
-          name: "adasdasdasdasdasd-hello",
-          isEmpty: true,
-        },
-      ],
-    },
-  ],
+  github: null,
+  gitlab: null,
 };
 
 const NewApp = () => {
@@ -90,11 +26,40 @@ const NewApp = () => {
     await githubService
       .getRepositories()
       .then((res) => {
-        console.log(res);
-        setProviders({ github: res.organizations });
+        setProviders({ github: res.organizations, gitlab: null });
       })
       .catch((error) => {
         console.log(error);
+        getMessages(error?.response.data).forEach((description, i) => {
+          toast({
+            title: "Erro!",
+            description: `${description}`,
+            status: "error",
+            id: i,
+            position: "bottom-left",
+          });
+        });
+      });
+
+    await gitlabService
+      .getRepositories()
+      .then((res) => {
+        console.log(res);
+        setProviders((prevState) => {
+          prevState.gitlab = res.organizations;
+          return prevState;
+        });
+      })
+      .catch((error) => {
+        getMessages(error?.response.data).forEach((description, i) => {
+          toast({
+            title: "Erro!",
+            description: `${description}`,
+            status: "error",
+            id: i,
+            position: "bottom-left",
+          });
+        });
       });
   }
 
