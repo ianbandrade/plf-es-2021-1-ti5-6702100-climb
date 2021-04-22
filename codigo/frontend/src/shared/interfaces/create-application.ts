@@ -1,10 +1,10 @@
-import Enviroment from "./enviroment";
+import Environment from "./environment";
 export interface CreateApplication {
   name: string;
   provider: string;
   repositoryId: number;
   repositoryRef: string;
   repositoryPath: string;
-  repositoryUrl: string;
-  enviroments: Enviroment[];
+  repositoryURL: string;
+  environments: Environment[];
 }

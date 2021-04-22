@@ -32,9 +32,9 @@ import { BiGitBranch } from "react-icons/bi";
 import { IoIosApps, IoMdKey, IoIosAddCircle } from "react-icons/io";
 import { GiStonePath, GiChest, GiTrashCan } from "react-icons/gi";
 import { colors } from "../../../styles/customTheme";
-import Enviroment from "../../../shared/interfaces/enviroment";
+import Environment from "../../../shared/interfaces/environment";
 import { CreateApplication } from "../../../shared/interfaces/create-application";
-import api from "../../../shared/api/api-client";
+import apiClient from "../../../shared/api/api-client";
 import { getMessages } from "../../../shared/utils/toast-messages";
 
 interface ModalConfigProps {
@@ -77,7 +77,7 @@ const ModalConfig = ({
 
   const [keyInput, setKeyInput] = useState<string>("");
   const [valueInput, setValueInput] = useState<string>("");
-  const [envs, setEnvs] = useState<Enviroment[] | []>([]);
+  const [envs, setEnvs] = useState<Environment[] | []>([]);
   const [appNameInput, setAppNameInput] = useState("");
   const [branchNameSelect, setBranchNameSelect] = useState(repository.ref);
   const [pathInput, setPathInput] = useState("");
@@ -122,14 +122,14 @@ const ModalConfig = ({
       repositoryId: repository.repositoryId,
       repositoryRef: branchNameSelect,
       repositoryPath: pathInput,
-      repositoryUrl: repository.url,
-      enviroments: envs,
+      repositoryURL: repository.url,
+      environments: envs,
     };
 
     if (validateFields(newApplication)) {
       //Make Request
-      api
-        .post("applications", { body: newApplication })
+      apiClient
+        .post("applications", newApplication)
         .then(() => {
           toast({
             title: "Sucesso",
@@ -355,7 +355,7 @@ const ModalConfig = ({
                       </Thead>
                       <Tbody>
                         {envs.length > 0 ? (
-                          envs.map((env: Enviroment, index: number) => (
+                          envs.map((env: Environment, index: number) => (
                             <Tr key={index}>
                               <Th textAlign="left" maxW="52">
                                 {env.key}
