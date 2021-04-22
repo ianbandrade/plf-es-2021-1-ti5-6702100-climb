@@ -1,9 +1,9 @@
-import { BaseEntity, Column, Entity, OneToMany } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Instance } from './instance/instance.entity';
 
 @Entity()
 export class Plugin extends BaseEntity {
-  @Column({ primary: true })
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ nullable: false })
