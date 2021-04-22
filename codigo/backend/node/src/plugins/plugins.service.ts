@@ -119,7 +119,7 @@ export class PluginsService {
       },
     };
     this.amqpConnection.publish(
-      defaultExchange,
+      '',
       plugins.req.routingKey,
       payload,
     );

@@ -37,7 +37,6 @@ export default () => ({
     apps: {
       req: {
         routingKey: process.env.AMPQ_APPS_REQ_KEY || 'apps.deploy.req',
-        queue: process.env.AMPQ_APPS_REQ_QUEUE || 'apps.deploy.req',
       },
       res: {
         routingKey: process.env.AMPQ_APPS_RES_KEY || 'apps.deploy.res',
@@ -47,7 +46,6 @@ export default () => ({
     plugins: {
       req: {
         routingKey: process.env.AMPQ_PLUGINS_REQ_KEY || 'plugins.deploy.req',
-        queue: process.env.AMPQ_PLUGINS_REQ_QUEUE || 'plugins.deploy.req',
       },
       res: {
         routingKey: process.env.AMPQ_PLUGINS_RES_KEY || 'plugins.deploy.res',

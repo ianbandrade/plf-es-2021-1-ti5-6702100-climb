@@ -39,11 +39,15 @@ export class ApplicationsService {
     private amqpConnection: AmqpConnection,
   ) {}
 
-  create(createApplicationDto: CreateApplicationDto, user: User) {
-    return this.applicationRepository.createApplication(
+  async create(createApplicationDto: CreateApplicationDto, user: User) {
+    const application = await this.applicationRepository.createApplication(
       createApplicationDto,
       user,
     );
+
+    this.createDeploy(application.id, user)
+
+    return application
   }
 
   async findAll(
@@ -151,7 +155,7 @@ export class ApplicationsService {
       await fechedUser,
     );
 
-    this.amqpConnection.publish(defaultExchange, apps.req.routingKey, payload, {
+    this.amqpConnection.publish('', apps.req.routingKey, payload, {
       contentType: 'application/json',
     });
 
