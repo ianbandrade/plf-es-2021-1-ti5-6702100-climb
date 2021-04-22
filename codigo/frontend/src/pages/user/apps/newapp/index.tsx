@@ -4,121 +4,13 @@ import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 import { GitProviders } from "../../../../shared/interfaces/GitProviders";
+import { githubService } from "../../../../shared/services/githubService";
+import { gitlabService } from "../../../../shared/services/gitlabService";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 
 const data = {
-  github: [
-    {
-      name: "GaMoCh",
-      repositories: [
-        {
-          repositoryId: 1,
-          name: "express-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 2,
-          name: "adasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 3,
-          name: "adasdasdasdasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "main",
-          branchs: ["main", "develop"],
-          isEmpty: false,
-        },
-      ],
-    },
-    {
-      name: "Mira",
-      repositories: [
-        {
-          repositoryId: 1,
-          name: "test-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 2,
-          name: "qqqq-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-      ],
-    },
-  ],
-  gitlab: [
-    {
-      name: "asdasd",
-      repositories: [
-        {
-          repositoryId: 1,
-          name: "edadasdsdxpress-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 2,
-          name: "adasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 3,
-          name: "adasdasdasdasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "main",
-          branchs: ["main", "develop"],
-          isEmpty: true,
-        },
-      ],
-    },
-    {
-      name: "aaaaaaaaa",
-      repositories: [
-        {
-          repositoryId: 1,
-          name: "express-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 2,
-          name: "adasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 3,
-          name: "adasdasdasdasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "main",
-          branchs: ["main", "develop"],
-          isEmpty: false,
-        },
-      ],
-    },
-  ],
+  github: null,
+  gitlab: null,
 };
 
 const NewApp = () => {
@@ -127,18 +19,17 @@ const NewApp = () => {
   const toast = useToast();
 
   useEffect(() => {
-    //fetchData()
+    fetchData();
   }, []);
-  /*
+
   async function fetchData() {
-    Git api...
-    await api
-      .get("/algum git url")
+    await githubService
+      .getRepositories()
       .then((res) => {
-        const { data } = res;
-        setProviders(data);
+        setProviders({ github: res.organizations, gitlab: null });
       })
-      .catch(error) {
+      .catch((error) => {
+        console.log(error);
         getMessages(error?.response.data).forEach((description, i) => {
           toast({
             title: "Erro!",
@@ -147,9 +38,31 @@ const NewApp = () => {
             id: i,
             position: "bottom-left",
           });
-      };
+        });
+      });
+
+    await gitlabService
+      .getRepositories()
+      .then((res) => {
+        console.log(res);
+        setProviders((prevState) => {
+          prevState.gitlab = res.organizations;
+          return prevState;
+        });
+      })
+      .catch((error) => {
+        getMessages(error?.response.data).forEach((description, i) => {
+          toast({
+            title: "Erro!",
+            description: `${description}`,
+            status: "error",
+            id: i,
+            position: "bottom-left",
+          });
+        });
+      });
   }
-  */
+
   function handleSelectGit(gitProvider: string) {
     gitProvider === "github"
       ? setGitProvider("github")

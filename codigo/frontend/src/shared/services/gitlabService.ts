@@ -47,18 +47,14 @@ class GitlabService {
     const { hasNextPage, endCursor } = response.data.data.projects.pageInfo;
     const pageRepositories: BasicRepository[] = response.data.data.projects.nodes.map(
       ({ name, namespace, repository }) => ({
-        name: `${name}/${namespace}`,
+        name: `${namespace.fullPath}/${name}`,
         isEmpty: repository.empty,
       })
     );
 
-    debugger;
-
     if (!hasNextPage) {
       return [...repositories, ...pageRepositories];
     }
-
-    debugger;
 
     return [
       ...pageRepositories,
@@ -66,10 +62,7 @@ class GitlabService {
     ];
   }
 
-  async getRepository(
-    owner: string = "ArthurRAmaral",
-    name: string = "firstproject"
-  ): Promise<Repository> {
+  async getRepository(owner: string, name: string): Promise<Repository> {
     const { data } = await gitlabClient.post<GitlabRepositoryGraphQLResponse>(
       "",
       {

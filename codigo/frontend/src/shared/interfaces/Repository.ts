@@ -4,6 +4,7 @@ export interface Repository {
   url: string;
   defaultBranch: string;
   branchs: string[];
+  isEmpty?: boolean;
 }
 
 export interface BasicRepository {
