@@ -18,21 +18,21 @@ export class LoggerInterceptor implements NestInterceptor {
   }
 
   private log(req: any) {
-    const body = { ...req.body };
-    delete body.password;
-    delete body.passwordConfirmation;
-    const user = req.user;
-    const userEmail = user ? user.email : null;
+    const body = { ...req?.body };
+    delete body?.password;
+    delete body?.passwordConfirmation;
+    const user = req?.user;
+    const userEmail = user ? user?.email : null;
     this.logger.info({
       timestamp: new Date().toISOString(),
-      method: req.method,
-      route: req.route.path,
+      method: req?.method,
+      route: req?.route?.path,
       data: {
         body: body,
-        query: req.query,
-        params: req.params,
+        query: req?.query,
+        params: req?.params,
       },
-      from: req.ip,
+      from: req?.ip,
       madeBy: userEmail,
     });
   }

@@ -11,6 +11,7 @@ import { ConfigurationModule } from './configuration/configuration.module';
 import { typeOrmConfig } from './configuration/configs/typeorm.config';
 import { winstonConfig } from './configuration/configs/winston.config';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
+import { ApplicationsModule } from './applications/applications.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
     VersionControlModule,
     UsersModule,
     AuthModule,
+    ApplicationsModule,
   ],
   controllers: [],
   providers: [

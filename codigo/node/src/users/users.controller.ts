@@ -1,4 +1,3 @@
-import { ReturnManyUsersDto } from './dto/return-many-users.dto';
 import { UpdateUserDto } from './dto/update-users.dto';
 import {
   Controller,
@@ -22,6 +21,8 @@ import { UserRole } from './user-roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
+import { ReturList } from 'src/shared/dto/return-list.dto';
+import { User } from './user.entity';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -49,9 +50,7 @@ export class UsersController {
 
   @Get()
   @Role(UserRole.ADMIN)
-  async findUsers(
-    @Query() query: FindUsersQueryDto,
-  ): Promise<ReturnManyUsersDto> {
+  async findUsers(@Query() query: FindUsersQueryDto): Promise<ReturList<User>> {
     return await this.usersService.findUsers(query);
   }
 

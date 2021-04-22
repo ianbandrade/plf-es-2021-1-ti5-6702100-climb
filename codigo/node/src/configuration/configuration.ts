@@ -33,4 +33,22 @@ export default () => ({
     key: process.env.ENCRYPTION_KEY || 'a'.repeat(64),
     iv: process.env.ENCRYPTION_IV || 'a'.repeat(32),
   },
+  amqp: {
+    apps: {
+      req: {
+        routingKey: process.env.AMPQ_APPS_REQ_KEY || 'apps.deploy.req',
+        queue: process.env.AMPQ_APPS_REQ_QUEUE || 'apps.deploy.req',
+      },
+      res: {
+        routingKey: process.env.AMPQ_APPS_RES_KEY || 'apps.deploy.res',
+        queue: process.env.AMPQ_APPS_RES_QUEUE || 'apps.deploy.res',
+      },
+    },
+    user: process.env.AMPQ_USER || 'guest',
+    password: process.env.AMPQ_PASSWORD || 'guest',
+    protocol: process.env.AMPQ_PROTOCOL || 'amqp',
+    host: process.env.AMPQ_HOST || 'localhost',
+    port: +process.env.AMPQ_PORT || '5672',
+    virtualHost: process.env.AMPQ_VIRTUAL_HOST || '',
+  },
 });

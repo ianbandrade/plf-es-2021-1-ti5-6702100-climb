@@ -20,7 +20,7 @@ const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
 const AUTHURL = `/auth/signin`;
-const PROFILE_PATH = 'user/profile';
+const PROFILE_PATH = "user/profile";
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -28,10 +28,11 @@ const Home = () => {
   const toast = useToast();
   const router = useRouter();
 
-  useEffect(()=>{
-    if(isAuthenticated()) {
-      router.push(PROFILE_PATH)
-    }},[])
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push(PROFILE_PATH);
+    }
+  }, []);
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -70,17 +71,17 @@ const Home = () => {
     apiClient
       .post(AUTHURL, body)
       .then((res) => {
-          if (res.data?.token) {
-            login(res.data.token)
-            showToast({
-              title: "Sucesso!",
-              description: "Acesso autorizado",
-              status: "success",
-              id: "login",
-              position: "bottom-left",
-            });
-            router.push(PROFILE_PATH);
-          }
+        if (res.data?.token) {
+          login(res.data.token);
+          showToast({
+            title: "Sucesso!",
+            description: "Acesso autorizado",
+            status: "success",
+            id: "login",
+            position: "bottom-left",
+          });
+          router.push(PROFILE_PATH);
+        }
       })
       .catch((e) =>
         getMessages(e?.response?.data).forEach((description, i) =>

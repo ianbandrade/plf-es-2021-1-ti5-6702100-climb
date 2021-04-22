@@ -1,11 +1,9 @@
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from '../users/users.repository';
 import { ConfigService } from '@nestjs/config';
-import { User } from 'src/users/user.entity';
-import { Request } from 'express';
+import { PassportStrategy } from '@nestjs/passport';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { UserRepository } from '../users/users.repository';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -22,12 +20,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: { id: number }) {
     const { id } = payload;
-    const user = await this.userRepository.findOne(id, {
-      select: User.publicAttributes,
-    });
+    const user = await this.userRepository.findOne(id);
     if (!user) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
+    delete user.password;
 
     return user;
   }
