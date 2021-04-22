@@ -80,7 +80,9 @@ const ModalConfig = ({
   const [valueInput, setValueInput] = useState<string>("");
   const [envs, setEnvs] = useState<Environment[] | []>([]);
   const [appNameInput, setAppNameInput] = useState("");
-  const [branchNameSelect, setBranchNameSelect] = useState(repository.ref);
+  const [branchNameSelect, setBranchNameSelect] = useState(
+    repository.defaultBranch
+  );
   const [pathInput, setPathInput] = useState("");
   const [invalidInputs, setInvalidInputs] = useState({
     name: false,
@@ -256,7 +258,7 @@ const ModalConfig = ({
                   <Icon as={BiGitBranch} alignSelf="center" />
                 </Flex>
                 <Select
-                  defaultValue={repository.ref}
+                  defaultValue={repository.defaultBranch}
                   bgColor={inputBgColor}
                   color={inputColor}
                   onChange={(e: any) => setBranchNameSelect(e.target.value)}

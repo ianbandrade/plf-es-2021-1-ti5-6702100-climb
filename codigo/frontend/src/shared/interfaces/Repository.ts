@@ -1,7 +1,8 @@
 export interface Repository {
-  repositoryId: number;
+  repositoryId?: number;
   name: string;
-  url: string;
-  ref: string;
-  branchs: string[];
+  url?: string;
+  defaultBranch?: string;
+  branchs?: string[];
+  isEmpty: boolean;
 }
