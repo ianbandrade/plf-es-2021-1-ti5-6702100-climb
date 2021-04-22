@@ -44,11 +44,22 @@ export default () => ({
         queue: process.env.AMPQ_APPS_RES_QUEUE || 'apps.deploy.res',
       },
     },
+    plugins: {
+      req: {
+        routingKey: process.env.AMPQ_PLUGINS_REQ_KEY || 'plugins.deploy.req',
+        queue: process.env.AMPQ_PLUGINS_REQ_QUEUE || 'plugins.deploy.req',
+      },
+      res: {
+        routingKey: process.env.AMPQ_PLUGINS_RES_KEY || 'plugins.deploy.res',
+        queue: process.env.AMPQ_PLUGINS_RES_QUEUE || 'plugins.deploy.res',
+      },
+    },
     user: process.env.AMPQ_USER || 'guest',
     password: process.env.AMPQ_PASSWORD || 'guest',
     protocol: process.env.AMPQ_PROTOCOL || 'amqp',
     host: process.env.AMPQ_HOST || 'localhost',
     port: +process.env.AMPQ_PORT || '5672',
     virtualHost: process.env.AMPQ_VIRTUAL_HOST || '',
+    defaultExchange: 'amq.direct',
   },
 });

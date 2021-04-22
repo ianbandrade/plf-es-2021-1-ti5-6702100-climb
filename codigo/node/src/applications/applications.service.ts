@@ -22,6 +22,13 @@ import { ApplicationRepository } from './entities/application.repository';
 import { Deploys } from './entities/deploys/deploys.entity';
 import { DeploysRepository } from './entities/deploys/deploys.repository';
 import { Environment } from './entities/environments/environments.entity';
+import * as dotenv from 'dotenv';
+import configuration from 'src/configuration/configuration';
+
+dotenv.config();
+
+const config = configuration();
+const { defaultExchange, apps } = config.amqp;
 
 @Injectable()
 export class ApplicationsService {
@@ -144,7 +151,7 @@ export class ApplicationsService {
       await fechedUser,
     );
 
-    this.amqpConnection.publish('amq.direct', 'apps.deploy.req', payload, {
+    this.amqpConnection.publish(defaultExchange, apps.req.routingKey, payload, {
       contentType: 'application/json',
     });
 
@@ -152,9 +159,9 @@ export class ApplicationsService {
   }
 
   @RabbitSubscribe({
-    exchange: 'amq.direct',
-    routingKey: 'apps.deploy.res',
-    queue: 'apps.deploy.res',
+    exchange: defaultExchange,
+    routingKey: apps.res.routingKey,
+    queue: apps.res.queue,
   })
   async deployResponse(updateMessage: ResDeployDto) {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);

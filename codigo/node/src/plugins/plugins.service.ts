@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -21,6 +22,13 @@ import { Credential } from './entities/credentials/credentials.entity';
 import { v4 } from 'uuid';
 import { CreatePuglinDto } from './dto/create-plugin.dto';
 import { Plugin } from './entities/plugin.entity';
+import * as dotenv from 'dotenv';
+import configuration from 'src/configuration/configuration';
+
+dotenv.config();
+
+const config = configuration();
+const { defaultExchange, plugins } = config.amqp;
 
 @Injectable()
 export class PluginsService {
@@ -65,6 +73,18 @@ export class PluginsService {
     return { instances: basicInstance };
   }
 
+  async getOneInstaces(instanceId: string, user: User): Promise<BasicInstance> {
+    const instance = await this.instanceRepository.findOne(instanceId);
+
+    if (!instance) throw new NotFoundException('Instância não encontrada');
+
+    if (instance.userId !== user.id)
+      throw new ForbiddenException('Você não tem acesso à essa instância');
+
+    const { id, name, status, credentials } = instance;
+    return { id, name, status, credentials };
+  }
+
   async createInstance(
     pluginId: string,
     createIntanceDto: CreateInstancesDto,
@@ -82,7 +102,7 @@ export class PluginsService {
     return instance;
   }
 
-  async deleteInstance(instanceId: string, user: User) {
+  async deleteInstance(instanceId: string, user: User): Promise<boolean> {
     const deleteResult = await this.instanceRepository.delete({
       id: instanceId,
       userId: user.id,
@@ -98,7 +118,11 @@ export class PluginsService {
         dockerfile: plugin.dockerImage,
       },
     };
-    this.amqpConnection.publish('amq.direct', 'plugins.deploy.req', payload);
+    this.amqpConnection.publish(
+      defaultExchange,
+      plugins.req.routingKey,
+      payload,
+    );
   }
 
   async createPlugiin(
@@ -114,20 +138,20 @@ export class PluginsService {
   }
 
   @RabbitSubscribe({
-    exchange: 'amq.direct',
-    routingKey: 'plugins.deploy.res',
-    queue: 'plugins.deploy.res',
+    exchange: defaultExchange,
+    routingKey: plugins.res.routingKey,
+    queue: plugins.res.queue,
   })
   async deployResponse({ id, success, credentials }: ResInstanceDto) {
-    const instance = await this.instanceRepository.findOne(id);
-
-    instance.status = success
-      ? DeployStatusEnum.SUCCESS
-      : DeployStatusEnum.FAIL;
-
-    instance.credentials = this.mapCredentials(credentials, instance.id);
-
     try {
+      const instance = await this.instanceRepository.findOne(id);
+
+      instance.status = success
+        ? DeployStatusEnum.SUCCESS
+        : DeployStatusEnum.FAIL;
+
+      instance.credentials = this.mapCredentials(credentials, instance.id);
+
       instance.save();
       return instance;
     } catch (e) {

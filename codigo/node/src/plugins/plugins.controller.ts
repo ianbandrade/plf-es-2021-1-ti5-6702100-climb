@@ -19,10 +19,12 @@ import { Instance } from './entities/instance/instance.entity';
 import { Role } from 'src/auth/role.decorator';
 import { UserRole } from 'src/users/user-roles.enum';
 import { CreatePuglinDto } from './dto/create-plugin.dto';
+import { BasicInstance } from './dto/instances/basic-instance.dto';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @ApiTags('Plugins')
 @Controller('plugins')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class PluginsController {
   constructor(private readonly pluginsService: PluginsService) {}
 
@@ -37,6 +39,14 @@ export class PluginsController {
     @GetUser() user: User,
   ): Promise<GetInstances> {
     return await this.pluginsService.getInstaces(pluginId, user);
+  }
+
+  @Get('/instances/:instanceId')
+  async getOneInstace(
+    @Param('instanceId') instanceId: string,
+    @GetUser() user: User,
+  ): Promise<BasicInstance> {
+    return await this.pluginsService.getOneInstaces(instanceId, user);
   }
 
   @Post()
@@ -59,10 +69,10 @@ export class PluginsController {
   }
 
   @Delete('/instances/:instanceId')
-  deleteInstance(
+  async deleteInstance(
     @Param('instanceId') instanceId: string,
     @GetUser() user: User,
-  ) {
-    this.pluginsService.deleteInstance(instanceId, user);
+  ): Promise<boolean> {
+    return await this.pluginsService.deleteInstance(instanceId, user);
   }
 }
