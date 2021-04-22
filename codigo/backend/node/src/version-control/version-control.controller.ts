@@ -14,11 +14,11 @@ import { VersionControlService } from './version-control.service';
 
 @ApiTags('Version Control')
 @Controller('version-control')
+@ApiBearerAuth()
 export class VersionControlController {
   constructor(private versionControlService: VersionControlService) {}
 
   @Post('github')
-  @ApiBearerAuth()
   @UseGuards(AuthGuard())
   async github(
     @GetUser() user: User,
@@ -32,7 +32,6 @@ export class VersionControlController {
   }
 
   @Post('gitlab')
-  @ApiBearerAuth()
   @UseGuards(AuthGuard())
   async gitlab(
     @GetUser() user: User,

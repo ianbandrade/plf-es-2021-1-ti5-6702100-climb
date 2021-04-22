@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { User } from 'src/users/user.entity';
@@ -23,6 +23,7 @@ import { UpdateApplicationDto } from './dto/update-application.dto';
 @ApiTags('Applications')
 @Controller('applications')
 @UseGuards(AuthGuard())
+@ApiBearerAuth()
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 

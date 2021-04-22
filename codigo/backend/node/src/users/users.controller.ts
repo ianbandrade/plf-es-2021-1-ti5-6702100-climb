@@ -25,9 +25,9 @@ import { ReturList } from 'src/shared/dto/return-list.dto';
 import { User } from './user.entity';
 
 @ApiTags('Users')
-@ApiBearerAuth()
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
+@ApiBearerAuth()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

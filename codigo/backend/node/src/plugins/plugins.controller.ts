@@ -11,7 +11,7 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { PluginsService } from './plugins.service';
 import { User } from '../users/user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetPuglinsDto } from './dto/get-plugins.dto';
 import { GetInstances } from './dto/instances/get-instance.dto';
 import { CreateInstancesDto } from './dto/instances/create-instances.dto';
@@ -24,6 +24,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 
 @ApiTags('Plugins')
 @Controller('plugins')
+@ApiBearerAuth()
 @UseGuards(AuthGuard(), RolesGuard)
 export class PluginsController {
   constructor(private readonly pluginsService: PluginsService) {}
