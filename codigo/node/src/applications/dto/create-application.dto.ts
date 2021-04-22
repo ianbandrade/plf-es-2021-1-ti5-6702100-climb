@@ -28,8 +28,8 @@ export class CreateApplicationDto {
   @IsNotEmpty({
     message: 'Id do repositório não pode ser vazio',
   })
-  @IsNumber()
-  repositoryId: number;
+  @IsString()
+  repositoryId: string;
 
   @IsNotEmpty({
     message: 'O nome da branch não pode ser vazio',

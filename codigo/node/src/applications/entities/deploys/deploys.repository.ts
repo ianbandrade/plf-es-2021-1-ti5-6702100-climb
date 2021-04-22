@@ -1,10 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { ReturList } from 'src/shared/dto/return-list.dto';
 import { User } from 'src/users/user.entity';
 import { Deploys } from './deploys.entity';
 import { ReqDeployDto } from '../../dto/deploys/req-deploy.dto';
 import { v4 } from 'uuid';
-import { FindDeployQueryDto } from '../../dto/deploys/find-deploys-query.dto';
 import { Application } from '../application.entity';
 import { InternalServerErrorException } from '@nestjs/common';
 
@@ -29,12 +27,5 @@ export class DeploysRepository extends Repository<Deploys> {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-  }
-
-  async findAll(
-    queryDto: FindDeployQueryDto,
-    user: User,
-  ): Promise<ReturList<Deploys>> {
-    return { items: [], total: 0 };
   }
 }

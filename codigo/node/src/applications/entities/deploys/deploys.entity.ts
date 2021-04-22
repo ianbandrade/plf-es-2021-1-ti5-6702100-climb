@@ -25,6 +25,9 @@ export class Deploys extends BaseEntity {
   @Column({ nullable: false, default: DeployStatusEnum.CREATING })
   status: DeployStatusEnum;
 
+  @Column({ nullable: true })
+  error: string | null;
+
   @CreateDateColumn()
   createdAt?: Date;
 

@@ -108,6 +108,8 @@ export class ApplicationsService {
       ? DeployStatusEnum.SUCCESS
       : DeployStatusEnum.FAIL;
 
+    deploy.error = updateMessage.error;
+
     deploy.save();
   }
 

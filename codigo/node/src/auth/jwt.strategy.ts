@@ -24,8 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
-    delete user.password;
 
+    delete user.password;
+    delete user.salt;
     return user;
   }
 }
