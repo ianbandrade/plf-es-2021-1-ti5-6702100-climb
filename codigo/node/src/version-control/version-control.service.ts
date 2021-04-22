@@ -75,10 +75,6 @@ export class VersionControlService {
     });
   }
 
-  async getUserRepositories(user: User) {
-    console.log(user.gitHubToken);
-  }
-
   @Cron(CronExpression.EVERY_HOUR)
   private async updateAccounts() {
     const allUsers = await this.usersRepository.find();

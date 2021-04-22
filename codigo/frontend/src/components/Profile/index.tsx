@@ -15,6 +15,8 @@ import apiClient from "../../shared/api/api-client";
 import { setCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
 import { authService } from "../../shared/services/authService";
+import { githubService } from "../../shared/services/githubService";
+import { gitlabService } from "../../shared/services/gitlabService";
 import { getMessages } from "../../shared/utils/toast-messages";
 import { colors } from "../../styles/customTheme";
 
@@ -56,8 +58,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
       apiClient
         .post(`/version-control/${state}`, body)
         .then(async (res) => {
-          const me =
-            (await authService.me().then((response) => response.data)) ?? user;
+          const me = user;
           setCurrentUser(me);
           setUser(me);
 

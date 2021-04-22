@@ -26,7 +26,7 @@ export class Application extends BaseEntity {
   provider: ProvidersEnum;
 
   @Column({ nullable: false, type: 'int' })
-  repositoryId: number;
+  repositoryId: string;
 
   @Column({ nullable: false, type: 'varchar' })
   repositoryRef: string;

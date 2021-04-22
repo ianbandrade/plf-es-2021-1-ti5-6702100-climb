@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import Profile from "../../components/Profile";
 import { getCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
+import { authService } from "../../shared/services/authService";
 
 const UserPage = () => {
   const [user, setUser] = useState<User>({} as User);
-
   useEffect(() => {
-    setUser(getCurrentUser());
+    authService.me().then((user) => setUser(user));
   }, []);
 
   return (

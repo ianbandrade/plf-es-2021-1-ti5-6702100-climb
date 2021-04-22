@@ -1,13 +1,19 @@
 export interface Repository {
-  repositoryId: number;
+  repositoryId: string;
   name: string;
   url: string;
   defaultBranch: string;
   branchs: string[];
-  isEmpty?: boolean;
 }
 
 export interface BasicRepository {
   name: string;
   isEmpty: boolean;
+}
+
+export interface RepositoriesList {
+  organizations: {
+    name: string;
+    repositories: BasicRepository[];
+  }[];
 }
