@@ -3,7 +3,6 @@ export interface PreConfigCardProps {
   name: string;
   image: string;
   description: string;
-  selected: boolean;
 }
 
 export interface PreConfigCardRequestProps {

@@ -6,6 +6,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
+import React from "react";
 import { PreConfigCardProps } from "../../shared/interfaces/PreConfigCardInterface";
 import { colors } from "../../styles/customTheme";
 
@@ -14,7 +15,6 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
   name,
   image,
   description,
-  selected,
 }) => {
   const { colorMode } = useColorMode();
 
@@ -36,12 +36,14 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
       alignItems="center"
       textAlign="center"
       borderRadius={10}
-      {...(selected && { boxShadow: "dark-lg", border: "2px solid" })}
       _hover={{ transition: "0.3s ease-out", boxShadow: "2xl" }}
     >
-      <Box>
-        <Heading fontSize="3xl">{name}</Heading>
-      </Box>
+      <Flex>
+        <Heading fontSize="3xl" m="auto 0" textAlign="center">
+          {name}
+        </Heading>
+      </Flex>
+
       <Image maxW={120} maxH={120} src={image} alt={`${name} icon`} />
       <Box>
         <Text>{description}</Text>
