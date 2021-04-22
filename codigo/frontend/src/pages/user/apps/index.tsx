@@ -1,13 +1,13 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { Flex } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { AiFillGithub } from "react-icons/ai";
+import { IconType } from "react-icons/lib";
 import { RiGitlabFill } from "react-icons/ri";
 import { RepoItem } from "../../../components/RepoItem/RepoItem";
-import { IconType } from "react-icons/lib";
 import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
-import { RepoItemProps } from "../../../shared/interfaces/RepoItemProps";
 import apiClient from "../../../shared/api/api-client";
-import { useEffect, useState } from "react";
+import { RepoItemProps } from "../../../shared/interfaces/RepoItemProps";
 import { getMessages } from "../../../shared/utils/toast-messages";
 export const Apps = () => {
   const avaiableIcons: Record<string, IconType> = {
@@ -49,10 +49,10 @@ export const Apps = () => {
   );
 
   return (
-    <Box display="flex" flexDirection="column" padding="12" width="full">
+    <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Aplicações conectadas" />
       <Flex flexWrap="wrap">{renderRepos}</Flex>
-    </Box>
+    </Flex>
   );
 };
 

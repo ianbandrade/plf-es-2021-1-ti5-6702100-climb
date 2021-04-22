@@ -84,7 +84,7 @@ const Plugins = (): JSX.Element => {
   }
 
   return (
-    <Flex flexDir="column">
+    <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Plugins pré-configurados" />
       <Modal
         isOpen={flag}
@@ -97,7 +97,7 @@ const Plugins = (): JSX.Element => {
             pluginId={id}
             closeModal={setFlag}
           />
-        } // Req of specific instances from ID
+        }
       />
       <Flex flexWrap="wrap" justifyContent="center">
         {renderCards()}
