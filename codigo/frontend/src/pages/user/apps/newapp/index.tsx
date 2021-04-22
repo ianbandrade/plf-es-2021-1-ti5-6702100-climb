@@ -4,7 +4,6 @@ import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 import { GitProviders } from "../../../../shared/interfaces/GitProviders";
-import { getMessages } from "../../../../shared/utils/toast-messages";
 
 const data = {
   github: [
@@ -12,28 +11,16 @@ const data = {
       name: "GaMoCh",
       repositories: [
         {
-          repositoryId: 1,
           name: "express-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
           isEmpty: false,
         },
         {
-          repositoryId: 2,
-          name: "adasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
+          name: "okoskd",
+          isEmpty: true,
         },
         {
-          repositoryId: 3,
           name: "adasdasdasdasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "main",
-          branchs: ["main", "develop"],
-          isEmpty: false,
+          isEmpty: true,
         },
       ],
     },
@@ -41,19 +28,11 @@ const data = {
       name: "Mira",
       repositories: [
         {
-          repositoryId: 1,
           name: "test-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
+          isEmpty: true,
         },
         {
-          repositoryId: 2,
           name: "qqqq-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
           isEmpty: false,
         },
       ],
@@ -64,28 +43,16 @@ const data = {
       name: "asdasd",
       repositories: [
         {
-          repositoryId: 1,
           name: "edadasdsdxpress-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 2,
-          name: "adasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
-        },
-        {
-          repositoryId: 3,
-          name: "adasdasdasdasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "main",
-          branchs: ["main", "develop"],
           isEmpty: true,
+        },
+        {
+          name: "adasdasd-hello",
+          isEmpty: true,
+        },
+        {
+          name: "adasdasdasdasdasd-hello",
+          isEmpty: false,
         },
       ],
     },
@@ -93,28 +60,16 @@ const data = {
       name: "aaaaaaaaa",
       repositories: [
         {
-          repositoryId: 1,
           name: "express-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
+          isEmpty: true,
         },
         {
-          repositoryId: 2,
           name: "adasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "master",
-          branchs: ["master", "develop"],
-          isEmpty: false,
+          isEmpty: true,
         },
         {
-          repositoryId: 3,
           name: "adasdasdasdasdasd-hello",
-          url: "https://github.com/GaMoCh/express-hello.git",
-          defaultBranch: "main",
-          branchs: ["main", "develop"],
-          isEmpty: false,
+          isEmpty: true,
         },
       ],
     },

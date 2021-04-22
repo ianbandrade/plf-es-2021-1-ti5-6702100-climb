@@ -1,6 +1,6 @@
-import { Repository } from "./Repository";
+import { Repository, BasicRepository } from "./Repository";
 
 export interface Organization {
   name: string;
-  repositories: Repository[];
+  repositories: BasicRepository[] | Repository[];
 }

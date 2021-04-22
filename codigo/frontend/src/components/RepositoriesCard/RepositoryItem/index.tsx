@@ -44,6 +44,18 @@ const RepositoryItem = ({
         };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [repo, setRepo] = useState<Repository>(repository);
+  function handleClickAddRepo() {
+    setRepo({
+      repositoryId: 6,
+      name: repo.name,
+      defaultBranch: "master",
+      url: "masdmsadm",
+      branchs: ["master", "test"],
+    });
+
+    onOpen();
+  }
 
   return (
     <>
@@ -51,7 +63,7 @@ const RepositoryItem = ({
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
-        repository={repository}
+        repository={repo}
         organizationName={organizationName}
         provider={provider}
       />
@@ -68,7 +80,7 @@ const RepositoryItem = ({
         <Flex justifyContent="space-between">
           <Icon as={GoRepo} color={iconColor} boxSize="6" mr="4" />
           <Text fontSize="md" alignSelf="center" color={textColor}>
-            {`${organizationName}/${repository.name}`}
+            {`${repo.name}`}
           </Text>
         </Flex>
         <Flex>
@@ -77,7 +89,8 @@ const RepositoryItem = ({
             bgColor={colors.aurora.Nord14}
             _hover={{ bgColor: colors.aurora.Nord14 }}
             color={colors.light.Nord4}
-            onClick={onOpen}
+            onClick={() => handleClickAddRepo()}
+            disabled={repo.isEmpty}
           >
             Adicionar
           </Button>

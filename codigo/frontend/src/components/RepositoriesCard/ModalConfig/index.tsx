@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
   Modal,
@@ -80,9 +80,11 @@ const ModalConfig = ({
   const [valueInput, setValueInput] = useState<string>("");
   const [envs, setEnvs] = useState<Environment[] | []>([]);
   const [appNameInput, setAppNameInput] = useState("");
+  //Fix deafult branch later
   const [branchNameSelect, setBranchNameSelect] = useState(
-    repository.defaultBranch
+    repository.defaultBranch || "master"
   );
+
   const [pathInput, setPathInput] = useState("");
   const [invalidInputs, setInvalidInputs] = useState({
     name: false,
@@ -130,7 +132,8 @@ const ModalConfig = ({
       repositoryURL: repository.url,
       environments: envs,
     };
-
+    console.log(branchNameSelect);
+    console.log(newApplication);
     if (validateFields(newApplication)) {
       //Make Request
       apiClient
@@ -263,15 +266,19 @@ const ModalConfig = ({
                   color={inputColor}
                   onChange={(e: any) => setBranchNameSelect(e.target.value)}
                 >
-                  {repository.branchs.map((branch: string, index: number) => (
-                    <option
-                      value={branch}
-                      key={index}
-                      style={{ color: inputBgColor }}
-                    >
-                      {branch}
-                    </option>
-                  ))}
+                  {repository.branchs
+                    ? repository.branchs.map(
+                        (branch: string, index: number) => (
+                          <option
+                            value={branch}
+                            key={index}
+                            style={{ color: inputBgColor }}
+                          >
+                            {branch}
+                          </option>
+                        )
+                      )
+                    : ""}
                 </Select>
               </Flex>
               <Input
