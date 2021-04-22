@@ -83,9 +83,6 @@ const RepositoriesCard = ({
       height="100%"
       overflowY="auto"
     >
-      <Heading fontSize="2xl" alignSelf="flex-start" pb="8">
-        Nova aplicação
-      </Heading>
       <Flex width="100%" justifyContent="space-evenly" px="6">
         <Select
           ml="2"

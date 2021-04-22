@@ -1,11 +1,17 @@
 import { Button, ButtonGroup } from "@chakra-ui/button";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
+import Link from "next/link";
 import {
-  ActionButtonProps,
-  HeadingActionButtonProps,
+  ActionButtonProps
 } from "../../shared/interfaces/ActionButtonProps";
 import { colors } from "../../styles/customTheme";
+
+interface HeadingActionButtonProps{
+  title:string;
+}
+
+export const BASE_URL = "/user/apps";
 
 export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   title,
@@ -18,6 +24,7 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   };
 
   const preConfiguredApps = {
+    href: `${BASE_URL}/plugins`,
     backgroundColor: colors.aurora.Nord10,
     label: "Apps Pré-configurados",
     icon: <SettingsIcon m="1" />,
@@ -25,6 +32,7 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   };
 
   const newApps = {
+    href: `${BASE_URL}/newapp`,
     backgroundColor: colors.aurora.Nord14,
     label: "Nova Aplicação",
     icon: <AddIcon m="1" />,
@@ -34,10 +42,12 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   const RenderButton: React.FC<ActionButtonProps> = (
     props: ActionButtonProps
   ) => (
-    <Button {...props}>
-      {props.label}
-      {props.icon}
-    </Button>
+    <Link href={props.href}>
+      <Button {...props}>
+        {props.label}
+        {props.icon}
+      </Button>
+    </Link>
   );
 
   return (

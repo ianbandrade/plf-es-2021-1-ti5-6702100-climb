@@ -118,7 +118,7 @@ const ModalConfig = ({
   function handleConfirmDeploy() {
     const newApplication: CreateApplication = {
       name: appNameInput,
-      provider,
+      provider: provider.toUpperCase(),
       repositoryId: repository.repositoryId,
       repositoryRef: branchNameSelect,
       repositoryPath: pathInput,
