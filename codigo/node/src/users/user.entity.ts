@@ -9,6 +9,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { encryptionTransformer } from 'src/shared/transformers/encryption.transformer';
 import { Application } from 'src/applications/entities/application.entity';
+import { Instance } from 'src/plugins/entities/instance/instance.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -53,6 +54,9 @@ export class User extends BaseEntity {
 
   @ManyToOne(() => Application, (application) => application.user)
   applications: Application[];
+
+  @ManyToOne(() => Instance, (instance) => instance.user)
+  pluginsInstances: Instance[];
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

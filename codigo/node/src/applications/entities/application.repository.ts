@@ -2,12 +2,13 @@ import { EntityRepository, Repository } from 'typeorm';
 import { CreateApplicationDto } from '../dto/create-application.dto';
 import { Application } from './application.entity';
 import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v4 } from 'uuid';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { FindApplicationQueryDto } from '../dto/find-application-query.dto';
 import { User } from 'src/users/user.entity';
 import { Environment } from './environments/environments.entity';
+import { GetApplication } from '../dto/get-application.dto';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
@@ -29,6 +30,7 @@ export class ApplicationRepository extends Repository<Application> {
 
     const mapedEnvironments = environments.map(async ({ key, value }) => {
       const newEviroment = new Environment();
+      newEviroment.id = v4();
       newEviroment.key = key;
       newEviroment.value = value;
       return await newEviroment.save();

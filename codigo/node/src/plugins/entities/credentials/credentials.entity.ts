@@ -4,23 +4,22 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Application } from '../application.entity';
+import { Instance } from '../instance/instance.entity';
 
 @Entity()
-export class Environment extends BaseEntity {
+export class Credential extends BaseEntity {
   @Column({ primary: true, select: false })
   id: string;
-
-  @ManyToOne(() => Application, (app) => app.environments)
-  applicationId: string;
 
   @Column({ nullable: false })
   key: string;
 
   @Column({ nullable: false })
   value: string;
+
+  @ManyToOne(() => Instance, (instance) => instance.credentials)
+  instance: Instance;
 
   @CreateDateColumn({ select: false })
   createdAt?: Date;

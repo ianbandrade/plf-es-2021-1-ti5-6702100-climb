@@ -1,19 +1,13 @@
-import { IsArray, IsString, MaxLength } from 'class-validator';
-import { Environment } from '../entities/environments/environments.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { BaseEnvironment } from '../dto/environments/basic-environment.dto';
 
 export class UpdateApplicationDto {
-  @MaxLength(50, {
-    message: 'O nome da aplicação de ter no máx 50 caracteres',
-  })
-  @IsString()
   name?: string;
 
-  @IsString()
   repositoryRef?: string;
 
-  @IsString()
   repositoryPath?: string;
 
-  @IsArray()
-  environments?: Environment[];
+  @ApiProperty({ type: () => [BaseEnvironment] })
+  environments?: BaseEnvironment[];
 }

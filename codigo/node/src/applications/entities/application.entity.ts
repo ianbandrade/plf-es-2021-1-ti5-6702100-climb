@@ -16,28 +16,28 @@ import { Deploys } from './deploys/deploys.entity';
 
 @Entity()
 export class Application extends BaseEntity {
-  @Column({ nullable: false, primary: true })
+  @Column({ primary: true })
   id: string;
 
-  @Column({ nullable: false, type: 'varchar', length: 50 })
+  @Column({ nullable: false })
   name: string;
 
-  @Column({ nullable: false, type: 'varchar', length: 10 })
+  @Column({ nullable: false })
   provider: ProvidersEnum;
 
-  @Column({ nullable: false, type: 'int' })
+  @Column({ nullable: false })
   repositoryId: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false })
   repositoryRef: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false })
   repositoryPath: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false })
   repositoryURL: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false })
   webhookToken: string;
 
   @ManyToOne(() => User, (user) => user.applications)

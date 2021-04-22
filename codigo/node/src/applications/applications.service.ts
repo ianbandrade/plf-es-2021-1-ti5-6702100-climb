@@ -1,27 +1,26 @@
-import {
-  AmqpConnection,
-  RabbitHandler,
-  RabbitRPC,
-  RabbitSubscribe,
-} from '@golevelup/nestjs-rabbitmq';
+import { AmqpConnection, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
-import { ProvidersEnum } from 'src/shared/enum/providers.enum';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { v4 } from 'uuid';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { ResDeployDto } from './dto/deploys/res-deploy.dto';
+import { BaseEnvironment } from './dto/environments/basic-environment.dto';
 import { FindApplicationQueryDto } from './dto/find-application-query.dto';
+import { GetApplication } from './dto/get-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { Application } from './entities/application.entity';
 import { ApplicationRepository } from './entities/application.repository';
 import { Deploys } from './entities/deploys/deploys.entity';
 import { DeploysRepository } from './entities/deploys/deploys.repository';
+import { Environment } from './entities/environments/environments.entity';
 
 @Injectable()
 export class ApplicationsService {
@@ -50,14 +49,36 @@ export class ApplicationsService {
     }
   }
 
-  async findOne(id: string, user: User): Promise<Application> {
-    const application = await this.applicationRepository.findOne(id);
+  async findOne(appId: string, user: User): Promise<GetApplication> {
+    const application = await this.applicationRepository.findOne(appId);
     if (!application)
       throw new NotFoundException('Aplicação não foi encontrado');
     if (application.userId !== user.id)
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
 
-    return application;
+    const {
+      id,
+      name,
+      userId,
+      provider,
+      repositoryId,
+      repositoryURL,
+      repositoryPath,
+      repositoryRef,
+      environments,
+    } = application;
+
+    return {
+      id,
+      name,
+      userId,
+      provider,
+      repositoryId,
+      repositoryURL,
+      repositoryPath,
+      repositoryRef,
+      environments,
+    };
   }
 
   async update(
@@ -71,8 +92,27 @@ export class ApplicationsService {
     if (application.userId !== user.id)
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
 
-    await this.applicationRepository.update({ id }, updateApplicationDto);
-    return this.applicationRepository.findOne(id);
+    const {
+      name,
+      repositoryPath,
+      repositoryRef,
+      environments,
+    } = updateApplicationDto;
+
+    application.name = name;
+    application.repositoryPath = repositoryPath;
+    application.repositoryRef = repositoryRef;
+    application.environments = this.mapEnvironments(
+      environments,
+      application.id,
+    );
+
+    try {
+      await application.save();
+      return this.applicationRepository.findOne(id);
+    } catch (e) {
+      throw new InternalServerErrorException(e);
+    }
   }
 
   async remove(id: string, user: User): Promise<boolean> {
@@ -83,12 +123,17 @@ export class ApplicationsService {
     return deleteResult.affected > 0;
   }
 
-  async createDeploy(id: string, user: User) {
-    const application = this.findOne(id, user);
+  async createDeploy(appId: string, user: User) {
+    const application = await this.applicationRepository.findOne(appId);
+    if (!application)
+      throw new NotFoundException('Aplicação não foi encontrado');
+    if (application.userId !== user.id)
+      throw new ForbiddenException('Você não tem acesso à essa aplicação');
+
     const fechedUser = this.userService.findCompleteUserById(user.id);
 
     const payload = await this.deploysRepository.createDeploy(
-      await application,
+      application,
       await fechedUser,
     );
 
@@ -126,9 +171,33 @@ export class ApplicationsService {
     return deploy;
   }
 
-  async getDeploys(id: string, user: User): Promise<ReturList<Deploys>> {
-    const { deploys } = await this.findOne(id, user);
+  async getDeploys(appId: string, user: User): Promise<ReturList<Deploys>> {
+    const application = await this.applicationRepository.findOne(appId);
+    if (!application)
+      throw new NotFoundException('Aplicação não foi encontrado');
+    if (application.userId !== user.id)
+      throw new ForbiddenException('Você não tem acesso à essa aplicação');
+
+    const { deploys } = application;
 
     return { items: deploys, total: deploys.length };
+  }
+
+  mapEnvironments(baseEnvironments: BaseEnvironment[], applicationId: string) {
+    return baseEnvironments.map<Environment>(({ key, value }) => {
+      const env = new Environment();
+
+      env.id = v4();
+      env.key = key;
+      env.value = value;
+      env.applicationId = applicationId;
+
+      try {
+        env.save();
+        return env;
+      } catch (e) {
+        throw new InternalServerErrorException(e);
+      }
+    });
   }
 }
