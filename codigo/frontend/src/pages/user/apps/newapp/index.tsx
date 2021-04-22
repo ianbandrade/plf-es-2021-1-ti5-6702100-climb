@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
+import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 const data = {
   github: [
     {
@@ -118,11 +119,14 @@ const NewApp = () => {
   return !data.github && !data.gitlab ? (
     <NotLinkedGit />
   ) : (
-    <Flex justifyContent="center" alignItems="center" mt={"28"}>
-      <RepositoriesCard
-        gitOrganizations={data[gitProvider]}
-        onSelectGit={handleSelectGit}
-      />
+    <Flex flexDirection="column" padding="12" width="full">
+      <HeadingActionButton title="Nova Aplicação" />
+      <Flex justifyContent="center" alignItems="center" mt={"28"}>
+        <RepositoriesCard
+          gitOrganizations={data[gitProvider]}
+          onSelectGit={handleSelectGit}
+        />
+      </Flex>
     </Flex>
   );
 };

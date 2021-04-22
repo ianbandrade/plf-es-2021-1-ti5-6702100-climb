@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from "@chakra-ui/button";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
+import Link from "next/link";
 import {
   ActionButtonProps
 } from "../../shared/interfaces/ActionButtonProps";
@@ -41,10 +42,12 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   const RenderButton: React.FC<ActionButtonProps> = (
     props: ActionButtonProps
   ) => (
-    <Button as="a" {...props}>
-      {props.label}
-      {props.icon}
-    </Button>
+    <Link href={props.href}>
+      <Button {...props}>
+        {props.label}
+        {props.icon}
+      </Button>
+    </Link>
   );
 
   return (
