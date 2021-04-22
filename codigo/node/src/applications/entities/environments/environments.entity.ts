@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Application } from '../application.entity';
 
@@ -13,7 +12,9 @@ export class Environment extends BaseEntity {
   @Column({ primary: true, select: false })
   id: string;
 
-  @ManyToOne(() => Application, (app) => app.environments)
+  @ManyToOne(() => Application, (app) => app.environments, {
+    onDelete: 'CASCADE',
+  })
   applicationId: string;
 
   @Column({ nullable: false })

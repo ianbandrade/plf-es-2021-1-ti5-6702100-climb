@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PluginRepository } from './entities/plugin.repository';
 import { User } from 'src/users/user.entity';
 import { BasicCredentials } from './dto/credentials/basic-credentials.dto';
@@ -7,36 +11,42 @@ import { BasicInstance } from './dto/instances/basic-instance.dto';
 import { CreateInstancesDto } from './dto/instances/create-instances.dto';
 import { GetInstances } from './dto/instances/get-instance.dto';
 import { InstanceRepository } from './entities/instance/instance.repository';
+import { BasicPlugin } from './dto/basic-plugin.dto';
+import { AmqpConnection, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { Instance } from './entities/instance/instance.entity';
+import { ResInstanceDto } from './dto/instances/res-instance.dto';
+import { ReqInstanceDto } from './dto/instances/req-instance.dto';
+import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
+import { Credential } from './entities/credentials/credentials.entity';
+import { v4 } from 'uuid';
+import { CreatePuglinDto } from './dto/create-plugin.dto';
+import { Plugin } from './entities/plugin.entity';
 
 @Injectable()
 export class PluginsService {
   constructor(
     private instanceRepository: InstanceRepository,
     private pluginRepository: PluginRepository,
+    private amqpConnection: AmqpConnection,
   ) {}
 
-  findAll(): GetPuglinsDto {
+  async findAll(): Promise<GetPuglinsDto> {
+    const allPlugins = await this.pluginRepository.find();
     return {
-      plugins: [
-        {
-          id: '6e67872f-c459-4f18-2153-41f5ff17947b',
-          name: 'redis',
-          description: 'Lorem ipsum dolor sit amet',
-          image: 'http://climb-project.tk/static/images/plugins/redis.png',
-        },
-        {
-          id: '6e67872f-c459-4f18-2153-41f5ff17947b',
-          name: 'postgreSQL',
-          description: 'Lorem ipsum dolor sit amet',
-          image: 'http://climb-project.tk/static/images/plugins/postgresql.png',
-        },
-      ],
+      plugins: allPlugins.map<BasicPlugin>(
+        ({ id, name, description, image }) => ({
+          description,
+          id,
+          image,
+          name,
+        }),
+      ),
     };
   }
 
   async getInstaces(pluginId: string, user: User): Promise<GetInstances> {
     const instances = await this.instanceRepository.find({
-      pluginId,
+      plugin: { id: pluginId },
       userId: user.id,
     });
 
@@ -59,13 +69,17 @@ export class PluginsService {
     pluginId: string,
     createIntanceDto: CreateInstancesDto,
     user: User,
-  ): Promise<void> {
-    const plugin = this.pluginRepository.findOne(pluginId);
-    return await this.instanceRepository.createInstance(
-      await plugin,
+  ): Promise<Instance> {
+    const plugin = await this.pluginRepository.findOne(pluginId);
+    if (!plugin) throw new NotFoundException('Plugin não encontrado');
+
+    const instance = await this.instanceRepository.createInstance(
+      plugin,
       createIntanceDto,
       user,
     );
+    this.sendNewInstance(instance, plugin);
+    return instance;
   }
 
   async deleteInstance(instanceId: string, user: User) {
@@ -74,5 +88,71 @@ export class PluginsService {
       userId: user.id,
     });
     return deleteResult.affected > 0;
+  }
+
+  sendNewInstance(instance: Instance, plugin: Plugin) {
+    const payload: ReqInstanceDto = {
+      id: instance.id,
+      plugin: {
+        name: plugin.name,
+        dockerfile: plugin.dockerImage,
+      },
+    };
+    this.amqpConnection.publish('amq.direct', 'plugins.deploy.req', payload);
+  }
+
+  async createPlugiin(
+    bcreatePluginnDto: CreatePuglinDto,
+  ): Promise<BasicPlugin> {
+    const {
+      id,
+      name,
+      description,
+      image,
+    } = await this.pluginRepository.createPlugin(bcreatePluginnDto);
+    return { id, name, description, image };
+  }
+
+  @RabbitSubscribe({
+    exchange: 'amq.direct',
+    routingKey: 'plugins.deploy.res',
+    queue: 'plugins.deploy.res',
+  })
+  async deployResponse({ id, success, credentials }: ResInstanceDto) {
+    const instance = await this.instanceRepository.findOne(id);
+
+    instance.status = success
+      ? DeployStatusEnum.SUCCESS
+      : DeployStatusEnum.FAIL;
+
+    instance.credentials = this.mapCredentials(credentials, instance.id);
+
+    try {
+      instance.save();
+      return instance;
+    } catch (e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
+  private mapCredentials(
+    baseCredentials: BasicCredentials[],
+    instanceId: string,
+  ) {
+    return baseCredentials.map<Credential>(({ key, value }) => {
+      const credential = new Credential();
+
+      credential.id = v4();
+      credential.key = key;
+      credential.value = value;
+      credential.instanceId = instanceId;
+
+      try {
+        credential.save();
+        return credential;
+      } catch (e) {
+        throw new InternalServerErrorException(e);
+      }
+    });
   }
 }

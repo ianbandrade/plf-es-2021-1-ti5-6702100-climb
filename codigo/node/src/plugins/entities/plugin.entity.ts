@@ -13,8 +13,11 @@ export class Plugin extends BaseEntity {
   description: string;
 
   @Column({ nullable: false })
+  image: string;
+
+  @Column({ nullable: false })
   dockerImage: string;
 
-  @OneToMany(() => Instance, (instance) => instance.plugin, { lazy: true })
+  @OneToMany(() => Instance, (instance) => instance.plugin)
   instances: Instance[];
 }

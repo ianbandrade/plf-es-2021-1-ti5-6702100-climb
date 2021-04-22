@@ -12,7 +12,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   async signIn(
     credentialsDto: CredentialsDto,

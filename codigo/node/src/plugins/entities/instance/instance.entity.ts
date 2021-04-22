@@ -20,12 +20,12 @@ export class Instance extends BaseEntity {
   @Column({ nullable: false })
   name: string;
 
-  @ManyToOne(() => Plugin, (plugin) => plugin.instances)
-  @JoinColumn({ name: 'pluginId' })
+  @ManyToOne(() => Plugin, (plugin) => plugin.instances, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinTable()
   plugin: Plugin;
-
-  @Column({ nullable: false })
-  pluginId: string;
 
   @Column({ default: DeployStatusEnum.CREATING })
   status: DeployStatusEnum;
@@ -36,7 +36,9 @@ export class Instance extends BaseEntity {
   @JoinTable()
   credentials: Credential[];
 
-  @ManyToOne(() => User, (user) => user.pluginsInstances)
+  @ManyToOne(() => User, (user) => user.pluginsInstances, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 

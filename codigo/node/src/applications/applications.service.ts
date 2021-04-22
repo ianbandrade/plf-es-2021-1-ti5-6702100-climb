@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { PostgresError } from 'pg-error-enum';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
 import { User } from 'src/users/user.entity';
@@ -116,11 +117,17 @@ export class ApplicationsService {
   }
 
   async remove(id: string, user: User): Promise<boolean> {
-    const deleteResult = await this.applicationRepository.delete({
-      id,
-      userId: user.id,
-    });
-    return deleteResult.affected > 0;
+    const application = await this.applicationRepository.findOne(id);
+    if (!application) return false;
+
+    if (application.userId !== user.id) return false;
+
+    try {
+      const deleteResult = await this.applicationRepository.delete(id);
+      return deleteResult.affected > 0;
+    } catch (e) {
+      throw new InternalServerErrorException(e);
+    }
   }
 
   async createDeploy(appId: string, user: User) {
@@ -183,7 +190,10 @@ export class ApplicationsService {
     return { items: deploys, total: deploys.length };
   }
 
-  mapEnvironments(baseEnvironments: BaseEnvironment[], applicationId: string) {
+  private mapEnvironments(
+    baseEnvironments: BaseEnvironment[],
+    applicationId: string,
+  ) {
     return baseEnvironments.map<Environment>(({ key, value }) => {
       const env = new Environment();
 

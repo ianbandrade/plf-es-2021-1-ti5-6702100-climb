@@ -15,6 +15,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { GetPuglinsDto } from './dto/get-plugins.dto';
 import { GetInstances } from './dto/instances/get-instance.dto';
 import { CreateInstancesDto } from './dto/instances/create-instances.dto';
+import { Instance } from './entities/instance/instance.entity';
+import { Role } from 'src/auth/role.decorator';
+import { UserRole } from 'src/users/user-roles.enum';
+import { CreatePuglinDto } from './dto/create-plugin.dto';
 
 @ApiTags('Plugins')
 @Controller('plugins')
@@ -23,8 +27,8 @@ export class PluginsController {
   constructor(private readonly pluginsService: PluginsService) {}
 
   @Get()
-  findAll(): GetPuglinsDto {
-    return this.pluginsService.findAll();
+  async findAll(): Promise<GetPuglinsDto> {
+    return await this.pluginsService.findAll();
   }
 
   @Get(':pluginId/instances')
@@ -35,12 +39,18 @@ export class PluginsController {
     return await this.pluginsService.getInstaces(pluginId, user);
   }
 
+  @Post()
+  @Role(UserRole.ADMIN)
+  async createPuglin(@Body() body: CreatePuglinDto) {
+    return this, this.pluginsService.createPlugiin(body);
+  }
+
   @Post(':pluginId/instances')
   async createInstance(
     @Param('pluginId') pluginId: string,
     @Body() createIntanceDto: CreateInstancesDto,
     @GetUser() user: User,
-  ): Promise<void> {
+  ): Promise<Instance> {
     return await this.pluginsService.createInstance(
       pluginId,
       createIntanceDto,

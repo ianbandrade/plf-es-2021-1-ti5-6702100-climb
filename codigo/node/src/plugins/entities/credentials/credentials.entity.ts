@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
 } from 'typeorm';
 import { Instance } from '../instance/instance.entity';
@@ -18,8 +19,14 @@ export class Credential extends BaseEntity {
   @Column({ nullable: false })
   value: string;
 
-  @ManyToOne(() => Instance, (instance) => instance.credentials)
+  @ManyToOne(() => Instance, (instance) => instance.credentials, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'instanceId' })
   instance: Instance;
+
+  @Column({ nullable: false })
+  instanceId: string;
 
   @CreateDateColumn({ select: false })
   createdAt?: Date;

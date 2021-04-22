@@ -3,8 +3,6 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { WinstonModule } from 'nest-winston';
-import { winstonConfig } from './configuration/configs/winston.config';
 import * as cookieParser from 'cookie-parser';
 
 export async function bootstrap() {

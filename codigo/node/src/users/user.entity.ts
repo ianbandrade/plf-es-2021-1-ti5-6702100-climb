@@ -52,10 +52,14 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @ManyToOne(() => Application, (application) => application.user)
+  @ManyToOne(() => Application, (application) => application.user, {
+    onDelete: 'CASCADE',
+  })
   applications: Application[];
 
-  @ManyToOne(() => Instance, (instance) => instance.user)
+  @ManyToOne(() => Instance, (instance) => instance.user, {
+    onDelete: 'CASCADE',
+  })
   pluginsInstances: Instance[];
 
   async checkPassword(password: string): Promise<boolean> {

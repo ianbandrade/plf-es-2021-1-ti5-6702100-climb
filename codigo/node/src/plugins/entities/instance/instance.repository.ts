@@ -12,7 +12,7 @@ export class InstanceRepository extends Repository<Instance> {
     plugin: Plugin,
     { name }: CreateInstancesDto,
     user: User,
-  ): Promise<void> {
+  ): Promise<Instance> {
     const instance = new Instance();
 
     instance.id = v4();
@@ -22,6 +22,7 @@ export class InstanceRepository extends Repository<Instance> {
 
     try {
       instance.save();
+      return instance;
     } catch (e) {
       throw new InternalServerErrorException(e);
     }

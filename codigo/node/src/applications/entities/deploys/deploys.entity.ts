@@ -15,7 +15,9 @@ export class Deploys extends BaseEntity {
   @Column({ nullable: false, primary: true })
   id: string;
 
-  @ManyToOne(() => Application, (app) => app.deploys)
+  @ManyToOne(() => Application, (app) => app.deploys, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'applicationId' })
   application: Application;
 

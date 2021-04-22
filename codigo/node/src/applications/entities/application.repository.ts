@@ -8,7 +8,6 @@ import { ReturList } from 'src/shared/dto/return-list.dto';
 import { FindApplicationQueryDto } from '../dto/find-application-query.dto';
 import { User } from 'src/users/user.entity';
 import { Environment } from './environments/environments.entity';
-import { GetApplication } from '../dto/get-application.dto';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
