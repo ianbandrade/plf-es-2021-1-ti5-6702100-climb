@@ -1,26 +1,25 @@
+import Environment from "./environment";
 import { IconType } from "react-icons/lib";
 
 export module RepoItemProps {
+  export interface Items {
+    items: Application[];
+  }
 
-    export interface Environment {
-        key: string;
-        value: string;
-    }
+  export interface Application {
+    id: string;
+    name: string;
+    repository: string;
+    repositoryURL: string;
+    provider: string;
+    branch?: string;
+    repositoryPath: string;
+    environments: Environment[];
+    userId: string;
+    icon?: IconType;
+  }
 
-    export interface Application {
-        id: string;
-        name: string;
-        repository: string;
-        url: string;
-        provider: string;
-        branch: string;
-        path: string;
-        environments: Environment[];
-        icon?:IconType;
-    }
-
-    export interface RootObject {
-        applications: Application[];
-    }
-
+  export interface RootObject {
+    applications: Application[];
+  }
 }

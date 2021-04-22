@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   Modal,
   ModalOverlay,
@@ -86,6 +87,8 @@ const ModalConfig = ({
     path: false,
   });
 
+  const router = useRouter();
+
   function handleAddEnv() {
     const newEnv = {
       key: keyInput,
@@ -140,6 +143,7 @@ const ModalConfig = ({
           });
           onClose();
           clearAllFields();
+          router.push("/user/apps");
         })
         .catch((error) => {
           getMessages(error?.response.data).forEach((description, i) => {

@@ -121,7 +121,7 @@ const NewApp = () => {
   ) : (
     <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Nova Aplicação" />
-      <Flex justifyContent="center" alignItems="center" mt={"28"}>
+      <Flex justifyContent="center" alignItems="center">
         <RepositoriesCard
           gitOrganizations={data[gitProvider]}
           onSelectGit={handleSelectGit}
