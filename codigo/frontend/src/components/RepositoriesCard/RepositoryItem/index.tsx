@@ -15,6 +15,7 @@ import { Repository } from "../../../shared/interfaces/Repository";
 import { colors } from "../../../styles/customTheme";
 import { GoRepo } from "react-icons/go";
 import ModalConfig from "../ModalConfig";
+import { githubService } from "../../../shared/services/githubService";
 
 interface RepositoryItem {
   organizationName: string;
@@ -45,15 +46,24 @@ const RepositoryItem = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [repo, setRepo] = useState<Repository>(repository);
-  function handleClickAddRepo() {
+
+  async function handleClickAddRepo() {
     setRepo({
-      repositoryId: 6,
+      repositoryId: "6",
       name: repo.name,
       defaultBranch: "master",
       url: "masdmsadm",
       branchs: ["master", "test"],
     });
-
+    await githubService
+      .getRepository(organizationName, repository.name)
+      .then((res) => {
+        console.log(res);
+        setRepo(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     onOpen();
   }
 

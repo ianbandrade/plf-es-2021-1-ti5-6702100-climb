@@ -66,10 +66,7 @@ class GitlabService {
     ];
   }
 
-  async getRepository(
-    owner: string = "ArthurRAmaral",
-    name: string = "firstproject"
-  ): Promise<Repository> {
+  async getRepository(owner: string, name: string): Promise<Repository> {
     const { data } = await gitlabClient.post<GitlabRepositoryGraphQLResponse>(
       "",
       {

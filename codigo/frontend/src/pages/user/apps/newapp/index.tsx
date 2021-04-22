@@ -4,7 +4,8 @@ import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 import { GitProviders } from "../../../../shared/interfaces/GitProviders";
-
+import { githubService } from "../../../../shared/services/githubService";
+import { getMessages } from "../../../../shared/utils/toast-messages";
 const data = {
   github: [
     {
@@ -82,29 +83,21 @@ const NewApp = () => {
   const toast = useToast();
 
   useEffect(() => {
-    //fetchData()
+    fetchData();
   }, []);
-  /*
+
   async function fetchData() {
-    Git api...
-    await api
-      .get("/algum git url")
+    await githubService
+      .getRepositories()
       .then((res) => {
-        const { data } = res;
-        setProviders(data);
+        console.log(res);
+        setProviders({ github: res.organizations });
       })
-      .catch(error) {
-        getMessages(error?.response.data).forEach((description, i) => {
-          toast({
-            title: "Erro!",
-            description: `${description}`,
-            status: "error",
-            id: i,
-            position: "bottom-left",
-          });
-      };
+      .catch((error) => {
+        console.log(error);
+      });
   }
-  */
+
   function handleSelectGit(gitProvider: string) {
     gitProvider === "github"
       ? setGitProvider("github")

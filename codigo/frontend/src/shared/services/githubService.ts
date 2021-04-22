@@ -64,8 +64,8 @@ class GithubService {
   }
 
   async getRepository(
-    owner: string = "ArthurRAmaral",
-    name: string = "projetodetisiv-america-locomotiva",
+    owner: string,
+    name: string,
     branchs: string[] = [],
     cursor?: string
   ): Promise<Repository> {

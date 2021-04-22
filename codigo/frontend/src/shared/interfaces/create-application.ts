@@ -2,7 +2,7 @@ import Environment from "./environment";
 export interface CreateApplication {
   name: string;
   provider: string;
-  repositoryId: number;
+  repositoryId: string;
   repositoryRef: string;
   repositoryPath: string;
   repositoryURL: string;

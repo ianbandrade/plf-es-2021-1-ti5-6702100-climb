@@ -42,6 +42,7 @@ const RepositoriesCard = ({
   const [filterInput, setFilterInput] = useState("");
 
   const [gitOrganizationsName, setgitOrganizationsName] = useState("github");
+
   const [repositories, setRepositories] = useState(
     gitOrganizations === null ? null : gitOrganizations[0].repositories
   );
