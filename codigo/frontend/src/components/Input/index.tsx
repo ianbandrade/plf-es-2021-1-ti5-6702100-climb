@@ -4,18 +4,21 @@ import { ReactNode } from "react";
 interface InputProps {
   placeholder: string;
   icon?: ReactNode;
-  label: string;
+  label?: string;
   value?: string;
   onChangeInput: Function;
   style?: {
+    marginLeft?: string;
     inputTextColor?: string;
     labelColor?: string;
     inputBgColor?: string;
     marginBottom?: string;
+    marginRight?: string;
   };
   type: string;
   required?: boolean;
   validate?: boolean;
+  maxLength?: number;
 }
 
 const InputComponent = ({
@@ -28,6 +31,7 @@ const InputComponent = ({
   type,
   required,
   validate,
+  maxLength,
 }: InputProps) => {
   return (
     <>
@@ -37,11 +41,14 @@ const InputComponent = ({
       <InputGroup
         backgroundColor={style?.labelColor}
         height="40px"
+        ml={style?.marginLeft}
         mb={style?.marginBottom}
+        mr={style?.marginRight}
         rounded="md"
       >
         <InputLeftAddon children={icon} />
         <Input
+          maxLength={maxLength ? maxLength : undefined}
           isInvalid={validate}
           required={required}
           type={type}

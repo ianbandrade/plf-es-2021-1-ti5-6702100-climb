@@ -16,7 +16,7 @@ const UserHeader = () => {
     { url: `${BASE_URL}/monitor`, text: "Monitoramento" },
   ]);
 
-  const index = pages.findIndex((page) => page.url === router.pathname);
+  const index = pages.findIndex((page) => router.pathname.includes(page.url));
 
   useEffect(() => {
     const currentUser = getCurrentUser();
