@@ -1,4 +1,3 @@
-import { Heading } from "@chakra-ui/layout";
 import {
   Accordion,
   AccordionButton,
@@ -196,8 +195,8 @@ const AccordionInstance: React.FC<AccordionProps> = ({
       <Accordion width={750} mb={5} allowToggle>
         {instances?.length === 0 ? (
           <Flex justifyContent="center">
-            <Text size="2xl" fontWeight="bold">
-              Ainda não existem aplicações pré-configuradas!
+            <Text fontSize="xl" fontWeight="bold">
+              Ainda não existem plugins pré-configuradas!
             </Text>
           </Flex>
         ) : (
@@ -214,7 +213,9 @@ const AccordionInstance: React.FC<AccordionProps> = ({
                     }
                   >
                     <Box flex="1" textAlign="left" margin="0 auto">
-                      <Heading>{instance.name}</Heading>
+                      <Text fontSize="2xl" fontWeight="semibold">
+                        {instance.name}
+                      </Text>
                     </Box>
                     <Tag
                       mr={2}
