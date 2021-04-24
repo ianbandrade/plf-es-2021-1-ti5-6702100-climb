@@ -38,14 +38,14 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
       borderRadius={10}
       _hover={{ transition: "0.3s ease-out", boxShadow: "2xl" }}
     >
-      <Flex>
+      <Flex pb={2}>
         <Heading fontSize="3xl" m="auto 0" textAlign="center">
           {name}
         </Heading>
       </Flex>
 
-      <Image maxW={120} maxH={120} src={image} alt={`${name} icon`} />
-      <Box>
+      <Image p={2} maxW={120} maxH={120} src={image} alt={`${name} icon`} />
+      <Box p={2}>
         <Text>{description}</Text>
       </Box>
     </Flex>
