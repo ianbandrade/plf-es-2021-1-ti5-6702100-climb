@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/icons";
 import {
   Avatar,
+  Box,
   Button,
   Flex,
   Heading,
@@ -8,15 +9,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import apiClient from "../../shared/api/api-client";
 import { setCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
-import { authService } from "../../shared/services/authService";
-import { githubService } from "../../shared/services/githubService";
-import { gitlabService } from "../../shared/services/gitlabService";
 import { getMessages } from "../../shared/utils/toast-messages";
 import { colors } from "../../styles/customTheme";
 
@@ -66,6 +64,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
             toast({
               title: "Sucesso!",
               description,
+              position: "bottom-left",
               status: "success",
               id: i,
             })
@@ -76,6 +75,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
             toast({
               title: "Erro!",
               description,
+              position: "bottom-left",
               status: "error",
               id: i,
             })
@@ -128,7 +128,8 @@ const Profile = ({ user, setUser }: ProfileProps) => {
         disabled={!!integration.nick}
         key={integration.site}
         variant={!integration.nick ? "solid" : "ghost"}
-        marginRight={4}
+        mt={2}
+        mb={5}
       >
         <Icon
           as={integration.icon}
@@ -148,7 +149,8 @@ const Profile = ({ user, setUser }: ProfileProps) => {
         as="a"
         href={integration.href}
         variant={!integration.nick ? "solid" : "ghost"}
-        marginRight={4}
+        mt={1}
+        mb={6}
       >
         <Icon
           as={integration.icon}
@@ -162,21 +164,14 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   );
 
   return (
-    <Flex ml="150px" mt="30px">
-      <Flex>
-        <Avatar
-          width="100px"
-          height="100px"
-          mr="18px"
-          bgColor={color.avatarBg}
-        />
-      </Flex>
-      <Flex flexDirection="column">
-        <Heading>{user.name}</Heading>
-        <Flex mt="15px" justifyContent="space-between" width="250px">
-          {integrationButtons}
-        </Flex>
-      </Flex>
+    <Flex ml="150px" mt="30px" justifyContent="center">
+      <Box mr={5}>
+        <Avatar width={120} height={120} bgColor={color.avatarBg} />
+        <Heading mt={2} textAlign="center">
+          {user.name}
+        </Heading>
+      </Box>
+      <Flex flexDir="column">{integrationButtons}</Flex>
     </Flex>
   );
 };
