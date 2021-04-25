@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AccordionInstance from "../../../components/AccordionInstance";
 import Modal from "../../../components/Modal";
@@ -27,23 +27,19 @@ const Plugins = (): JSX.Element => {
     getPlugins();
   }, []);
 
-  function getPlugins() {
-    api
-      .get<PluginsResponse>("/plugins")
-      .then((res) => {
-        setPlugins(res.data.plugins);
-      })
-      .catch((error) => {});
+  async function getPlugins() {
+    await api.get<PluginsResponse>("/plugins").then((res) => {
+      setPlugins(res.data.plugins);
+    });
   }
 
-  function getPluginInstances(selectedId: string) {
-    api
+  async function getPluginInstances(selectedId: string) {
+    await api
       .get<InstancesResponse>(`/plugins/${selectedId}/instances`)
       .then((res) => {
         setInstances(res.data.instances);
         setFlag(true);
-      })
-      .catch();
+      });
   }
 
   const toggleCardSelect = (index: number): void => {
@@ -57,31 +53,6 @@ const Plugins = (): JSX.Element => {
     setId(selectedId);
     setTitle(selectedTitle);
   };
-
-  function renderCards() {
-    return plugins?.map(
-      (plugin, index): JSX.Element => {
-        return (
-          <Flex
-            justifyContent="center"
-            key={index}
-            onClick={(): void => {
-              toggleCardSelect(index);
-            }}
-            cursor="pointer"
-          >
-            <PreConfigCard
-              id={plugin.id}
-              key={index}
-              name={plugin.name}
-              description={plugin.description}
-              image={plugin.image}
-            />
-          </Flex>
-        );
-      }
-    );
-  }
 
   return (
     <Flex flexDirection="column" padding="12" width="full">
@@ -100,7 +71,34 @@ const Plugins = (): JSX.Element => {
         }
       />
       <Flex flexWrap="wrap" justifyContent="center">
-        {renderCards()}
+        {plugins.length !== 0 ? (
+          plugins?.map(
+            (plugin, index): JSX.Element => {
+              return (
+                <Flex
+                  justifyContent="center"
+                  key={index}
+                  onClick={(): void => {
+                    toggleCardSelect(index);
+                  }}
+                  cursor="pointer"
+                >
+                  <PreConfigCard
+                    id={plugin.id}
+                    key={index}
+                    name={plugin.name}
+                    description={plugin.description}
+                    image={plugin.image}
+                  />
+                </Flex>
+              );
+            }
+          )
+        ) : (
+          <Text mt={5} fontSize="3xl" fontWeight="bold">
+            Ainda não existem plugins pré-configuradas!
+          </Text>
+        )}
       </Flex>
     </Flex>
   );
