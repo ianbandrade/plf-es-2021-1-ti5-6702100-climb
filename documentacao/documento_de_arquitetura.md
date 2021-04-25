@@ -43,6 +43,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **04/03/2021** | Arthur Rocha    | Correção de requisitos                                                                                             | 1.2.3      |
 | **18/03/2021** | Gabriel Chaves  | Adição da imagem da Visão Geral da Solução                                                                         | 2.0.0      |
 | **18/03/2021** | Ian Bittencourt | Adição de novas história de usuários, bem como definições e aberviaturas                                           | 2.1.0      |
+| **25/04/2021** | Arthur Rocha    | Atualiza diagramas arquiteturais                                                                                   | 2.2.0      |
 
 ## SUMÁRIO
 
@@ -121,9 +122,8 @@ Os objetivos específicos são:
 | RF005  | Implantação da aplicação do usuário por meio de Webhook                | Essencial      |
 | RF006  | Lista de atividades com Rollback                                       | Essencial      |
 | RF007  | Diferenciar níveis de acesso de administrador e usuário                | Essencial      |
-| RF008  | Controle de recursos alocados                                          | Desejável      |
-| RF009  | Monitoramento (Prometheus + Grafana)                                   | Desejável      |
-| RF010  | Visualização de informações (Mobile)                                   | Desejável      |
+| RF009  | Visualização de informações (Mobile)                                   | Essencial      |
+| RF010  | Monitoramento (Prometheus + Grafana)                                   | Desejável      |
 | RF011  | Construção da imagem de container com o Buildpacks Pack                | Desejável      |
 | RF012  | Integração com GitLab                                                  | Opcional       |
 | RF013  | Disponibilizar aplicativos pré configurado por meio de template        | Opcional       |
