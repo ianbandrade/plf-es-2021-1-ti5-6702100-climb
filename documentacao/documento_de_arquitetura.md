@@ -43,6 +43,8 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **04/03/2021** | Arthur Rocha    | Correção de requisitos                                                                                             | 1.2.3      |
 | **18/03/2021** | Gabriel Chaves  | Adição da imagem da Visão Geral da Solução                                                                         | 2.0.0      |
 | **18/03/2021** | Ian Bittencourt | Adição de novas história de usuários, bem como definições e aberviaturas                                           | 2.1.0      |
+| **25/03/2021** | Gabriel Chaves  | Adição de uma breve explicação da Visão Geral da Solução                                                           | 2.1.1      |
+| **08/04/2021** | Gabriel Chaves  | Atualização da imagem da Visão Geral da Solução                                                                    | 2.1.2      |
 | **25/04/2021** | Arthur Rocha    | Atualiza diagramas arquiteturais                                                                                   | 2.2.0      |
 
 ## SUMÁRIO
@@ -186,6 +188,8 @@ Os objetivos específicos são:
 
 **Figura 1 - Visão Geral da Solução**
 
+O projeto terá dois tipos de front-end, web e móvel nativo, sendo que o móvel usará uma comunicação em tempo real. Eles se comunicarão com uma aplicação de back-end, na qual possui a função de servir os dados referentes aos usuários, realizar integrações com o GitHub e Gitlab, e encaminhar solicitações de orquestração das aplicações dos usuários para outro serviço de back-end. Este outro serviço tem como objetivo realizar o gerenciamento da orquestração das aplicações, utilizando para isso o Kubernetes em conjunto com o Traefik, que serão monitorados pela dupla Prometheus e Grafana.
+
 ## 3.1. Visão de Negócio (Funcionalidades)
 
 1. O sistema deve permitir a implantação de aplicações escolhidas pelos usuários;
@@ -194,19 +198,20 @@ Os objetivos específicos são:
 4. O sistema deve permitir um usuário vincular sua conta do GitHub ou GitLab;
 5. O sistema deve atualizar as aplicações implantadas com base nos Webhooks dos seus respectivos repositórios;
 6. O sistema deve permitir reverter um implantação;
-7. O sistema deve gerenciar o recurso de cada aplicação implantada;
-8. O sistema deve disponibilizar um painel com monitoramente de cada aplicação;
+7. O sistema deve monitorar e gerenciar o recurso de cada aplicação implantada;
+8. O sistema deve disponibilizar um painel para monitoramento de cada aplicação;
 
 ### Histórias de Usuário
 
-- Como usuário direto, eu quero poder implantar minhas aplicações clonadas diretamente do GitHub ou GitLab;
-- Como administrador, eu quero cadastrar usuários diretos;
+- Como usuário direto, eu quero implantar minhas aplicações clonadas diretamente do GitHub ou GitLab;
+- Como administrador, eu quero cadastrar usuários diretos e outros administradores;
+- Como administrador, eu quero deletar usuários diretos;
 - Como usuário direto, eu quero ver as minhas aplicações implantadas serem atualizadas a partir dos seus repositórios fonte;
-- Como usuário direto, eu poder personalizar, para cada aplicação, seus domĩnios;
-- Como usuário direto, eu quero poder configurar o ambiente em que minha aplicação esta rodando;
-- Como usuário indireto, eu quero poder acessar as aplicações implantadas pelos usuários diretos;
-- Como usuário direto, eu quero conseguir monitorar e gerenciar os recursos utilizados por minhas aplicações;
-- Como usuário direto, eu quero conseguir desfazer alguma implantação.
+- Como usuário direto, eu quero personalizar o domínio que dará acesso à minha aplicação implantada;
+- Como usuário direto, eu quero configurar o ambiente em que minha aplicação esta rodando;
+- Como usuário indireto, eu quero acessar as aplicações implantadas pelos usuários diretos;
+- Como usuário direto, eu quero monitorar os recursos utilizados por minhas aplicações;
+- Como usuário direto, eu quero desfazer alguma implantação.
 
 ## 3.2. Visão Lógica
 
@@ -230,18 +235,10 @@ _Apresente o diagrama de componentes da aplicação, indicando, os elementos da 
 
 _Apresente uma descrição detalhada dos artefatos que constituem o diagrama de implantação._
 
-Ex: conforme diagrama apresentado na Figura X, as entidades participantes da solução são:
+Ex: conforme diagrama apresentado na Figura 3, as entidades participantes da solução são:
 
 - **Componente 1** - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nunc magna, accumsan eget porta a, tincidunt sed mauris. Suspendisse orci nulla, sagittis a lorem laoreet, tincidunt imperdiet ipsum. Morbi malesuada pretium suscipit.
 - **Componente 2** - Praesent nec nisi hendrerit, ullamcorper tortor non, rutrum sem. In non lectus tortor. Nulla vel tincidunt eros.
-
-## 3.3. Modelo de dados (opcional)
-
-_Caso julgue necessário para explicar a arquitetura, apresente o diagrama de classes ou diagrama de Entidade/Relacionamentos ou tabelas do banco de dados. Este modelo pode ser essencial caso a arquitetura utilize uma solução de banco de dados distribuídos ou um banco NoSQL._
-
-![Diagrama de Entidade Relacionamento (ER) ](imagens/diagrama_de_entidade_relacionamento.png 'Diagrama de Entidade Relacionamento (ER) ')
-
-**Figura 4 – Diagrama de Entidade Relacionamento (ER) - exemplo. Fonte: o próprio autor.**
 
 Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
 
