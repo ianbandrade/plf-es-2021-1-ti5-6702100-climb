@@ -38,6 +38,12 @@ export class Application extends BaseEntity {
   repositoryURL: string;
 
   @Column({ nullable: false })
+  repositoryName: string;
+
+  @Column({ nullable: false })
+  repositoryOwner: string;
+
+  @Column({ nullable: false })
   webhookToken: string;
 
   @ManyToOne(() => User, (user) => user.applications, {
@@ -75,6 +81,8 @@ export class Application extends BaseEntity {
       'repositoryId',
       'repositoryPath',
       'repositoryURL',
+      'repositoryName',
+      'repositoryOwner',
       'userId',
     ];
   }

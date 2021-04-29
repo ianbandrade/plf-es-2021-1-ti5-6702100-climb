@@ -7,4 +7,6 @@ export interface CreateApplication {
   repositoryPath: string;
   repositoryURL: string;
   environments: Environment[];
+  repositoryOwner: string;
+  repositoryName: string;
 }
