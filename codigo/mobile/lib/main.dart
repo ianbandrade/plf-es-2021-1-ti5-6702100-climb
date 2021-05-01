@@ -13,6 +13,7 @@ class ClimbApp extends StatelessWidget {
       builder: (context, _) {
         final themeProvider = Provider.of<ThemeProvider>(context);
         return MaterialApp(
+          title: 'CLIMB',
           home: HomePage(),
           themeMode: themeProvider.themeMode,
           theme: Themes.lightTheme,
