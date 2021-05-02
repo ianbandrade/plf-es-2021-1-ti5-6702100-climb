@@ -196,7 +196,7 @@ const AccordionInstance: React.FC<AccordionProps> = ({
         {instances?.length === 0 ? (
           <Flex justifyContent="center">
             <Text fontSize="xl" fontWeight="bold">
-              Ainda não existem plugins pré-configuradas!
+              Ainda não existem aplicações pré-configuradas!
             </Text>
           </Flex>
         ) : (

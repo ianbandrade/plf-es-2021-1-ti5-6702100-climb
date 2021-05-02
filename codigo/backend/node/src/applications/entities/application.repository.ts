@@ -22,6 +22,8 @@ export class ApplicationRepository extends Repository<Application> {
       repositoryRef,
       repositoryPath: repopsitoryPath,
       repositoryURL,
+      repositoryName,
+      repositoryOwner,
       environments,
     } = createApplicationDto;
 
@@ -42,6 +44,8 @@ export class ApplicationRepository extends Repository<Application> {
     application.repositoryRef = `refs/heads/${repositoryRef}`;
     application.repositoryPath = repopsitoryPath;
     application.repositoryURL = repositoryURL;
+    application.repositoryOwner = repositoryOwner;
+    application.repositoryName = repositoryName;
     application.environments = await Promise.all(mapedEnvironments);
     application.webhookToken = await bcrypt.genSalt();
     application.user = user;

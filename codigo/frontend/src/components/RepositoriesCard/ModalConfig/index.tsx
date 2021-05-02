@@ -131,6 +131,8 @@ const ModalConfig = ({
       repositoryPath: pathInput,
       repositoryURL: repository.url,
       environments: envs,
+      repositoryName: repository.name,
+      repositoryOwner: organizationName,
     };
 
     if (validateFields(newApplication)) {
