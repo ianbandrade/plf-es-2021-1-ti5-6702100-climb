@@ -63,7 +63,7 @@ export const RepoItem = (props: RepoItemProps.Application) => {
             margin="auto 0"
             isTruncated
           >
-            {`${props.repositoryPath}`}
+            {`${props.repositoryOwner}/${props.repositoryName}`}
           </Text>
         </Flex>
       </Flex>

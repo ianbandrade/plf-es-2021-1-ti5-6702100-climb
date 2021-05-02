@@ -9,6 +9,8 @@ export class GetApplication {
   repositoryRef: string;
   repositoryPath: string;
   repositoryURL: string;
+  repositoryOwner: string;
+  repositoryName: string;
   userId: string;
   environments: BaseEnvironment[];
 }
