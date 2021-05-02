@@ -1,40 +1,44 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 class Input extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final bool isPassword;
+  final IconData icon;
 
-  Input({
-    this.label,
-    this.controller,
-    this.keyboardType = TextInputType.text,
-    this.isPassword = false,
-  });
+  Input(
+      {this.label,
+      this.controller,
+      this.keyboardType = TextInputType.text,
+      this.isPassword = false,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
-    final isIOS = Platform.isIOS ? true : false;
-
-    return isIOS
-        ? Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: CupertinoTextField(
-              obscureText: isPassword,
-              controller: controller,
-              keyboardType: keyboardType,
-              placeholder: label,
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-            ),
-          )
-        : TextField(
-            obscureText: isPassword,
-            controller: controller,
-            keyboardType: keyboardType,
-            decoration: InputDecoration(labelText: label),
-          );
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        style: TextStyle(color: Theme.of(context).primaryColor),
+        obscureText: isPassword,
+        controller: controller,
+        keyboardType: keyboardType,
+        cursorColor: Theme.of(context).accentColor,
+        decoration: InputDecoration(
+          filled: true,
+          hintText: label,
+          hintStyle: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
+          fillColor: Theme.of(context).accentColor,
+          prefixIcon: Icon(
+            icon,
+            color: Theme.of(context).primaryColor,
+          ),
+          border: OutlineInputBorder(),
+        ),
+      ),
+    );
   }
 }

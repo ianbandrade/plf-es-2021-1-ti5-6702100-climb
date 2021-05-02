@@ -6,12 +6,12 @@ class Themes {
       appBarTheme: AppBarTheme(backgroundColor: Colors.white),
       primaryColor: Colors.white,
       brightness: Brightness.light,
-      accentColor: Colors.grey.shade500,
+      accentColor: Colors.grey.shade700,
       scaffoldBackgroundColor: Colors.white,
       fontFamily: 'Alatsi',
       textTheme: TextTheme(
         headline4: TextStyle(
-          fontSize: 36,
+          fontSize: 40,
           letterSpacing: 3,
           color: Colors.grey.shade800,
         ),
@@ -26,14 +26,14 @@ class Themes {
   static darkTheme(context) {
     return ThemeData(
       appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade900),
-      primaryColor: Colors.red,
+      primaryColor: Colors.grey.shade700,
       brightness: Brightness.dark,
       accentColor: Colors.white,
       scaffoldBackgroundColor: Colors.grey.shade900,
       fontFamily: 'Alatsi',
       textTheme: TextTheme(
         headline4: TextStyle(
-          fontSize: 36,
+          fontSize: 40,
           letterSpacing: 3,
           color: Colors.white,
         ),

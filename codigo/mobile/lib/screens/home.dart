@@ -34,21 +34,20 @@ class HomePage extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 30),
-                        child: Column(
-                          children: [
-                            Input(
-                              label: 'Email',
-                              controller: _emailController,
-                            ),
-                            Input(
-                              isPassword: true,
-                              label: 'Senha',
-                              controller: passwordController,
-                            ),
-                          ],
-                        ),
+                      Column(
+                        children: [
+                          Input(
+                            label: 'Email',
+                            controller: _emailController,
+                            icon: Icons.email,
+                          ),
+                          Input(
+                            isPassword: true,
+                            label: 'Senha',
+                            icon: Icons.lock,
+                            controller: passwordController,
+                          ),
+                        ],
                       ),
                       Button(
                         label: 'Entrar',
