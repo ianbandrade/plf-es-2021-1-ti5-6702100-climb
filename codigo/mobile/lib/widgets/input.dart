@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-class AdaptativeTextfield extends StatelessWidget {
+class Input extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final bool isPassword;
 
-  AdaptativeTextfield({
+  Input({
     this.label,
     this.controller,
     this.keyboardType = TextInputType.text,

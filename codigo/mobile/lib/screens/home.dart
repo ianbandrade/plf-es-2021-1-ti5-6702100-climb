@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/widgets/button.dart';
-import 'package:mobile/widgets/text_field.dart';
+import 'package:mobile/widgets/input.dart';
 import 'package:mobile/widgets/logo.dart';
 import 'package:mobile/provider/theme_provider.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
@@ -38,11 +38,11 @@ class HomePage extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 30),
                         child: Column(
                           children: [
-                            AdaptativeTextfield(
+                            Input(
                               label: 'Email',
                               controller: _emailController,
                             ),
-                            AdaptativeTextfield(
+                            Input(
                               isPassword: true,
                               label: 'Senha',
                               controller: passwordController,
@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      AdaptativeButton(
+                      Button(
                         label: 'Entrar',
                         style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).accentColor,
