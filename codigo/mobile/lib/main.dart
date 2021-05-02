@@ -16,8 +16,8 @@ class ClimbApp extends StatelessWidget {
           title: 'CLIMB',
           home: HomePage(),
           themeMode: themeProvider.themeMode,
-          theme: Themes.lightTheme,
-          darkTheme: Themes.darkTheme,
+          theme: Themes.lightTheme(context),
+          darkTheme: Themes.darkTheme(context),
         );
       });
 }
