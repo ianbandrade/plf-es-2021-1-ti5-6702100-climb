@@ -7,6 +7,7 @@ class ChangeThemeSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Switch.adaptive(
+      activeColor: Colors.blueGrey,
       value: themeProvider.isDarkMode,
       onChanged: (value) {
         final provider = Provider.of<ThemeProvider>(context, listen: false);

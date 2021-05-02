@@ -1,17 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/widgets/button.dart';
 import 'package:mobile/widgets/input.dart';
 import 'package:mobile/widgets/logo.dart';
-import 'package:mobile/provider/theme_provider.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _emailController = TextEditingController();
-    final passwordController = TextEditingController();
+    final _passwordController = TextEditingController();
+
+    bool checkFieldsEmpty() {
+      return _emailController.text.isEmpty || _emailController.text.isEmpty;
+    }
+
+    _handleSignIn() {
+      final body = json.encode(
+        {
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        },
+      );
+
+      print(json.decode(body));
+
+      http
+          .post(
+            Uri.http(env['API_HOST'], '/auth/signin'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: body,
+          )
+          .then((value) => print(value.body))
+          .catchError((error) {
+        print(error);
+      });
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -42,7 +71,7 @@ class HomePage extends StatelessWidget {
                             isPassword: true,
                             label: 'Senha',
                             icon: Icons.lock,
-                            controller: passwordController,
+                            controller: _passwordController,
                           ),
                         ],
                       ),
@@ -52,7 +81,7 @@ class HomePage extends StatelessWidget {
                           primary: Theme.of(context).accentColor,
                         ),
                         textStyle: Theme.of(context).textTheme.headline6,
-                        onPressed: () {},
+                        onPressed: () => _handleSignIn(),
                       )
                     ],
                   ),

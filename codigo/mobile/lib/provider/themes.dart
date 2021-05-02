@@ -13,7 +13,7 @@ class Themes {
         headline4: TextStyle(
           fontSize: 40,
           letterSpacing: 3,
-          color: Colors.grey.shade800,
+          color: Colors.blueGrey[800],
         ),
         headline6: TextStyle(
           color: Colors.white,
