@@ -1,5 +1,5 @@
 import { useColorMode } from "@chakra-ui/color-mode";
-import { Flex } from "@chakra-ui/layout";
+import { Center, Divider, Flex } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -94,6 +94,17 @@ const ConfigApp = () => {
     });
   }
 
+  const submitEnvs = () => {
+    apiClient
+      .patch(`/applications/${id}`, {enviroments: Array.from(enviroments?.values() || [])})
+      .then()
+      .catch((error) => {
+        getMessages(error?.response.data).forEach((description, i) => {
+          showToast(description, i)
+        });
+      });
+  }
+
   return (
     <Skeleton isLoaded={!!enviroments} >
       <HeadingActionButton title={appName} />
@@ -101,9 +112,16 @@ const ConfigApp = () => {
         width="80%"
         height="100%"
         margin="0 auto;"
-        bgColor={bgColor}>
+        bgColor={bgColor}
+        boxShadow="2xl"
+        borderRadius="12px"
+        >
         {enviroments &&
-          <ApplicationConfig environments={Array.from(enviroments.values())} addNewEnv={addNewEnv} removeEnv={removeEnv} />
+          <ApplicationConfig
+             environments={Array.from(enviroments.values())}
+             addNewEnv={addNewEnv}
+             removeEnv={removeEnv}
+             submitEnv={submitEnvs}/>
         }
       </Flex>
     </Skeleton>
