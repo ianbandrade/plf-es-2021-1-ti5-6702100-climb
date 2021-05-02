@@ -39,7 +39,7 @@ export class ApplicationRepository extends Repository<Application> {
     application.name = name;
     application.provider = provider;
     application.repositoryId = repositoryId;
-    application.repositoryRef = repositoryRef;
+    application.repositoryRef = `refs/heads/${repositoryRef}`;
     application.repositoryPath = repopsitoryPath;
     application.repositoryURL = repositoryURL;
     application.environments = await Promise.all(mapedEnvironments);

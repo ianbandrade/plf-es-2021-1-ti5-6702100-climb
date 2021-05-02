@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import { ApplicationsController } from './applications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,6 +15,7 @@ import { rabbitMQConfig } from 'src/configuration/configs/rabbitmq.config';
     RabbitMQModule.forRootAsync(RabbitMQModule, rabbitMQConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
+    HttpModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService],

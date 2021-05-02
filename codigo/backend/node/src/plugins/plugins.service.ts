@@ -118,11 +118,7 @@ export class PluginsService {
         dockerfile: plugin.dockerImage,
       },
     };
-    this.amqpConnection.publish(
-      '',
-      plugins.req.routingKey,
-      payload,
-    );
+    this.amqpConnection.publish('', plugins.req.routingKey, payload);
   }
 
   async createPlugiin(

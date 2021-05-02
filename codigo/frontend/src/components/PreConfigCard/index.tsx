@@ -44,7 +44,13 @@ const PreConfigCard: React.FC<PreConfigCardProps> = ({
         </Heading>
       </Flex>
 
-      <Image p={2} maxW={120} maxH={120} src={image} alt={`${name} icon`} />
+      <Image
+        p={2}
+        maxW={120}
+        maxH={120}
+        src={`http://${process.env.NEXT_PUBLIC_API_HOST}/${image}`}
+        alt={`${name} icon`}
+      />
       <Box p={2}>
         <Text>{description}</Text>
       </Box>

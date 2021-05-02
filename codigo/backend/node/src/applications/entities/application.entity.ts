@@ -19,7 +19,7 @@ export class Application extends BaseEntity {
   @Column({ primary: true })
   id: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   name: string;
 
   @Column({ nullable: false })

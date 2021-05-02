@@ -1,11 +1,11 @@
 import { AmqpConnection, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import {
   ForbiddenException,
+  HttpService,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { PostgresError } from 'pg-error-enum';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
 import { User } from 'src/users/user.entity';
@@ -24,11 +24,21 @@ import { DeploysRepository } from './entities/deploys/deploys.repository';
 import { Environment } from './entities/environments/environments.entity';
 import * as dotenv from 'dotenv';
 import configuration from 'src/configuration/configuration';
+import { ReqDeployDto } from './dto/deploys/req-deploy.dto';
+import * as publicIp from 'public-ip';
+import { ProvidersEnum } from 'src/shared/enum/providers.enum';
+import {
+  GithubWebhookEventDto,
+  GitlabWebhookEventDto,
+} from 'src/shared/dto/webhook-push-event.dto';
 
 dotenv.config();
 
 const config = configuration();
-const { defaultExchange, apps } = config.amqp;
+const {
+  port,
+  amqp: { defaultExchange, apps },
+} = config;
 
 @Injectable()
 export class ApplicationsService {
@@ -37,6 +47,7 @@ export class ApplicationsService {
     private deploysRepository: DeploysRepository,
     private userService: UsersService,
     private amqpConnection: AmqpConnection,
+    private httpService: HttpService,
   ) {}
 
   async create(createApplicationDto: CreateApplicationDto, user: User) {
@@ -45,9 +56,9 @@ export class ApplicationsService {
       user,
     );
 
-    this.createDeploy(application.id, user)
+    this.createDeploy(application.id, user);
 
-    return application
+    return application;
   }
 
   async findAll(
@@ -150,16 +161,16 @@ export class ApplicationsService {
 
     const fechedUser = this.userService.findCompleteUserById(user.id);
 
-    const payload = await this.deploysRepository.createDeploy(
+    const deployReq = await this.deploysRepository.createDeploy(
       application,
       await fechedUser,
     );
 
-    this.amqpConnection.publish('', apps.req.routingKey, payload, {
-      contentType: 'application/json',
-    });
+    this.sendNewDeployMessage(deployReq);
 
-    return payload;
+    this.createApplicationHook(application);
+
+    return deployReq;
   }
 
   @RabbitSubscribe({
@@ -201,6 +212,27 @@ export class ApplicationsService {
     return { items: deploys, total: deploys.length };
   }
 
+  async reciveWebhook(
+    appId: string,
+    webhook: GithubWebhookEventDto | GitlabWebhookEventDto,
+  ) {
+    const application = await this.applicationRepository.findOne(appId);
+    if (!application) {
+      throw new NotFoundException('A aplicação não foi encontrada');
+    }
+
+    if (application.repositoryRef === webhook.ref) {
+      const user = this.userService.findUserById(application.userId);
+      const deployReq = this.deploysRepository.createDeploy(
+        application,
+        await user,
+      );
+      this.sendNewDeployMessage(await deployReq);
+      return true;
+    }
+    return false;
+  }
+
   private mapEnvironments(
     baseEnvironments: BaseEnvironment[],
     applicationId: string,
@@ -220,5 +252,86 @@ export class ApplicationsService {
         throw new InternalServerErrorException(e);
       }
     });
+  }
+
+  private sendNewDeployMessage(payload: ReqDeployDto) {
+    this.amqpConnection.publish('', apps.req.routingKey, payload, {
+      contentType: 'application/json',
+    });
+  }
+
+  private createApplicationHook(application: Application) {
+    switch (application.provider) {
+      case ProvidersEnum.GITHUB:
+        return this.createGithubApplicationHook(application);
+      case ProvidersEnum.GITLAB:
+        return this.createGitlabApplicationHook(application);
+    }
+  }
+
+  async createGithubApplicationHook(application: Application) {
+    const user = await this.userService.findCompleteUserById(
+      application.userId,
+    );
+    const urlSplited = application.repositoryURL.split('/');
+    const owner = urlSplited[3];
+    const repo = urlSplited[4];
+
+    const createWebhookUrl = `https://api.github.com/repos/${owner}/${repo}/hooks`;
+
+    const host = await publicIp.v4();
+
+    const createWebhookBody = {
+      config: {
+        url: `${host}:${port}/${application.id}/hook`,
+        content_type: 'json',
+        secret: application.webhookToken,
+      },
+    };
+
+    const createWebhookConfig = {
+      headers: {
+        Authorization: 'Bearer ' + user.gitHubToken,
+      },
+    };
+    try {
+      return await this.httpService
+        .post(createWebhookUrl, createWebhookBody, createWebhookConfig)
+        .toPromise();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  private async createGitlabApplicationHook(application: Application) {
+    const user = await this.userService.findCompleteUserById(
+      application.userId,
+    );
+
+    const urlSplited = application.repositoryURL.split('/');
+    const owner = urlSplited[3];
+    const repo = urlSplited[4];
+
+    const createWebhookUrl = `https://gitlab.com/api/v4/projects/${owner}%2F${repo}/hooks`;
+
+    const host = await publicIp.v4();
+    debugger;
+
+    const createWebhookBody = {
+      url: `${host}:${port}/applications/${application.id}/hook`,
+    };
+
+    const createWebhookConfig = {
+      headers: {
+        Authorization: 'Bearer ' + user.gitLabToken,
+      },
+    };
+    try {
+      return await this.httpService
+        .post(createWebhookUrl, createWebhookBody, createWebhookConfig)
+        .toPromise();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

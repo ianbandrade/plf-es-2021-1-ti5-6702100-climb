@@ -22,11 +22,11 @@ import { UpdateApplicationDto } from './dto/update-application.dto';
 
 @ApiTags('Applications')
 @Controller('applications')
-@UseGuards(AuthGuard())
-@ApiBearerAuth()
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Post()
   create(
     @GetUser() user: User,
@@ -35,6 +35,8 @@ export class ApplicationsController {
     return this.applicationsService.create(createApplicationDto, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get()
   async findAll(
     @GetUser() user: User,
@@ -43,11 +45,15 @@ export class ApplicationsController {
     return await this.applicationsService.findAll(query, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@GetUser() user: User, @Param('id') id: string) {
     return this.applicationsService.findOne(id, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Patch(':id')
   update(
     @GetUser() user: User,
@@ -57,23 +63,36 @@ export class ApplicationsController {
     return this.applicationsService.update(id, updateApplicationDto, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@GetUser() user: User, @Param('id') id: string) {
     return this.applicationsService.remove(id, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get(':appId/builds')
   getDeploys(@GetUser() user: User, @Param('appId') appId: string) {
     return this.applicationsService.getDeploys(appId, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get('builds/:deployId')
   getDeploy(@GetUser() user: User, @Param('deployId') deployId: string) {
     return this.applicationsService.getOneDeploy(deployId, user);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Post(':appId/builds')
   createDeploy(@GetUser() user: User, @Param('appId') appId: string) {
     return this.applicationsService.createDeploy(appId, user);
+  }
+
+  @Post(':appId/hook')
+  reciveWebhook(@Param('appId') appId: string, @Body() body: any) {
+    return this.applicationsService.reciveWebhook(appId, body);
   }
 }
