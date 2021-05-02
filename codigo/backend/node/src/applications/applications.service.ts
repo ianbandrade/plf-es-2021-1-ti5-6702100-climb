@@ -45,9 +45,9 @@ export class ApplicationsService {
       user,
     );
 
-    this.createDeploy(application.id, user)
+    this.createDeploy(application.id, user);
 
-    return application
+    return application;
   }
 
   async findAll(
@@ -75,6 +75,8 @@ export class ApplicationsService {
       provider,
       repositoryId,
       repositoryURL,
+      repositoryName,
+      repositoryOwner,
       repositoryPath,
       repositoryRef,
       environments,
@@ -87,6 +89,8 @@ export class ApplicationsService {
       provider,
       repositoryId,
       repositoryURL,
+      repositoryName,
+      repositoryOwner,
       repositoryPath,
       repositoryRef,
       environments,
