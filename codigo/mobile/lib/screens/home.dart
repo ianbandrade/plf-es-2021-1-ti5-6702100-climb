@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
 
     final _emailController = TextEditingController();
     final passwordController = TextEditingController();
-
+    print(Theme.of(context).textTheme.headline6);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -52,6 +52,10 @@ class HomePage extends StatelessWidget {
                       ),
                       AdaptativeButton(
                         label: 'Entrar',
+                        style: ElevatedButton.styleFrom(
+                          primary: Theme.of(context).accentColor,
+                        ),
+                        textStyle: Theme.of(context).textTheme.headline6,
                         onPressed: () {},
                       )
                     ],

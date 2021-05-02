@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 class AdaptativeButton extends StatelessWidget {
   final String label;
   final Function onPressed;
-
-  AdaptativeButton({this.label, this.onPressed});
+  final ButtonStyle style;
+  final TextStyle textStyle;
+  AdaptativeButton({this.label, this.onPressed, this.style, this.textStyle});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        textStyle: TextStyle(fontSize: 18, fontFamily: 'Alatsi'),
+      style: style,
+      child: Text(
+        label,
+        style: textStyle,
       ),
-      child: Text(label),
       onPressed: onPressed,
     );
   }

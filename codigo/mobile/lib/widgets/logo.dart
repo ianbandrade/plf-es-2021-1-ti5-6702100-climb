@@ -20,10 +20,7 @@ class Logo extends StatelessWidget {
         SvgPicture.asset(assetName),
         Text(
           'CLIMB',
-          style: TextStyle(
-            fontSize: 32,
-            letterSpacing: 3,
-          ),
+          style: Theme.of(context).textTheme.headline4,
         )
       ],
     );
