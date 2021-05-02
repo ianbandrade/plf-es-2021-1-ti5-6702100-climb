@@ -4,6 +4,7 @@ import Icon from "@chakra-ui/icon";
 import { Box, Flex, Spacer, Text } from "@chakra-ui/layout";
 import { colors } from "../../styles/customTheme";
 import { RepoItemProps } from "../../shared/interfaces/RepoItemProps";
+import Link from "next/link";
 
 export const RepoItem = (props: RepoItemProps.Application) => {
   const { colorMode } = useColorMode();
@@ -41,15 +42,16 @@ export const RepoItem = (props: RepoItemProps.Application) => {
           </Box>
           <Spacer />
           <Box>
+            <Link href={`/user/apps/${props?.id}`}>
             <Button
               as="a"
-              href={props?.repositoryURL}
               _hover={{ cursor: "pointer" }}
               background={colors.aurora.Nord14}
               color={colors.light.Nord6}
             >
               Acessar
             </Button>
+            </Link>
           </Box>
         </Flex>
         <Flex>
