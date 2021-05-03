@@ -42,7 +42,7 @@ export const RepoItem = (props: RepoItemProps.Application) => {
           </Box>
           <Spacer />
           <Box>
-            <Link href={`/user/apps/${props?.id}`}>
+            <Link href={`/user/apps/${props?.name}`}>
             <Button
               as="a"
               _hover={{ cursor: "pointer" }}
