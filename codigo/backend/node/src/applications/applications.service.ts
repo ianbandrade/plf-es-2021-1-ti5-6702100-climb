@@ -131,13 +131,21 @@ export class ApplicationsService {
       environments,
     } = updateApplicationDto;
 
-    application.name = name;
-    application.repositoryPath = repositoryPath;
-    application.repositoryRef = repositoryRef;
-    application.environments = this.mapEnvironments(
-      environments,
-      application.id,
-    );
+    if (name) {
+      application.name = name;
+    }
+    if (repositoryPath) {
+      application.repositoryPath = repositoryPath;
+    }
+    if (repositoryRef) {
+      application.repositoryRef = repositoryRef;
+    }
+    if (environments) {
+      application.environments = this.mapEnvironments(
+        environments,
+        application.id,
+      );
+    }
 
     try {
       await application.save();
