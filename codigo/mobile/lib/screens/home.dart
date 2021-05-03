@@ -43,9 +43,10 @@ class HomePage extends StatelessWidget {
           print(response.body);
           if (token != null) {
             await storage.write(key: 'token', value: token);
-            ApiClient()
-                .get(Uri.http(env['API_HOST'], '/auth/me'))
-                .then((res) => print(res.body));
+            ApiClient().get(Uri.http(env['API_HOST'], '/auth/me')).then((res) {
+              Navigator.of(context)
+                  .pushNamed('/user', arguments: json.decode(res.body));
+            });
           }
         } else {
           final messages = json.decode(response.body)['message'];
