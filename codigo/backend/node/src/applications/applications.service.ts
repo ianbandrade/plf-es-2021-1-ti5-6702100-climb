@@ -72,9 +72,7 @@ export class ApplicationsService {
   }
 
   async findOnebyName(name: string, user: User) {
-    const application = await this.applicationRepository.findOne({
-      name,
-    });
+    const application = (await this.applicationRepository.find({ name }))[0];
     if (!application)
       throw new NotFoundException('Aplicação não foi encontrado');
     if (application.userId !== user.id)
@@ -125,15 +123,11 @@ export class ApplicationsService {
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
 
     const {
-      name,
       repositoryPath,
       repositoryRef,
       environments,
     } = updateApplicationDto;
 
-    if (name) {
-      application.name = name;
-    }
     if (repositoryPath) {
       application.repositoryPath = repositoryPath;
     }
