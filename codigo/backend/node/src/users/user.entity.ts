@@ -35,6 +35,9 @@ export class User extends BaseEntity {
   salt: string;
 
   @Column({ nullable: true })
+  image?: string;
+
+  @Column({ nullable: true })
   gitHubAccount?: string;
 
   @Column({ nullable: true })
@@ -72,6 +75,7 @@ export class User extends BaseEntity {
       'id',
       'name',
       'email',
+      'image',
       'role',
       'status',
       'gitHubAccount',
