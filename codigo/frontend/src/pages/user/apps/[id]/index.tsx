@@ -1,5 +1,5 @@
 import { useColorMode } from "@chakra-ui/color-mode";
-import { Center, Divider, Flex } from "@chakra-ui/layout";
+import { Flex } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ const ConfigApp = () => {
   const router = useRouter()
   const { id } = router.query;
   const [enviroments, setEnviroments] = useState<Map<string, Environment> | undefined>();
-  const [appName, setAppName] = useState<string>("");
+  const [appData, setAppData] = useState({name: "", id: ""});
   const toast = useToast();
   const { colorMode } = useColorMode();
   const { bgColor } = colorMode === LIGHT ? { bgColor: colors.light.Nord4 } : { bgColor: colors.dark.Nord1, }
@@ -40,13 +40,13 @@ const ConfigApp = () => {
   const fetchData = () => {
     if (id) {
       apiClient
-        .get<ApplicationResponse>(`/applications/${id}`)
+        .get<ApplicationResponse>(`/applications/name/${id}`)
         .then((res) => {
           const { data } = res;
           const envMap = new Map<string, Environment>()
           data.environments.forEach(env => envMap.set(env.key, env))
           setEnviroments(envMap);
-          setAppName(data.name)
+          setAppData(data)
         })
         .catch((error) => {
           getMessages(error?.response.data).forEach((description, i) => {
@@ -96,7 +96,7 @@ const ConfigApp = () => {
 
   const submitEnvs = () => {
     apiClient
-      .patch(`/applications/${id}`, {enviroments: Array.from(enviroments?.values() || [])})
+      .patch(`/applications/${appData.id}`, {enviroments: Array.from(enviroments?.values() || [])})
       .then()
       .catch((error) => {
         getMessages(error?.response.data).forEach((description, i) => {
@@ -107,7 +107,7 @@ const ConfigApp = () => {
 
   return (
     <Skeleton isLoaded={!!enviroments} >
-      <HeadingActionButton title={appName} />
+      <HeadingActionButton title={appData.name} />
       <Flex flexDirection="row"
         width="80%"
         height="100%"
