@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/shared/api.dart';
 import 'package:mobile/widgets/button.dart';
 import 'package:mobile/widgets/input.dart';
 import 'package:mobile/widgets/logo.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -18,28 +20,51 @@ class HomePage extends StatelessWidget {
       return _emailController.text.isEmpty || _emailController.text.isEmpty;
     }
 
-    _handleSignIn() {
+    final storage = new FlutterSecureStorage();
+
+    _handleSignIn() async {
       final body = json.encode(
         {
           'email': _emailController.text,
           'password': _passwordController.text,
         },
       );
+      try {
+        final response = await http.post(
+          Uri.http(env['API_HOST'], '/auth/signin'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: body,
+        );
+        print(response.statusCode);
+        if (response.statusCode == 201) {
+          final token = json.decode(response.body)['token'];
+          print(response.body);
+          if (token != null) {
+            await storage.write(key: 'token', value: token);
+            ApiClient()
+                .get(Uri.http(env['API_HOST'], '/auth/me'))
+                .then((res) => print(res.body));
+          }
+        } else {
+          final messages = json.decode(response.body)['message'];
 
-      print(json.decode(body));
-
-      http
-          .post(
-            Uri.http(env['API_HOST'], '/auth/signin'),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: body,
-          )
-          .then((value) => print(value.body))
-          .catchError((error) {
-        print(error);
-      });
+          showDialog(
+              context: context,
+              builder: (BuildContext ctx) {
+                return AlertDialog(
+                  title: Text(
+                    'Erro ao realizar login',
+                    style: TextStyle(color: Theme.of(ctx).accentColor),
+                  ),
+                  content: Text(messages[0]),
+                );
+              });
+        }
+      } catch (error) {
+        print('error aqui');
+      }
     }
 
     return Scaffold(
