@@ -61,13 +61,29 @@ export class ApplicationsService {
     }
   }
 
-  async findOne(appId: string, user: User): Promise<GetApplication> {
+  async findOnebyId(appId: string, user: User): Promise<GetApplication> {
     const application = await this.applicationRepository.findOne(appId);
     if (!application)
       throw new NotFoundException('Aplicação não foi encontrado');
     if (application.userId !== user.id)
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
 
+    return this.getPubicApplicationFields(application);
+  }
+
+  async findOnebyName(name: string, user: User) {
+    const application = await this.applicationRepository.findOne({
+      name,
+    });
+    if (!application)
+      throw new NotFoundException('Aplicação não foi encontrado');
+    if (application.userId !== user.id)
+      throw new ForbiddenException('Você não tem acesso à essa aplicação');
+
+    return this.getPubicApplicationFields(application);
+  }
+
+  private getPubicApplicationFields(application: Application) {
     const {
       id,
       name,
@@ -188,7 +204,7 @@ export class ApplicationsService {
 
     if (!deploy) throw new NotFoundException('Deploy não encontrado');
 
-    await this.findOne(deploy.applicationId, user);
+    await this.findOnebyId(deploy.applicationId, user);
 
     return deploy;
   }
