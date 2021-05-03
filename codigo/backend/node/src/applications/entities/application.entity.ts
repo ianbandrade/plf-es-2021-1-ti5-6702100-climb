@@ -19,7 +19,7 @@ export class Application extends BaseEntity {
   @Column({ primary: true })
   id: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   name: string;
 
   @Column({ nullable: false })
@@ -36,6 +36,12 @@ export class Application extends BaseEntity {
 
   @Column({ nullable: false })
   repositoryURL: string;
+
+  @Column({ nullable: false })
+  repositoryName: string;
+
+  @Column({ nullable: false })
+  repositoryOwner: string;
 
   @Column({ nullable: false })
   webhookToken: string;
@@ -75,6 +81,8 @@ export class Application extends BaseEntity {
       'repositoryId',
       'repositoryPath',
       'repositoryURL',
+      'repositoryName',
+      'repositoryOwner',
       'userId',
     ];
   }

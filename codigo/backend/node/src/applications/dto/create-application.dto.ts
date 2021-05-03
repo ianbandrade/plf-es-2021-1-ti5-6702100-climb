@@ -15,6 +15,10 @@ export class CreateApplicationDto {
 
   repositoryURL: string;
 
+  repositoryOwner: string;
+
+  repositoryName: string;
+
   @ApiProperty({ type: () => [BaseEnvironment] })
   environments: BaseEnvironment[];
 }

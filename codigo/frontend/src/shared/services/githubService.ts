@@ -53,7 +53,6 @@ class GithubService {
     if (!hasNextPage) {
       return [...repositories, ...pageRepositories];
     }
-
     return [
       ...pageRepositories,
       ...(await this.fetchRepositories(repositories, endCursor)),

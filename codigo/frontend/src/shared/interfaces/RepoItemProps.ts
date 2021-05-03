@@ -11,6 +11,8 @@ export module RepoItemProps {
     name: string;
     repository: string;
     repositoryURL: string;
+    repositoryName: string;
+    repositoryOwner: string;
     provider: string;
     branch?: string;
     repositoryPath: string;
