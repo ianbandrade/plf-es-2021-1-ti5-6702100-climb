@@ -24,11 +24,16 @@ export interface ApplicationResponse {
   environments: Environment[];
 }
 
+interface ConfigAppState {
+  name: string;
+  id: string;
+}
+
 const ConfigApp = () => {
   const router = useRouter()
   const { id } = router.query;
   const [enviroments, setEnviroments] = useState<Map<string, Environment> | undefined>();
-  const [appData, setAppData] = useState({name: "", id: ""});
+  const [appData, setAppData] = useState<ConfigAppState>();
   const toast = useToast();
   const { colorMode } = useColorMode();
   const { bgColor } = colorMode === LIGHT ? { bgColor: colors.light.Nord4 } : { bgColor: colors.dark.Nord1, }
@@ -96,7 +101,7 @@ const ConfigApp = () => {
 
   const submitEnvs = () => {
     apiClient
-      .patch(`/applications/${appData.id}`, {enviroments: Array.from(enviroments?.values() || [])})
+      .patch(`/applications/${appData?.id}`, { enviroments: Array.from(enviroments?.values() || []) })
       .then()
       .catch((error) => {
         getMessages(error?.response.data).forEach((description, i) => {
@@ -107,7 +112,7 @@ const ConfigApp = () => {
 
   return (
     <Skeleton isLoaded={!!enviroments} >
-      <HeadingActionButton title={appData.name} />
+      {appData && <HeadingActionButton title={appData.name} />}
       <Flex flexDirection="row"
         width="80%"
         height="100%"
@@ -115,13 +120,13 @@ const ConfigApp = () => {
         bgColor={bgColor}
         boxShadow="2xl"
         borderRadius="12px"
-        >
+      >
         {enviroments &&
           <ApplicationConfig
-             environments={Array.from(enviroments.values())}
-             addNewEnv={addNewEnv}
-             removeEnv={removeEnv}
-             submitEnv={submitEnvs}/>
+            environments={Array.from(enviroments.values())}
+            addNewEnv={addNewEnv}
+            removeEnv={removeEnv}
+            submitEnv={submitEnvs} />
         }
       </Flex>
     </Skeleton>
