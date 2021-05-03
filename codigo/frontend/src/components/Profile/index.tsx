@@ -1,7 +1,6 @@
 import { Icon } from "@chakra-ui/icons";
 import {
   Avatar,
-  Box,
   Button,
   Flex,
   Heading,
@@ -9,15 +8,23 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import apiClient from "../../shared/api/api-client";
-import { setCurrentUser } from "../../shared/auth/localStorageManager";
+import {
+  AVATAR_KEY,
+  setCurrentUser,
+  setUserAvatarUrl,
+} from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
+import { authService } from "../../shared/services/authService";
+import { githubService } from "../../shared/services/githubService";
 import { getMessages } from "../../shared/utils/toast-messages";
+import { Context, UserContext } from "../../store/UserProvider";
 import { colors } from "../../styles/customTheme";
 
+const BASE_URL = "/user/profile";
 const LIGHT = "light";
 const GITHUB_OAUTH = "https://github.com/login/oauth/authorize?";
 const GITLAB_OAUTH = "https://gitlab.com/oauth/authorize?";
@@ -48,17 +55,21 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   const toast = useToast();
   const router = useRouter();
   const { code, state } = router.query;
+  const { globalUserContext, setGlobalUserContext } = useContext(
+    UserContext
+  ) as Context;
 
-  useEffect(() => {
+  const toggleIntegrationButton = async (): Promise<void> => {
     if (code) {
       const body = { code, redirectUrl };
 
-      apiClient
+      await apiClient
         .post(`/version-control/${state}`, body)
-        .then(async (res) => {
-          const me = user;
-          setCurrentUser(me);
-          setUser(me);
+        .then((res) => {
+          authService.me().then((me) => {
+            setUser(me);
+            setCurrentUser(me);
+          });
 
           getMessages(res.data).forEach((description, i) =>
             toast({
@@ -80,9 +91,34 @@ const Profile = ({ user, setUser }: ProfileProps) => {
               id: i,
             })
           );
+        })
+        .finally(() => {
+          router.replace(BASE_URL);
         });
     }
+  };
+
+  useEffect(() => {
+    toggleIntegrationButton();
   }, [code]);
+
+  const verifyAndUpdateAvatar = (): void => {
+    if (user.gitHubAccount) {
+      githubService.getUserAvatar().then((avatarUrl) => {
+        setGlobalUserContext({ avatarUrl });
+        setUserAvatarUrl(avatarUrl);
+      });
+    }
+
+    if (globalUserContext.avatarUrl === undefined) {
+      let avatarUrl = sessionStorage.getItem(AVATAR_KEY);
+      setGlobalUserContext({ avatarUrl });
+    }
+  };
+
+  useEffect(() => {
+    verifyAndUpdateAvatar();
+  }, [user]);
 
   const { colorMode } = useColorMode();
 
@@ -164,16 +200,30 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   );
 
   return (
-    <Flex ml="150px" mt="30px" justifyContent="center">
-      <Box mr={5}>
-        <Avatar width={120} height={120} bgColor={color.avatarBg} />
+    <Flex ml={50} mt={30} justifyContent="center">
+      <Flex mr={5} flexDir="column">
+        <Avatar
+          margin="0 auto"
+          width={120}
+          height={120}
+          bgColor={color.avatarBg}
+          src={
+            globalUserContext.avatarUrl === null
+              ? ""
+              : globalUserContext.avatarUrl
+          }
+        />
         <Heading mt={2} textAlign="center">
-          {user.name}
+          {user.name?.length > 10 ? splitAt(`${user.name}`, 10) : user.name}
         </Heading>
-      </Box>
+      </Flex>
       <Flex flexDir="column">{integrationButtons}</Flex>
     </Flex>
   );
 };
 
 export default Profile;
+
+const splitAt = (value: string, index: number): string => {
+  return value.split(new RegExp(`(?<=^.{${index}})`))[0] + "...";
+};

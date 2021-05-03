@@ -2,13 +2,11 @@ import { Button, ButtonGroup } from "@chakra-ui/button";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
 import Link from "next/link";
-import {
-  ActionButtonProps
-} from "../../shared/interfaces/ActionButtonProps";
+import { ActionButtonProps } from "../../shared/interfaces/ActionButtonProps";
 import { colors } from "../../styles/customTheme";
 
-interface HeadingActionButtonProps{
-  title:string;
+interface HeadingActionButtonProps {
+  title: string;
 }
 
 export const BASE_URL = "/user/apps";

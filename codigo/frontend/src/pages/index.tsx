@@ -7,15 +7,21 @@ import {
   UseToastOptions,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import apiClient from "../shared/api/api-client";
-import { isAuthenticated, login } from "../shared/auth/localStorageManager";
+import {
+  getCurrentUser,
+  isAuthenticated,
+  login,
+  setUserAvatarUrl,
+} from "../shared/auth/localStorageManager";
+import { githubService } from "../shared/services/githubService";
 import { getMessages } from "../shared/utils/toast-messages";
+import { Context, UserContext } from "../store/UserProvider";
 import { colors } from "../styles/customTheme";
-
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
@@ -27,12 +33,13 @@ const Home = () => {
   const [password, setPassword] = useState("");
   const toast = useToast();
   const router = useRouter();
+  const { setGlobalUserContext } = useContext(UserContext) as Context;
 
   useEffect(() => {
     if (isAuthenticated()) {
       router.push(PROFILE_PATH);
     }
-  }, []);
+  });
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -73,6 +80,14 @@ const Home = () => {
       .then((res) => {
         if (res.data?.token) {
           login(res.data.token);
+
+          if (getCurrentUser().gitHubAccount) {
+            githubService.getUserAvatar().then((avatarUrl) => {
+              setGlobalUserContext({ avatarUrl });
+              setUserAvatarUrl(avatarUrl);
+            });
+          }
+
           showToast({
             title: "Sucesso!",
             description: "Acesso autorizado",
@@ -124,7 +139,6 @@ const Home = () => {
           labelColor: colors.dark.Nord2,
           inputBgColor: colors.dark.Nord0,
         };
-
   return (
     <>
       <Flex

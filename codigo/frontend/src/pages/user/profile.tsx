@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Profile from "../../components/Profile";
-import { getCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
 import { authService } from "../../shared/services/authService";
 
