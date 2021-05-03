@@ -42,21 +42,23 @@ const ConfigApp = () => {
     fetchData();
   }, [id]);
 
-  const fetchData = () => {
+  const fetchData = ():void => {
     if (id) {
       apiClient
         .get<ApplicationResponse>(`/applications/name/${id}`)
         .then((res) => {
           const { data } = res;
-          const envMap = new Map<string, Environment>()
-          data.environments.forEach(env => envMap.set(env.key, env))
-          setEnviroments(envMap);
-          setAppData(data)
+            const envMap = new Map<string, Environment>()
+            data.environments.forEach(env => envMap.set(env.key, env))
+            setEnviroments(envMap);
+            setAppData(data);
         })
         .catch((error) => {
-          getMessages(error?.response.data).forEach((description, i) => {
+          if(error.response)
+            return getMessages(error?.response.data).forEach((description, i) => {
             showToast(description, i)
           });
+          showToast(`Falha ao conectar ao servidor: '${error}'`, 500);
         });
     }
   }
@@ -101,7 +103,7 @@ const ConfigApp = () => {
 
   const submitEnvs = () => {
     apiClient
-      .patch(`/applications/${appData?.id}`, { enviroments: Array.from(enviroments?.values() || []) })
+      .patch(`/applications/${appData?.id}`, { environments: Array.from(enviroments?.values() || []) })
       .then()
       .catch((error) => {
         getMessages(error?.response.data).forEach((description, i) => {
