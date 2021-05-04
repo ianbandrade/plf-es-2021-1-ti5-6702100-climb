@@ -1,4 +1,5 @@
 import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
+import { Center, Text } from "@chakra-ui/layout";
 import {
   Button,
   Code,
@@ -13,6 +14,7 @@ import {
   Tfoot,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorMode,
   useDisclosure,
@@ -57,21 +59,21 @@ const Users = () => {
   } =
     colorMode === LIGHT
       ? {
-          formColor: colors.light.Nord6,
-          textColor: colors.light.Nord6,
-          inputTextColor: colors.light.Nord6,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.dark.Nord2,
-          iconInputColor: colors.dark.Nord0,
-        }
+        formColor: colors.light.Nord6,
+        textColor: colors.light.Nord6,
+        inputTextColor: colors.light.Nord6,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.dark.Nord2,
+        iconInputColor: colors.dark.Nord0,
+      }
       : {
-          formColor: colors.dark.Nord2,
-          textColor: colors.dark.Nord2,
-          inputTextColor: colors.dark.Nord2,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.light.Nord4,
-          iconInputColor: colors.dark.Nord2,
-        };
+        formColor: colors.dark.Nord2,
+        textColor: colors.dark.Nord2,
+        inputTextColor: colors.dark.Nord2,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.light.Nord4,
+        iconInputColor: colors.dark.Nord2,
+      };
 
   const inputStyle = {
     inputTextColor,
@@ -451,268 +453,280 @@ const Users = () => {
     setConfirmPassField("");
   };
 
-  return (
-    <>
-      <ModalComponent
-        title="Deletar usuário"
-        isOpen={isDeleteModalOpen}
-        userName={selectedUserName}
-        onClose={(): void => handleCloseModal()}
-      >
-        <Flex justify="flex-end" mb={5} mt={5}>
-          <Button
-            mr={4}
-            onClick={(): void => handleCloseModal()}
-            bgColor={colors.aurora.Nord11}
-            color={colors.light.Nord6}
-            _hover={{
-              bgColor: colors.aurora.Nord11,
-            }}
-          >
-            Não
+  const iconTooltip = (child: JSX.Element, label: string) => (
+    <Tooltip label={label} fontSize="md" placement="bottom">
+      <span>
+        {child}
+      </span>
+    </Tooltip>
+  )
+
+  const addUserComponent = (
+    iconTooltip(
+      (<Icon
+        as={FiUserPlus}
+        boxSize={25}
+        color={colors.aurora.Nord14}
+        _hover={{ cursor: "pointer" }}
+        m={2}
+        onClick={(): void => openAddUserModal()}
+      />), "Adicionar Usuário"))
+
+  const importUserInfo = (
+    iconTooltip(
+      (<Icon
+        as={FiAlertCircle}
+        boxSize={5}
+        color={colors.aurora.Nord12}
+        _hover={{ cursor: "pointer" }}
+        ml={2}
+        onClick={onOpen}
+      />), "Informações"))
+
+return (
+  <>
+    <ModalComponent
+      title="Deletar usuário"
+      isOpen={isDeleteModalOpen}
+      userName={selectedUserName}
+      onClose={(): void => handleCloseModal()}
+    >
+      <Flex justify="flex-end" mb={5} mt={5}>
+        <Button
+          mr={4}
+          onClick={(): void => handleCloseModal()}
+          bgColor={colors.aurora.Nord11}
+          color={colors.light.Nord6}
+          _hover={{
+            bgColor: colors.aurora.Nord11,
+          }}
+        >
+          Não
           </Button>
-          <Button
-            bgColor={colors.aurora.Nord14}
-            color={colors.light.Nord6}
-            _hover={{
-              bgColor: colors.aurora.Nord14,
-            }}
-            onClick={(): void => handleConfirmModal()}
-          >
-            Sim
+        <Button
+          bgColor={colors.aurora.Nord14}
+          color={colors.light.Nord6}
+          _hover={{
+            bgColor: colors.aurora.Nord14,
+          }}
+          onClick={(): void => handleConfirmModal()}
+        >
+          Sim
           </Button>
-        </Flex>
-      </ModalComponent>
-
-      <ModalComponent
-        title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
-        isOpen={isAddUserModalOpen || isUpdateModalOpen}
-        onClose={(): void => handleCloseModal()}
-      >
-        <Form style={{ bgColor: formColor, textColor }}>
-          <Input
-            type={"text"}
-            label="Nome"
-            placeholder="Nome"
-            validate={isInputInvalid.name}
-            style={inputStyle}
-            icon={<AiOutlineUser color={iconInputColor} />}
-            onChangeInput={handleChangeName}
-            value={nameField}
-          />
-          <Input
-            type={"email"}
-            label="E-mail"
-            validate={isInputInvalid.email}
-            placeholder="Email"
-            style={inputStyle}
-            icon={<EmailIcon color={iconInputColor} />}
-            onChangeInput={handleChangeEmail}
-            value={emailField}
-          />
-          {!isUpdateModalOpen && (
-            <>
-              <Input
-                type={"password"}
-                label="Senha"
-                validate={isInputInvalid.password}
-                placeholder="Senha"
-                style={inputStyle}
-                icon={<LockIcon color={iconInputColor} />}
-                onChangeInput={handleChangPass}
-                value={passField}
-              />
-              <Input
-                type={"password"}
-                label="Confirma senha"
-                validate={isInputInvalid.confirmPassword}
-                placeholder="Confirma senha"
-                style={inputStyle}
-                icon={<LockIcon color={iconInputColor} />}
-                onChangeInput={handleChangeConfirmPass}
-                value={confirmPassField}
-              />
-            </>
-          )}
-        </Form>
-        <Flex justify="flex-end" mb={5}>
-          <Button
-            onClick={(): void => handleCloseModal()}
-            bgColor={colors.aurora.Nord11}
-            color={colors.light.Nord6}
-            _hover={{
-              bgColor: colors.aurora.Nord11,
-            }}
-            mr={4}
-          >
-            Cancelar
-          </Button>
-          <Button
-            bgColor={colors.aurora.Nord14}
-            color={colors.light.Nord6}
-            _hover={{
-              bgColor: colors.aurora.Nord14,
-            }}
-            onClick={(): void => handleConfirmModal()}
-          >
-            Salvar
-          </Button>
-        </Flex>
-      </ModalComponent>
-
-      <Flex justifyContent="center" alignItems="center" mt="2%">
-        <Flex flexDirection="column" alignItems="flex-end">
-          <Flex justifyContent="space-between" alignItems="center" mb="3%">
-            <Icon
-              as={FiUserPlus}
-              boxSize={25}
-              color={colors.aurora.Nord14}
-              _hover={{ cursor: "pointer" }}
-              mr={4}
-              onClick={(): void => openAddUserModal()}
-            />
-            <label
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "40px",
-                width: "160px",
-                cursor: "pointer",
-                color: colors.light.Nord6,
-                backgroundColor: colors.aurora.Nord14,
-                borderRadius: "8px",
-              }}
-            >
-              <CSVReader
-                label="Importar Usuários"
-                onFileLoaded={(data: any[], fileInfo: Object): any =>
-                  handleImportUsers(data, fileInfo)
-                }
-                parserOptions={parserOptions}
-                inputStyle={{
-                  display: "none",
-                  cursor: "pointer",
-                  width: "100%",
-                }}
-                accept=".csv"
-              />
-            </label>
-
-            <Icon
-              as={FiAlertCircle}
-              boxSize={5}
-              color={colors.aurora.Nord12}
-              _hover={{ cursor: "pointer" }}
-              ml={2}
-              onClick={onOpen}
-            />
-
-            <ModalComponent
-              isOpen={isOpen}
-              onClose={onClose}
-              title="Exemplo CSV"
-              width={650}
-            >
-              <Table variant="unstyled" m={[5, 2]}>
-                <TableCaption>
-                  Os itens devem ser separados por <Code>;</Code>
-                </TableCaption>
-                <Thead>
-                  <Tr>
-                    <Th>Nome;</Th>
-                    <Th>Email;</Th>
-                    <Th>Senha</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Td>Joaquim da Silva Lobo;</Td>
-                    <Td>joaquim@climb.com;</Td>
-                    <Td>senha123</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Patrick Antonio;</Td>
-                    <Td>patricka@climb.com;</Td>
-                    <Td>423!@$fpass</Td>
-                  </Tr>
-                </Tbody>
-              </Table>
-            </ModalComponent>
-          </Flex>
-
-          <Skeleton isLoaded={!!users}>
-            {users.length !== 0 ? (
-              <Table
-                boxShadow="dark-lg"
-                variant="striped"
-                bgColor={setTableBgColor()}
-                borderRadius={6}
-                maxH={600}
-                minW={1000}
-                maxW={500}
-                size="lg"
-                h={"50%"}
-              >
-                <Thead>
-                  <Tr height={5}>
-                    <Th>Nome</Th>
-                    <Th>Email</Th>
-                    <Th>Github</Th>
-                    <Th>Gitlab</Th>
-                    <Th>Ações</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>{handleRenderUsers()} </Tbody>
-                <Tfoot>
-                  <Tr height="5px">
-                    <Td colSpan={5}>
-                      <Flex alignItems="center">
-                        {currentPage === 0 || currentPage === 1 ? (
-                          <Button
-                            isDisabled={disabled}
-                            onClick={(): void => handlePrevPage()}
-                          >
-                            <AiOutlineArrowLeft />
-                          </Button>
-                        ) : (
-                          <Button onClick={(): void => handlePrevPage()}>
-                            <AiOutlineArrowLeft />
-                          </Button>
-                        )}
-
-                        <Spacer />
-                        <Heading fontSize="22px">{currentPage}</Heading>
-                        <Spacer />
-
-                        {currentPage === numberOfPages ? (
-                          <Button
-                            isDisabled={disabled}
-                            onClick={(): void => handlePrevPage()}
-                          >
-                            <AiOutlineArrowRight />
-                          </Button>
-                        ) : (
-                          <Button
-                            isDisabled={canPass()}
-                            onClick={(): void => handleNextPage()}
-                          >
-                            <AiOutlineArrowRight />
-                          </Button>
-                        )}
-                      </Flex>
-                    </Td>
-                  </Tr>
-                </Tfoot>
-              </Table>
-            ) : (
-              ""
-            )}
-          </Skeleton>
-        </Flex>
       </Flex>
-    </>
-  );
+    </ModalComponent>
+
+    <ModalComponent
+      title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
+      isOpen={isAddUserModalOpen || isUpdateModalOpen}
+      onClose={(): void => handleCloseModal()}
+    >
+      <Form style={{ bgColor: formColor, textColor }}>
+        <Input
+          type={"text"}
+          label="Nome"
+          placeholder="Nome"
+          validate={isInputInvalid.name}
+          style={inputStyle}
+          icon={<AiOutlineUser color={iconInputColor} />}
+          onChangeInput={handleChangeName}
+          value={nameField}
+        />
+        <Input
+          type={"email"}
+          label="E-mail"
+          validate={isInputInvalid.email}
+          placeholder="Email"
+          style={inputStyle}
+          icon={<EmailIcon color={iconInputColor} />}
+          onChangeInput={handleChangeEmail}
+          value={emailField}
+        />
+        {!isUpdateModalOpen && (
+          <>
+            <Input
+              type={"password"}
+              label="Senha"
+              validate={isInputInvalid.password}
+              placeholder="Senha"
+              style={inputStyle}
+              icon={<LockIcon color={iconInputColor} />}
+              onChangeInput={handleChangPass}
+              value={passField}
+            />
+            <Input
+              type={"password"}
+              label="Confirma senha"
+              validate={isInputInvalid.confirmPassword}
+              placeholder="Confirma senha"
+              style={inputStyle}
+              icon={<LockIcon color={iconInputColor} />}
+              onChangeInput={handleChangeConfirmPass}
+              value={confirmPassField}
+            />
+          </>
+        )}
+      </Form>
+      <Flex justify="flex-end" mb={5}>
+        <Button
+          onClick={(): void => handleCloseModal()}
+          bgColor={colors.aurora.Nord11}
+          color={colors.light.Nord6}
+          _hover={{
+            bgColor: colors.aurora.Nord11,
+          }}
+          mr={4}
+        >
+          Cancelar
+          </Button>
+        <Button
+          bgColor={colors.aurora.Nord14}
+          color={colors.light.Nord6}
+          _hover={{
+            bgColor: colors.aurora.Nord14,
+          }}
+          onClick={(): void => handleConfirmModal()}
+        >
+          Salvar
+          </Button>
+      </Flex>
+    </ModalComponent>
+
+    <Flex justifyContent="center" alignItems="center" mt="2%">
+      <Flex flexDirection="column" alignItems="flex-end" minW="75%">
+        <Flex justifyContent="space-between" alignItems="center" mb="3%">
+          {addUserComponent}
+          <label
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "40px",
+              width: "160px",
+              cursor: "pointer",
+              color: colors.light.Nord6,
+              backgroundColor: colors.aurora.Nord14,
+              borderRadius: "8px",
+            }}
+          >
+            <CSVReader
+              label="Importar Usuários"
+              onFileLoaded={(data: any[], fileInfo: Object): any =>
+                handleImportUsers(data, fileInfo)
+              }
+              parserOptions={parserOptions}
+              inputStyle={{
+                display: "none",
+                cursor: "pointer",
+                width: "100%",
+              }}
+              accept=".csv"
+            />
+          </label>
+          {importUserInfo}
+          <ModalComponent
+            isOpen={isOpen}
+            onClose={onClose}
+            title="Exemplo CSV"
+            width={650}
+          >
+            <Table variant="unstyled" m={[5, 2]}>
+              <TableCaption>
+                Os itens devem ser separados por <Code>;</Code>
+              </TableCaption>
+              <Thead>
+                <Tr>
+                  <Th>Nome;</Th>
+                  <Th>Email;</Th>
+                  <Th>Senha</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>Joaquim da Silva Lobo;</Td>
+                  <Td>joaquim@climb.com;</Td>
+                  <Td>senha123</Td>
+                </Tr>
+                <Tr>
+                  <Td>Patrick Antonio;</Td>
+                  <Td>patricka@climb.com;</Td>
+                  <Td>423!@$fpass</Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </ModalComponent>
+        </Flex>
+
+        <Skeleton isLoaded={!!users} margin="auto">
+          {users.length !== 0 ? (
+            <Table
+              boxShadow="dark-lg"
+              variant="striped"
+              bgColor={setTableBgColor()}
+              borderRadius={6}
+              maxH={600}
+              minW={1000}
+              maxW={500}
+              size="lg"
+              h={"50%"}
+            >
+              <Thead>
+                <Tr height={5}>
+                  <Th>Nome</Th>
+                  <Th>Email</Th>
+                  <Th>Github</Th>
+                  <Th>Gitlab</Th>
+                  <Th>Ações</Th>
+                </Tr>
+              </Thead>
+              <Tbody>{handleRenderUsers()} </Tbody>
+              <Tfoot>
+                <Tr height="5px">
+                  <Td colSpan={5}>
+                    <Flex alignItems="center">
+                      {currentPage === 0 || currentPage === 1 ? (
+                        <Button
+                          isDisabled={disabled}
+                          onClick={(): void => handlePrevPage()}
+                        >
+                          <AiOutlineArrowLeft />
+                        </Button>
+                      ) : (
+                        <Button onClick={(): void => handlePrevPage()}>
+                          <AiOutlineArrowLeft />
+                        </Button>
+                      )}
+
+                      <Spacer />
+                      <Heading fontSize="22px">{currentPage}</Heading>
+                      <Spacer />
+
+                      {currentPage === numberOfPages ? (
+                        <Button
+                          isDisabled={disabled}
+                          onClick={(): void => handlePrevPage()}
+                        >
+                          <AiOutlineArrowRight />
+                        </Button>
+                      ) : (
+                        <Button
+                          isDisabled={canPass()}
+                          onClick={(): void => handleNextPage()}
+                        >
+                          <AiOutlineArrowRight />
+                        </Button>
+                      )}
+                    </Flex>
+                  </Td>
+                </Tr>
+              </Tfoot>
+            </Table>
+          ) : (<Text fontSize="3xl">Sem usuários para serem listados, importe por <code>.csv</code> ou crie um usuário {addUserComponent}</Text>)}
+        </Skeleton>
+      </Flex>
+    </Flex>
+  </>
+);
 };
 
 export default Users;
