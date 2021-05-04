@@ -94,7 +94,10 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Logo(),
+                Logo(
+                  textStyle: Theme.of(context).textTheme.headline4,
+                  imageHeight: 60,
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
@@ -120,7 +123,7 @@ class HomePage extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).accentColor,
                         ),
-                        textStyle: Theme.of(context).textTheme.headline6,
+                        textStyle: Theme.of(context).textTheme.headline5,
                         onPressed: () => _handleSignIn(),
                       )
                     ],

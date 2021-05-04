@@ -15,9 +15,12 @@ class Themes {
           letterSpacing: 3,
           color: Colors.blueGrey[800],
         ),
-        headline6: TextStyle(
+        headline5: TextStyle(
           color: Colors.white,
-          fontSize: 24,
+        ),
+        headline6: TextStyle(
+          color: Colors.grey.shade700,
+          fontSize: 18,
         ),
       ),
     );
@@ -37,9 +40,13 @@ class Themes {
           letterSpacing: 3,
           color: Colors.white,
         ),
-        headline6: TextStyle(
+        headline5: TextStyle(
           color: Colors.grey.shade700,
           fontSize: 24,
+        ),
+        headline6: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
