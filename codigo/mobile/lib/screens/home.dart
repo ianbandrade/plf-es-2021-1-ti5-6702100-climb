@@ -95,7 +95,7 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Logo(
-                  textStyle: Theme.of(context).textTheme.headline4,
+                  textStyle: Theme.of(context).textTheme.headline3,
                   imageHeight: 60,
                 ),
                 Padding(

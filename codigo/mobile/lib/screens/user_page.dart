@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
 import 'package:mobile/widgets/logo.dart';
+import 'package:mobile/widgets/user_profile.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _UserPageState extends State<UserPage> {
         actions: [ChangeThemeSwitch()],
       ),
       body: Center(
-        child: Text('hello'),
+        child: UserProfile(),
       ),
     );
   }

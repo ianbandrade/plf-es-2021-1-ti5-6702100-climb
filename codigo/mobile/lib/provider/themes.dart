@@ -10,10 +10,14 @@ class Themes {
       scaffoldBackgroundColor: Colors.white,
       fontFamily: 'Alatsi',
       textTheme: TextTheme(
-        headline4: TextStyle(
+        headline3: TextStyle(
           fontSize: 40,
           letterSpacing: 3,
           color: Colors.blueGrey[800],
+        ),
+        headline4: TextStyle(
+          fontSize: 26,
+          color: Colors.grey.shade900,
         ),
         headline5: TextStyle(
           color: Colors.white,
@@ -35,8 +39,13 @@ class Themes {
       scaffoldBackgroundColor: Colors.grey.shade900,
       fontFamily: 'Alatsi',
       textTheme: TextTheme(
-        headline4: TextStyle(
+        headline3: TextStyle(
           fontSize: 40,
+          letterSpacing: 3,
+          color: Colors.white,
+        ),
+        headline4: TextStyle(
+          fontSize: 26,
           letterSpacing: 3,
           color: Colors.white,
         ),
