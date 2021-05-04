@@ -32,6 +32,7 @@ import Form from "../../../components/Form";
 import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
 import TableLine from "../../../components/TableLine";
+import { UserTable, UserTableProps } from "../../../components/UserTable";
 import { UserRole } from "../../../shared/enum/user-role";
 import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UpdateUser } from "../../../shared/interfaces/update-user";
@@ -82,13 +83,8 @@ const Users = () => {
     marginBottom: "5%",
   };
 
-  const setTableBgColor = (): string =>
-    colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
-
   const usersList: User[] = [];
   const [users, setUsers] = useState(usersList);
-  const [numberOfPages, setNumberOfPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userId, setId] = useState("");
   const [nameField, setNameField] = useState("");
@@ -129,53 +125,6 @@ const Users = () => {
     };
     fetchData();
   }, []);
-
-  const canPass = (): boolean =>
-    numberOfPages === currentPage && numberOfPages > currentPage;
-
-  const handleNextPage = (): void =>
-    setCurrentPage((prevState) => prevState + 1);
-
-  const handlePrevPage = (): void =>
-    setCurrentPage((prevState) => prevState - 1);
-
-  const handleRenderUsers = (): JSX.Element[] => {
-    let userToRender = [];
-
-    for (
-      let i = (currentPage - 1) * NUMBER_OF_USERS_PER_PAGE;
-      i < currentPage * NUMBER_OF_USERS_PER_PAGE && users && i < users.length;
-      i++
-    ) {
-      const user = users[i];
-      if (user) {
-        const newUserToRender = (
-          <>
-            <TableLine
-              index={i}
-              user={user}
-              key={i}
-              updateUser={(updatedUser) => handleUpdateUser(updatedUser, i)}
-              deleteUser={(deletedUser) => handleDeleteUser(deletedUser, i)}
-            />
-          </>
-        );
-        userToRender.push(newUserToRender);
-      }
-    }
-
-    return userToRender;
-  };
-
-  const updateNumberOfPages = () => {
-    const page = Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE);
-    setNumberOfPages(page);
-    setCurrentPage(page);
-  };
-
-  useEffect(() => {
-    updateNumberOfPages();
-  }, [users]);
 
   const isAddUserValid = (newUser: CreateUser): boolean => {
     const { password } = newUser;
@@ -286,13 +235,13 @@ const Users = () => {
     }
   };
 
-  const updateUser = async (): Promise<void> => {
+  const updateUser = ():void => {
     const updatedUser: UpdateUser = {
       name: nameField,
       email: emailField,
     };
 
-    await userService
+    userService
       .update(userId, updatedUser)
       .then(() => {
         const newArray = users.map((el, i) =>
@@ -323,8 +272,8 @@ const Users = () => {
       });
   };
 
-  const deleteUser = async (): Promise<void> => {
-    await userService
+  const deleteUser = ():void => {
+    userService
       .delete(userId)
       .then(() => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
@@ -401,10 +350,6 @@ const Users = () => {
     await userService.createMany(requestBody).then((res) => {
       userService.getAll({ role: UserRole.USER }).then(({ data }) => {
         setUsers(data.items);
-        const newPageNumber = Math.floor(
-          data.length / NUMBER_OF_USERS_PER_PAGE
-        );
-        setNumberOfPages((prevState) => prevState + newPageNumber);
       });
     });
   }
@@ -483,250 +428,193 @@ const Users = () => {
         onClick={onOpen}
       />), "Informações"))
 
-return (
-  <>
-    <ModalComponent
-      title="Deletar usuário"
-      isOpen={isDeleteModalOpen}
-      userName={selectedUserName}
-      onClose={(): void => handleCloseModal()}
-    >
-      <Flex justify="flex-end" mb={5} mt={5}>
-        <Button
-          mr={4}
-          onClick={(): void => handleCloseModal()}
-          bgColor={colors.aurora.Nord11}
-          color={colors.light.Nord6}
-          _hover={{
-            bgColor: colors.aurora.Nord11,
-          }}
-        >
-          Não
-          </Button>
-        <Button
-          bgColor={colors.aurora.Nord14}
-          color={colors.light.Nord6}
-          _hover={{
-            bgColor: colors.aurora.Nord14,
-          }}
-          onClick={(): void => handleConfirmModal()}
-        >
-          Sim
-          </Button>
-      </Flex>
-    </ModalComponent>
+  const userTableProps: UserTableProps = {
+    handleDeleteUser, handleUpdateUser, users
+  }
 
-    <ModalComponent
-      title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
-      isOpen={isAddUserModalOpen || isUpdateModalOpen}
-      onClose={(): void => handleCloseModal()}
-    >
-      <Form style={{ bgColor: formColor, textColor }}>
-        <Input
-          type={"text"}
-          label="Nome"
-          placeholder="Nome"
-          validate={isInputInvalid.name}
-          style={inputStyle}
-          icon={<AiOutlineUser color={iconInputColor} />}
-          onChangeInput={handleChangeName}
-          value={nameField}
-        />
-        <Input
-          type={"email"}
-          label="E-mail"
-          validate={isInputInvalid.email}
-          placeholder="Email"
-          style={inputStyle}
-          icon={<EmailIcon color={iconInputColor} />}
-          onChangeInput={handleChangeEmail}
-          value={emailField}
-        />
-        {!isUpdateModalOpen && (
-          <>
-            <Input
-              type={"password"}
-              label="Senha"
-              validate={isInputInvalid.password}
-              placeholder="Senha"
-              style={inputStyle}
-              icon={<LockIcon color={iconInputColor} />}
-              onChangeInput={handleChangPass}
-              value={passField}
-            />
-            <Input
-              type={"password"}
-              label="Confirma senha"
-              validate={isInputInvalid.confirmPassword}
-              placeholder="Confirma senha"
-              style={inputStyle}
-              icon={<LockIcon color={iconInputColor} />}
-              onChangeInput={handleChangeConfirmPass}
-              value={confirmPassField}
-            />
-          </>
-        )}
-      </Form>
-      <Flex justify="flex-end" mb={5}>
-        <Button
-          onClick={(): void => handleCloseModal()}
-          bgColor={colors.aurora.Nord11}
-          color={colors.light.Nord6}
-          _hover={{
-            bgColor: colors.aurora.Nord11,
-          }}
-          mr={4}
-        >
-          Cancelar
-          </Button>
-        <Button
-          bgColor={colors.aurora.Nord14}
-          color={colors.light.Nord6}
-          _hover={{
-            bgColor: colors.aurora.Nord14,
-          }}
-          onClick={(): void => handleConfirmModal()}
-        >
-          Salvar
-          </Button>
-      </Flex>
-    </ModalComponent>
-
-    <Flex justifyContent="center" alignItems="center" mt="2%">
-      <Flex flexDirection="column" alignItems="flex-end" minW="75%">
-        <Flex justifyContent="space-between" alignItems="center" mb="3%">
-          {addUserComponent}
-          <label
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "40px",
-              width: "160px",
-              cursor: "pointer",
-              color: colors.light.Nord6,
-              backgroundColor: colors.aurora.Nord14,
-              borderRadius: "8px",
+  return (
+    <>
+      <ModalComponent
+        title="Deletar usuário"
+        isOpen={isDeleteModalOpen}
+        userName={selectedUserName}
+        onClose={(): void => handleCloseModal()}
+      >
+        <Flex justify="flex-end" mb={5} mt={5}>
+          <Button
+            mr={4}
+            onClick={(): void => handleCloseModal()}
+            bgColor={colors.aurora.Nord11}
+            color={colors.light.Nord6}
+            _hover={{
+              bgColor: colors.aurora.Nord11,
             }}
           >
-            <CSVReader
-              label="Importar Usuários"
-              onFileLoaded={(data: any[], fileInfo: Object): any =>
-                handleImportUsers(data, fileInfo)
-              }
-              parserOptions={parserOptions}
-              inputStyle={{
-                display: "none",
-                cursor: "pointer",
-                width: "100%",
-              }}
-              accept=".csv"
-            />
-          </label>
-          {importUserInfo}
-          <ModalComponent
-            isOpen={isOpen}
-            onClose={onClose}
-            title="Exemplo CSV"
-            width={650}
+            Não
+          </Button>
+          <Button
+            bgColor={colors.aurora.Nord14}
+            color={colors.light.Nord6}
+            _hover={{
+              bgColor: colors.aurora.Nord14,
+            }}
+            onClick={(): void => handleConfirmModal()}
           >
-            <Table variant="unstyled" m={[5, 2]}>
-              <TableCaption>
-                Os itens devem ser separados por <Code>;</Code>
-              </TableCaption>
-              <Thead>
-                <Tr>
-                  <Th>Nome;</Th>
-                  <Th>Email;</Th>
-                  <Th>Senha</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>Joaquim da Silva Lobo;</Td>
-                  <Td>joaquim@climb.com;</Td>
-                  <Td>senha123</Td>
-                </Tr>
-                <Tr>
-                  <Td>Patrick Antonio;</Td>
-                  <Td>patricka@climb.com;</Td>
-                  <Td>423!@$fpass</Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </ModalComponent>
+            Sim
+          </Button>
         </Flex>
+      </ModalComponent>
 
-        <Skeleton isLoaded={!!users} margin="auto">
-          {users.length !== 0 ? (
-            <Table
-              boxShadow="dark-lg"
-              variant="striped"
-              bgColor={setTableBgColor()}
-              borderRadius={6}
-              maxH={600}
-              minW={1000}
-              maxW={500}
-              size="lg"
-              h={"50%"}
+      <ModalComponent
+        title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
+        isOpen={isAddUserModalOpen || isUpdateModalOpen}
+        onClose={(): void => handleCloseModal()}
+      >
+        <Form style={{ bgColor: formColor, textColor }}>
+          <Input
+            type={"text"}
+            label="Nome"
+            placeholder="Nome"
+            validate={isInputInvalid.name}
+            style={inputStyle}
+            icon={<AiOutlineUser color={iconInputColor} />}
+            onChangeInput={handleChangeName}
+            value={nameField}
+          />
+          <Input
+            type={"email"}
+            label="E-mail"
+            validate={isInputInvalid.email}
+            placeholder="Email"
+            style={inputStyle}
+            icon={<EmailIcon color={iconInputColor} />}
+            onChangeInput={handleChangeEmail}
+            value={emailField}
+          />
+          {!isUpdateModalOpen && (
+            <>
+              <Input
+                type={"password"}
+                label="Senha"
+                validate={isInputInvalid.password}
+                placeholder="Senha"
+                style={inputStyle}
+                icon={<LockIcon color={iconInputColor} />}
+                onChangeInput={handleChangPass}
+                value={passField}
+              />
+              <Input
+                type={"password"}
+                label="Confirma senha"
+                validate={isInputInvalid.confirmPassword}
+                placeholder="Confirma senha"
+                style={inputStyle}
+                icon={<LockIcon color={iconInputColor} />}
+                onChangeInput={handleChangeConfirmPass}
+                value={confirmPassField}
+              />
+            </>
+          )}
+        </Form>
+        <Flex justify="flex-end" mb={5}>
+          <Button
+            onClick={(): void => handleCloseModal()}
+            bgColor={colors.aurora.Nord11}
+            color={colors.light.Nord6}
+            _hover={{
+              bgColor: colors.aurora.Nord11,
+            }}
+            mr={4}
+          >
+            Cancelar
+          </Button>
+          <Button
+            bgColor={colors.aurora.Nord14}
+            color={colors.light.Nord6}
+            _hover={{
+              bgColor: colors.aurora.Nord14,
+            }}
+            onClick={(): void => handleConfirmModal()}
+          >
+            Salvar
+          </Button>
+        </Flex>
+      </ModalComponent>
+
+      <Flex justifyContent="center" alignItems="center" mt="2%">
+        <Flex flexDirection="column" alignItems="flex-end" minW="75%">
+          <Flex justifyContent="space-between" alignItems="center" mb="3%">
+            {addUserComponent}
+            <label
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "40px",
+                width: "160px",
+                cursor: "pointer",
+                color: colors.light.Nord6,
+                backgroundColor: colors.aurora.Nord14,
+                borderRadius: "8px",
+              }}
             >
-              <Thead>
-                <Tr height={5}>
-                  <Th>Nome</Th>
-                  <Th>Email</Th>
-                  <Th>Github</Th>
-                  <Th>Gitlab</Th>
-                  <Th>Ações</Th>
-                </Tr>
-              </Thead>
-              <Tbody>{handleRenderUsers()} </Tbody>
-              <Tfoot>
-                <Tr height="5px">
-                  <Td colSpan={5}>
-                    <Flex alignItems="center">
-                      {currentPage === 0 || currentPage === 1 ? (
-                        <Button
-                          isDisabled={disabled}
-                          onClick={(): void => handlePrevPage()}
-                        >
-                          <AiOutlineArrowLeft />
-                        </Button>
-                      ) : (
-                        <Button onClick={(): void => handlePrevPage()}>
-                          <AiOutlineArrowLeft />
-                        </Button>
-                      )}
+              <CSVReader
+                label="Importar Usuários"
+                onFileLoaded={(data: any[], fileInfo: Object): any =>
+                  handleImportUsers(data, fileInfo)
+                }
+                parserOptions={parserOptions}
+                inputStyle={{
+                  display: "none",
+                  cursor: "pointer",
+                  width: "100%",
+                }}
+                accept=".csv"
+              />
+            </label>
+            {importUserInfo}
+            <ModalComponent
+              isOpen={isOpen}
+              onClose={onClose}
+              title="Exemplo CSV"
+              width={650}
+            >
+              <Table variant="unstyled" m={[5, 2]}>
+                <TableCaption>
+                  Os itens devem ser separados por <Code>;</Code>
+                </TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Nome;</Th>
+                    <Th>Email;</Th>
+                    <Th>Senha</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>Joaquim da Silva Lobo;</Td>
+                    <Td>joaquim@climb.com;</Td>
+                    <Td>senha123</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Patrick Antonio;</Td>
+                    <Td>patricka@climb.com;</Td>
+                    <Td>423!@$fpass</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </ModalComponent>
+          </Flex>
 
-                      <Spacer />
-                      <Heading fontSize="22px">{currentPage}</Heading>
-                      <Spacer />
-
-                      {currentPage === numberOfPages ? (
-                        <Button
-                          isDisabled={disabled}
-                          onClick={(): void => handlePrevPage()}
-                        >
-                          <AiOutlineArrowRight />
-                        </Button>
-                      ) : (
-                        <Button
-                          isDisabled={canPass()}
-                          onClick={(): void => handleNextPage()}
-                        >
-                          <AiOutlineArrowRight />
-                        </Button>
-                      )}
-                    </Flex>
-                  </Td>
-                </Tr>
-              </Tfoot>
-            </Table>
-          ) : (<Text fontSize="3xl">Sem usuários para serem listados, importe por <code>.csv</code> ou crie um usuário {addUserComponent}</Text>)}
-        </Skeleton>
+          <Skeleton isLoaded={!!users} margin="auto">
+            {users.length !== 0 ? (
+              <UserTable {...userTableProps}/>
+            ) : (<Text fontSize="3xl">Sem usuários para serem listados, importe por <code>.csv</code> ou crie um usuário {addUserComponent}</Text>)}
+          </Skeleton>
+        </Flex>
       </Flex>
-    </Flex>
-  </>
-);
+    </>
+  );
 };
 
 export default Users;
