@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'button.dart';
 
 class AppTile extends StatelessWidget {
+  final String appName;
+  final String orgRepo;
+  final String provider;
+
+  AppTile({this.appName, this.orgRepo, this.provider});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +46,7 @@ class AppTile extends StatelessWidget {
                       child: Container(
                         height: 18,
                         width: 18,
-                        child: Image.asset('assets/images/gitlab-logo.png'),
+                        child: Image.asset('assets/images/github-logo.png'),
                       ),
                     ),
                     Text(
