@@ -11,7 +11,7 @@ class ApiClient extends http.BaseClient {
     String _token = await storage.read(key: "token");
 
     request.headers['Authorization'] = "Bearer $_token";
-    print(request.headers['Authorization'] = "Bearer $_token");
+
     return _inner.send(request);
   }
 }
