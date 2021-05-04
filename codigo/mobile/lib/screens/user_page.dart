@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/models/user.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -8,10 +9,10 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    final userData = ModalRoute.of(context).settings.arguments;
+    final routeData = ModalRoute.of(context).settings.arguments as User;
 
     return Container(
-      child: Text('aadns ${userData}'),
+      child: Text('aadns ${routeData.name}'),
     );
   }
 }

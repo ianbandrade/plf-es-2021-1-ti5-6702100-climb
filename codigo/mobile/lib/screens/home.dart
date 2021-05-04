@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/models/user.dart';
 import 'package:mobile/shared/api.dart';
 import 'package:mobile/widgets/button.dart';
 import 'package:mobile/widgets/input.dart';
@@ -37,15 +38,28 @@ class HomePage extends StatelessWidget {
           },
           body: body,
         );
-        print(response.statusCode);
+
         if (response.statusCode == 201) {
           final token = json.decode(response.body)['token'];
-          print(response.body);
+
           if (token != null) {
             await storage.write(key: 'token', value: token);
             ApiClient().get(Uri.http(env['API_HOST'], '/auth/me')).then((res) {
-              Navigator.of(context)
-                  .pushNamed('/user', arguments: json.decode(res.body));
+              final parsedUser = json.decode(res.body);
+
+              User userData = new User(
+                id: parsedUser['id'],
+                name: parsedUser['name'],
+                role: parsedUser['role'],
+                gitHubAccount: parsedUser['gitHubAccount'],
+                gitHubToken: parsedUser['gitHubToken'],
+                gitLabAccount: parsedUser['gitLabAccount'],
+                gitLabToken: parsedUser['gitLabToken'],
+                image: parsedUser['image'],
+                status: parsedUser['status'],
+              );
+
+              Navigator.of(context).pushNamed('/user', arguments: userData);
             });
           }
         } else {
