@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
+import 'package:mobile/widgets/app_tile.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
 import 'package:mobile/widgets/logo.dart';
 import 'package:mobile/widgets/user_profile.dart';
@@ -34,14 +35,22 @@ class _UserPageState extends State<UserPage> {
         ),
         actions: [ChangeThemeSwitch()],
       ),
-      body: ListView(children: [
-        Center(
-          child: UserProfile(
-            name: 'João',
-            image: 'oi',
+      body: ListView(
+        children: [
+          Center(
+            child: UserProfile(
+              name: 'João',
+              image: 'oi',
+            ),
           ),
-        ),
-      ]),
+          AppTile(),
+          AppTile(),
+          AppTile(),
+          AppTile(),
+          AppTile(),
+          AppTile(),
+        ],
+      ),
     );
   }
 }
