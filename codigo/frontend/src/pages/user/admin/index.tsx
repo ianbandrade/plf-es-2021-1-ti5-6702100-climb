@@ -4,6 +4,7 @@ import {
   Code,
   Flex,
   Heading,
+  Skeleton,
   Spacer,
   Table,
   TableCaption,
@@ -79,18 +80,13 @@ const Users = () => {
     marginBottom: "5%",
   };
 
-  function setTableBgColor() {
-    return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
-  }
+  const setTableBgColor = (): string =>
+    colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
 
   const usersList: User[] = [];
-
   const [users, setUsers] = useState(usersList);
-  const [numberOfPages, setNumberOfPages] = useState(
-    users ? Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE) : 0
-  );
+  const [numberOfPages, setNumberOfPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userId, setId] = useState("");
   const [nameField, setNameField] = useState("");
@@ -99,7 +95,6 @@ const Users = () => {
   const [confirmPassField, setConfirmPassField] = useState("");
   const [selectedUser, setSelectedUser] = useState(0);
   const [selectedUserName, setSelectedUserName] = useState("");
-
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -111,12 +106,11 @@ const Users = () => {
   });
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async (): Promise<void> => {
       await userService
         .getAll({ role: UserRole.USER })
         .then((res) => {
           const { data } = res;
-          console.log(data);
           setUsers(data.items);
         })
         .catch((e) => {
@@ -125,23 +119,25 @@ const Users = () => {
               title: "Erro!",
               description,
               status: "error",
+              position: "bottom-left",
               id: i,
             })
           );
         });
-    }
+    };
     fetchData();
   }, []);
 
-  function handleNextPage() {
+  const canPass = (): boolean =>
+    numberOfPages === currentPage && numberOfPages > currentPage;
+
+  const handleNextPage = (): void =>
     setCurrentPage((prevState) => prevState + 1);
-  }
 
-  function handlePrevPage() {
+  const handlePrevPage = (): void =>
     setCurrentPage((prevState) => prevState - 1);
-  }
 
-  function handleRenderUsers() {
+  const handleRenderUsers = (): JSX.Element[] => {
     let userToRender = [];
 
     for (
@@ -150,30 +146,36 @@ const Users = () => {
       i++
     ) {
       const user = users[i];
-      const newUserToRender = (
-        <>
-          <TableLine
-            index={i}
-            user={user}
-            key={i}
-            updateUser={(updatedUser) => handleUpdateUser(updatedUser, i)}
-            deleteUser={(deletedUser) => handleDeleteUser(deletedUser, i)}
-          />
-        </>
-      );
-      userToRender.push(newUserToRender);
+      if (user) {
+        const newUserToRender = (
+          <>
+            <TableLine
+              index={i}
+              user={user}
+              key={i}
+              updateUser={(updatedUser) => handleUpdateUser(updatedUser, i)}
+              deleteUser={(deletedUser) => handleDeleteUser(deletedUser, i)}
+            />
+          </>
+        );
+        userToRender.push(newUserToRender);
+      }
     }
 
     return userToRender;
-  }
+  };
 
-  function updateNumberOfPages() {
-    setNumberOfPages(
-      users ? Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE) : 0
-    );
-  }
+  const updateNumberOfPages = () => {
+    const page = Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE);
+    setNumberOfPages(page);
+    setCurrentPage(page);
+  };
 
-  function isAddUserValid(newUser: CreateUser) {
+  useEffect(() => {
+    updateNumberOfPages();
+  }, [users]);
+
+  const isAddUserValid = (newUser: CreateUser): boolean => {
     const { password } = newUser;
     const fieldsAndValues = Object.entries(newUser);
 
@@ -181,9 +183,7 @@ const Users = () => {
     for (let i = 0; i < fieldsAndValues.length; i++) {
       const fields = fieldsAndValues[i];
 
-      if (fields[1].length === 0) {
-        invalidFields.push(fields[0]);
-      }
+      if (fields[1].length === 0) invalidFields.push(fields[0]);
     }
     let aux = {
       name: false,
@@ -222,6 +222,7 @@ const Users = () => {
         });
       }
       setIsInputInvalid(aux);
+
       return false;
     } else if (!isUpdateModalOpen && password !== confirmPassField) {
       aux.password = true;
@@ -234,13 +235,14 @@ const Users = () => {
         position: "bottom-left",
       });
       setIsInputInvalid(aux);
+
       return false;
     }
 
     return true;
-  }
+  };
 
-  function saveUser() {
+  const saveUser = () => {
     const newUser: CreateUser = {
       name: nameField,
       email: emailField,
@@ -254,10 +256,10 @@ const Users = () => {
         .create(newUser)
         .then((res) => {
           const user = res.data.user as User;
-          console.log(user);
+
           setUsers([...users, user]);
           handleCloseModal();
-          updateNumberOfPages();
+
           cleanFields();
 
           toast({
@@ -269,65 +271,60 @@ const Users = () => {
           });
         })
         .catch((e) => {
-          console.error(e);
           getMessages(e?.response?.data).forEach((description, i) =>
             toast({
               title: "Erro!",
               description,
               status: "error",
+              position: "bottom-left",
               id: i,
             })
           );
         });
     }
-  }
+  };
 
-  async function updateUser() {
+  const updateUser = async (): Promise<void> => {
     const updatedUser: UpdateUser = {
       name: nameField,
       email: emailField,
     };
 
-    if (true) {
-      //Mudar
-      await userService
-        .update(userId, updatedUser)
-        .then(() => {
-          const newArray = users.map((el, i) =>
-            i === selectedUser ? Object.assign({}, el, updatedUser) : el
-          );
-          setUsers(newArray);
-          updateNumberOfPages();
-          handleCloseModal();
-
+    await userService
+      .update(userId, updatedUser)
+      .then(() => {
+        const newArray = users.map((el, i) =>
+          i === selectedUser ? Object.assign({}, el, updatedUser) : el
+        );
+        setUsers(newArray);
+        handleCloseModal();
+        toast({
+          title: "Sucesso!",
+          description: `${nameField} atualizado`,
+          status: "success",
+          id: `${userId}`,
+          position: "bottom-left",
+          duration: 2000,
+        });
+      })
+      .catch((e) => {
+        getMessages(e?.response?.data).forEach((description, i) =>
           toast({
-            title: "Sucesso!",
-            description: `${nameField}  atualizado`,
-            status: "success",
-            id: `${userId}`,
+            title: "Erro!",
+            description,
+            status: "error",
+            id: i,
             position: "bottom-left",
             duration: 2000,
-          });
-        })
-        .catch((e) => {
-          getMessages(e?.response?.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description,
-              status: "error",
-              id: i,
-              position: "bottom-left",
-              duration: 2000,
-            })
-          );
-        });
-    }
-  }
+          })
+        );
+      });
+  };
 
-  async function deleteUser() {
+  const deleteUser = async (): Promise<void> => {
     await userService
       .delete(userId)
-      .then((res) => {
+      .then(() => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
 
         toast({
@@ -340,7 +337,6 @@ const Users = () => {
 
         setUsers(newArray);
         setIsDeleteModalOpen(false);
-        updateNumberOfPages();
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
@@ -348,11 +344,12 @@ const Users = () => {
             title: "Erro!",
             description,
             status: "error",
+            position: "bottom-left",
             id: i,
           })
         );
       });
-  }
+  };
 
   function handleConfirmModal() {
     if (isAddUserModalOpen) {
@@ -399,10 +396,8 @@ const Users = () => {
       users: newUsers,
     };
 
-    //change to passwordConfirmation
     await userService.createMany(requestBody).then((res) => {
       userService.getAll({ role: UserRole.USER }).then(({ data }) => {
-        console.log(data);
         setUsers(data.items);
         const newPageNumber = Math.floor(
           data.length / NUMBER_OF_USERS_PER_PAGE
@@ -430,26 +425,15 @@ const Users = () => {
     setPassField(e.target.value);
   }
 
-  function handleChangeConfirmPass(e: any) {
+  const handleChangeConfirmPass = (e: any): void =>
     setConfirmPassField(e.target.value);
-  }
 
-  function openAddUserModal() {
-    setIsAddUserModalOpen(true);
-  }
+  const openAddUserModal = (): void => setIsAddUserModalOpen(true);
 
-  function handleCloseModal() {
-    if (isAddUserModalOpen) {
-      setIsAddUserModalOpen(false);
-    }
-
-    if (isUpdateModalOpen) {
-      setIsUpdateModalOpen(false);
-    }
-
-    if (isDeleteModalOpen) {
-      setIsDeleteModalOpen(false);
-    }
+  const handleCloseModal = (): void => {
+    if (isAddUserModalOpen) setIsAddUserModalOpen(false);
+    else if (isUpdateModalOpen) setIsUpdateModalOpen(false);
+    else if (isDeleteModalOpen) setIsDeleteModalOpen(false);
 
     setIsInputInvalid({
       name: false,
@@ -458,14 +442,14 @@ const Users = () => {
       confirmPassword: false,
     });
     cleanFields();
-  }
+  };
 
-  function cleanFields() {
+  const cleanFields = (): void => {
     setNameField("");
     setEmailField("");
     setPassField("");
     setConfirmPassField("");
-  }
+  };
 
   return (
     <>
@@ -473,22 +457,12 @@ const Users = () => {
         title="Deletar usuário"
         isOpen={isDeleteModalOpen}
         userName={selectedUserName}
-        onClose={() => handleCloseModal()}
+        onClose={(): void => handleCloseModal()}
       >
         <Flex justify="flex-end" mb={5} mt={5}>
           <Button
-            bgColor={colors.aurora.Nord14}
-            color={colors.light.Nord6}
-            _hover={{
-              bgColor: colors.aurora.Nord14,
-            }}
-            mr="8%"
-            onClick={() => handleConfirmModal()}
-          >
-            Sim
-          </Button>
-          <Button
-            onClick={() => handleCloseModal()}
+            mr={4}
+            onClick={(): void => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
             color={colors.light.Nord6}
             _hover={{
@@ -497,13 +471,23 @@ const Users = () => {
           >
             Não
           </Button>
+          <Button
+            bgColor={colors.aurora.Nord14}
+            color={colors.light.Nord6}
+            _hover={{
+              bgColor: colors.aurora.Nord14,
+            }}
+            onClick={(): void => handleConfirmModal()}
+          >
+            Sim
+          </Button>
         </Flex>
       </ModalComponent>
 
       <ModalComponent
         title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
         isOpen={isAddUserModalOpen || isUpdateModalOpen}
-        onClose={() => handleCloseModal()}
+        onClose={(): void => handleCloseModal()}
       >
         <Form style={{ bgColor: formColor, textColor }}>
           <Input
@@ -551,15 +535,15 @@ const Users = () => {
             </>
           )}
         </Form>
-        <Flex justify="flex-end" mb="5%">
+        <Flex justify="flex-end" mb={5}>
           <Button
-            onClick={() => handleCloseModal()}
+            onClick={(): void => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
             color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
-            mr="8%"
+            mr={4}
           >
             Cancelar
           </Button>
@@ -569,7 +553,7 @@ const Users = () => {
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
-            onClick={() => handleConfirmModal()}
+            onClick={(): void => handleConfirmModal()}
           >
             Salvar
           </Button>
@@ -581,11 +565,11 @@ const Users = () => {
           <Flex justifyContent="space-between" alignItems="center" mb="3%">
             <Icon
               as={FiUserPlus}
-              boxSize="25px"
+              boxSize={25}
               color={colors.aurora.Nord14}
               _hover={{ cursor: "pointer" }}
-              mr="12px"
-              onClick={() => openAddUserModal()}
+              mr={4}
+              onClick={(): void => openAddUserModal()}
             />
             <label
               style={{
@@ -602,7 +586,7 @@ const Users = () => {
             >
               <CSVReader
                 label="Importar Usuários"
-                onFileLoaded={(data: any[], fileInfo: Object) =>
+                onFileLoaded={(data: any[], fileInfo: Object): any =>
                   handleImportUsers(data, fileInfo)
                 }
                 parserOptions={parserOptions}
@@ -617,10 +601,10 @@ const Users = () => {
 
             <Icon
               as={FiAlertCircle}
-              boxSize="20px"
+              boxSize={5}
               color={colors.aurora.Nord12}
               _hover={{ cursor: "pointer" }}
-              ml="5%"
+              ml={2}
               onClick={onOpen}
             />
 
@@ -657,65 +641,74 @@ const Users = () => {
             </ModalComponent>
           </Flex>
 
-          <Table
-            boxShadow="dark-lg"
-            variant="striped"
-            bgColor={setTableBgColor()}
-            borderRadius="6px"
-            maxH="600px"
-            minW="1000px"
-            maxW="500px"
-            size="lg"
-            h={"50%"}
-          >
-            <Thead>
-              <Tr height="5px">
-                <Th>Nome</Th>
-                <Th>Email</Th>
-                <Th>Github</Th>
-                <Th>Gitlab</Th>
-                <Th>Ações</Th>
-              </Tr>
-            </Thead>
-            <Tbody>{handleRenderUsers()} </Tbody>
-            <Tfoot>
-              <Tr height="5px">
-                <Td colSpan={5}>
-                  <Flex alignItems="center">
-                    {currentPage === 1 ? (
-                      <Button
-                        isDisabled={disabled}
-                        onClick={() => handlePrevPage()}
-                      >
-                        <AiOutlineArrowLeft />
-                      </Button>
-                    ) : (
-                      <Button onClick={() => handlePrevPage()}>
-                        <AiOutlineArrowLeft />
-                      </Button>
-                    )}
+          <Skeleton isLoaded={!!users}>
+            {users.length !== 0 ? (
+              <Table
+                boxShadow="dark-lg"
+                variant="striped"
+                bgColor={setTableBgColor()}
+                borderRadius={6}
+                maxH={600}
+                minW={1000}
+                maxW={500}
+                size="lg"
+                h={"50%"}
+              >
+                <Thead>
+                  <Tr height={5}>
+                    <Th>Nome</Th>
+                    <Th>Email</Th>
+                    <Th>Github</Th>
+                    <Th>Gitlab</Th>
+                    <Th>Ações</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>{handleRenderUsers()} </Tbody>
+                <Tfoot>
+                  <Tr height="5px">
+                    <Td colSpan={5}>
+                      <Flex alignItems="center">
+                        {currentPage === 0 || currentPage === 1 ? (
+                          <Button
+                            isDisabled={disabled}
+                            onClick={(): void => handlePrevPage()}
+                          >
+                            <AiOutlineArrowLeft />
+                          </Button>
+                        ) : (
+                          <Button onClick={(): void => handlePrevPage()}>
+                            <AiOutlineArrowLeft />
+                          </Button>
+                        )}
 
-                    <Spacer />
-                    <Heading fontSize="22px">{currentPage}</Heading>
-                    <Spacer />
+                        <Spacer />
+                        <Heading fontSize="22px">{currentPage}</Heading>
+                        <Spacer />
 
-                    {currentPage === numberOfPages ? (
-                      <Button
-                        isDisabled={disabled}
-                        onClick={() => handlePrevPage()}
-                      >
-                        <AiOutlineArrowRight />
-                      </Button>
-                    ) : (
-                      <Button onClick={() => handleNextPage()}>
-                        <AiOutlineArrowRight />
-                      </Button>
-                    )}
-                  </Flex>
-                </Td>
-              </Tr>
-            </Tfoot>
-          </Table>
+                        {currentPage === numberOfPages ? (
+                          <Button
+                            isDisabled={disabled}
+                            onClick={(): void => handlePrevPage()}
+                          >
+                            <AiOutlineArrowRight />
+                          </Button>
+                        ) : (
+                          <Button
+                            isDisabled={canPass()}
+                            onClick={(): void => handleNextPage()}
+                          >
+                            <AiOutlineArrowRight />
+                          </Button>
+                        )}
+                      </Flex>
+                    </Td>
+                  </Tr>
+                </Tfoot>
+              </Table>
+            ) : (
+              ""
+            )}
+          </Skeleton>
         </Flex>
       </Flex>
     </>

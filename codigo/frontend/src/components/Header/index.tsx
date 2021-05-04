@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import { logout } from "../../shared/auth/localStorageManager";
-import { Context, UserContext } from "../../store/UserProvider";
+import { UserContext } from "../../store/UserProvider";
 import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
 import RegularHeader from "./RegularHeader";
@@ -26,9 +26,7 @@ const Header = () => {
   const router = useRouter();
   const isUserPage = router.pathname.split("/")[1] === "user";
   const { colorMode } = useColorMode();
-  const { globalUserContext, setGlobalUserContext } = useContext(
-    UserContext
-  ) as Context;
+  const { user } = useContext(UserContext);
 
   const setHeaderBgColor = (): string | undefined => {
     if (isUserPage && colorMode === LIGHT) {
@@ -63,7 +61,7 @@ const Header = () => {
             <Menu>
               <MenuButton
                 as={Avatar}
-                src={globalUserContext.avatarUrl}
+                src={user.image}
                 mr={30}
                 bgColor={
                   colorMode === LIGHT ? colors.light.Nord4 : colors.dark.Nord1
@@ -94,7 +92,6 @@ const Header = () => {
                   <MenuItem
                     onClick={() => {
                       logout();
-                      setGlobalUserContext({});
                       router.replace("/");
                     }}
                   >

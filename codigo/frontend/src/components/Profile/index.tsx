@@ -8,20 +8,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import apiClient from "../../shared/api/api-client";
-import {
-  AVATAR_KEY,
-  setCurrentUser,
-  setUserAvatarUrl,
-} from "../../shared/auth/localStorageManager";
+import { setCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
 import { authService } from "../../shared/services/authService";
-import { githubService } from "../../shared/services/githubService";
 import { getMessages } from "../../shared/utils/toast-messages";
-import { Context, UserContext } from "../../store/UserProvider";
 import { colors } from "../../styles/customTheme";
 
 const BASE_URL = "/user/profile";
@@ -55,9 +49,6 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   const toast = useToast();
   const router = useRouter();
   const { code, state } = router.query;
-  const { globalUserContext, setGlobalUserContext } = useContext(
-    UserContext
-  ) as Context;
 
   const toggleIntegrationButton = async (): Promise<void> => {
     if (code) {
@@ -102,19 +93,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
     toggleIntegrationButton();
   }, [code]);
 
-  const verifyAndUpdateAvatar = (): void => {
-    if (user.gitHubAccount) {
-      githubService.getUserAvatar().then((avatarUrl) => {
-        setGlobalUserContext({ avatarUrl });
-        setUserAvatarUrl(avatarUrl);
-      });
-    }
-
-    if (globalUserContext.avatarUrl === undefined) {
-      let avatarUrl = sessionStorage.getItem(AVATAR_KEY);
-      setGlobalUserContext({ avatarUrl });
-    }
-  };
+  const verifyAndUpdateAvatar = (): void => {};
 
   useEffect(() => {
     verifyAndUpdateAvatar();
@@ -207,11 +186,7 @@ const Profile = ({ user, setUser }: ProfileProps) => {
           width={120}
           height={120}
           bgColor={color.avatarBg}
-          src={
-            globalUserContext.avatarUrl === null
-              ? ""
-              : globalUserContext.avatarUrl
-          }
+          src={user.image}
         />
         <Heading mt={2} textAlign="center">
           {user.name?.length > 10 ? splitAt(`${user.name}`, 10) : user.name}

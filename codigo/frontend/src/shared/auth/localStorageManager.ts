@@ -2,7 +2,6 @@ import jwtDecode from "jwt-decode";
 import { User } from "../interfaces/user";
 
 export const TOKEN_KEY = "accessToken";
-export const AVATAR_KEY = "avatarUrl";
 export const USER_KEY = "currentUser";
 
 export const isAuthenticated = (): boolean =>
@@ -22,12 +21,7 @@ export const login = (token: string): void => {
   setCurrentUser(jwtDecode(token));
 };
 
-export const setUserAvatarUrl = (avatarUrl: string): void => {
-  sessionStorage.setItem(AVATAR_KEY, avatarUrl);
-};
-
 export const logout = (): void => {
   sessionStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(USER_KEY);
-  sessionStorage.removeItem(AVATAR_KEY);
 };
