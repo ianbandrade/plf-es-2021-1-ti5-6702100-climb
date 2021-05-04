@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class Themes {
   static lightTheme(context) {
     return ThemeData(
-      appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       primaryColor: Colors.white,
       brightness: Brightness.light,
       accentColor: Colors.grey.shade700,
@@ -17,6 +20,7 @@ class Themes {
         ),
         headline4: TextStyle(
           fontSize: 26,
+          letterSpacing: 2,
           color: Colors.grey.shade900,
         ),
         headline5: TextStyle(
@@ -32,7 +36,10 @@ class Themes {
 
   static darkTheme(context) {
     return ThemeData(
-      appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade900),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey.shade900,
+        elevation: 0,
+      ),
       primaryColor: Colors.grey.shade700,
       brightness: Brightness.dark,
       accentColor: Colors.white,
@@ -46,7 +53,7 @@ class Themes {
         ),
         headline4: TextStyle(
           fontSize: 26,
-          letterSpacing: 3,
+          letterSpacing: 2,
           color: Colors.white,
         ),
         headline5: TextStyle(

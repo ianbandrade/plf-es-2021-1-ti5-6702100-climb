@@ -34,9 +34,14 @@ class _UserPageState extends State<UserPage> {
         ),
         actions: [ChangeThemeSwitch()],
       ),
-      body: Center(
-        child: UserProfile(),
-      ),
+      body: ListView(children: [
+        Center(
+          child: UserProfile(
+            name: 'João',
+            image: 'oi',
+          ),
+        ),
+      ]),
     );
   }
 }
