@@ -35,7 +35,14 @@ class AppTile extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.add),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Container(
+                        height: 18,
+                        width: 18,
+                        child: Image.asset('assets/images/gitlab-logo.png'),
+                      ),
+                    ),
                     Text(
                       'JoaoGuiMB/Blookg',
                       style: Theme.of(context).textTheme.headline6,
