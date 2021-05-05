@@ -1,17 +1,14 @@
 import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
-import { Center, Text } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/layout";
 import {
   Button,
   Code,
   Flex,
-  Heading,
   Skeleton,
-  Spacer,
   Table,
   TableCaption,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tooltip,
@@ -22,16 +19,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
-import {
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiOutlineUser,
-} from "react-icons/ai";
+import { AiOutlineUser, } from "react-icons/ai";
 import { FiAlertCircle, FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
-import TableLine from "../../../components/TableLine";
 import { UserTable, UserTableProps } from "../../../components/UserTable";
 import { UserRole } from "../../../shared/enum/user-role";
 import { CreateUser } from "../../../shared/interfaces/create-user";
@@ -42,9 +34,6 @@ import { getMessages } from "../../../shared/utils/toast-messages";
 import { colors } from "../../../styles/customTheme";
 
 const LIGHT = "light";
-const disabled: boolean = true;
-
-const NUMBER_OF_USERS_PER_PAGE = 5;
 
 const Users = () => {
   const { colorMode } = useColorMode();
@@ -100,30 +89,21 @@ const Users = () => {
     name: false,
     email: false,
     password: false,
-    confirmPassword: false,
+    passwordConfirmation: false,
   });
 
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      await userService
-        .getAll({ role: UserRole.USER })
-        .then((res) => {
-          const { data } = res;
-          setUsers(data.items);
-        })
-        .catch((e) => {
-          getMessages(e?.response?.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description,
-              status: "error",
-              position: "bottom-left",
-              id: i,
-            })
-          );
-        });
-    };
-    fetchData();
+    userService
+      .getAll({ role: UserRole.USER })
+      .then((res) => {
+        const { data } = res;
+        setUsers(data.items);
+      })
+      .catch((e) => {
+        getMessages(e?.response?.data).forEach((description, i) =>
+          showToast(description,"error",i)
+        );
+      });
   }, []);
 
   const isAddUserValid = (newUser: CreateUser): boolean => {
@@ -140,7 +120,7 @@ const Users = () => {
       name: false,
       email: false,
       password: false,
-      confirmPassword: false,
+      passwordConfirmation: false,
     };
 
     if (invalidFields.length > 0) {
@@ -159,34 +139,21 @@ const Users = () => {
             aux.password = true;
             tranlatedField = "Senha";
             break;
-          case "confirmPassword":
-            aux.confirmPassword = true;
+          case "passwordConfirmation":
+            aux.passwordConfirmation = true;
             tranlatedField = "Confirmar senha";
             break;
         }
-        toast({
-          title: "Atenção!",
-          description: `Campo '${tranlatedField}' está vazio`,
-          status: "warning",
-          duration: 2000,
-          position: "bottom-left",
-        });
+        showToast(`Campo '${tranlatedField}' está vazio`, "warning");
       }
       setIsInputInvalid(aux);
 
       return false;
     } else if (!isUpdateModalOpen && password !== confirmPassField) {
       aux.password = true;
-      aux.confirmPassword = true;
-      toast({
-        title: "Atenção!",
-        description: `O campo 'Senha' e 'Confirmar senha' estão diferentes`,
-        status: "warning",
-        duration: 2000,
-        position: "bottom-left",
-      });
+      aux.passwordConfirmation = true;
+      showToast(`O campo 'Senha' e 'Confirmar senha' estão diferentes`, "warning");
       setIsInputInvalid(aux);
-
       return false;
     }
 
@@ -207,35 +174,20 @@ const Users = () => {
         .create(newUser)
         .then((res) => {
           const user = res.data.user as User;
-
           setUsers([...users, user]);
           handleCloseModal();
-
           cleanFields();
-
-          toast({
-            title: "Sucesso!",
-            description: `${newUser.name} cadastrado com sucesso`,
-            status: "success",
-            duration: 9000,
-            position: "bottom-left",
-          });
+          showToast(`${newUser.name} cadastrado com sucesso`, "success");
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description,
-              status: "error",
-              position: "bottom-left",
-              id: i,
-            })
+            showToast(description,"error",i)
           );
         });
     }
   };
 
-  const updateUser = ():void => {
+  const updateUser = (): void => {
     const updatedUser: UpdateUser = {
       name: nameField,
       email: emailField,
@@ -249,58 +201,48 @@ const Users = () => {
         );
         setUsers(newArray);
         handleCloseModal();
-        toast({
-          title: "Sucesso!",
-          description: `${nameField} atualizado`,
-          status: "success",
-          id: `${userId}`,
-          position: "bottom-left",
-          duration: 2000,
-        });
+        showToast(`${nameField} atualizado`,"success");
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
-          toast({
-            title: "Erro!",
-            description,
-            status: "error",
-            id: i,
-            position: "bottom-left",
-            duration: 2000,
-          })
+          showToast(description,"error",i)
         );
       });
   };
 
-  const deleteUser = ():void => {
+  const deleteUser = (): void => {
     userService
       .delete(userId)
       .then(() => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
-
-        toast({
-          title: "Sucesso!",
-          description: `Usuário ${selectedUserName} foi deletado`,
-          status: "success",
-          duration: 2000,
-          position: "bottom-left",
-        });
-
+        showToast(`Usuário ${selectedUserName} foi deletado`,"success");
         setUsers(newArray);
         setIsDeleteModalOpen(false);
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
-          toast({
-            title: "Erro!",
-            description,
-            status: "error",
-            position: "bottom-left",
-            id: i,
-          })
+          showToast(description,"error",i)
         );
       });
   };
+
+  function showToast(description:string,status: "error" | "warning" |"success", id:number = 1){
+    if(!toast.isActive(id)){
+      const title = {
+        ["error"]:"Erro!",
+        ["warning"]: "Aviso!",
+        ["success"]: "Sucesso!"
+      }
+      toast({
+        title: title[status],
+        description,
+        status,
+        position: "bottom-left",
+        duration: 4000,
+        id
+      });
+    }
+  }
 
   function handleConfirmModal() {
     if (isAddUserModalOpen) {
@@ -330,24 +272,21 @@ const Users = () => {
   }
 
   async function handleImportUsers(data: any[], fileInfo: Object) {
-    let newUsers: CreateUser[] = [];
-    for (let i = 1; i < data.length; i++) {
-      const user = data[i];
-      const newUser: CreateUser = {
+    const newUsers: CreateUser[] = data.map((user: any[]) => (
+      {
         name: user[0],
         email: user[1],
         password: user[2],
         passwordConfirmation: user[2],
         role: UserRole.USER,
-      };
-      newUsers.push(newUser);
-    }
+      }
+    ));
 
     const requestBody = {
       users: newUsers,
     };
 
-    await userService.createMany(requestBody).then((res) => {
+    userService.createMany(requestBody).then((res) => {
       userService.getAll({ role: UserRole.USER }).then(({ data }) => {
         setUsers(data.items);
       });
@@ -386,7 +325,7 @@ const Users = () => {
       name: false,
       email: false,
       password: false,
-      confirmPassword: false,
+      passwordConfirmation: false,
     });
     cleanFields();
   };
@@ -506,7 +445,7 @@ const Users = () => {
               <Input
                 type={"password"}
                 label="Confirma senha"
-                validate={isInputInvalid.confirmPassword}
+                validate={isInputInvalid.passwordConfirmation}
                 placeholder="Confirma senha"
                 style={inputStyle}
                 icon={<LockIcon color={iconInputColor} />}
@@ -608,7 +547,7 @@ const Users = () => {
 
           <Skeleton isLoaded={!!users} margin="auto">
             {users.length !== 0 ? (
-              <UserTable {...userTableProps}/>
+              <UserTable {...userTableProps} />
             ) : (<Text fontSize="3xl">Sem usuários para serem listados, importe por <code>.csv</code> ou crie um usuário {addUserComponent}</Text>)}
           </Skeleton>
         </Flex>

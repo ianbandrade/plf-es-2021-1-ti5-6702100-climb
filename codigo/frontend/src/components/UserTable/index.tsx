@@ -42,7 +42,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, handleUpdateUser, h
         setCurrentPage((prevState) => prevState - 1);
 
     const handleRenderUsers: JSX.Element[] = (
-        users.slice(init, init + 5).map((user, i) => {
+        users.slice(init, init + NUMBER_OF_USERS_PER_PAGE).map((user, i) => {
             const key = init+i;
             return(
                 <TableLine
