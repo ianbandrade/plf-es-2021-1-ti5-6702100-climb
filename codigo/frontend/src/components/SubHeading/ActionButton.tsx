@@ -49,7 +49,7 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   );
 
   return (
-    <Flex mb={10}>
+    <Flex mb={10} width="full">
       <Box p={4}>
         <Heading size="md">{title}</Heading>
       </Box>

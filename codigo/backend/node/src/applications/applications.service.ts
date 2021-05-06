@@ -6,45 +6,45 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import * as publicIp from 'public-ip';
+import configuration from 'src/configuration/configuration';
+import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { ReturList } from 'src/shared/dto/return-list.dto';
+import {
+  GithubWebhookEventDto,
+  GitlabWebhookEventDto,
+} from 'src/shared/dto/webhook-push-event.dto';
+import { GithubWebhook, GitlabWebhook } from 'src/shared/dto/webhook-response';
+import { ActivityType } from 'src/shared/enum/activity-type.enum';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
+import { DeployType } from 'src/shared/enum/deploy-message-type.enum';
+import { ProvidersEnum } from 'src/shared/enum/providers.enum';
+import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
+import {
+  githubApiBaseUrl,
+  gitlabApiBaseUrl,
+} from 'src/shared/utils/version-control-services';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { v4 } from 'uuid';
 import { CreateApplicationDto } from './dto/create-application.dto';
+import { ReqCreateDto } from './dto/deploys/req-create.dto';
+import { ReqDeleteDto } from './dto/deploys/req-delete.dto';
+import { ReqUpdateDto } from './dto/deploys/req-update.dto';
 import { ResCreateDto } from './dto/deploys/res-create.dto';
+import { ResUpdateDto } from './dto/deploys/res-update.dto';
 import { BaseEnvironment } from './dto/environments/basic-environment.dto';
 import { FindApplicationQueryDto } from './dto/find-application-query.dto';
 import { GetApplication } from './dto/get-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
+import { Activity } from './entities/activities/activity.entity';
+import { ActivityRepository } from './entities/activities/activity.repository';
 import { Application } from './entities/application.entity';
 import { ApplicationRepository } from './entities/application.repository';
 import { Deploys } from './entities/deploys/deploys.entity';
 import { DeploysRepository } from './entities/deploys/deploys.repository';
 import { Environment } from './entities/environments/environments.entity';
-import * as dotenv from 'dotenv';
-import configuration from 'src/configuration/configuration';
-import { ReqCreateDto } from './dto/deploys/req-create.dto';
-import * as publicIp from 'public-ip';
-import { ProvidersEnum } from 'src/shared/enum/providers.enum';
-import {
-  GithubWebhookEventDto,
-  GitlabWebhookEventDto,
-} from 'src/shared/dto/webhook-push-event.dto';
-import { ActivityRepository } from './entities/activities/activity.repository';
-import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
-import { ActivityType } from 'src/shared/enum/activity-type.enum';
-import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
-import { Activity } from './entities/activities/activity.entity';
-import { ResUpdateDto } from './dto/deploys/res-update.dto';
-import { ReqUpdateDto } from './dto/deploys/req-update.dto';
-import { ReqDeleteDto } from './dto/deploys/req-delete.dto';
-import {
-  githubApiBaseUrl,
-  gitlabApiBaseUrl,
-} from 'src/shared/utils/version-control-services';
-import { GithubWebhook, GitlabWebhook } from 'src/shared/dto/webhook-response';
-import { DeployType } from 'src/shared/enum/deploy-message-type.enum';
 
 dotenv.config();
 
@@ -206,7 +206,7 @@ export class ApplicationsService {
     }
   }
 
-  async findOne(appId: string, user: User): Promise<GetApplication> {
+  async findOnebyId(appId: string, user: User): Promise<GetApplication> {
     const application = this.findCompleteApplication(appId, user);
 
     return this.getPubicApplicationFields(await application);
@@ -314,7 +314,7 @@ export class ApplicationsService {
       );
       this.createActivity(application, commit);
 
-      return this.findOne(id, user);
+      return this.findOnebyId(id, user);
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
@@ -540,7 +540,7 @@ export class ApplicationsService {
 
     if (!deploy) throw new NotFoundException('Deploy não encontrado');
 
-    await this.findOne(deploy.applicationId, user);
+    await this.findOnebyId(deploy.applicationId, user);
 
     return deploy;
   }
@@ -718,18 +718,18 @@ export class ApplicationsService {
   }
 
   async getAppActivities(user: User, appId: string) {
-    const application = await this.findOne(appId, user);
+    const application = await this.findOnebyId(appId, user);
     const activities = await this.activityRepository.find({
       where: { application },
       order: { createdAt: 'DESC' },
       select: Activity.publicAttributes,
     });
 
-    return activities;
+    return { activities };
   }
 
   async doRollBack(user: User, appId: string) {
-    const activities = await this.getAppActivities(user, appId);
+    const activities = (await this.getAppActivities(user, appId)).activities;
     const actualActivity = activities[0];
 
     if (actualActivity.type === ActivityType.SUCCESS) {
@@ -764,7 +764,7 @@ export class ApplicationsService {
   }
 
   async undoRollBack(user: User, appId: string) {
-    const activities = await this.getAppActivities(user, appId);
+    const activities = (await this.getAppActivities(user, appId)).activities;
     const actualActivity = activities[0];
 
     if (actualActivity.type === ActivityType.ROLLBACK) {
