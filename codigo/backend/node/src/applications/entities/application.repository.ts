@@ -3,7 +3,6 @@ import { CreateApplicationDto } from '../dto/create-application.dto';
 import { Application } from './application.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4, v4 } from 'uuid';
-import { InternalServerErrorException } from '@nestjs/common';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { FindApplicationQueryDto } from '../dto/find-application-query.dto';
 import { User } from 'src/users/user.entity';

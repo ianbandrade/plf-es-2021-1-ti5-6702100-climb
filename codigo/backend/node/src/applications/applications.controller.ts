@@ -9,7 +9,6 @@ import {
   Query,
   UseGuards,
   ValidationPipe,
-  NotImplementedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

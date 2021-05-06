@@ -1,4 +1,5 @@
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
+import { DeployType } from 'src/shared/enum/deploy-message-type.enum';
 import {
   BaseEntity,
   Column,
@@ -29,6 +30,9 @@ export class Deploys extends BaseEntity {
 
   @Column({ nullable: true })
   error: string | null;
+
+  @Column({ nullable: false })
+  type: DeployType;
 
   @CreateDateColumn()
   createdAt?: Date;
