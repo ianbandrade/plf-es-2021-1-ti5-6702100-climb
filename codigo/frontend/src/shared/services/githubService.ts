@@ -1,5 +1,6 @@
 import { githubClient } from "../api/github-client";
 import {
+  GithubAvatarResponse,
   GithubRepositoriesGraphQLResponse,
   GithubRepositoryGraphQLResponse,
 } from "../interfaces/graphql-repositories";
@@ -64,7 +65,6 @@ class GithubService {
     branchs: string[] = [],
     cursor?: string
   ): Promise<Repository> {
-    console.log({ owner, name });
     const { data } = await githubClient.post<GithubRepositoryGraphQLResponse>(
       "",
       {
@@ -93,7 +93,6 @@ class GithubService {
 
     const { refs, defaultBranchRef, url, id } = data.data.repository;
     branchs.push(...refs.nodes.map<string>(({ name }) => name));
-    console.log(data);
     if (refs.pageInfo.hasNextPage) {
       return this.getRepository(owner, name, branchs, refs.pageInfo.endCursor);
     }
@@ -105,6 +104,19 @@ class GithubService {
       repositoryId: id,
       url,
     };
+  }
+
+  async getUserAvatar(): Promise<string> {
+    const { data: res } = await githubClient.post<GithubAvatarResponse>("", {
+      query: `query GetAvatarUrl {
+          viewer {
+            avatarUrl
+          }
+        }`,
+      operationName: "GetAvatarUrl",
+    });
+
+    return res.data.viewer.avatarUrl;
   }
 }
 

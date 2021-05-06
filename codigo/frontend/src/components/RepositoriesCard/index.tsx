@@ -1,20 +1,13 @@
+import { Button, Flex, Icon, Select, useColorMode } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  Flex,
-  Select,
-  Heading,
-  useColorMode,
-  Icon,
-  Button,
-} from "@chakra-ui/react";
-import { colors } from "../../styles/customTheme";
-import Input from "../Input";
 import { AiFillGithub, AiOutlineSearch } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import { Organization } from "../../shared/interfaces/Organization";
-import RepositoryItem from "./RepositoryItem";
-import NotLinkedGit from "../NotLinkedGit";
 import { Repository } from "../../shared/interfaces/Repository";
+import { colors } from "../../styles/customTheme";
+import Input from "../Input";
+import NotLinkedGit from "../NotLinkedGit";
+import RepositoryItem from "./RepositoryItem";
 
 const LIGHT = "light";
 interface RepositoriesProps {
