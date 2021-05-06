@@ -1,12 +1,11 @@
 import { Flex } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import Profile from "../../components/Profile";
-import { getCurrentUser } from "../../shared/auth/localStorageManager";
-import { User } from "../../shared/interfaces/user";
 import { authService } from "../../shared/services/authService";
+import { UserContext } from "../../store/UserProvider";
 
 const UserPage = () => {
-  const [user, setUser] = useState<User>({} as User);
+  const { user, setUser } = useContext(UserContext);
   useEffect(() => {
     authService.me().then((user) => setUser(user));
   }, []);

@@ -15,7 +15,6 @@ import apiClient from "../shared/api/api-client";
 import { isAuthenticated, login } from "../shared/auth/localStorageManager";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
-
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
@@ -32,7 +31,7 @@ const Home = () => {
     if (isAuthenticated()) {
       router.push(PROFILE_PATH);
     }
-  }, []);
+  });
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -73,6 +72,7 @@ const Home = () => {
       .then((res) => {
         if (res.data?.token) {
           login(res.data.token);
+
           showToast({
             title: "Sucesso!",
             description: "Acesso autorizado",
@@ -124,7 +124,6 @@ const Home = () => {
           labelColor: colors.dark.Nord2,
           inputBgColor: colors.dark.Nord0,
         };
-
   return (
     <>
       <Flex

@@ -1,17 +1,17 @@
 import { EmailIcon, Icon, LockIcon } from "@chakra-ui/icons";
+import { Text } from "@chakra-ui/layout";
 import {
   Button,
   Code,
   Flex,
-  Heading,
-  Spacer,
+  Skeleton,
   Table,
   TableCaption,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorMode,
   useDisclosure,
@@ -19,16 +19,12 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
-import {
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiOutlineUser,
-} from "react-icons/ai";
+import { AiOutlineUser, } from "react-icons/ai";
 import { FiAlertCircle, FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
 import ModalComponent from "../../../components/Modal";
-import TableLine from "../../../components/TableLine";
+import { UserTable, UserTableProps } from "../../../components/UserTable";
 import { UserRole } from "../../../shared/enum/user-role";
 import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UpdateUser } from "../../../shared/interfaces/update-user";
@@ -38,9 +34,6 @@ import { getMessages } from "../../../shared/utils/toast-messages";
 import { colors } from "../../../styles/customTheme";
 
 const LIGHT = "light";
-const disabled: boolean = true;
-
-const NUMBER_OF_USERS_PER_PAGE = 5;
 
 const Users = () => {
   const { colorMode } = useColorMode();
@@ -56,21 +49,21 @@ const Users = () => {
   } =
     colorMode === LIGHT
       ? {
-          formColor: colors.light.Nord6,
-          textColor: colors.light.Nord6,
-          inputTextColor: colors.light.Nord6,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.dark.Nord2,
-          iconInputColor: colors.dark.Nord0,
-        }
+        formColor: colors.light.Nord6,
+        textColor: colors.light.Nord6,
+        inputTextColor: colors.light.Nord6,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.dark.Nord2,
+        iconInputColor: colors.dark.Nord0,
+      }
       : {
-          formColor: colors.dark.Nord2,
-          textColor: colors.dark.Nord2,
-          inputTextColor: colors.dark.Nord2,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.light.Nord4,
-          iconInputColor: colors.dark.Nord2,
-        };
+        formColor: colors.dark.Nord2,
+        textColor: colors.dark.Nord2,
+        inputTextColor: colors.dark.Nord2,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.light.Nord4,
+        iconInputColor: colors.dark.Nord2,
+      };
 
   const inputStyle = {
     inputTextColor,
@@ -79,18 +72,8 @@ const Users = () => {
     marginBottom: "5%",
   };
 
-  function setTableBgColor() {
-    return colorMode === LIGHT ? colors.light.Nord5 : colors.dark.Nord1;
-  }
-
   const usersList: User[] = [];
-
   const [users, setUsers] = useState(usersList);
-  const [numberOfPages, setNumberOfPages] = useState(
-    users ? Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE) : 0
-  );
-  const [currentPage, setCurrentPage] = useState(1);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userId, setId] = useState("");
   const [nameField, setNameField] = useState("");
@@ -99,7 +82,6 @@ const Users = () => {
   const [confirmPassField, setConfirmPassField] = useState("");
   const [selectedUser, setSelectedUser] = useState(0);
   const [selectedUserName, setSelectedUserName] = useState("");
-
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -107,73 +89,24 @@ const Users = () => {
     name: false,
     email: false,
     password: false,
-    confirmPassword: false,
+    passwordConfirmation: false,
   });
 
   useEffect(() => {
-    async function fetchData() {
-      await userService
-        .getAll({ role: UserRole.USER })
-        .then((res) => {
-          const { data } = res;
-          console.log(data);
-          setUsers(data.items);
-        })
-        .catch((e) => {
-          getMessages(e?.response?.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description,
-              status: "error",
-              id: i,
-            })
-          );
-        });
-    }
-    fetchData();
+    userService
+      .getAll({ role: UserRole.USER })
+      .then((res) => {
+        const { data } = res;
+        setUsers(data.items);
+      })
+      .catch((e) => {
+        getMessages(e?.response?.data).forEach((description, i) =>
+          showToast(description,"error",i)
+        );
+      });
   }, []);
 
-  function handleNextPage() {
-    setCurrentPage((prevState) => prevState + 1);
-  }
-
-  function handlePrevPage() {
-    setCurrentPage((prevState) => prevState - 1);
-  }
-
-  function handleRenderUsers() {
-    let userToRender = [];
-
-    for (
-      let i = (currentPage - 1) * NUMBER_OF_USERS_PER_PAGE;
-      i < currentPage * NUMBER_OF_USERS_PER_PAGE && users && i < users.length;
-      i++
-    ) {
-      const user = users[i];
-      const newUserToRender = (
-        <>
-          <TableLine
-            index={i}
-            user={user}
-            key={i}
-            updateUser={(updatedUser) => handleUpdateUser(updatedUser, i)}
-            deleteUser={(deletedUser) => handleDeleteUser(deletedUser, i)}
-          />
-        </>
-      );
-      userToRender.push(newUserToRender);
-    }
-
-    return userToRender;
-  }
-
-  function updateNumberOfPages() {
-    setNumberOfPages(
-      users ? Math.ceil(users.length / NUMBER_OF_USERS_PER_PAGE) : 0
-    );
-  }
-
-  function isAddUserValid(newUser: CreateUser) {
+  const isAddUserValid = (newUser: CreateUser): boolean => {
     const { password } = newUser;
     const fieldsAndValues = Object.entries(newUser);
 
@@ -181,15 +114,13 @@ const Users = () => {
     for (let i = 0; i < fieldsAndValues.length; i++) {
       const fields = fieldsAndValues[i];
 
-      if (fields[1].length === 0) {
-        invalidFields.push(fields[0]);
-      }
+      if (fields[1].length === 0) invalidFields.push(fields[0]);
     }
     let aux = {
       name: false,
       email: false,
       password: false,
-      confirmPassword: false,
+      passwordConfirmation: false,
     };
 
     if (invalidFields.length > 0) {
@@ -208,39 +139,28 @@ const Users = () => {
             aux.password = true;
             tranlatedField = "Senha";
             break;
-          case "confirmPassword":
-            aux.confirmPassword = true;
+          case "passwordConfirmation":
+            aux.passwordConfirmation = true;
             tranlatedField = "Confirmar senha";
             break;
         }
-        toast({
-          title: "Atenção!",
-          description: `Campo '${tranlatedField}' está vazio`,
-          status: "warning",
-          duration: 2000,
-          position: "bottom-left",
-        });
+        showToast(`Campo '${tranlatedField}' está vazio`, "warning");
       }
       setIsInputInvalid(aux);
+
       return false;
     } else if (!isUpdateModalOpen && password !== confirmPassField) {
       aux.password = true;
-      aux.confirmPassword = true;
-      toast({
-        title: "Atenção!",
-        description: `O campo 'Senha' e 'Confirmar senha' estão diferentes`,
-        status: "warning",
-        duration: 2000,
-        position: "bottom-left",
-      });
+      aux.passwordConfirmation = true;
+      showToast(`O campo 'Senha' e 'Confirmar senha' estão diferentes`, "warning");
       setIsInputInvalid(aux);
       return false;
     }
 
     return true;
-  }
+  };
 
-  function saveUser() {
+  const saveUser = () => {
     const newUser: CreateUser = {
       name: nameField,
       email: emailField,
@@ -254,104 +174,74 @@ const Users = () => {
         .create(newUser)
         .then((res) => {
           const user = res.data.user as User;
-          console.log(user);
           setUsers([...users, user]);
           handleCloseModal();
-          updateNumberOfPages();
           cleanFields();
-
-          toast({
-            title: "Sucesso!",
-            description: `${newUser.name} cadastrado com sucesso`,
-            status: "success",
-            duration: 9000,
-            position: "bottom-left",
-          });
+          showToast(`${newUser.name} cadastrado com sucesso`, "success");
         })
         .catch((e) => {
-          console.error(e);
           getMessages(e?.response?.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description,
-              status: "error",
-              id: i,
-            })
+            showToast(description,"error",i)
           );
         });
     }
-  }
+  };
 
-  async function updateUser() {
+  const updateUser = (): void => {
     const updatedUser: UpdateUser = {
       name: nameField,
       email: emailField,
     };
 
-    if (true) {
-      //Mudar
-      await userService
-        .update(userId, updatedUser)
-        .then(() => {
-          const newArray = users.map((el, i) =>
-            i === selectedUser ? Object.assign({}, el, updatedUser) : el
-          );
-          setUsers(newArray);
-          updateNumberOfPages();
-          handleCloseModal();
-
-          toast({
-            title: "Sucesso!",
-            description: `${nameField}  atualizado`,
-            status: "success",
-            id: `${userId}`,
-            position: "bottom-left",
-            duration: 2000,
-          });
-        })
-        .catch((e) => {
-          getMessages(e?.response?.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description,
-              status: "error",
-              id: i,
-              position: "bottom-left",
-              duration: 2000,
-            })
-          );
-        });
-    }
-  }
-
-  async function deleteUser() {
-    await userService
-      .delete(userId)
-      .then((res) => {
-        const newArray = users.filter((_el, i) => selectedUser !== i);
-
-        toast({
-          title: "Sucesso!",
-          description: `Usuário ${selectedUserName} foi deletado`,
-          status: "success",
-          duration: 2000,
-          position: "bottom-left",
-        });
-
+    userService
+      .update(userId, updatedUser)
+      .then(() => {
+        const newArray = users.map((el, i) =>
+          i === selectedUser ? Object.assign({}, el, updatedUser) : el
+        );
         setUsers(newArray);
-        setIsDeleteModalOpen(false);
-        updateNumberOfPages();
+        handleCloseModal();
+        showToast(`${nameField} atualizado`,"success");
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
-          toast({
-            title: "Erro!",
-            description,
-            status: "error",
-            id: i,
-          })
+          showToast(description,"error",i)
         );
       });
+  };
+
+  const deleteUser = (): void => {
+    userService
+      .delete(userId)
+      .then(() => {
+        const newArray = users.filter((_el, i) => selectedUser !== i);
+        showToast(`Usuário ${selectedUserName} foi deletado`,"success");
+        setUsers(newArray);
+        setIsDeleteModalOpen(false);
+      })
+      .catch((e) => {
+        getMessages(e?.response?.data).forEach((description, i) =>
+          showToast(description,"error",i)
+        );
+      });
+  };
+
+  function showToast(description:string,status: "error" | "warning" |"success", id:number = 1){
+    if(!toast.isActive(id)){
+      const title = {
+        ["error"]:"Erro!",
+        ["warning"]: "Aviso!",
+        ["success"]: "Sucesso!"
+      }
+      toast({
+        title: title[status],
+        description,
+        status,
+        position: "bottom-left",
+        duration: 4000,
+        id
+      });
+    }
   }
 
   function handleConfirmModal() {
@@ -382,32 +272,23 @@ const Users = () => {
   }
 
   async function handleImportUsers(data: any[], fileInfo: Object) {
-    let newUsers: CreateUser[] = [];
-    for (let i = 1; i < data.length; i++) {
-      const user = data[i];
-      const newUser: CreateUser = {
+    const newUsers: CreateUser[] = data.map((user: any[]) => (
+      {
         name: user[0],
         email: user[1],
         password: user[2],
         passwordConfirmation: user[2],
         role: UserRole.USER,
-      };
-      newUsers.push(newUser);
-    }
+      }
+    ));
 
     const requestBody = {
       users: newUsers,
     };
 
-    //change to passwordConfirmation
-    await userService.createMany(requestBody).then((res) => {
+    userService.createMany(requestBody).then((res) => {
       userService.getAll({ role: UserRole.USER }).then(({ data }) => {
-        console.log(data);
         setUsers(data.items);
-        const newPageNumber = Math.floor(
-          data.length / NUMBER_OF_USERS_PER_PAGE
-        );
-        setNumberOfPages((prevState) => prevState + newPageNumber);
       });
     });
   }
@@ -430,41 +311,64 @@ const Users = () => {
     setPassField(e.target.value);
   }
 
-  function handleChangeConfirmPass(e: any) {
+  const handleChangeConfirmPass = (e: any): void =>
     setConfirmPassField(e.target.value);
-  }
 
-  function openAddUserModal() {
-    setIsAddUserModalOpen(true);
-  }
+  const openAddUserModal = (): void => setIsAddUserModalOpen(true);
 
-  function handleCloseModal() {
-    if (isAddUserModalOpen) {
-      setIsAddUserModalOpen(false);
-    }
-
-    if (isUpdateModalOpen) {
-      setIsUpdateModalOpen(false);
-    }
-
-    if (isDeleteModalOpen) {
-      setIsDeleteModalOpen(false);
-    }
+  const handleCloseModal = (): void => {
+    if (isAddUserModalOpen) setIsAddUserModalOpen(false);
+    else if (isUpdateModalOpen) setIsUpdateModalOpen(false);
+    else if (isDeleteModalOpen) setIsDeleteModalOpen(false);
 
     setIsInputInvalid({
       name: false,
       email: false,
       password: false,
-      confirmPassword: false,
+      passwordConfirmation: false,
     });
     cleanFields();
-  }
+  };
 
-  function cleanFields() {
+  const cleanFields = (): void => {
     setNameField("");
     setEmailField("");
     setPassField("");
     setConfirmPassField("");
+  };
+
+  const iconTooltip = (child: JSX.Element, label: string) => (
+    <Tooltip label={label} fontSize="md" placement="bottom">
+      <span>
+        {child}
+      </span>
+    </Tooltip>
+  )
+
+  const addUserComponent = (
+    iconTooltip(
+      (<Icon
+        as={FiUserPlus}
+        boxSize={25}
+        color={colors.aurora.Nord14}
+        _hover={{ cursor: "pointer" }}
+        m={2}
+        onClick={(): void => openAddUserModal()}
+      />), "Adicionar Usuário"))
+
+  const importUserInfo = (
+    iconTooltip(
+      (<Icon
+        as={FiAlertCircle}
+        boxSize={5}
+        color={colors.aurora.Nord12}
+        _hover={{ cursor: "pointer" }}
+        ml={2}
+        onClick={onOpen}
+      />), "Informações"))
+
+  const userTableProps: UserTableProps = {
+    handleDeleteUser, handleUpdateUser, users
   }
 
   return (
@@ -473,22 +377,12 @@ const Users = () => {
         title="Deletar usuário"
         isOpen={isDeleteModalOpen}
         userName={selectedUserName}
-        onClose={() => handleCloseModal()}
+        onClose={(): void => handleCloseModal()}
       >
         <Flex justify="flex-end" mb={5} mt={5}>
           <Button
-            bgColor={colors.aurora.Nord14}
-            color={colors.light.Nord6}
-            _hover={{
-              bgColor: colors.aurora.Nord14,
-            }}
-            mr="8%"
-            onClick={() => handleConfirmModal()}
-          >
-            Sim
-          </Button>
-          <Button
-            onClick={() => handleCloseModal()}
+            mr={4}
+            onClick={(): void => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
             color={colors.light.Nord6}
             _hover={{
@@ -497,13 +391,23 @@ const Users = () => {
           >
             Não
           </Button>
+          <Button
+            bgColor={colors.aurora.Nord14}
+            color={colors.light.Nord6}
+            _hover={{
+              bgColor: colors.aurora.Nord14,
+            }}
+            onClick={(): void => handleConfirmModal()}
+          >
+            Sim
+          </Button>
         </Flex>
       </ModalComponent>
 
       <ModalComponent
         title={isAddUserModalOpen ? "Adicionar usuário" : "Editar usuário"}
         isOpen={isAddUserModalOpen || isUpdateModalOpen}
-        onClose={() => handleCloseModal()}
+        onClose={(): void => handleCloseModal()}
       >
         <Form style={{ bgColor: formColor, textColor }}>
           <Input
@@ -541,7 +445,7 @@ const Users = () => {
               <Input
                 type={"password"}
                 label="Confirma senha"
-                validate={isInputInvalid.confirmPassword}
+                validate={isInputInvalid.passwordConfirmation}
                 placeholder="Confirma senha"
                 style={inputStyle}
                 icon={<LockIcon color={iconInputColor} />}
@@ -551,15 +455,15 @@ const Users = () => {
             </>
           )}
         </Form>
-        <Flex justify="flex-end" mb="5%">
+        <Flex justify="flex-end" mb={5}>
           <Button
-            onClick={() => handleCloseModal()}
+            onClick={(): void => handleCloseModal()}
             bgColor={colors.aurora.Nord11}
             color={colors.light.Nord6}
             _hover={{
               bgColor: colors.aurora.Nord11,
             }}
-            mr="8%"
+            mr={4}
           >
             Cancelar
           </Button>
@@ -569,7 +473,7 @@ const Users = () => {
             _hover={{
               bgColor: colors.aurora.Nord14,
             }}
-            onClick={() => handleConfirmModal()}
+            onClick={(): void => handleConfirmModal()}
           >
             Salvar
           </Button>
@@ -577,16 +481,9 @@ const Users = () => {
       </ModalComponent>
 
       <Flex justifyContent="center" alignItems="center" mt="2%">
-        <Flex flexDirection="column" alignItems="flex-end">
+        <Flex flexDirection="column" alignItems="flex-end" minW="75%">
           <Flex justifyContent="space-between" alignItems="center" mb="3%">
-            <Icon
-              as={FiUserPlus}
-              boxSize="25px"
-              color={colors.aurora.Nord14}
-              _hover={{ cursor: "pointer" }}
-              mr="12px"
-              onClick={() => openAddUserModal()}
-            />
+            {addUserComponent}
             <label
               style={{
                 display: "flex",
@@ -602,7 +499,7 @@ const Users = () => {
             >
               <CSVReader
                 label="Importar Usuários"
-                onFileLoaded={(data: any[], fileInfo: Object) =>
+                onFileLoaded={(data: any[], fileInfo: Object): any =>
                   handleImportUsers(data, fileInfo)
                 }
                 parserOptions={parserOptions}
@@ -614,16 +511,7 @@ const Users = () => {
                 accept=".csv"
               />
             </label>
-
-            <Icon
-              as={FiAlertCircle}
-              boxSize="20px"
-              color={colors.aurora.Nord12}
-              _hover={{ cursor: "pointer" }}
-              ml="5%"
-              onClick={onOpen}
-            />
-
+            {importUserInfo}
             <ModalComponent
               isOpen={isOpen}
               onClose={onClose}
@@ -657,65 +545,11 @@ const Users = () => {
             </ModalComponent>
           </Flex>
 
-          <Table
-            boxShadow="dark-lg"
-            variant="striped"
-            bgColor={setTableBgColor()}
-            borderRadius="6px"
-            maxH="600px"
-            minW="1000px"
-            maxW="500px"
-            size="lg"
-            h={"50%"}
-          >
-            <Thead>
-              <Tr height="5px">
-                <Th>Nome</Th>
-                <Th>Email</Th>
-                <Th>Github</Th>
-                <Th>Gitlab</Th>
-                <Th>Ações</Th>
-              </Tr>
-            </Thead>
-            <Tbody>{handleRenderUsers()} </Tbody>
-            <Tfoot>
-              <Tr height="5px">
-                <Td colSpan={5}>
-                  <Flex alignItems="center">
-                    {currentPage === 1 ? (
-                      <Button
-                        isDisabled={disabled}
-                        onClick={() => handlePrevPage()}
-                      >
-                        <AiOutlineArrowLeft />
-                      </Button>
-                    ) : (
-                      <Button onClick={() => handlePrevPage()}>
-                        <AiOutlineArrowLeft />
-                      </Button>
-                    )}
-
-                    <Spacer />
-                    <Heading fontSize="22px">{currentPage}</Heading>
-                    <Spacer />
-
-                    {currentPage === numberOfPages ? (
-                      <Button
-                        isDisabled={disabled}
-                        onClick={() => handlePrevPage()}
-                      >
-                        <AiOutlineArrowRight />
-                      </Button>
-                    ) : (
-                      <Button onClick={() => handleNextPage()}>
-                        <AiOutlineArrowRight />
-                      </Button>
-                    )}
-                  </Flex>
-                </Td>
-              </Tr>
-            </Tfoot>
-          </Table>
+          <Skeleton isLoaded={!!users} margin="auto">
+            {users.length !== 0 ? (
+              <UserTable {...userTableProps} />
+            ) : (<Text fontSize="3xl">Sem usuários para serem listados, importe por <code>.csv</code> ou crie um usuário {addUserComponent}</Text>)}
+          </Skeleton>
         </Flex>
       </Flex>
     </>
