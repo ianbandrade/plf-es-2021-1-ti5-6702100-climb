@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Flex } from "@chakra-ui/layout";
-import { Button, Icon, Skeleton } from "@chakra-ui/react";
+import { Button, Icon, Skeleton, Tooltip } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -185,15 +185,16 @@ const ConfigApp = () => {
     <Skeleton isLoaded={!!enviroments}>
       {appData && (
         <Flex flexDirection="row" padding="12" width="full">
-          <Button onClick={() => removeApp()}>
-            <Icon
-              as={GiTrashCan}
-              boxSize="6"
-              mt="5"
-              color={colors.aurora.Nord11}
-              _hover={{ cursor: "pointer" }}
-            />
-          </Button>
+          <Tooltip label="Excluir aplicação" fontSize="md">
+            <Button onClick={() => removeApp()} mt={2} variant="ghost">
+              <Icon
+                as={GiTrashCan}
+                boxSize={6}
+                color={colors.aurora.Nord11}
+                _hover={{ cursor: "pointer" }}
+              />
+            </Button>
+          </Tooltip>
           <HeadingActionButton title={appData.name} />
         </Flex>
       )}
