@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Flex } from "@chakra-ui/layout";
-import { Skeleton } from "@chakra-ui/react";
+import { Icon, Skeleton } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import { Activities } from "../../../../shared/interfaces/Activities";
 import Environment from "../../../../shared/interfaces/environment";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 import { colors } from "../../../../styles/customTheme";
+import { GiTrashCan } from "react-icons/gi";
+import { route } from "next/dist/next-server/server/router";
 const LIGHT = "light";
 
 type Status = "info" | "warning" | "success" | "error" | undefined;
@@ -210,10 +212,36 @@ const ConfigApp = () => {
       });
   };
 
+  const removeApp = () => {
+    apiClient
+      .delete(`/applications/${appData?.id}`)
+      .then(() => {
+        showToast(
+          "Sucesso!",
+          `${appData?.name} excluída com sucesso`,
+          "success"
+        );
+        router.back();
+      })
+      .catch((error) => {
+        getMessages(error?.response.data).forEach((description, i) => {
+          showToast("Atenção!", description, "warning", i);
+        });
+      });
+  };
+
   return (
     <Skeleton isLoaded={!!enviroments}>
       {appData && (
-        <Flex flexDirection="column" padding="12" width="full">
+        <Flex flexDirection="row" padding="12" width="full">
+          <Icon
+            as={GiTrashCan}
+            boxSize="6"
+            mt="5"
+            color={colors.aurora.Nord11}
+            _hover={{ cursor: "pointer" }}
+            onClick={() => removeApp()}
+          />
           <HeadingActionButton title={appData.name} />
         </Flex>
       )}
