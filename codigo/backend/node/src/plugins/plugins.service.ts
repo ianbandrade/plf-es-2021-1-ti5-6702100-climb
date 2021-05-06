@@ -118,11 +118,7 @@ export class PluginsService {
         dockerfile: plugin.dockerImage,
       },
     };
-    this.amqpConnection.publish(
-      '',
-      plugins.req.routingKey,
-      payload,
-    );
+    this.amqpConnection.publish('', plugins.deploy.req.routingKey, payload);
   }
 
   async createPlugiin(
@@ -139,8 +135,8 @@ export class PluginsService {
 
   @RabbitSubscribe({
     exchange: defaultExchange,
-    routingKey: plugins.res.routingKey,
-    queue: plugins.res.queue,
+    routingKey: plugins.deploy.res.routingKey,
+    queue: plugins.deploy.res.queue,
   })
   async deployResponse({ id, success, credentials }: ResInstanceDto) {
     try {

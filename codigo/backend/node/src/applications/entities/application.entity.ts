@@ -13,13 +13,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Deploys } from './deploys/deploys.entity';
+import { Activity } from './activities/activity.entity';
 
 @Entity()
 export class Application extends BaseEntity {
   @Column({ primary: true })
   id: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   name: string;
 
   @Column({ nullable: false })
@@ -45,6 +46,9 @@ export class Application extends BaseEntity {
 
   @Column({ nullable: false })
   webhookToken: string;
+
+  @Column({ nullable: true })
+  hookId: number;
 
   @ManyToOne(() => User, (user) => user.applications, {
     onDelete: 'CASCADE',
@@ -72,6 +76,11 @@ export class Application extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+
+  @OneToMany(() => Activity, (activity) => activity.application, {
+    onDelete: 'CASCADE',
+  })
+  activities: any;
 
   static get publicAttributes(): (keyof Application)[] {
     return [

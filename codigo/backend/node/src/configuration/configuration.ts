@@ -1,6 +1,7 @@
 export default () => ({
   env: process.env.NODE_ENV || 'development',
   port: +process.env.PORT || 3333,
+  publicHost: process.env.NEST_PUBLIC_API_HOST || undefined,
   database: {
     host: process.env.DATABASE_HOST || 'localhost',
     port: +process.env.DATABASE_PORT || 5432,
@@ -35,21 +36,43 @@ export default () => ({
   },
   amqp: {
     apps: {
-      req: {
-        routingKey: process.env.AMPQ_APPS_REQ_KEY || 'apps.deploy.req',
+      create: {
+        req: {
+          routingKey: 'apps.create.req',
+        },
+        res: {
+          routingKey: 'apps.create.res',
+          queue: 'apps.create.res',
+        },
       },
-      res: {
-        routingKey: process.env.AMPQ_APPS_RES_KEY || 'apps.deploy.res',
-        queue: process.env.AMPQ_APPS_RES_QUEUE || 'apps.deploy.res',
+      update: {
+        req: {
+          routingKey: 'apps.update.req',
+        },
+        res: {
+          routingKey: 'apps.update.res',
+          queue: 'apps.update.res',
+        },
+      },
+      delete: {
+        req: {
+          routingKey: 'apps.delete.req',
+        },
+        res: {
+          routingKey: 'apps.delete.res',
+          queue: 'apps.delete.res',
+        },
       },
     },
     plugins: {
-      req: {
-        routingKey: process.env.AMPQ_PLUGINS_REQ_KEY || 'plugins.deploy.req',
-      },
-      res: {
-        routingKey: process.env.AMPQ_PLUGINS_RES_KEY || 'plugins.deploy.res',
-        queue: process.env.AMPQ_PLUGINS_RES_QUEUE || 'plugins.deploy.res',
+      deploy: {
+        req: {
+          routingKey: 'plugins.deploy.req',
+        },
+        res: {
+          routingKey: 'plugins.deploy.res',
+          queue: 'plugins.deploy.res',
+        },
       },
     },
     user: process.env.AMPQ_USER || 'guest',
@@ -58,6 +81,6 @@ export default () => ({
     host: process.env.AMPQ_HOST || 'localhost',
     port: +process.env.AMPQ_PORT || '5672',
     virtualHost: process.env.AMPQ_VIRTUAL_HOST || '',
-    defaultExchange: 'amq.direct',
+    defaultExchange: 'amq.topic',
   },
 });

@@ -23,10 +23,7 @@ export interface GitlabRepositoriesGraphQLResponse {
         endCursor: string;
       };
       nodes: {
-        name: string;
-        namespace: {
-          fullPath: string;
-        };
+        fullPath: string;
         repository: {
           empty: boolean;
         };

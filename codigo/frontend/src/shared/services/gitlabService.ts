@@ -29,10 +29,7 @@ class GitlabService {
               endCursor
             }
             nodes {
-              name
-              namespace {
-                fullPath
-              }
+              fullPath
               repository {
                 empty
               }
@@ -46,8 +43,8 @@ class GitlabService {
 
     const { hasNextPage, endCursor } = response.data.data.projects.pageInfo;
     const pageRepositories: BasicRepository[] = response.data.data.projects.nodes.map(
-      ({ name, namespace, repository }) => ({
-        name: `${namespace.fullPath}/${name}`,
+      ({ fullPath, repository }) => ({
+        name: `${fullPath}`,
         isEmpty: repository.empty,
       })
     );
@@ -92,6 +89,7 @@ class GitlabService {
         operationName: "Repository",
       }
     );
+    debugger;
 
     const { repository, webUrl, id } = data.data.project;
 

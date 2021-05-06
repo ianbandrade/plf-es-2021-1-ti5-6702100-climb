@@ -8,6 +8,7 @@ import { ReturList } from 'src/shared/dto/return-list.dto';
 import { FindApplicationQueryDto } from '../dto/find-application-query.dto';
 import { User } from 'src/users/user.entity';
 import { Environment } from './environments/environments.entity';
+import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
@@ -55,10 +56,8 @@ export class ApplicationRepository extends Repository<Application> {
       delete application.user;
       delete application.webhookToken;
       return application;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Erro ao salvar o usuário na base de dados',
-      );
+    } catch (e) {
+      postgresCatch(e);
     }
   }
 

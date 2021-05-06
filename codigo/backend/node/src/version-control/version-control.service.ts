@@ -11,6 +11,10 @@ import { Repository } from 'typeorm';
 
 import { User } from 'src/users/user.entity';
 import { chunkArray } from 'src/shared/utils/arrays.util';
+import {
+  githubApiBaseUrl,
+  gitlabApiBaseUrl,
+} from 'src/shared/utils/version-control-services';
 
 interface tokenParams {
   client_id: string;
@@ -125,7 +129,7 @@ export class VersionControlService {
 
   private async getGitHubAccount(token: string) {
     return this.httpService
-      .get('https://api.github.com/user', {
+      .get(`${githubApiBaseUrl}/user`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .toPromise()
@@ -135,7 +139,7 @@ export class VersionControlService {
 
   private async getGitLabAccount(token: string) {
     return this.httpService
-      .get('https://gitlab.com/api/v4/user', {
+      .get(`${gitlabApiBaseUrl}/user`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .toPromise()

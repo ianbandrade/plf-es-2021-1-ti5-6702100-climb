@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import { ApplicationsController } from './applications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,13 +8,19 @@ import { DeploysRepository } from './entities/deploys/deploys.repository';
 import { UsersModule } from 'src/users/users.module';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { rabbitMQConfig } from 'src/configuration/configs/rabbitmq.config';
+import { ActivityRepository } from './entities/activities/activity.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ApplicationRepository, DeploysRepository]),
+    TypeOrmModule.forFeature([
+      ApplicationRepository,
+      DeploysRepository,
+      ActivityRepository,
+    ]),
     RabbitMQModule.forRootAsync(RabbitMQModule, rabbitMQConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
+    HttpModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService],

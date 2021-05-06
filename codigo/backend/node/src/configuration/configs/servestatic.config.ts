@@ -4,7 +4,7 @@ import { join } from 'path';
 
 export const serveStaticConfig: ServeStaticModuleAsyncOptions = {
   imports: [ConfigModule],
-  useFactory: async (configService: ConfigService) => [
+  useFactory: async () => [
     {
       serveRoot: '/static',
       rootPath: join(__dirname, '../../', 'static'),
