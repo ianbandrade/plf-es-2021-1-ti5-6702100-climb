@@ -32,7 +32,7 @@ import {
   GitlabWebhookEventDto,
 } from 'src/shared/dto/webhook-push-event.dto';
 import { ActivityRepository } from './entities/activities/activity.repository';
-import { GithubCommit } from 'src/shared/dto/commit-response';
+import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { ActivityType } from 'src/shared/enum/activity-type.enum';
 import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 
@@ -56,10 +56,11 @@ export class ApplicationsService {
   ) {}
 
   async create(createApplicationDto: CreateApplicationDto, user: User) {
-    const commit = await this.getGithubCommitData(
+    const commit = await this.getCommitData(
       createApplicationDto.repositoryOwner,
       createApplicationDto.repositoryName,
       createApplicationDto.repositoryRef,
+      createApplicationDto.provider,
       user,
     );
 
@@ -73,6 +74,32 @@ export class ApplicationsService {
     this.createApplicationHook(application);
 
     return application;
+  }
+
+  private async getCommitData(
+    repositoryOwner: string,
+    repositoryName: string,
+    repositoryRef: string,
+    provider: string,
+    user: User,
+  ) {
+    console.log({ provider });
+    switch (provider) {
+      case ProvidersEnum.GITHUB:
+        return this.getGithubCommitData(
+          repositoryOwner,
+          repositoryName,
+          repositoryRef,
+          user,
+        );
+      case ProvidersEnum.GITLAB:
+        return this.getGitlabCommitData(
+          repositoryOwner,
+          repositoryName,
+          repositoryRef,
+          user,
+        );
+    }
   }
 
   private async createActivity(
@@ -96,12 +123,12 @@ export class ApplicationsService {
   }
 
   private async getGithubCommitData(
-    owner: string,
-    repo: string,
-    ref: string,
+    repositoryOwner: string,
+    repositoryName: string,
+    repositoryRef: string,
     user: User,
   ) {
-    const createWebhookUrl = `https://api.github.com/repos/${owner}/${repo}/commits/${ref}`;
+    const createWebhookUrl = `https://api.github.com/repos/${repositoryOwner}/${repositoryName}/commits/refs/heads/${repositoryRef}`;
 
     const createWebhookConfig = {
       headers: {
@@ -117,7 +144,33 @@ export class ApplicationsService {
       throw new NotFoundException('Não foi encontrado os dados do repositório');
     }
 
-    return commit.data.sha;
+    return commit.data.sha.slice(0, 8);
+  }
+
+  private async getGitlabCommitData(
+    repositoryOwner: string,
+    repositoryName: string,
+    repositoryRef: string,
+    user: User,
+  ) {
+    const createWebhookUrl = `https://gitlab.com/api/v4/projects/${repositoryOwner}%2F${repositoryName}/repository/commits/${repositoryRef}`;
+
+    console.log({ createWebhookUrl, gitLabToken: user.gitLabToken });
+    const createWebhookConfig = {
+      headers: {
+        Authorization: 'Bearer ' + user.gitLabToken,
+      },
+    };
+
+    const commit = await this.httpService
+      .get<GitlabCommit>(createWebhookUrl, createWebhookConfig)
+      .toPromise();
+
+    if (!commit.data) {
+      throw new NotFoundException('Não foi encontrado os dados do repositório');
+    }
+
+    return commit.data.id.slice(0, 8);
   }
 
   async findAll(
@@ -319,10 +372,11 @@ export class ApplicationsService {
       const user = await this.userService.findUserById(application.userId);
       const deployReq = this.deploysRepository.createDeploy(application, user);
       this.sendNewDeployMessage(await deployReq);
-      const commit = await this.getGithubCommitData(
+      const commit = await this.getCommitData(
         application.repositoryOwner,
         application.repositoryName,
         application.repositoryRef,
+        application.provider,
         user,
       );
       this.updateLastCreatingActivity(application.id, ActivityType.FAIL);

@@ -42,7 +42,7 @@ export class ApplicationRepository extends Repository<Application> {
     application.name = name;
     application.provider = provider;
     application.repositoryId = repositoryId;
-    application.repositoryRef = `refs/heads/${repositoryRef}`;
+    application.repositoryRef = repositoryRef;
     application.repositoryPath = repopsitoryPath;
     application.repositoryURL = repositoryURL;
     application.repositoryOwner = repositoryOwner;

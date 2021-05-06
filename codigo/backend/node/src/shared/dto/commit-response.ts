@@ -1,3 +1,27 @@
+export class GitlabCommit {
+  id: string;
+  short_id: string;
+  created_at: string;
+  parent_ids: [];
+  title: string;
+  message: string;
+  author_name: string;
+  author_email: string;
+  authored_date: string;
+  committer_name: string;
+  committer_email: string;
+  committed_date: string;
+  web_url: string;
+  stats: {
+    additions: number;
+    deletions: number;
+    total: number;
+  };
+  status: boolean;
+  project_id: number;
+  last_pipeline: null;
+}
+
 export class GithubCommit {
   url: string;
   sha: string;
@@ -69,27 +93,23 @@ export class GithubCommit {
     type: string;
     site_admin: false;
   };
-  parents: [
-    {
-      url: string;
-      sha: string;
-    },
-  ];
+  parents: {
+    url: string;
+    sha: string;
+  }[];
   stats: {
     additions: number;
     deletions: number;
     total: number;
   };
-  files: [
-    {
-      filename: string;
-      additions: number;
-      deletions: number;
-      changes: number;
-      status: string;
-      raw_url: string;
-      blob_url: string;
-      patch: string;
-    },
-  ];
+  files: {
+    filename: string;
+    additions: number;
+    deletions: number;
+    changes: number;
+    status: string;
+    raw_url: string;
+    blob_url: string;
+    patch: string;
+  }[];
 }
