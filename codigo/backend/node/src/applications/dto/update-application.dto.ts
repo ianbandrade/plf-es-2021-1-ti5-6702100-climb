@@ -2,8 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseEnvironment } from '../dto/environments/basic-environment.dto';
 
 export class UpdateApplicationDto {
-  name?: string;
-
   repositoryRef?: string;
 
   repositoryPath?: string;

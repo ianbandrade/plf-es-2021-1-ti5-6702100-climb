@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   ValidationPipe,
+  NotImplementedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -85,13 +86,6 @@ export class ApplicationsController {
     return this.applicationsService.getOneDeploy(deployId, user);
   }
 
-  @UseGuards(AuthGuard())
-  @ApiBearerAuth()
-  @Post(':appId/builds')
-  createDeploy(@GetUser() user: User, @Param('appId') appId: string) {
-    return this.applicationsService.createDeploy(appId, user);
-  }
-
   @Post(':appId/hook')
   reciveWebhook(@Param('appId') appId: string, @Body() body: any) {
     return this.applicationsService.reciveWebhook(appId, body);
@@ -102,5 +96,19 @@ export class ApplicationsController {
   @Get(':appId/activities')
   getAppActivities(@GetUser() user: User, @Param('appId') appId: string) {
     return this.applicationsService.getAppActivities(user, appId);
+  }
+
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
+  @Post(':appId/rollback')
+  doRollback(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.doRollBack(user, appId);
+  }
+
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
+  @Post(':appId/rollback/cancel')
+  undoRollback(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.undoRollBack(user, appId);
   }
 }

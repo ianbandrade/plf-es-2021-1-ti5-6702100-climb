@@ -12,7 +12,7 @@ import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { v4 } from 'uuid';
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { ResDeployDto } from './dto/deploys/res-deploy.dto';
+import { ResCreateDto } from './dto/deploys/res-create.dto';
 import { BaseEnvironment } from './dto/environments/basic-environment.dto';
 import { FindApplicationQueryDto } from './dto/find-application-query.dto';
 import { GetApplication } from './dto/get-application.dto';
@@ -24,7 +24,7 @@ import { DeploysRepository } from './entities/deploys/deploys.repository';
 import { Environment } from './entities/environments/environments.entity';
 import * as dotenv from 'dotenv';
 import configuration from 'src/configuration/configuration';
-import { ReqDeployDto } from './dto/deploys/req-deploy.dto';
+import { ReqCreateDto } from './dto/deploys/req-create.dto';
 import * as publicIp from 'public-ip';
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
 import {
@@ -36,6 +36,15 @@ import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { ActivityType } from 'src/shared/enum/activity-type.enum';
 import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 import { Activity } from './entities/activities/activity.entity';
+import { ResUpdateDto } from './dto/deploys/res-update.dto';
+import { ReqUpdateDto } from './dto/deploys/req-update.dto';
+import { ReqDeleteDto } from './dto/deploys/req-delete.dto';
+import { application } from 'express';
+import {
+  githubApiBaseUrl,
+  gitlabApiBaseUrl,
+} from 'src/shared/utils/version-control-services';
+import { GithubWebhook, GitlabWebhook } from 'src/shared/dto/webhook-response';
 
 dotenv.config();
 
@@ -58,33 +67,46 @@ export class ApplicationsService {
   ) {}
 
   async create(createApplicationDto: CreateApplicationDto, user: User) {
-    const commit = await this.getCommitData(
-      createApplicationDto.repositoryOwner,
-      createApplicationDto.repositoryName,
-      createApplicationDto.repositoryRef,
-      createApplicationDto.provider,
+    const {
+      repositoryOwner,
+      repositoryName,
+      repositoryRef,
+      provider,
+    } = createApplicationDto;
+
+    const commit = await this.getCommitData({
+      repositoryOwner,
+      repositoryName,
+      repositoryRef,
+      provider,
       user,
-    );
+    });
 
     const application = await this.applicationRepository.createApplication(
       createApplicationDto,
       user,
     );
 
-    this.createDeploy(application.id, user);
+    this.createNewDeploy(application, user, commit);
     this.createActivity(application, commit);
     this.createApplicationHook(application);
 
     return application;
   }
 
-  private async getCommitData(
-    repositoryOwner: string,
-    repositoryName: string,
-    repositoryRef: string,
-    provider: string,
-    user: User,
-  ) {
+  private async getCommitData({
+    repositoryOwner,
+    repositoryName,
+    repositoryRef,
+    provider,
+    user,
+  }: {
+    repositoryOwner: string;
+    repositoryName: string;
+    repositoryRef: string;
+    provider: string;
+    user: User;
+  }) {
     switch (provider) {
       case ProvidersEnum.GITHUB:
         return this.getGithubCommitData(
@@ -129,7 +151,7 @@ export class ApplicationsService {
     repositoryRef: string,
     user: User,
   ) {
-    const createWebhookUrl = `https://api.github.com/repos/${repositoryOwner}/${repositoryName}/commits/refs/heads/${repositoryRef}`;
+    const createWebhookUrl = `${githubApiBaseUrl}/repos/${repositoryOwner}/${repositoryName}/commits/refs/heads/${repositoryRef}`;
 
     const createWebhookConfig = {
       headers: {
@@ -154,7 +176,7 @@ export class ApplicationsService {
     repositoryRef: string,
     user: User,
   ) {
-    const createWebhookUrl = `https://gitlab.com/api/v4/projects/${repositoryOwner}%2F${repositoryName}/repository/commits/${repositoryRef}`;
+    const getCommitDataUrl = `${gitlabApiBaseUrl}/projects/${repositoryOwner}%2F${repositoryName}/repository/commits/${repositoryRef}`;
 
     const createWebhookConfig = {
       headers: {
@@ -163,7 +185,7 @@ export class ApplicationsService {
     };
 
     const commit = await this.httpService
-      .get<GitlabCommit>(createWebhookUrl, createWebhookConfig)
+      .get<GitlabCommit>(getCommitDataUrl, createWebhookConfig)
       .toPromise();
 
     if (!commit.data) {
@@ -250,23 +272,47 @@ export class ApplicationsService {
     const application = await this.findCompleteApplication(id, user);
 
     const {
-      name,
       repositoryPath,
       repositoryRef,
       environments,
     } = updateApplicationDto;
 
-    application.name = name;
-    application.repositoryPath = repositoryPath;
-    application.repositoryRef = repositoryRef;
-    application.environments = this.mapEnvironments(
-      environments,
-      application.id,
-    );
+    if (repositoryPath) {
+      application.repositoryPath = repositoryPath;
+    }
+    if (repositoryRef) {
+      application.repositoryRef = repositoryRef;
+    }
+    if (environments) {
+      application.environments = this.mapEnvironments(
+        environments,
+        application.id,
+      );
+    }
 
     try {
       await application.save();
-      this.sendUpdateDeployMessage();
+      const {
+        repositoryOwner,
+        repositoryName,
+        repositoryRef: ref,
+        provider,
+      } = application;
+
+      const commit = await this.getCommitData({
+        repositoryOwner,
+        repositoryName,
+        repositoryRef: ref,
+        provider,
+        user,
+      });
+      this.createUpdateDeploy(application, commit);
+      this.updateLastCreatingActivity(
+        application.id,
+        ActivityType.FAIL,
+        'Cancelado por uma atualização',
+      );
+      this.createActivity(application, commit);
 
       return this.findOne(id, user);
     } catch (e) {
@@ -274,33 +320,49 @@ export class ApplicationsService {
     }
   }
 
-  sendUpdateDeployMessage() {
-    throw new Error('Method not implemented.');
+  private async createUpdateDeploy(application: Application, commit: string) {
+    const deployReq = await this.deploysRepository.createUpdateDeploy(
+      application,
+      commit,
+    );
+
+    this.sendUpdateDeployMessage(deployReq);
+
+    return deployReq;
   }
 
-  async remove(id: string, user: User): Promise<boolean> {
-    const application = await this.findCompleteApplication(id, user);
-    if (!application) return false;
+  private async createDeleteDeploy(application: Application) {
+    const deployReq = await this.deploysRepository.createDeleteDeploy(
+      application,
+    );
 
-    if (application.userId !== user.id) return false;
+    this.sendDeleteDeployMessage(deployReq);
+
+    return deployReq;
+  }
+
+  async remove(id: string, user: User): Promise<string> {
+    const application = await this.findCompleteApplication(id, user);
 
     try {
-      const deleteResult = await this.applicationRepository.delete(id);
-      return deleteResult.affected > 0;
+      this.createDeleteDeploy(application);
+      return 'A applicação será deletada';
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
   }
 
-  async createDeploy(appId: string, user: User) {
-    const application = await this.applicationRepository.findOne(appId);
-    this.verifyApplicationFetch(application, user);
-
+  private async createNewDeploy(
+    application: Application,
+    user: User,
+    commit: string,
+  ) {
     const fechedUser = this.userService.findCompleteUserById(user.id);
 
-    const deployReq = await this.deploysRepository.createDeploy(
+    const deployReq = await this.deploysRepository.createNewDeploy(
       application,
       await fechedUser,
+      commit,
     );
 
     this.sendNewDeployMessage(deployReq);
@@ -310,10 +372,119 @@ export class ApplicationsService {
 
   @RabbitSubscribe({
     exchange: defaultExchange,
-    routingKey: apps.deploys.res.routingKey,
-    queue: apps.deploys.res.queue,
+    routingKey: apps.delete.res.routingKey,
+    queue: apps.delete.res.queue,
   })
-  async deployResponse(updateMessage: ResDeployDto) {
+  async reciveDeleteDeployResponse(updateMessage: ResUpdateDto) {
+    const deploy = await this.deploysRepository.findOne(updateMessage.id);
+
+    deploy.status = updateMessage.success
+      ? DeployStatusEnum.SUCCESS
+      : DeployStatusEnum.FAIL;
+
+    deploy.error = updateMessage.error;
+
+    deploy.save();
+
+    if (updateMessage.success) {
+      await this.updateLastCreatingActivity(
+        deploy.applicationId,
+        ActivityType.FAIL,
+        'A aplicação foi deletada',
+      );
+      const application = await this.applicationRepository.findOne(
+        deploy.applicationId,
+      );
+
+      if (await this.deleteWebHooks(application)) {
+        await this.applicationRepository.delete(deploy.applicationId);
+      }
+    }
+  }
+
+  private async deleteWebHooks(application: Application) {
+    const user = await this.userService.findCompleteUserById(
+      application.userId,
+    );
+
+    switch (application.provider) {
+      case ProvidersEnum.GITHUB:
+        this.deleteGithubWebhooks(application, user);
+        return true;
+      case ProvidersEnum.GITLAB:
+        this.deleteGitlabWebhooks(application, user);
+        return true;
+    }
+  }
+
+  private async deleteGithubWebhooks(application: Application, user: User) {
+    const { repositoryOwner, repositoryName, hookId } = application;
+
+    const getCommitDataUrl = `${githubApiBaseUrl}/repos/${repositoryOwner}/${repositoryName}/hooks/${hookId}`;
+
+    const createWebhookConfig = {
+      headers: {
+        Authorization: 'Bearer ' + user.gitHubToken,
+      },
+    };
+
+    return this.httpService
+      .delete(getCommitDataUrl, createWebhookConfig)
+      .toPromise();
+  }
+
+  private async deleteGitlabWebhooks(application: Application, user: User) {
+    const { repositoryOwner, repositoryName, hookId } = application;
+
+    const getCommitDataUrl = `${gitlabApiBaseUrl}/projects/${repositoryOwner}%2F${repositoryName}/hooks/${hookId}`;
+
+    const createWebhookConfig = {
+      headers: {
+        Authorization: 'Bearer ' + user.gitLabToken,
+      },
+    };
+
+    return this.httpService
+      .delete(getCommitDataUrl, createWebhookConfig)
+      .toPromise();
+  }
+
+  @RabbitSubscribe({
+    exchange: defaultExchange,
+    routingKey: apps.update.res.routingKey,
+    queue: apps.update.res.queue,
+  })
+  async reciveUpdateDeployResponse(updateMessage: ResUpdateDto) {
+    const deploy = await this.deploysRepository.findOne(updateMessage.id);
+
+    deploy.status = updateMessage.success
+      ? DeployStatusEnum.SUCCESS
+      : DeployStatusEnum.FAIL;
+
+    deploy.error = updateMessage.error;
+
+    deploy.save();
+
+    if (updateMessage.success) {
+      this.updateLastCreatingActivity(
+        deploy.applicationId,
+        ActivityType.SUCCESS,
+      );
+    } else {
+      this.updateLastCreatingActivity(
+        deploy.applicationId,
+        ActivityType.FAIL,
+        updateMessage.error,
+      );
+    }
+  }
+
+  @RabbitSubscribe({
+    exchange: defaultExchange,
+    routingKey: apps.create.res.routingKey,
+    queue: apps.create.res.queue,
+  })
+  async reciveNewDeployResponse(updateMessage: ResCreateDto) {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
     deploy.status = updateMessage.success
@@ -349,6 +520,10 @@ export class ApplicationsService {
         type: ActivityType.CREATING,
       },
     });
+    if (!lastCreatingActivity) {
+      return;
+    }
+
     lastCreatingActivity.type = type;
     lastCreatingActivity.error = error;
     return await lastCreatingActivity.save();
@@ -383,21 +558,18 @@ export class ApplicationsService {
       const user = await this.userService.findCompleteUserById(
         application.userId,
       );
-      const deployReq = this.deploysRepository.createDeploy(application, user);
-      this.sendNewDeployMessage(await deployReq);
+      const commit = (webhook instanceof GithubWebhookEventDto
+        ? webhook.head_commit.id
+        : webhook.commits[0].id
+      ).slice(0, 8);
+      this.createNewDeploy(application, user, commit);
 
       this.updateLastCreatingActivity(
         application.id,
         ActivityType.FAIL,
         'Novo webhook cancelou essa criação',
       );
-      this.createActivity(
-        application,
-        (webhook instanceof GithubWebhookEventDto
-          ? webhook.head_commit.id
-          : webhook.commits[0].id
-        ).slice(0, 8),
-      );
+      this.createActivity(application, commit);
       return true;
     }
     return false;
@@ -424,10 +596,10 @@ export class ApplicationsService {
     });
   }
 
-  private sendNewDeployMessage(payload: ReqDeployDto) {
+  private sendNewDeployMessage(payload: ReqCreateDto) {
     this.amqpConnection.publish(
       defaultExchange,
-      apps.deploys.req.routingKey,
+      apps.create.req.routingKey,
       payload,
       {
         contentType: 'application/json',
@@ -435,13 +607,40 @@ export class ApplicationsService {
     );
   }
 
-  private createApplicationHook(application: Application) {
+  private sendUpdateDeployMessage(payload: ReqUpdateDto) {
+    this.amqpConnection.publish(
+      defaultExchange,
+      apps.update.req.routingKey,
+      payload,
+      {
+        contentType: 'application/json',
+      },
+    );
+  }
+
+  private sendDeleteDeployMessage(payload: ReqDeleteDto) {
+    this.amqpConnection.publish(
+      defaultExchange,
+      apps.delete.req.routingKey,
+      payload,
+      {
+        contentType: 'application/json',
+      },
+    );
+  }
+
+  private async createApplicationHook(application: Application) {
     switch (application.provider) {
       case ProvidersEnum.GITHUB:
-        return this.createGithubApplicationHook(application);
+        const githubHook = await this.createGithubApplicationHook(application);
+        application.hookId = githubHook.id;
+        break;
       case ProvidersEnum.GITLAB:
-        return this.createGitlabApplicationHook(application);
+        const gitlabHook = await this.createGitlabApplicationHook(application);
+        application.hookId = gitlabHook.id;
+        break;
     }
+    await application.save();
   }
 
   async createGithubApplicationHook(application: Application) {
@@ -449,7 +648,7 @@ export class ApplicationsService {
       application.userId,
     );
 
-    const createWebhookUrl = `https://api.github.com/repos/${application.repositoryOwner}/${application.repositoryName}/hooks`;
+    const createWebhookUrl = `${githubApiBaseUrl}/repos/${application.repositoryOwner}/${application.repositoryName}/hooks`;
 
     const host = publicHost || `${await publicIp.v4()}:${port}`;
 
@@ -467,9 +666,15 @@ export class ApplicationsService {
       },
     };
     try {
-      return await this.httpService
-        .post(createWebhookUrl, createWebhookBody, createWebhookConfig)
-        .toPromise();
+      return (
+        await this.httpService
+          .post<GithubWebhook>(
+            createWebhookUrl,
+            createWebhookBody,
+            createWebhookConfig,
+          )
+          .toPromise()
+      ).data;
     } catch (e) {}
   }
 
@@ -478,10 +683,9 @@ export class ApplicationsService {
       application.userId,
     );
 
-    const createWebhookUrl = `https://gitlab.com/api/v4/projects/${application.repositoryOwner}%2F${application.repositoryName}/hooks`;
+    const createWebhookUrl = `${gitlabApiBaseUrl}/projects/${application.repositoryOwner}%2F${application.repositoryName}/hooks`;
 
     const host = publicHost || `${await publicIp.v4()}:${port}`;
-    debugger;
 
     const createWebhookBody = {
       url: `${host}/applications/${application.id}/hook`,
@@ -493,9 +697,15 @@ export class ApplicationsService {
       },
     };
     try {
-      return await this.httpService
-        .post(createWebhookUrl, createWebhookBody, createWebhookConfig)
-        .toPromise();
+      return (
+        await this.httpService
+          .post<GitlabWebhook>(
+            createWebhookUrl,
+            createWebhookBody,
+            createWebhookConfig,
+          )
+          .toPromise()
+      ).data;
     } catch (e) {}
   }
 
@@ -508,5 +718,74 @@ export class ApplicationsService {
     });
 
     return activities;
+  }
+
+  async doRollBack(user: User, appId: string) {
+    const activities = await this.getAppActivities(user, appId);
+    const actualActivity = activities[0];
+
+    if (actualActivity.type === ActivityType.SUCCESS) {
+      const rollbackToActivity = activities.find(
+        (activity, index) =>
+          (activity.type === ActivityType.SUCCESS ||
+            activity.type === ActivityType.ROLLBACK) &&
+          index > 0 &&
+          activity.commit !== actualActivity.commit,
+      );
+      if (!rollbackToActivity) {
+        return false;
+      }
+
+      const application = await this.findCompleteApplication(appId, user);
+
+      this.updateLastCreatingActivity(
+        application.id,
+        ActivityType.FAIL,
+        'Cancelado devido a solicitação de rollback',
+      );
+      this.createActivity(
+        application,
+        rollbackToActivity.commit,
+        ActivityType.ROLLBACK,
+      );
+      this.createUpdateDeploy(application, rollbackToActivity.commit);
+      return true;
+    }
+
+    return false;
+  }
+
+  async undoRollBack(user: User, appId: string) {
+    const activities = await this.getAppActivities(user, appId);
+    const actualActivity = activities[0];
+
+    if (actualActivity.type === ActivityType.ROLLBACK) {
+      const cancelRollbackActivity = activities.find(
+        (activity, index) =>
+          activity.type === ActivityType.SUCCESS &&
+          index > 0 &&
+          activity.commit !== actualActivity.commit,
+      );
+      if (!cancelRollbackActivity) {
+        return false;
+      }
+
+      const application = await this.findCompleteApplication(appId, user);
+
+      this.updateLastCreatingActivity(
+        application.id,
+        ActivityType.FAIL,
+        'Cancelado devido a solicitação de cancelamento de um rollback',
+      );
+      this.createActivity(
+        application,
+        cancelRollbackActivity.commit,
+        ActivityType.SUCCESS,
+      );
+      this.createUpdateDeploy(application, cancelRollbackActivity.commit);
+      return true;
+    }
+
+    return false;
   }
 }

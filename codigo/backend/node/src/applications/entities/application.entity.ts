@@ -47,6 +47,9 @@ export class Application extends BaseEntity {
   @Column({ nullable: false })
   webhookToken: string;
 
+  @Column({ nullable: true })
+  hookId: number;
+
   @ManyToOne(() => User, (user) => user.applications, {
     onDelete: 'CASCADE',
   })

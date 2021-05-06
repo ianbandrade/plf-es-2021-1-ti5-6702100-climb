@@ -36,22 +36,22 @@ export default () => ({
   },
   amqp: {
     apps: {
-      deploys: {
+      create: {
         req: {
-          routingKey: 'apps.deploy.req',
+          routingKey: 'apps.create.req',
         },
         res: {
-          routingKey: 'apps.deploy.res',
-          queue: 'apps.deploy.res',
+          routingKey: 'apps.create.res',
+          queue: 'apps.create.res',
         },
       },
-      envs: {
+      update: {
         req: {
-          routingKey: 'apps.envs.req',
+          routingKey: 'apps.update.req',
         },
         res: {
-          routingKey: 'apps.envs.res',
-          queue: 'apps.envs.res',
+          routingKey: 'apps.update.res',
+          queue: 'apps.update.res',
         },
       },
       delete: {
@@ -61,24 +61,6 @@ export default () => ({
         res: {
           routingKey: 'apps.delete.res',
           queue: 'apps.delete.res',
-        },
-      },
-      rollback: {
-        req: {
-          routingKey: 'apps.rollback.req',
-        },
-        res: {
-          routingKey: 'apps.rollback.res',
-          queue: 'apps.rollback.res',
-        },
-      },
-      revert: {
-        req: {
-          routingKey: 'apps.revert.req',
-        },
-        res: {
-          routingKey: 'apps.revert.res',
-          queue: 'apps.revert.res',
         },
       },
     },
