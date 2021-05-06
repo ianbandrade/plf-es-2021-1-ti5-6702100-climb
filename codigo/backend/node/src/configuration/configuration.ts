@@ -1,6 +1,7 @@
 export default () => ({
   env: process.env.NODE_ENV || 'development',
   port: +process.env.PORT || 3333,
+  publicHost: process.env.NEST_PUBLIC_API_HOST || undefined,
   database: {
     host: process.env.DATABASE_HOST || 'localhost',
     port: +process.env.DATABASE_PORT || 5432,

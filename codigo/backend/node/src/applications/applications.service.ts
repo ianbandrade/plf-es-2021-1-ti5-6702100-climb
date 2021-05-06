@@ -35,11 +35,13 @@ import { ActivityRepository } from './entities/activities/activity.repository';
 import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { ActivityType } from 'src/shared/enum/activity-type.enum';
 import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
+import { Activity } from './entities/activities/activity.entity';
 
 dotenv.config();
 
 const config = configuration();
 const {
+  publicHost,
   port,
   amqp: { defaultExchange, apps },
 } = config;
@@ -83,7 +85,6 @@ export class ApplicationsService {
     provider: string,
     user: User,
   ) {
-    console.log({ provider });
     switch (provider) {
       case ProvidersEnum.GITHUB:
         return this.getGithubCommitData(
@@ -155,7 +156,6 @@ export class ApplicationsService {
   ) {
     const createWebhookUrl = `https://gitlab.com/api/v4/projects/${repositoryOwner}%2F${repositoryName}/repository/commits/${repositoryRef}`;
 
-    console.log({ createWebhookUrl, gitLabToken: user.gitLabToken });
     const createWebhookConfig = {
       headers: {
         Authorization: 'Bearer ' + user.gitLabToken,
@@ -323,15 +323,25 @@ export class ApplicationsService {
     deploy.error = updateMessage.error;
 
     deploy.save();
-    this.updateLastCreatingActivity(
-      deploy.applicationId,
-      updateMessage.success ? ActivityType.SUCCESS : ActivityType.FAIL,
-    );
+
+    if (updateMessage.success) {
+      this.updateLastCreatingActivity(
+        deploy.applicationId,
+        ActivityType.SUCCESS,
+      );
+    } else {
+      this.updateLastCreatingActivity(
+        deploy.applicationId,
+        ActivityType.FAIL,
+        updateMessage.error,
+      );
+    }
   }
 
   private async updateLastCreatingActivity(
     applicationId: string,
     type: ActivityType,
+    error?: string,
   ) {
     const lastCreatingActivity = await this.activityRepository.findOne({
       where: {
@@ -340,6 +350,7 @@ export class ApplicationsService {
       },
     });
     lastCreatingActivity.type = type;
+    lastCreatingActivity.error = error;
     return await lastCreatingActivity.save();
   }
 
@@ -368,19 +379,25 @@ export class ApplicationsService {
     const application = await this.applicationRepository.findOne(appId);
     this.verifyApplicationFetch(application);
 
-    if (application.repositoryRef === webhook.ref) {
-      const user = await this.userService.findUserById(application.userId);
+    if (`refs/heads/${application.repositoryRef}` === webhook.ref) {
+      const user = await this.userService.findCompleteUserById(
+        application.userId,
+      );
       const deployReq = this.deploysRepository.createDeploy(application, user);
       this.sendNewDeployMessage(await deployReq);
-      const commit = await this.getCommitData(
-        application.repositoryOwner,
-        application.repositoryName,
-        application.repositoryRef,
-        application.provider,
-        user,
+
+      this.updateLastCreatingActivity(
+        application.id,
+        ActivityType.FAIL,
+        'Novo webhook cancelou essa criação',
       );
-      this.updateLastCreatingActivity(application.id, ActivityType.FAIL);
-      this.createActivity(application, commit);
+      this.createActivity(
+        application,
+        (webhook instanceof GithubWebhookEventDto
+          ? webhook.head_commit.id
+          : webhook.commits[0].id
+        ).slice(0, 8),
+      );
       return true;
     }
     return false;
@@ -434,11 +451,11 @@ export class ApplicationsService {
 
     const createWebhookUrl = `https://api.github.com/repos/${application.repositoryOwner}/${application.repositoryName}/hooks`;
 
-    const host = await publicIp.v4();
+    const host = publicHost || `${await publicIp.v4()}:${port}`;
 
     const createWebhookBody = {
       config: {
-        url: `${host}:${port}/${application.id}/hook`,
+        url: `${host}/applications/${application.id}/hook`,
         content_type: 'json',
         secret: application.webhookToken,
       },
@@ -463,11 +480,11 @@ export class ApplicationsService {
 
     const createWebhookUrl = `https://gitlab.com/api/v4/projects/${application.repositoryOwner}%2F${application.repositoryName}/hooks`;
 
-    const host = await publicIp.v4();
+    const host = publicHost || `${await publicIp.v4()}:${port}`;
     debugger;
 
     const createWebhookBody = {
-      url: `${host}:${port}/applications/${application.id}/hook`,
+      url: `${host}/applications/${application.id}/hook`,
     };
 
     const createWebhookConfig = {
@@ -486,6 +503,8 @@ export class ApplicationsService {
     const application = await this.findOne(appId, user);
     const activities = await this.activityRepository.find({
       where: { application },
+      order: { createdAt: 'DESC' },
+      select: Activity.publicAttributes,
     });
 
     return activities;

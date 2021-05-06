@@ -1,4 +1,10 @@
-import { BaseEntity, Column, Entity, ManyToOne } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+} from 'typeorm';
 import { Application } from '../application.entity';
 import { ActivityType } from '../../../shared/enum/activity-type.enum';
 
@@ -20,6 +26,9 @@ export class Activity extends BaseEntity {
     onDelete: 'CASCADE',
   })
   application: Application;
+
+  @CreateDateColumn()
+  createdAt?: Date;
 
   static get publicAttributes(): (keyof Activity)[] {
     return ['type', 'commit', 'error'];
