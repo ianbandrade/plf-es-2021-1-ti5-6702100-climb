@@ -49,8 +49,13 @@ export class ApplicationsController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @Get(':id')
-  findOne(@GetUser() user: User, @Param('id') id: string) {
-    return this.applicationsService.findOne(id, user);
+  findOneId(@GetUser() user: User, @Param('id') id: string) {
+    return this.applicationsService.findOnebyId(id, user);
+  }
+
+  @Get('name/:appName')
+  findOnebyName(@GetUser() user: User, @Param('appName') name: string) {
+    return this.applicationsService.findOnebyName(name, user);
   }
 
   @UseGuards(AuthGuard())

@@ -1,5 +1,5 @@
 import { FormLabel, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { KeyboardEventHandler, ReactNode } from "react";
 
 interface InputProps {
   placeholder: string;
@@ -19,6 +19,8 @@ interface InputProps {
   required?: boolean;
   validate?: boolean;
   maxLength?: number;
+  id?: string;
+  onKeyDown?: (e:KeyboardEvent) => void; 
 }
 
 const InputComponent = ({
@@ -32,6 +34,8 @@ const InputComponent = ({
   required,
   validate,
   maxLength,
+  id,
+  onKeyDown
 }: InputProps) => {
   return (
     <>
@@ -59,7 +63,9 @@ const InputComponent = ({
             color: style?.inputTextColor,
           }}
           value={value}
+          id={id}
           onChange={(e) => onChangeInput(e)}
+          onKeyDown={(e: any) => onKeyDown? onKeyDown(e) : undefined} 
         />
       </InputGroup>
     </>

@@ -8,10 +8,10 @@ import (
   "os"
 )
 
-func Clone(RepositoryURL, RepositoryRef, token, workdir string) (err error) {
+func Clone(RepositoryURL, RepositoryRef, token, commit, workdir string) (err error) {
   referenceName := plumbing.NewBranchReferenceName(RepositoryRef)
 
-  _, err = git.PlainClone(workdir, false, &git.CloneOptions{
+  repository, err := git.PlainClone(workdir, false, &git.CloneOptions{
     URL:           RepositoryURL,
     SingleBranch:  true,
     ReferenceName: referenceName,
@@ -24,6 +24,21 @@ func Clone(RepositoryURL, RepositoryRef, token, workdir string) (err error) {
 
   if err != nil {
     utils.LogError(err, "failed to clone repository")
+    return
+  }
+
+  worktree, err := repository.Worktree()
+
+  if err != nil {
+    utils.LogError(err, "failed to get repository worktree")
+    return
+  }
+
+  if err = worktree.Checkout(&git.CheckoutOptions{
+    Hash: plumbing.NewHash(commit),
+  }); err != nil {
+    utils.LogError(err, "failed to run commit checkout")
+    return
   }
 
   return err

@@ -4,16 +4,15 @@ import (
   "climb/apps-deployer/structs"
   "climb/apps-deployer/utils"
   "fmt"
+  "github.com/streadway/amqp"
 )
 
-func Consumer(handler func([]byte)) (err error) {
+func Consumer(queueName string, routingKeys []string, handler func(amqp.Delivery)) (err error) {
   server, err := getServer()
 
   if err != nil {
     return err
   }
-
-  queueName := utils.RequiredEnv("CONSUMER_QUEUE")
 
   queue, err := server.channel.QueueDeclare(
     queueName,
@@ -31,6 +30,21 @@ func Consumer(handler func([]byte)) (err error) {
     return &structs.RabbitMQError{Message: errorMessage}
   }
 
+  for _, routingKey := range routingKeys {
+    if err = server.channel.QueueBind(
+      queue.Name,
+      routingKey,
+      "amq.topic",
+      false,
+      nil,
+    ); err != nil {
+      errorMessage := fmt.Sprintf("failed to bind queue %s", queueName)
+      utils.LogError(err, errorMessage)
+
+      return &structs.RabbitMQError{Message: errorMessage}
+    }
+  }
+
   messages, err := server.channel.Consume(
     queue.Name,
     "",
@@ -41,11 +55,18 @@ func Consumer(handler func([]byte)) (err error) {
     nil,
   )
 
+  if err != nil {
+    errorMessage := fmt.Sprintf("failed to consume queue %s", queueName)
+    utils.LogError(err, errorMessage)
+
+    return &structs.RabbitMQError{Message: errorMessage}
+  }
+
   for message := range messages {
     msg := message
 
     go func() {
-      handler(msg.Body)
+      handler(msg)
     }()
   }
 
