@@ -108,7 +108,7 @@ export const ApplicationConfig = (props: ApplicationConfigProps) => {
   return (
     <>
       <Flex flexDirection="column" w="60%" padding="1" mr={20}>
-        <Center margin="5">
+        <Center margin={5}>
           <Heading as="h3" size="lg">
             Configurações de Variáveis
           </Heading>

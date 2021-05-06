@@ -1,5 +1,5 @@
 import { List } from "@chakra-ui/layout";
-import { Center, Flex, Heading } from "@chakra-ui/react";
+import { Center, Flex, Heading, Text } from "@chakra-ui/react";
 import { Activity } from "../../shared/interfaces/Activities";
 import { ActivityItem } from "./activityItem";
 
@@ -19,24 +19,31 @@ const ActivitiesConfig: React.FC<ActivitiesConfigProps> = ({
           Atividades
         </Heading>
       </Center>
-      <List spacing={3} p={2} overflow="auto" height="26em">
-        {activities.map((activity, i) => {
-          let canRollback =
-            i === 0 &&
-            (activity.type === "SUCCESS" || activity.type === "ROLLBACK") &&
-            activities.some(
-              (act, index) => act.type === "SUCCESS" && index !== i
+
+      {activities.length > 0 ? (
+        <List spacing={3} p={2} overflow="auto" height="26em">
+          {activities.map((activity, i) => {
+            let canRollback =
+              i === 0 &&
+              (activity.type === "SUCCESS" || activity.type === "ROLLBACK") &&
+              activities.some(
+                (act, index) => act.type === "SUCCESS" && index !== i
+              );
+            return (
+              <ActivityItem
+                key={i}
+                activity={activity}
+                rollback={canRollback}
+                id={id}
+              />
             );
-          return (
-            <ActivityItem
-              key={i}
-              activity={activity}
-              rollback={canRollback}
-              id={id}
-            />
-          );
-        })}
-      </List>
+          })}
+        </List>
+      ) : (
+        <Text mt={10} textAlign="center" fontSize="xl">
+          Sem atividades recentes
+        </Text>
+      )}
     </Flex>
   );
 };

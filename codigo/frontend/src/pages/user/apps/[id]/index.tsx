@@ -200,7 +200,9 @@ const ConfigApp = () => {
       .patch(`/applications/${appData?.id}`, {
         environments: Array.from(enviroments?.values() || []),
       })
-      .then()
+      .then(() => {
+        showToast("Sucesso!", "Variáveis de ambiente salvas.", "success");
+      })
       .catch((error) => {
         getMessages(error?.response.data).forEach((description, i) => {
           showToast("Atenção!", description, "warning", i);
@@ -233,6 +235,7 @@ const ConfigApp = () => {
             submitEnv={submitEnvs}
           />
         )}
+
         <ActivitiesConfig activities={activities.activities} id={id} />
       </Flex>
     </Skeleton>

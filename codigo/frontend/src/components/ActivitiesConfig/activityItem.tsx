@@ -1,8 +1,9 @@
 import { Box, Flex, ListItem, Text } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import React from "react";
 import api from "../../shared/api/api-client";
 import { Action, Activity } from "../../shared/interfaces/Activities";
+import { getMessages } from "../../shared/utils/toast-messages";
 
 interface ActivityItemProps {
   activity: Activity;
@@ -15,6 +16,8 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
   rollback,
   id,
 }): JSX.Element => {
+  const toast = useToast();
+
   const cantRollback: Action = {
     CREATING: null,
     SUCCESS: null,
@@ -40,12 +43,55 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
   const toggleRollback = () => {
     api
       .post(`applications/${id}/rollback`)
-      .then(() => {})
-      .catch(() => {});
+      .then(() => {
+        toast({
+          title: "Sucesso!",
+          description: `A solicitação para realizar o rollback do commit ${activity.commit} foi recebida.`,
+          status: "success",
+          duration: 3000,
+          position: "bottom-left",
+          id: id?.toString(),
+        });
+      })
+      .catch((error) => {
+        getMessages(error?.response?.data).forEach((description, i) =>
+          toast({
+            title: "Erro!",
+            description,
+            status: "error",
+            duration: 3000,
+            position: "bottom-left",
+            id: i,
+          })
+        );
+      });
   };
 
   const toggleCancelRollback = () => {
-    console.log("Here!");
+    api
+      .post(`applications/${id}/rollback/cancel`)
+      .then(() => {
+        toast({
+          title: "Sucesso!",
+          description: `A solicitação para realizar o cancelamento do rollback do commit ${activity.commit} foi recebida.`,
+          status: "success",
+          duration: 3000,
+          position: "bottom-left",
+          id: id?.toString(),
+        });
+      })
+      .catch((error) => {
+        getMessages(error?.response?.data).forEach((description, i) =>
+          toast({
+            title: "Erro!",
+            description,
+            status: "error",
+            duration: 3000,
+            position: "bottom-left",
+            id: i,
+          })
+        );
+      });
   };
 
   return (

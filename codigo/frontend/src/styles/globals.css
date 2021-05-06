@@ -14,21 +14,25 @@ html {
 }
 
 body::-webkit-scrollbar,
-div::-webkit-scrollbar {
+div::-webkit-scrollbar,
+ul::-webkit-scrollbar {
   width: 10px;
 }
 body,
-div {
+div,
+ul {
   scrollbar-width: thin;
   scrollbar-color: var(--thumbBG) var(--scrollbarBG);
 }
 body::-webkit-scrollbar-track,
-div::-webkit-scrollbar-track {
+div::-webkit-scrollbar-track,
+ul::-webkit-scrollbar-track {
   background: var(--scrollbarBG);
   border-radius: 6px;
 }
 body::-webkit-scrollbar-thumb,
-div::-webkit-scrollbar-thumb {
+div::-webkit-scrollbar-thumb,
+ul::-webkit-scrollbar-thumb {
   background-color: var(--thumbBG);
   border-radius: 2px;
   border: 2px solid var(--scrollbarBG);
