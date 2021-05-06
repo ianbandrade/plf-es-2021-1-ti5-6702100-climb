@@ -5,7 +5,7 @@ import { ActivityItem } from "./activityItem";
 
 interface ActivitiesConfigProps {
   activities: Activity[];
-  id: string | string[] | undefined;
+  id: string;
 }
 
 const ActivitiesConfig: React.FC<ActivitiesConfigProps> = ({

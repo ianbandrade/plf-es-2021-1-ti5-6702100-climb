@@ -8,78 +8,13 @@ import ActivitiesConfig from "../../../../components/ActivitiesConfig";
 import { ApplicationConfig } from "../../../../components/ApplicationConfig";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 import apiClient from "../../../../shared/api/api-client";
-import { Activities } from "../../../../shared/interfaces/Activities";
+import { Activities, Activity } from "../../../../shared/interfaces/Activities";
 import Environment from "../../../../shared/interfaces/environment";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 import { colors } from "../../../../styles/customTheme";
 const LIGHT = "light";
 
 type Status = "info" | "warning" | "success" | "error" | undefined;
-
-const activities: Activities = {
-  activities: [
-    {
-      type: "SUCCESS",
-      commit: "897ar077",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar076",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar075",
-      error: null,
-    },
-    {
-      type: "ROLLBACK",
-      commit: "897ar077",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar076",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar075",
-      error: null,
-    },
-    {
-      type: "ROLLBACK",
-      commit: "897ar077",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar076",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar075",
-      error: null,
-    },
-    {
-      type: "ROLLBACK",
-      commit: "897ar077",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar076",
-      error: null,
-    },
-    {
-      type: "SUCCESS",
-      commit: "897ar075",
-      error: null,
-    },
-  ],
-};
 
 export interface ApplicationResponse {
   id: string;
@@ -93,7 +28,7 @@ export interface ApplicationResponse {
   environments: Environment[];
 }
 
-interface ConfigAppState {
+export interface ConfigAppState {
   name: string;
   id: string;
 }
@@ -106,6 +41,7 @@ const ConfigApp = () => {
   >();
   const [appData, setAppData] = useState<ConfigAppState>();
   const toast = useToast();
+  const [activities, setActivities] = useState<Activity[]>([]);
   const { colorMode } = useColorMode();
   const { bgColor } =
     colorMode === LIGHT
@@ -115,6 +51,17 @@ const ConfigApp = () => {
   useEffect(() => {
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (appData) {
+      apiClient
+        .get<Activities>(`applications/${appData.id}/activities`)
+        .then((res) => {
+          console.log(res.data);
+          setActivities(res.data.activities);
+        });
+    }
+  }, [appData]);
 
   const fetchData = (): void => {
     if (id) {
@@ -235,8 +182,9 @@ const ConfigApp = () => {
             submitEnv={submitEnvs}
           />
         )}
-
-        <ActivitiesConfig activities={activities.activities} id={id} />
+        {appData && (
+          <ActivitiesConfig activities={activities} id={appData.id} />
+        )}
       </Flex>
     </Skeleton>
   );

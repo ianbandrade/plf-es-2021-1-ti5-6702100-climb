@@ -141,7 +141,6 @@ export const ApplicationConfig = (props: ApplicationConfigProps) => {
             background={colors.aurora.Nord14}
             size="md"
             _hover={{ backgroundColor: "none", boxShadow: "lg" }}
-            disabled={!props.environments?.length}
             onClick={props.submitEnv}
           >
             Salvar
