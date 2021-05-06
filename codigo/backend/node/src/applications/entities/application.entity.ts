@@ -13,6 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Deploys } from './deploys/deploys.entity';
+import { Activity } from './activities/activity.entity';
 
 @Entity()
 export class Application extends BaseEntity {
@@ -72,6 +73,11 @@ export class Application extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+
+  @OneToMany(() => Activity, (activity) => activity.application, {
+    onDelete: 'CASCADE',
+  })
+  activities: any;
 
   static get publicAttributes(): (keyof Application)[] {
     return [

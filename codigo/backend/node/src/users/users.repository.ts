@@ -3,16 +3,11 @@ import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import {
-  BadRequestException,
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
-import { PostgresError } from 'pg-error-enum';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -66,14 +61,8 @@ export class UserRepository extends Repository<User> {
       delete user.password;
       delete user.salt;
       return user;
-    } catch (error) {
-      if (error.code.toString() === PostgresError.UNIQUE_VIOLATION) {
-        throw new ConflictException('Email já cadastrado');
-      } else {
-        throw new InternalServerErrorException(
-          'Erro ao salvar o usuário na base de dados',
-        );
-      }
+    } catch (e) {
+      postgresCatch(e);
     }
   }
 
@@ -103,12 +92,7 @@ export class UserRepository extends Repository<User> {
         .execute();
       return true;
     } catch (e) {
-      const { code, message, detail } = e;
-      if (code.toString() === PostgresError.NOT_NULL_VIOLATION)
-        throw new BadRequestException(message);
-      if (code.toString() === PostgresError.UNIQUE_VIOLATION)
-        throw new ConflictException(detail, message);
-      else throw new InternalServerErrorException(detail, message);
+      postgresCatch(e);
     }
   }
 

@@ -35,21 +35,61 @@ export default () => ({
   },
   amqp: {
     apps: {
-      req: {
-        routingKey: process.env.AMPQ_APPS_REQ_KEY || 'apps.deploy.req',
+      deploys: {
+        req: {
+          routingKey: 'apps.deploy.req',
+        },
+        res: {
+          routingKey: 'apps.deploy.res',
+          queue: 'apps.deploy.res',
+        },
       },
-      res: {
-        routingKey: process.env.AMPQ_APPS_RES_KEY || 'apps.deploy.res',
-        queue: process.env.AMPQ_APPS_RES_QUEUE || 'apps.deploy.res',
+      envs: {
+        req: {
+          routingKey: 'apps.envs.req',
+        },
+        res: {
+          routingKey: 'apps.envs.res',
+          queue: 'apps.envs.res',
+        },
+      },
+      delete: {
+        req: {
+          routingKey: 'apps.delete.req',
+        },
+        res: {
+          routingKey: 'apps.delete.res',
+          queue: 'apps.delete.res',
+        },
+      },
+      rollback: {
+        req: {
+          routingKey: 'apps.rollback.req',
+        },
+        res: {
+          routingKey: 'apps.rollback.res',
+          queue: 'apps.rollback.res',
+        },
+      },
+      revert: {
+        req: {
+          routingKey: 'apps.revert.req',
+        },
+        res: {
+          routingKey: 'apps.revert.res',
+          queue: 'apps.revert.res',
+        },
       },
     },
     plugins: {
-      req: {
-        routingKey: process.env.AMPQ_PLUGINS_REQ_KEY || 'plugins.deploy.req',
-      },
-      res: {
-        routingKey: process.env.AMPQ_PLUGINS_RES_KEY || 'plugins.deploy.res',
-        queue: process.env.AMPQ_PLUGINS_RES_QUEUE || 'plugins.deploy.res',
+      deploy: {
+        req: {
+          routingKey: 'plugins.deploy.req',
+        },
+        res: {
+          routingKey: 'plugins.deploy.res',
+          queue: 'plugins.deploy.res',
+        },
       },
     },
     user: process.env.AMPQ_USER || 'guest',
@@ -58,6 +98,6 @@ export default () => ({
     host: process.env.AMPQ_HOST || 'localhost',
     port: +process.env.AMPQ_PORT || '5672',
     virtualHost: process.env.AMPQ_VIRTUAL_HOST || '',
-    defaultExchange: 'amq.direct',
+    defaultExchange: 'amq.topic',
   },
 });

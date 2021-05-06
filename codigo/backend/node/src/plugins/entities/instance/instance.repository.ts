@@ -1,5 +1,5 @@
-import { InternalServerErrorException } from '@nestjs/common';
 import { CreateInstancesDto } from 'src/plugins/dto/instances/create-instances.dto';
+import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 import { User } from 'src/users/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { v4 } from 'uuid';
@@ -24,7 +24,7 @@ export class InstanceRepository extends Repository<Instance> {
       instance.save();
       return instance;
     } catch (e) {
-      throw new InternalServerErrorException(e);
+      postgresCatch(e);
     }
   }
 }

@@ -31,6 +31,10 @@ import {
   GithubWebhookEventDto,
   GitlabWebhookEventDto,
 } from 'src/shared/dto/webhook-push-event.dto';
+import { ActivityRepository } from './entities/activities/activity.repository';
+import { GithubCommit } from 'src/shared/dto/commit-response';
+import { ActivityType } from 'src/shared/enum/activity-type.enum';
+import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 
 dotenv.config();
 
@@ -45,20 +49,75 @@ export class ApplicationsService {
   constructor(
     private applicationRepository: ApplicationRepository,
     private deploysRepository: DeploysRepository,
+    private activityRepository: ActivityRepository,
     private userService: UsersService,
     private amqpConnection: AmqpConnection,
     private httpService: HttpService,
   ) {}
 
   async create(createApplicationDto: CreateApplicationDto, user: User) {
+    const commit = await this.getGithubCommitData(
+      createApplicationDto.repositoryOwner,
+      createApplicationDto.repositoryName,
+      createApplicationDto.repositoryRef,
+      user,
+    );
+
     const application = await this.applicationRepository.createApplication(
       createApplicationDto,
       user,
     );
 
     this.createDeploy(application.id, user);
+    this.createActivity(application, commit);
+    this.createApplicationHook(application);
 
     return application;
+  }
+
+  private async createActivity(
+    application: Application,
+    commit: string,
+    type: ActivityType = ActivityType.CREATING,
+    error?: string,
+  ) {
+    const activity = this.activityRepository.create({
+      id: v4(),
+      application,
+      commit,
+      type,
+      error,
+    });
+    try {
+      return await activity.save();
+    } catch (e) {
+      postgresCatch(e);
+    }
+  }
+
+  private async getGithubCommitData(
+    owner: string,
+    repo: string,
+    ref: string,
+    user: User,
+  ) {
+    const createWebhookUrl = `https://api.github.com/repos/${owner}/${repo}/commits/${ref}`;
+
+    const createWebhookConfig = {
+      headers: {
+        Authorization: 'Bearer ' + user.gitHubToken,
+      },
+    };
+
+    const commit = await this.httpService
+      .get<GithubCommit>(createWebhookUrl, createWebhookConfig)
+      .toPromise();
+
+    if (!commit.data) {
+      throw new NotFoundException('Não foi encontrado os dados do repositório');
+    }
+
+    return commit.data.sha;
   }
 
   async findAll(
@@ -73,12 +132,34 @@ export class ApplicationsService {
   }
 
   async findOne(appId: string, user: User): Promise<GetApplication> {
+    const application = this.findCompleteApplication(appId, user);
+
+    return this.getPubicApplicationFields(await application);
+  }
+
+  private async findCompleteApplication(appId: string, user: User) {
     const application = await this.applicationRepository.findOne(appId);
+    this.verifyApplicationFetch(application, user);
+    return application;
+  }
+
+  private verifyApplicationFetch(application: Application, user?: User) {
     if (!application)
       throw new NotFoundException('Aplicação não foi encontrado');
-    if (application.userId !== user.id)
+    if (user && application.userId !== user.id)
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
+  }
 
+  async findOnebyName(name: string, user: User) {
+    const application = await this.applicationRepository.findOne({
+      where: { name },
+    });
+    this.verifyApplicationFetch(application, user);
+
+    return this.getPubicApplicationFields(application);
+  }
+
+  private getPubicApplicationFields(application: Application) {
     const {
       id,
       name,
@@ -113,11 +194,7 @@ export class ApplicationsService {
     updateApplicationDto: UpdateApplicationDto,
     user: User,
   ) {
-    const application = await this.applicationRepository.findOne(id);
-    if (!application)
-      throw new NotFoundException('Aplicação não foi encontrado');
-    if (application.userId !== user.id)
-      throw new ForbiddenException('Você não tem acesso à essa aplicação');
+    const application = await this.findCompleteApplication(id, user);
 
     const {
       name,
@@ -136,14 +213,20 @@ export class ApplicationsService {
 
     try {
       await application.save();
-      return this.applicationRepository.findOne(id);
+      this.sendUpdateDeployMessage();
+
+      return this.findOne(id, user);
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
   }
 
+  sendUpdateDeployMessage() {
+    throw new Error('Method not implemented.');
+  }
+
   async remove(id: string, user: User): Promise<boolean> {
-    const application = await this.applicationRepository.findOne(id);
+    const application = await this.findCompleteApplication(id, user);
     if (!application) return false;
 
     if (application.userId !== user.id) return false;
@@ -158,10 +241,7 @@ export class ApplicationsService {
 
   async createDeploy(appId: string, user: User) {
     const application = await this.applicationRepository.findOne(appId);
-    if (!application)
-      throw new NotFoundException('Aplicação não foi encontrado');
-    if (application.userId !== user.id)
-      throw new ForbiddenException('Você não tem acesso à essa aplicação');
+    this.verifyApplicationFetch(application, user);
 
     const fechedUser = this.userService.findCompleteUserById(user.id);
 
@@ -172,15 +252,13 @@ export class ApplicationsService {
 
     this.sendNewDeployMessage(deployReq);
 
-    this.createApplicationHook(application);
-
     return deployReq;
   }
 
   @RabbitSubscribe({
     exchange: defaultExchange,
-    routingKey: apps.res.routingKey,
-    queue: apps.res.queue,
+    routingKey: apps.deploys.res.routingKey,
+    queue: apps.deploys.res.queue,
   })
   async deployResponse(updateMessage: ResDeployDto) {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
@@ -192,6 +270,24 @@ export class ApplicationsService {
     deploy.error = updateMessage.error;
 
     deploy.save();
+    this.updateLastCreatingActivity(
+      deploy.applicationId,
+      updateMessage.success ? ActivityType.SUCCESS : ActivityType.FAIL,
+    );
+  }
+
+  private async updateLastCreatingActivity(
+    applicationId: string,
+    type: ActivityType,
+  ) {
+    const lastCreatingActivity = await this.activityRepository.findOne({
+      where: {
+        application: { id: applicationId },
+        type: ActivityType.CREATING,
+      },
+    });
+    lastCreatingActivity.type = type;
+    return await lastCreatingActivity.save();
   }
 
   async getOneDeploy(id: string, user: User) {
@@ -205,11 +301,7 @@ export class ApplicationsService {
   }
 
   async getDeploys(appId: string, user: User): Promise<ReturList<Deploys>> {
-    const application = await this.applicationRepository.findOne(appId);
-    if (!application)
-      throw new NotFoundException('Aplicação não foi encontrado');
-    if (application.userId !== user.id)
-      throw new ForbiddenException('Você não tem acesso à essa aplicação');
+    const application = await this.findCompleteApplication(appId, user);
 
     const { deploys } = application;
 
@@ -221,17 +313,20 @@ export class ApplicationsService {
     webhook: GithubWebhookEventDto | GitlabWebhookEventDto,
   ) {
     const application = await this.applicationRepository.findOne(appId);
-    if (!application) {
-      throw new NotFoundException('A aplicação não foi encontrada');
-    }
+    this.verifyApplicationFetch(application);
 
     if (application.repositoryRef === webhook.ref) {
-      const user = this.userService.findUserById(application.userId);
-      const deployReq = this.deploysRepository.createDeploy(
-        application,
-        await user,
-      );
+      const user = await this.userService.findUserById(application.userId);
+      const deployReq = this.deploysRepository.createDeploy(application, user);
       this.sendNewDeployMessage(await deployReq);
+      const commit = await this.getGithubCommitData(
+        application.repositoryOwner,
+        application.repositoryName,
+        application.repositoryRef,
+        user,
+      );
+      this.updateLastCreatingActivity(application.id, ActivityType.FAIL);
+      this.createActivity(application, commit);
       return true;
     }
     return false;
@@ -259,9 +354,14 @@ export class ApplicationsService {
   }
 
   private sendNewDeployMessage(payload: ReqDeployDto) {
-    this.amqpConnection.publish('', apps.req.routingKey, payload, {
-      contentType: 'application/json',
-    });
+    this.amqpConnection.publish(
+      defaultExchange,
+      apps.deploys.req.routingKey,
+      payload,
+      {
+        contentType: 'application/json',
+      },
+    );
   }
 
   private createApplicationHook(application: Application) {
@@ -277,11 +377,8 @@ export class ApplicationsService {
     const user = await this.userService.findCompleteUserById(
       application.userId,
     );
-    const urlSplited = application.repositoryURL.split('/');
-    const owner = urlSplited[3];
-    const repo = urlSplited[4];
 
-    const createWebhookUrl = `https://api.github.com/repos/${owner}/${repo}/hooks`;
+    const createWebhookUrl = `https://api.github.com/repos/${application.repositoryOwner}/${application.repositoryName}/hooks`;
 
     const host = await publicIp.v4();
 
@@ -302,9 +399,7 @@ export class ApplicationsService {
       return await this.httpService
         .post(createWebhookUrl, createWebhookBody, createWebhookConfig)
         .toPromise();
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    } catch (e) {}
   }
 
   private async createGitlabApplicationHook(application: Application) {
@@ -312,11 +407,7 @@ export class ApplicationsService {
       application.userId,
     );
 
-    const urlSplited = application.repositoryURL.split('/');
-    const owner = urlSplited[3];
-    const repo = urlSplited[4];
-
-    const createWebhookUrl = `https://gitlab.com/api/v4/projects/${owner}%2F${repo}/hooks`;
+    const createWebhookUrl = `https://gitlab.com/api/v4/projects/${application.repositoryOwner}%2F${application.repositoryName}/hooks`;
 
     const host = await publicIp.v4();
     debugger;
@@ -334,8 +425,15 @@ export class ApplicationsService {
       return await this.httpService
         .post(createWebhookUrl, createWebhookBody, createWebhookConfig)
         .toPromise();
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    } catch (e) {}
+  }
+
+  async getAppActivities(user: User, appId: string) {
+    const application = await this.findOne(appId, user);
+    const activities = await this.activityRepository.find({
+      where: { application },
+    });
+
+    return activities;
   }
 }

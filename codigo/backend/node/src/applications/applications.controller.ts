@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -30,7 +31,7 @@ export class ApplicationsController {
   @Post()
   create(
     @GetUser() user: User,
-    @Body() createApplicationDto: CreateApplicationDto,
+    @Body(ValidationPipe) createApplicationDto: CreateApplicationDto,
   ) {
     return this.applicationsService.create(createApplicationDto, user);
   }
@@ -94,5 +95,12 @@ export class ApplicationsController {
   @Post(':appId/hook')
   reciveWebhook(@Param('appId') appId: string, @Body() body: any) {
     return this.applicationsService.reciveWebhook(appId, body);
+  }
+
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
+  @Get(':appId/activities')
+  getAppActivities(@GetUser() user: User, @Param('appId') appId: string) {
+    return this.applicationsService.getAppActivities(user, appId);
   }
 }
