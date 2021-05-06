@@ -3,16 +3,83 @@ import { Flex } from "@chakra-ui/layout";
 import { Skeleton } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import ActivitiesConfig from "../../../../components/ActivitiesConfig";
 import { ApplicationConfig } from "../../../../components/ApplicationConfig";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
 import apiClient from "../../../../shared/api/api-client";
+import { Activities } from "../../../../shared/interfaces/Activities";
 import Environment from "../../../../shared/interfaces/environment";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 import { colors } from "../../../../styles/customTheme";
 const LIGHT = "light";
 
 type Status = "info" | "warning" | "success" | "error" | undefined;
+
+const activities: Activities = {
+  activities: [
+    {
+      type: "SUCCESS",
+      commit: "897ar077",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar076",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar075",
+      error: null,
+    },
+    {
+      type: "ROLLBACK",
+      commit: "897ar077",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar076",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar075",
+      error: null,
+    },
+    {
+      type: "ROLLBACK",
+      commit: "897ar077",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar076",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar075",
+      error: null,
+    },
+    {
+      type: "ROLLBACK",
+      commit: "897ar077",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar076",
+      error: null,
+    },
+    {
+      type: "SUCCESS",
+      commit: "897ar075",
+      error: null,
+    },
+  ],
+};
 
 export interface ApplicationResponse {
   id: string;
@@ -150,7 +217,7 @@ const ConfigApp = () => {
       )}
       <Flex
         flexDirection="row"
-        width="80%"
+        width="60%"
         height="100%"
         margin="0 auto;"
         bgColor={bgColor}
@@ -166,6 +233,7 @@ const ConfigApp = () => {
             submitEnv={submitEnvs}
           />
         )}
+        <ActivitiesConfig activities={activities.activities} id={id} />
       </Flex>
     </Skeleton>
   );

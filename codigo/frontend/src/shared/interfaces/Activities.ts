@@ -7,7 +7,7 @@ export type Action = {
 export interface Activity {
   type: Status;
   commit: string;
-  error: string;
+  error: string | null;
 }
 
 export interface Activities {

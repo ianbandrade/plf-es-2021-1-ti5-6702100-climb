@@ -107,7 +107,7 @@ export const ApplicationConfig = (props: ApplicationConfigProps) => {
 
   return (
     <>
-      <Flex flexDirection="column" padding="1" maxWidth="50%">
+      <Flex flexDirection="column" w="60%" padding="1" mr={20}>
         <Center margin="5">
           <Heading as="h3" size="lg">
             Configurações de Variáveis
@@ -125,16 +125,18 @@ export const ApplicationConfig = (props: ApplicationConfigProps) => {
             onClick={addNewEnv}
           />
         </Flex>
-        <Center margin="2" width="100%">
+        <Center width="100%">
           {props.environments?.length > 0 ? (
             <EnvList {...propsEnvList} />
           ) : (
-            <Text fontSize="xl">Sem variáveis configuradas</Text>
+            <Text mt={10} fontSize="xl">
+              Sem variáveis configuradas
+            </Text>
           )}
         </Center>
-        <Center m={4}>
+        <Center mt={4}>
           <Button
-            color={colors.dark.Nord0}
+            color={colors.light.Nord6}
             background={colors.aurora.Nord14}
             size="md"
             _hover={{ backgroundColor: "none", boxShadow: "lg" }}

@@ -1,31 +1,73 @@
 import { Box, Flex, ListItem, Text } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/react";
 import React from "react";
-import { Action, Activity } from "../../shared/interfaces/Versions";
+import api from "../../shared/api/api-client";
+import { Action, Activity } from "../../shared/interfaces/Activities";
 
-const action: Action = {
-  CREATING: null,
-  SUCCESS: null,
-  FAIL: null,
-  ROLLBACK: null,
-};
+interface ActivityItemProps {
+  activity: Activity;
+  rollback: boolean;
+  id: string | string[] | undefined;
+}
 
-const ActivityItem: React.FC<Activity> = ({
-  type,
-  commit,
-  error,
+export const ActivityItem: React.FC<ActivityItemProps> = ({
+  activity,
+  rollback,
+  id,
 }): JSX.Element => {
+  const cantRollback: Action = {
+    CREATING: null,
+    SUCCESS: null,
+    FAIL: null,
+    ROLLBACK: null,
+  };
+
+  const canRollback: Action = {
+    CREATING: null,
+    SUCCESS: (
+      <Button onClick={(): void => toggleRollback()} size="sm">
+        Reverter
+      </Button>
+    ),
+    FAIL: null,
+    ROLLBACK: (
+      <Button onClick={(): void => toggleCancelRollback()} size="sm">
+        Cancelar reversão
+      </Button>
+    ),
+  };
+
+  const toggleRollback = () => {
+    api
+      .post(`applications/${id}/rollback`)
+      .then(() => {})
+      .catch(() => {});
+  };
+
+  const toggleCancelRollback = () => {
+    console.log("Here!");
+  };
+
   return (
     <ListItem w="full">
-      <Flex>
-        <Box flex="1" textAlign="left" margin="0 auto">
-          <Text fontSize="2xl" fontWeight="semibold">
-            Versão: {commit}
+      <Flex alignContent="center">
+        <Box flex="1" textAlign="left" margin="0 auto" mb={2}>
+          <Text
+            fontSize="lg"
+            fontWeight="semibold"
+            display="inline-block"
+            mr={2}
+          >
+            Versão:
           </Text>
-          {action[type]}
+          <Text display="inline-block" fontSize="lg">
+            {activity.commit}
+          </Text>
         </Box>
+        {rollback === true
+          ? canRollback[activity.type]
+          : cantRollback[activity.type]}
       </Flex>
     </ListItem>
   );
 };
-
-export default ActivityItem;

@@ -1,23 +1,43 @@
 import { List } from "@chakra-ui/layout";
-import { Activities } from "../../shared/interfaces/Versions";
-import ActivityItem from "./activityItem";
+import { Center, Flex, Heading } from "@chakra-ui/react";
+import { Activity } from "../../shared/interfaces/Activities";
+import { ActivityItem } from "./activityItem";
 
-const ActivitiesConfig: React.FC<Activities> = ({
+interface ActivitiesConfigProps {
+  activities: Activity[];
+  id: string | string[] | undefined;
+}
+
+const ActivitiesConfig: React.FC<ActivitiesConfigProps> = ({
   activities,
+  id,
 }): JSX.Element => {
   return (
-    <List spacing={3}>
-      {activities.map((activity, i) => {
-        return (
-          <ActivityItem
-            key={i}
-            type={activity.type}
-            commit={activity.commit}
-            error={activity.error}
-          />
-        );
-      })}
-    </List>
+    <Flex display="flex" w="40%" flexDirection="column" padding="1" mr={20}>
+      <Center margin="5">
+        <Heading as="h3" size="lg">
+          Atividades
+        </Heading>
+      </Center>
+      <List spacing={3} p={2} overflow="auto" height="26em">
+        {activities.map((activity, i) => {
+          let canRollback =
+            i === 0 &&
+            (activity.type === "SUCCESS" || activity.type === "ROLLBACK") &&
+            activities.some(
+              (act, index) => act.type === "SUCCESS" && index !== i
+            );
+          return (
+            <ActivityItem
+              key={i}
+              activity={activity}
+              rollback={canRollback}
+              id={id}
+            />
+          );
+        })}
+      </List>
+    </Flex>
   );
 };
 
