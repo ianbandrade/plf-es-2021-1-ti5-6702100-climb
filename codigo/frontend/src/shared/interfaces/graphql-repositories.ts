@@ -55,6 +55,14 @@ export interface GithubRepositoryGraphQLResponse {
   };
 }
 
+export interface GithubAvatarResponse {
+  data: {
+    viewer: {
+      avatarUrl: string;
+    };
+  };
+}
+
 export interface GitlabRepositoryGraphQLResponse {
   data: {
     project: {

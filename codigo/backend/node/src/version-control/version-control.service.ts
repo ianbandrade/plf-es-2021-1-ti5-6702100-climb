@@ -49,8 +49,11 @@ export class VersionControlService {
       },
     );
 
+    const githubUser = await this.getGitHubAccount(accessToken);
+
     await this.usersRepository.update(user.id, {
-      gitHubAccount: await this.getGitHubAccount(accessToken),
+      image: githubUser.avatar_url,
+      gitHubAccount: githubUser.login,
       gitHubToken: accessToken,
     });
   }
@@ -73,8 +76,11 @@ export class VersionControlService {
       },
     );
 
+    const gitlabUser = await this.getGitLabAccount(accessToken);
+
     await this.usersRepository.update(user.id, {
-      gitLabAccount: await this.getGitLabAccount(accessToken),
+      image: user.image || gitlabUser.avatar_url,
+      gitLabAccount: gitlabUser.username,
       gitLabToken: accessToken,
     });
   }
@@ -87,9 +93,13 @@ export class VersionControlService {
     for (const users of usersChunks) {
       Promise.allSettled(
         users.map(async (user: User) => {
+          const githubUser = await this.getGitHubAccount(user.gitHubToken);
+          const gitlabUser = await this.getGitLabAccount(user.gitLabToken);
+
           this.usersRepository.update(user.id, {
-            gitHubAccount: await this.getGitHubAccount(user.gitHubToken),
-            gitLabAccount: await this.getGitLabAccount(user.gitLabToken),
+            image: githubUser.image || gitlabUser.image,
+            gitHubAccount: githubUser.login,
+            gitLabAccount: gitlabUser.account,
           });
         }),
       );
@@ -133,7 +143,7 @@ export class VersionControlService {
         headers: { Authorization: `Bearer ${token}` },
       })
       .toPromise()
-      .then((response) => response.data.login)
+      .then((response) => response.data)
       .catch(() => null);
   }
 
@@ -143,7 +153,7 @@ export class VersionControlService {
         headers: { Authorization: `Bearer ${token}` },
       })
       .toPromise()
-      .then((response) => response.data.username)
+      .then((response) => response.data)
       .catch(() => null);
   }
 }

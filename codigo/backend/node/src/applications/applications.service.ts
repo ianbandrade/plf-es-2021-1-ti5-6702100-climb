@@ -18,6 +18,7 @@ import {
 import { GithubWebhook, GitlabWebhook } from 'src/shared/dto/webhook-response';
 import { ActivityType } from 'src/shared/enum/activity-type.enum';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
+import { DeployType } from 'src/shared/enum/deploy-message-type.enum';
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
 import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 import {
@@ -166,7 +167,7 @@ export class ApplicationsService {
       throw new NotFoundException('Não foi encontrado os dados do repositório');
     }
 
-    return commit.data.sha.slice(0, 8);
+    return commit.data.sha;
   }
 
   private async getGitlabCommitData(
@@ -191,7 +192,7 @@ export class ApplicationsService {
       throw new NotFoundException('Não foi encontrado os dados do repositório');
     }
 
-    return commit.data.id.slice(0, 8);
+    return commit.data.id;
   }
 
   async findAll(
@@ -219,7 +220,7 @@ export class ApplicationsService {
 
   private verifyApplicationFetch(application: Application, user?: User) {
     if (!application)
-      throw new NotFoundException('Aplicação não foi encontrado');
+      throw new NotFoundException('Aplicação não foi encontrada');
     if (user && application.userId !== user.id)
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
   }
@@ -377,6 +378,8 @@ export class ApplicationsService {
   async reciveDeleteDeployResponse(updateMessage: ResUpdateDto) {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
+    if (deploy.type !== DeployType.DELETE) return;
+
     deploy.status = updateMessage.success
       ? DeployStatusEnum.SUCCESS
       : DeployStatusEnum.FAIL;
@@ -456,6 +459,8 @@ export class ApplicationsService {
   async reciveUpdateDeployResponse(updateMessage: ResUpdateDto) {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
+    if (deploy.type !== DeployType.UPDATE) return;
+
     deploy.status = updateMessage.success
       ? DeployStatusEnum.SUCCESS
       : DeployStatusEnum.FAIL;
@@ -485,6 +490,8 @@ export class ApplicationsService {
   })
   async reciveNewDeployResponse(updateMessage: ResCreateDto) {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
+
+    if (deploy.type !== DeployType.CREATE) return;
 
     deploy.status = updateMessage.success
       ? DeployStatusEnum.SUCCESS
@@ -539,9 +546,11 @@ export class ApplicationsService {
   }
 
   async getDeploys(appId: string, user: User): Promise<ReturList<Deploys>> {
-    const application = await this.findCompleteApplication(appId, user);
-
-    const { deploys } = application;
+    const { id } = await this.findCompleteApplication(appId, user);
+    const deploys = await this.deploysRepository.find({
+      where: { application: { id } },
+      order: { createdAt: 'ASC' },
+    });
 
     return { items: deploys, total: deploys.length };
   }
@@ -557,10 +566,10 @@ export class ApplicationsService {
       const user = await this.userService.findCompleteUserById(
         application.userId,
       );
-      const commit = (webhook instanceof GithubWebhookEventDto
-        ? webhook.head_commit.id
-        : webhook.commits[0].id
-      ).slice(0, 8);
+      const commit =
+        webhook instanceof GithubWebhookEventDto
+          ? webhook.head_commit.id
+          : webhook.commits[0].id;
       this.createNewDeploy(application, user, commit);
 
       this.updateLastCreatingActivity(

@@ -8,5 +8,5 @@ export interface User {
   gitLabToken: string;
   gitHubAccount: string;
   gitLabAccount: string;
-  image?: string;
+  image: string;
 }

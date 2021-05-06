@@ -14,7 +14,6 @@ func LogError(err error, message string) {
   log.Print(message)
 }
 
-
 func OptionalEnv(key, fallback string) (value string) {
   value = os.Getenv(key)
 

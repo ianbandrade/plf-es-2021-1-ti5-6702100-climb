@@ -8,6 +8,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { ProvidersEnum } from 'src/shared/enum/providers.enum';
 import { ReqUpdateDto } from 'src/applications/dto/deploys/req-update.dto';
 import { ReqDeleteDto } from 'src/applications/dto/deploys/req-delete.dto';
+import { DeployType } from 'src/shared/enum/deploy-message-type.enum';
 
 @EntityRepository(Deploys)
 export class DeploysRepository extends Repository<Deploys> {
@@ -20,6 +21,7 @@ export class DeploysRepository extends Repository<Deploys> {
 
     deploy.id = v4();
     deploy.application = application;
+    deploy.type = DeployType.CREATE;
 
     try {
       deploy.save();
@@ -53,6 +55,7 @@ export class DeploysRepository extends Repository<Deploys> {
 
     deploy.id = v4();
     deploy.application = application;
+    deploy.type = DeployType.UPDATE;
 
     try {
       deploy.save();
@@ -81,6 +84,7 @@ export class DeploysRepository extends Repository<Deploys> {
 
     deploy.id = v4();
     deploy.application = application;
+    deploy.type = DeployType.DELETE;
 
     try {
       deploy.save();
