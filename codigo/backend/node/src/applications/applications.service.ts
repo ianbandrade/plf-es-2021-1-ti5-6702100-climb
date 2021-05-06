@@ -658,7 +658,7 @@ export class ApplicationsService {
 
     const createWebhookUrl = `${githubApiBaseUrl}/repos/${application.repositoryOwner}/${application.repositoryName}/hooks`;
 
-    const host = publicHost || `${await publicIp.v4()}:${port}`;
+    const host = publicHost || `http://${await publicIp.v4()}:${port}`;
 
     const createWebhookBody = {
       config: {
@@ -693,7 +693,7 @@ export class ApplicationsService {
 
     const createWebhookUrl = `${gitlabApiBaseUrl}/projects/${application.repositoryOwner}%2F${application.repositoryName}/hooks`;
 
-    const host = publicHost || `${await publicIp.v4()}:${port}`;
+    const host = publicHost || `http://${await publicIp.v4()}:${port}`;
 
     const createWebhookBody = {
       url: `${host}/applications/${application.id}/hook`,
