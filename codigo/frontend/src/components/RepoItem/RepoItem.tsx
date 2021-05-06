@@ -2,9 +2,9 @@ import { Button } from "@chakra-ui/button";
 import { useColorMode } from "@chakra-ui/color-mode";
 import Icon from "@chakra-ui/icon";
 import { Box, Flex, Spacer, Text } from "@chakra-ui/layout";
-import { colors } from "../../styles/customTheme";
-import { RepoItemProps } from "../../shared/interfaces/RepoItemProps";
 import Link from "next/link";
+import { RepoItemProps } from "../../shared/interfaces/RepoItemProps";
+import { colors } from "../../styles/customTheme";
 
 export const RepoItem = (props: RepoItemProps.Application) => {
   const { colorMode } = useColorMode();
@@ -43,14 +43,14 @@ export const RepoItem = (props: RepoItemProps.Application) => {
           <Spacer />
           <Box>
             <Link href={`/user/apps/${props?.name}`}>
-            <Button
-              as="a"
-              _hover={{ cursor: "pointer" }}
-              background={colors.aurora.Nord14}
-              color={colors.light.Nord6}
-            >
-              Acessar
-            </Button>
+              <Button
+                as="a"
+                _hover={{ cursor: "pointer" }}
+                background={colors.aurora.Nord14}
+                color={colors.light.Nord6}
+              >
+                Acessar
+              </Button>
             </Link>
           </Box>
         </Flex>

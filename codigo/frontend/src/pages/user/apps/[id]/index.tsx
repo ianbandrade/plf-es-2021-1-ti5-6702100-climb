@@ -1,9 +1,10 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Flex } from "@chakra-ui/layout";
-import { Icon, Skeleton } from "@chakra-ui/react";
+import { Button, Icon, Skeleton } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { GiTrashCan } from "react-icons/gi";
 import ActivitiesConfig from "../../../../components/ActivitiesConfig";
 import { ApplicationConfig } from "../../../../components/ApplicationConfig";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
@@ -12,8 +13,6 @@ import { Activities, Activity } from "../../../../shared/interfaces/Activities";
 import Environment from "../../../../shared/interfaces/environment";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 import { colors } from "../../../../styles/customTheme";
-import { GiTrashCan } from "react-icons/gi";
-import { route } from "next/dist/next-server/server/router";
 const LIGHT = "light";
 
 type Status = "info" | "warning" | "success" | "error" | undefined;
@@ -60,7 +59,12 @@ const ConfigApp = () => {
         .get<Activities>(`applications/${appData.id}/activities`)
         .then((res) => {
           console.log(res.data);
-          setActivities(res.data.activities);
+          setActivities(
+            res.data.activities.map((item) => ({
+              ...item,
+              commit: item.commit.slice(0, 8),
+            }))
+          );
         });
     }
   }, [appData]);
@@ -181,14 +185,15 @@ const ConfigApp = () => {
     <Skeleton isLoaded={!!enviroments}>
       {appData && (
         <Flex flexDirection="row" padding="12" width="full">
-          <Icon
-            as={GiTrashCan}
-            boxSize="6"
-            mt="5"
-            color={colors.aurora.Nord11}
-            _hover={{ cursor: "pointer" }}
-            onClick={() => removeApp()}
-          />
+          <Button onClick={() => removeApp()}>
+            <Icon
+              as={GiTrashCan}
+              boxSize="6"
+              mt="5"
+              color={colors.aurora.Nord11}
+              _hover={{ cursor: "pointer" }}
+            />
+          </Button>
           <HeadingActionButton title={appData.name} />
         </Flex>
       )}
