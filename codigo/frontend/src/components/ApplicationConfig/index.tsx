@@ -36,6 +36,7 @@ export const ApplicationConfig = (props: ApplicationConfigProps) => {
   };
 
   const addNewEnv = () => {
+    if (!keyInput.trim().length) return;
     props.addNewEnv({
       key: keyInput,
       value: valueInput,
