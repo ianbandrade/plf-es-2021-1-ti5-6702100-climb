@@ -80,7 +80,11 @@ class _UserPageState extends State<UserPage> {
           children: [
             Center(
               child: UserProfile(
-                name: routeData.name,
+                name: routeData.gitHubAccount != null
+                    ? routeData.gitHubAccount
+                    : (routeData.gitLabAccount != null
+                        ? routeData.gitLabAccount
+                        : routeData.name),
                 image: routeData.image,
               ),
             ),

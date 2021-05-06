@@ -64,16 +64,35 @@ class HomePage extends StatelessWidget {
           }
         } else {
           final messages = json.decode(response.body)['message'];
-
+          var text = null;
+          if (messages.runtimeType == String) {
+            text = messages;
+          } else {
+            text = messages[0];
+          }
+          print(messages);
           showDialog(
               context: context,
               builder: (BuildContext ctx) {
                 return AlertDialog(
+                  actions: <Widget>[
+                    // define os botões na base do dialogo
+                    Button(
+                      label: 'Fechar',
+                      textStyle: Theme.of(context).textTheme.headline5,
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).accentColor,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                   title: Text(
                     'Erro ao realizar login',
                     style: TextStyle(color: Theme.of(ctx).accentColor),
                   ),
-                  content: Text(messages[0]),
+                  content: Text(text),
                 );
               });
         }

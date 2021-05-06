@@ -60,7 +60,6 @@ class Themes {
         ),
         headline5: TextStyle(
           color: Colors.grey.shade700,
-          fontSize: 24,
         ),
         headline6: TextStyle(
           color: Colors.white,
