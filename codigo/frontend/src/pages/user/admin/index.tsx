@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
-import { AiOutlineUser, } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
 import { FiAlertCircle, FiUserPlus } from "react-icons/fi";
 import Form from "../../../components/Form";
 import Input from "../../../components/Input";
@@ -49,21 +49,21 @@ const Users = () => {
   } =
     colorMode === LIGHT
       ? {
-        formColor: colors.light.Nord6,
-        textColor: colors.light.Nord6,
-        inputTextColor: colors.light.Nord6,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.dark.Nord2,
-        iconInputColor: colors.dark.Nord0,
-      }
+          formColor: colors.light.Nord6,
+          textColor: colors.light.Nord6,
+          inputTextColor: colors.light.Nord6,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.dark.Nord2,
+          iconInputColor: colors.dark.Nord0,
+        }
       : {
-        formColor: colors.dark.Nord2,
-        textColor: colors.dark.Nord2,
-        inputTextColor: colors.dark.Nord2,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.light.Nord4,
-        iconInputColor: colors.dark.Nord2,
-      };
+          formColor: colors.dark.Nord2,
+          textColor: colors.dark.Nord2,
+          inputTextColor: colors.dark.Nord2,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.light.Nord4,
+          iconInputColor: colors.dark.Nord2,
+        };
 
   const inputStyle = {
     inputTextColor,
@@ -101,7 +101,7 @@ const Users = () => {
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
-          showToast(description,"error",i)
+          showToast(description, "error", i)
         );
       });
   }, []);
@@ -152,7 +152,10 @@ const Users = () => {
     } else if (!isUpdateModalOpen && password !== confirmPassField) {
       aux.password = true;
       aux.passwordConfirmation = true;
-      showToast(`O campo 'Senha' e 'Confirmar senha' estão diferentes`, "warning");
+      showToast(
+        `O campo 'Senha' e 'Confirmar senha' estão diferentes`,
+        "warning"
+      );
       setIsInputInvalid(aux);
       return false;
     }
@@ -181,7 +184,7 @@ const Users = () => {
         })
         .catch((e) => {
           getMessages(e?.response?.data).forEach((description, i) =>
-            showToast(description,"error",i)
+            showToast(description, "error", i)
           );
         });
     }
@@ -201,11 +204,11 @@ const Users = () => {
         );
         setUsers(newArray);
         handleCloseModal();
-        showToast(`${nameField} atualizado`,"success");
+        showToast(`${nameField} atualizado`, "success");
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
-          showToast(description,"error",i)
+          showToast(description, "error", i)
         );
       });
   };
@@ -215,31 +218,35 @@ const Users = () => {
       .delete(userId)
       .then(() => {
         const newArray = users.filter((_el, i) => selectedUser !== i);
-        showToast(`Usuário ${selectedUserName} foi deletado`,"success");
+        showToast(`Usuário ${selectedUserName} foi deletado`, "success");
         setUsers(newArray);
         setIsDeleteModalOpen(false);
       })
       .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
-          showToast(description,"error",i)
+          showToast(description, "error", i)
         );
       });
   };
 
-  function showToast(description:string,status: "error" | "warning" |"success", id:number = 1){
-    if(!toast.isActive(id)){
+  function showToast(
+    description: string,
+    status: "error" | "warning" | "success",
+    id: number = 1
+  ) {
+    if (!toast.isActive(id)) {
       const title = {
-        ["error"]:"Erro!",
+        ["error"]: "Erro!",
         ["warning"]: "Aviso!",
-        ["success"]: "Sucesso!"
-      }
+        ["success"]: "Sucesso!",
+      };
       toast({
         title: title[status],
         description,
         status,
         position: "bottom-left",
         duration: 4000,
-        id
+        id,
       });
     }
   }
@@ -272,15 +279,13 @@ const Users = () => {
   }
 
   async function handleImportUsers(data: any[], fileInfo: Object) {
-    const newUsers: CreateUser[] = data.map((user: any[]) => (
-      {
-        name: user[0],
-        email: user[1],
-        password: user[2],
-        passwordConfirmation: user[2],
-        role: UserRole.USER,
-      }
-    ));
+    const newUsers: CreateUser[] = data.map((user: any[]) => ({
+      name: user[0],
+      email: user[1],
+      password: user[2],
+      passwordConfirmation: user[2],
+      role: UserRole.USER,
+    }));
 
     const requestBody = {
       users: newUsers,
@@ -339,37 +344,39 @@ const Users = () => {
 
   const iconTooltip = (child: JSX.Element, label: string) => (
     <Tooltip label={label} fontSize="md" placement="bottom">
-      <span>
-        {child}
-      </span>
+      <span>{child}</span>
     </Tooltip>
-  )
+  );
 
-  const addUserComponent = (
-    iconTooltip(
-      (<Icon
-        as={FiUserPlus}
-        boxSize={25}
-        color={colors.aurora.Nord14}
-        _hover={{ cursor: "pointer" }}
-        m={2}
-        onClick={(): void => openAddUserModal()}
-      />), "Adicionar Usuário"))
+  const addUserComponent = iconTooltip(
+    <Icon
+      as={FiUserPlus}
+      boxSize={25}
+      color={colors.aurora.Nord14}
+      _hover={{ cursor: "pointer" }}
+      m={2}
+      onClick={(): void => openAddUserModal()}
+    />,
+    "Adicionar Usuário"
+  );
 
-  const importUserInfo = (
-    iconTooltip(
-      (<Icon
-        as={FiAlertCircle}
-        boxSize={5}
-        color={colors.aurora.Nord12}
-        _hover={{ cursor: "pointer" }}
-        ml={2}
-        onClick={onOpen}
-      />), "Informações"))
+  const importUserInfo = iconTooltip(
+    <Icon
+      as={FiAlertCircle}
+      boxSize={5}
+      color={colors.aurora.Nord12}
+      _hover={{ cursor: "pointer" }}
+      ml={2}
+      onClick={onOpen}
+    />,
+    "Informações"
+  );
 
   const userTableProps: UserTableProps = {
-    handleDeleteUser, handleUpdateUser, users
-  }
+    handleDeleteUser,
+    handleUpdateUser,
+    users,
+  };
 
   return (
     <>
@@ -548,7 +555,12 @@ const Users = () => {
           <Skeleton isLoaded={!!users} margin="auto">
             {users.length !== 0 ? (
               <UserTable {...userTableProps} />
-            ) : (<Text fontSize="3xl">Sem usuários para serem listados, importe por <code>.csv</code> ou crie um usuário {addUserComponent}</Text>)}
+            ) : (
+              <Text fontSize="2xl">
+                Sem usuários para serem listados, importe por <code>.csv</code>{" "}
+                ou crie um usuário
+              </Text>
+            )}
           </Skeleton>
         </Flex>
       </Flex>

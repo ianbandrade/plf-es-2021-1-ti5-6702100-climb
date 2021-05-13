@@ -1,10 +1,9 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { Flex } from "@chakra-ui/layout";
-import { Button, Icon, Skeleton, Tooltip } from "@chakra-ui/react";
+import { Skeleton } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/toast";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { GiTrashCan } from "react-icons/gi";
 import ActivitiesConfig from "../../../../components/ActivitiesConfig";
 import { ApplicationConfig } from "../../../../components/ApplicationConfig";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
@@ -163,38 +162,10 @@ const ConfigApp = () => {
       });
   };
 
-  const removeApp = () => {
-    apiClient
-      .delete(`/applications/${appData?.id}`)
-      .then(() => {
-        showToast(
-          "Sucesso!",
-          `${appData?.name} excluída com sucesso`,
-          "success"
-        );
-        router.back();
-      })
-      .catch((error) => {
-        getMessages(error?.response.data).forEach((description, i) => {
-          showToast("Atenção!", description, "warning", i);
-        });
-      });
-  };
-
   return (
     <Skeleton isLoaded={!!enviroments}>
       {appData && (
         <Flex flexDirection="row" padding="12" width="full">
-          <Tooltip label="Excluir aplicação" fontSize="md">
-            <Button onClick={() => removeApp()} mt={2} variant="ghost">
-              <Icon
-                as={GiTrashCan}
-                boxSize={6}
-                color={colors.aurora.Nord11}
-                _hover={{ cursor: "pointer" }}
-              />
-            </Button>
-          </Tooltip>
           <HeadingActionButton title={appData.name} />
         </Flex>
       )}

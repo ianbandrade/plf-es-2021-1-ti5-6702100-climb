@@ -1,6 +1,12 @@
-import { Flex, Heading } from "@chakra-ui/react";
-import { HiEmojiSad } from "react-icons/hi";
-const NotLinkedGit = () => {
+import { Flex, Text } from "@chakra-ui/react";
+
+interface NotLinkedGitProps {
+  title: string;
+}
+const NotLinkedGit: React.FC<NotLinkedGitProps> = ({
+  title,
+  children,
+}): JSX.Element => {
   return (
     <Flex
       flexDirection="column"
@@ -11,8 +17,10 @@ const NotLinkedGit = () => {
       width="full"
     >
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
-        <HiEmojiSad size="70" />
-        <Heading fontSize={30}>Organização de git não vinculada ainda</Heading>
+        {children}
+        <Text mt={5} fontSize="2xl" fontWeight="bold">
+          {title}
+        </Text>
       </Flex>
     </Flex>
   );
