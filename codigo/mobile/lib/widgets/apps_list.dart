@@ -16,7 +16,6 @@ class AppList extends StatelessWidget {
         itemCount: applications.length,
         itemBuilder: (ctx, index) {
           final app = applications[index];
-          print(app);
           return AppTile(
             appName: app.name,
             orgRepo: '${app.repositoryOwner}/${app.repositoryName}',

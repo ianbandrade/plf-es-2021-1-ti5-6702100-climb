@@ -25,8 +25,87 @@ class _UserPageState extends State<UserPage> {
     image: 'asdsad',
   );
 
-  final List<Application> _applications = [];
-
+  final List<Application> _applications = [
+    new Application(
+      id: '1',
+      branch: 'master',
+      enviroments: [],
+      name: "blookg",
+      provider: "GITHUB",
+      repository: 'dasdasd',
+      repositoryName: 'oi',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    ),
+    new Application(
+      id: '2',
+      branch: 'master',
+      enviroments: [],
+      name: "tis5",
+      provider: "GITLAB",
+      repository: 'dasdasd',
+      repositoryName: 'oi',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    ),
+    new Application(
+      id: '2',
+      branch: 'master',
+      enviroments: [],
+      name: "tis5",
+      provider: "GITLAB",
+      repository: 'dasdasd',
+      repositoryName: 'oi',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    ),
+    new Application(
+      id: '2',
+      branch: 'master',
+      enviroments: [],
+      name: "tis5",
+      provider: "GITLAB",
+      repository: 'dasdasd',
+      repositoryName: 'oi',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    ),
+    new Application(
+      id: '2',
+      branch: 'master',
+      enviroments: [],
+      name: "tis5",
+      provider: "GITLAB",
+      repository: 'dasdasd',
+      repositoryName: 'oi',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    ),
+    new Application(
+      id: '2',
+      branch: 'master',
+      enviroments: [],
+      name: "tis5",
+      provider: "GITLAB",
+      repository: 'dasdasd',
+      repositoryName: 'oi',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    )
+  ];
+  /*
   @override
   void initState() {
     // TODO: implement initState
@@ -57,11 +136,12 @@ class _UserPageState extends State<UserPage> {
       }
     });
   }
+  */
 
   @override
   Widget build(BuildContext context) {
-    final routeData = ModalRoute.of(context).settings.arguments as User;
-    print(_applications.length);
+    //final routeData = ModalRoute.of(context).settings.arguments as User;
+    //print(_applications.length);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -80,12 +160,8 @@ class _UserPageState extends State<UserPage> {
           children: [
             Center(
               child: UserProfile(
-                name: routeData.gitHubAccount != null
-                    ? routeData.gitHubAccount
-                    : (routeData.gitLabAccount != null
-                        ? routeData.gitLabAccount
-                        : routeData.name),
-                image: routeData.image,
+                name: 'Oi',
+                image: null,
               ),
             ),
             AppList(
