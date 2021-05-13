@@ -46,6 +46,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **25/03/2021** | Gabriel Chaves  | Adição de uma breve explicação da Visão Geral da Solução                                                           | 2.1.1      |
 | **08/04/2021** | Gabriel Chaves  | Atualização da imagem da Visão Geral da Solução                                                                    | 2.1.2      |
 | **25/04/2021** | Arthur Rocha    | Atualiza diagramas arquiteturais                                                                                   | 2.2.0      |
+| **13/05/2021** | Gabriel Chaves  | Adição da Avaliação da Arquitetura sobre desempenho                                                                | 3.0.0      |
 
 ## SUMÁRIO
 
@@ -256,34 +257,57 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 **Cenário 2 - Interoperabilidade:** Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce ut accumsan erat. Pellentesque in enim tempus, iaculis sem in, semper arcu.
 
-**Cenário 3 - Manutenibilidade:** Phasellus magna tellus, consectetur quis scelerisque eget, ultricies eu ligula. Sed rhoncus fermentum nisi, a ullamcorper leo fringilla id. Nulla lacinia sem vel magna ornare, non tincidunt ipsum rhoncus. Nam euismod semper ante id tristique. Mauris vel elit augue.
+**Cenário 3 - Desempenho:** O sistema deve garantir um tempo de resposta adequado. Foi estipulado que devido a proposta do projeto ser uma aplicação que permitirá os membros de uma instituição que deseja que as suas aplicações desenvolvidas sejam expostas, a quantidade de usuários simultâneos raramente deve ultrapassar a quantidade de 100 usuários. Estipulamos que em condições de funcionamento comum o tempo de resposta não deve ultrapassar 5 segundos de resposta, então fizemos um teste com 200 usuários virtuais, por ser o dobro do que consideramos que raramente deve acontecer. Estipulamos também que o sistema deve continuar funcionando pelo menos com 2000 usuários simultâneos sem que a aplicação pare de funcionar, este valor foi pensado por ser 20 vezes a quantidade que raramente deve ter. É claro que o tempo de resposta será bem maior, porém o interesse é saber se o sistema irá continuar em funcionamento.
 
 **Cenário 4 - Segurança:** Suspendisse consectetur porta tortor non convallis. Sed lobortis erat sed dignissim dignissim. Nunc eleifend elit et aliquet imperdiet. Ut eu quam at lacus tincidunt fringilla eget maximus metus. Praesent finibus, sapien eget molestie porta, neque turpis congue risus, vel porttitor sapien tortor ac nulla. Aliquam erat volutpat.
 
 ## 4.2. Avaliação
 
-_Apresente as medidas registradas na coleta de dados. O que não for possível quantificar apresente uma justificativa baseada em evidências qualitativas que suportam o atendimento do requisito não-funcional. Apresente uma avaliação geral da arquitetura indicando os pontos fortes e as limitações da arquitetura proposta._
+| **Atributo de Qualidade:** | Tempo de resposta adequado.                                                                                                                                                                                                                                                                                                                                                                                                              |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Requisito de Qualidade** | O tempo de resposta do sistema não deve ultrapassar 5 segundos.                                                                                                                                                                                                                                                                                                                                                                          |
+| **Preocupação:**           | Os usuários devem ter uma boa experiência ao utilizar o sistema, não tendo que aguardar muito pelas respostas do sistema.                                                                                                                                                                                                                                                                                                                |
+| **Cenário:**               | Cenário 3.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Ambiente:**              | Sistema simulando o dobro de usuários simultâneos que raramente o sistema deve ter.                                                                                                                                                                                                                                                                                                                                                      |
+| **Estímulo:**              | A boa experiência do usuário ao utilizar o sistema.                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Mecanismo:**             | Para a avaliação foi utilizada a stack K6 (ferramenta de teste de carga utilizado) + InfluxDB (banco de dados de séries temporais para armazenar os dados coletados pelo K6) + Grafana (ferramenta para visualização interativa para visualizar os dados do InfluxDB). O teste foi realizado com 3 estágios: alcançando 200 usuários em 5 segundos, permanecendo com 200 usuários por 10 segundos e voltando a 0 usuários em 5 segundos. |
+| **Medida de Resposta:**    | Foi analisado se o tempo de resposta nesse ambiente não ultrapassou os 5 segundos de tempo de resposta por meio da visualização do maior tempo de resposta relatado. Nesse ambiente o tempo de resposta máximo foi de 4,59 segundos, sendo um caso que ultrapassa muitos a quantidade de usuários simultâneos esperados, o resultado foi bem satisfatório.                                                                               |
 
-| **Atributo de Qualidade:** | Segurança                                                                                                                                                                                                                                                              |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Requisito de Qualidade** | Acesso aos recursos restritos deve ser controlado                                                                                                                                                                                                                      |
-| **Preocupação:**           | Os acessos de usuários devem ser controlados de forma que cada um tenha acesso apenas aos recursos condizentes as suas credenciais.                                                                                                                                    |
-| **Cenários(s):**           | Cenário 4                                                                                                                                                                                                                                                              |
-| **Ambiente:**              | Sistema em operação normal                                                                                                                                                                                                                                             |
-| **Estímulo:**              | Acesso do administrador do sistema as funcionalidades de cadastro de novos produtos e exclusão de produtos.                                                                                                                                                            |
-| **Mecanismo:**             | O servidor de aplicação (Rails) gera um _token_ de acesso para o usuário que se autentica no sistema. Este _token_ é transferido para a camada de visualização (Angular) após a autenticação e o tratamento visual das funcionalidades podem ser tratados neste nível. |
-| **Medida de Resposta:**    | As áreas restritas do sistema devem ser disponibilizadas apenas quando há o acesso de usuários credenciados.                                                                                                                                                           |
+| **Considerações sobre a arquitetura:** |            |
+| -------------------------------------- | ---------- |
+| **Riscos:**                            | Não existe |
+| **Pontos de Sensibilidade:**           | Não existe |
+| **_Tradeoff_:**                        | Não existe |
 
-**Considerações sobre a arquitetura:**
+---
 
-| **Riscos:**                  | Não existe |
-| ---------------------------- | ---------- |
-| **Pontos de Sensibilidade:** | Não existe |
-| _**Tradeoff**_ **:**         | Não existe |
+| **Atributo de Qualidade:** | Vários usuários simultâneos                                                                                                                                                                                                                                                                                                                                                                                                                |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Requisito de Qualidade** | O sistema deve ser capaz de servir 2000 usuários simultâneos.                                                                                                                                                                                                                                                                                                                                                                              |
+| **Preocupação:**           | O sistema deve continuar funcionando em um ambiente que ultrapasse muito a quantidade de usuários simultâneos esperados, que pode acontecer em ataques antes desse acesso malicioso ser bloqueado.                                                                                                                                                                                                                                         |
+| **Cenário:**               | Cenário 3.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Ambiente:**              | Sistema simulando uma altíssima quantidade de usuários simultâneos esperados no sistema.                                                                                                                                                                                                                                                                                                                                                   |
+| **Estímulo:**              | Viabilizar que o sistema continue funcionando sem erros devido a grande quantidade de usuários simultâneos de acordo com a quantidade esperada.                                                                                                                                                                                                                                                                                            |
+| **Mecanismo:**             | Para a avaliação foi utilizada a stack K6 (ferramenta de teste de carga utilizado) + InfluxDB (banco de dados de séries temporais para armazenar os dados coletados pelo K6) + Grafana (ferramenta para visualização interativa para visualizar os dados do InfluxDB). O teste foi realizado com 3 estágios: alcançando 2000 usuários em 5 segundos, permanecendo com 2000 usuários por 10 segundos e voltando a 0 usuários em 5 segundos. |
+| **Medida de Resposta:**    | Foi analisado se não ocorreram falhas de resposta. Nesse ambiente não houve nenhum erro de resposta do sistema.                                                                                                                                                                                                                                                                                                                            |
 
-Evidências dos testes realizados
+| **Considerações sobre a arquitetura:** |            |
+| -------------------------------------- | ---------- |
+| **Riscos:**                            | Não existe |
+| **Pontos de Sensibilidade:**           | Não existe |
+| **_Tradeoff_:**                        | Não existe |
 
-_Apresente imagens, descreva os testes de tal forma que se comprove a realização da avaliação._
+---
+
+### **Evidências dos testes realizados:**
+
+**Tempo de resposta adequado**
+
+![Tempo de resposta adequado](imagens/tempo_de_resposta.png 'Tempo de resposta adequado')
+
+**Vários usuários simultâneos**
+
+![Vários usuários simultâneos](imagens/usuarios_simultaneos.png 'Vários usuários simultâneos')
 
 <a name="referencias"></a>
 
