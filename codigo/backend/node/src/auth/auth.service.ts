@@ -25,8 +25,11 @@ export class AuthService {
     }
 
     delete user.password;
+    delete user.salt;
     delete user.gitHubToken;
     delete user.gitLabToken;
+    delete user.createdAt;
+    delete user.updatedAt;
 
     const jwtPayload = {
       id: user.id,
