@@ -13,7 +13,7 @@ class AuthService {
 
   async me(): Promise<User | undefined> {
     try {
-      const user = (await apiClient.get<User>(`${this.DEFAULT_PATH}/me`)).data;
+      const user = (await axios.get<User>(`api/me`)).data;
       setCurrentUser(user);
       return user;
     } catch (e) {
