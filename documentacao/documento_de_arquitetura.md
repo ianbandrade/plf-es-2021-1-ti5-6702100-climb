@@ -253,7 +253,7 @@ _Esta seção descreve a avaliação da arquitetura apresentada, baseada no mét
 
 _Apresente os cenários de testes utilizados na realização dos testes da sua aplicação. Escolha cenários de testes que demonstrem os requisitos não funcionais sendo satisfeitos. Os requisitos a seguir são apenas exemplos de possíveis requisitos, devendo ser revistos, adequados a cada projeto e complementados de forma a terem uma especificação completa e auto-explicativa._
 
-**Cenário 1 - Resistencia a falhas:** Suspendisse consequat consectetur velit. Sed sem risus, dictum dictum facilisis vitae, commodo quis leo. Vivamus nulla sem, cursus a mollis quis, interdum at nulla. Nullam dictum congue mauris. Praesent nec nisi hendrerit, ullamcorper tortor non, rutrum sem. In non lectus tortor. Nulla vel tincidunt eros.
+**Cenário 1 - Resistencia a falhas:** A aplicação deverá manter em funcionamento mesmo em condições de falhas, as mensagens de exceção deverão ser retornadas para o usuário.
 
 **Cenário 2 - Segurança:** Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce ut accumsan erat. Pellentesque in enim tempus, iaculis sem in, semper arcu.
 
@@ -264,6 +264,26 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 ![Swagger UI](imagens/swagger_ui.png 'Swagger UI')
 
 ## 4.2. Avaliação
+
+| | | |
+|-|-|-|
+|**Atributo de Qualidade:**|Resistência a falhas |
+|**Requisito de Qualidade:**|Ser robusto perante falhas|
+|**Preocupação:**|O Sistema manter seu funcionamento  mesmo  em casos de falhas|
+|**Cenário(s):**|Cenário 1|
+|**Ambiente:**|Sistema em operação|
+|**Estímulo:**|Entrada de informações inválidas e falha de comunicação entre sistema|
+|**Mecanismo:**|Componente do tipo _tooltip_ é exibido quando um erro ocorre e suas cores verde, amarelo e vermelho representam seu grau de importância.|
+|**Medida de Resposta:**|Mensagens de erros são exibidas para o usuário|
+---
+
+| **Considerações sobre a arquitetura:** |            |
+| -------------------------------------- | ---------- |
+| **Riscos:**                            | Não existe |
+| **Pontos de Sensibilidade:**           | Não existe |
+| **_Tradeoff_:**                        | Não existe |
+
+---
 
 | **Atributo de Qualidade:** | Tempo de resposta adequado.                                                                                                                                                                                                                                                                                                                                                                                                              |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -302,6 +322,16 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 ---
 
 ### **Evidências dos testes realizados:**
+
+**Resistência a falhas - falha de comunicação entre sistemas**
+
+![Mensagem de falha de comunicação entre sistema](https://user-images.githubusercontent.com/16245919/118180648-2992e780-b40d-11eb-8277-5bad060ee87f.png
+'erro ao acessar rota não autenticada')
+
+**Resistência a falhas - entrada de dados inválidas**
+
+![Entrada de dados inválidas](imagens/entrada_dado_invalido.png
+'Mensagem de aviso sobre formato incorreto de entrada')
 
 **Tempo de resposta adequado**
 
