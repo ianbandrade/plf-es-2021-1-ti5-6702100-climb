@@ -12,14 +12,14 @@ import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import { authService } from "../shared/services/authService";
-import { isAuthenticated, login } from "../shared/auth/localStorageManager";
+import { setCurrentUser } from "../shared/auth/localStorageManager";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 import apiClient from "../shared/api/api-client";
+import { User } from "../shared/interfaces/user";
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
-const AUTHURL = `/auth/signin`;
 const PROFILE_PATH = "user/profile";
 
 const Home = () => {
@@ -29,10 +29,12 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      router.push(PROFILE_PATH);
-    }
-  });
+    authService.me().then((user) => {
+      if (user) {
+        router.push(PROFILE_PATH);
+      }
+    });
+  }, []);
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -68,12 +70,10 @@ const Home = () => {
       });
 
     const body = { email: email.replace(" ", ""), password: password };
-    apiClient
-      .post(AUTHURL, body)
+    authService
+      .signIn(body)
       .then((res) => {
-        if (res.data?.token) {
-          login(res.data.token);
-
+        if (res) {
           showToast({
             title: "Sucesso!",
             description: "Acesso autorizado",

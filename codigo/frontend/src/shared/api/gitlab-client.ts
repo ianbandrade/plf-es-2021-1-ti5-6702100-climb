@@ -8,6 +8,8 @@ const gitlabClient = axios.create({
 gitlabClient.interceptors.request.use(
   async (config) => {
     const me = await authService.me();
+    if (!me) return {};
+
     const token = me.gitLabToken;
 
     if (token) {

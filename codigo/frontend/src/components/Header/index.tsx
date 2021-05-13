@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
-import { logout } from "../../shared/auth/localStorageManager";
 import { UserContext } from "../../store/UserProvider";
 import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";

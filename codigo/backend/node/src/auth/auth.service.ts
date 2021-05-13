@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from '../users/users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -16,12 +17,16 @@ export class AuthService {
 
   async signIn(
     credentialsDto: CredentialsDto,
-  ): Promise<{ token: string; cookie: string }> {
+  ): Promise<{ user: User; cookie: string }> {
     const user = await this.userRepository.checkCredentials(credentialsDto);
 
     if (user === null) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
+
+    delete user.password;
+    delete user.gitHubToken;
+    delete user.gitLabToken;
 
     const jwtPayload = {
       id: user.id,
@@ -32,7 +37,7 @@ export class AuthService {
       gitLabAccount: user.gitLabAccount,
     };
     const token = this.jwtService.sign(jwtPayload);
-    return { token, cookie: this.getCookieToken(token) };
+    return { user, cookie: this.getCookieToken(token) };
   }
 
   getCookieToken(token: string) {

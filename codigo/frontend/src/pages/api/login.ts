@@ -9,5 +9,5 @@ export default async (req: any, res: any) => {
   );
   res.setHeader("Set-Cookie", response.headers["set-cookie"]);
   res.statusCode = 200;
-  return res.json({ success: true, token: response.data.token });
+  return res.json({ success: true, user: response.data.user });
 };
