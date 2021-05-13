@@ -54,6 +54,7 @@ export class ApplicationsController {
   }
 
   @Get('name/:appName')
+  @ApiBearerAuth()
   findOnebyName(@GetUser() user: User, @Param('appName') name: string) {
     return this.applicationsService.findOnebyName(name, user);
   }
@@ -91,6 +92,7 @@ export class ApplicationsController {
   }
 
   @Post(':appId/hook')
+  @ApiBearerAuth()
   reciveWebhook(@Param('appId') appId: string, @Body() body: any) {
     return this.applicationsService.reciveWebhook(appId, body);
   }

@@ -40,6 +40,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard())
   @Post('logout')
+  @ApiBearerAuth()
   async logOut(@Res() response: Response) {
     return response.setHeader(
       'Set-Cookie',
