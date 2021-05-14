@@ -259,9 +259,7 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 **Cenário 3 - Desempenho:** O sistema deve garantir um tempo de resposta adequado. Foi estipulado que devido a proposta do projeto ser uma aplicação que permitirá os membros de uma instituição que deseja que as suas aplicações desenvolvidas sejam expostas, a quantidade de usuários simultâneos raramente deve ultrapassar a quantidade de 100 usuários. Estipulamos que em condições de funcionamento comum o tempo de resposta não deve ultrapassar 5 segundos de resposta, então fizemos um teste com 200 usuários virtuais, por ser o dobro do que consideramos que raramente deve acontecer. Estipulamos também que o sistema deve continuar funcionando pelo menos com 2000 usuários simultâneos sem que a aplicação pare de funcionar, este valor foi pensado por ser 20 vezes a quantidade que raramente deve ter. É claro que o tempo de resposta será bem maior, porém o interesse é saber se o sistema irá continuar em funcionamento.
 
-**Cenário 4 - Manuntenbilidade:** Para realizar a manuntenbilidade do sistema, no *front-end*,foi necessário adotar padrões e princípios de organização e código. Como organização, a criação de pastas foi feita, para que seja necessário identificar e separar cada cenário e sua responsabilidade em relação ao sistema, por exemplo: a pasta 'shared' é interessante quando há necessidade de se compartilhar, de forma global, alguma funcionalidade específica do código, que outras funcionalidades utilizariam. Além disso, a linguagem TypeScript foi escolhida para compor o sistema, pois, nela é possível determiarmos tipos, dessa forma o desenvolvedor que necessita atualizar algum trecho do código, com a ajuda do *IntelliSense* de sua IDE, conseguirá ter visibilidade de como será implantado o retorno ou recebimento desta alteração. Além disso, acatamos as documentações do [Next.JS](https://nextjs.org/) (*framework* React.JS utilizado) e do [Chakra UI](https://chakra-ui.com/) (biblioteca de UI utilizada) como guias, aplicando todos os padrões descritos nelas. Já no *back-end*, com a intenção de facilitar a visualização das rotas, adotamos a utilização do [Swagger UI](https://swagger.io/), no qual proporciona uma documentação padronizada da API, contendo um guia de como todas as chamadas são feitas. Na imagem a seguir, temos uma parte do Swagger implementado: 
-
-![Swagger UI](imagens/swagger_ui.png 'Swagger UI')
+**Cenário 4 - Manuntenbilidade:** Para realizar a manuntenbilidade do sistema, no _front-end_,foi necessário adotar padrões e princípios de organização e código. Como organização, a criação de pastas foi feita, para que seja necessário identificar e separar cada cenário e sua responsabilidade em relação ao sistema, por exemplo: a pasta 'shared' é interessante quando há necessidade de se compartilhar, de forma global, alguma funcionalidade específica do código, que outras funcionalidades utilizariam. Além disso, a linguagem TypeScript foi escolhida para compor o sistema, pois, nela é possível determiarmos tipos, dessa forma o desenvolvedor que necessita atualizar algum trecho do código, com a ajuda do _IntelliSense_ de sua IDE, conseguirá ter visibilidade de como será implantado o retorno ou recebimento desta alteração. Além disso, acatamos as documentações do [Next.JS](https://nextjs.org/) (_framework_ React.JS utilizado) e do [Chakra UI](https://chakra-ui.com/) (biblioteca de UI utilizada) como guias, aplicando todos os padrões descritos nelas. Já no _back-end_, com a intenção de facilitar a visualização das rotas, adotamos a utilização do [Swagger UI](https://swagger.io/), no qual proporciona uma documentação padronizada da API, contendo um guia de como todas as chamadas são feitas.
 
 ## 4.2. Avaliação
 
@@ -310,6 +308,30 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 **Vários usuários simultâneos**
 
 ![Vários usuários simultâneos](imagens/usuarios_simultaneos.png 'Vários usuários simultâneos')
+
+---
+
+| **Atributo de Qualidade:** | Tempo de resposta adequado.                                                                                                                                                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Requisito de Qualidade** | O sistema deve garantir a manutenibilidade, através de uma documentação consistente.                                                                                                                                                          |
+| **Preocupação:**           | Futuros desenvolvedores que irão contribuir com o código possam entender de forma consistente o que foi feito, além de ter facilidade de modificar o que já foi feito.                                                                        |
+| **Cenário:**               | Cenário 4.                                                                                                                                                                                                                                    |
+| **Ambiente:**              | Sistema documentado a partir de uma interface que auxilia a chamada de um endpoint e demonstra o retorno da mesma.                                                                                                                            |
+| **Estímulo:**              | Facilidade de testar e identificar funcionamento do sistema.                                                                                                                                                                                  |
+| **Mecanismo:**             | Implementação da interface Swagger, no _back-end_ do projeto. Esta implementação é realizada por uma estrutura parecida com o JSON, que engloba todos os endpoints da aplicação, documentando seu retorno e como será realizada esta chamada. |
+| **Medida de Resposta:**    | Foi analisado a usabilidade do Swagger, realizando chamadas aos endpoints e avaliando os dados de retorno, se condizem com o que é feito em tempo de execução do código, ou não.                                                              |
+
+| **Considerações sobre a arquitetura:** |            |
+| -------------------------------------- | ---------- |
+| **Riscos:**                            | Não existe |
+| **Pontos de Sensibilidade:**           | Não existe |
+| **_Tradeoff_:**                        | Não existe |
+
+### **Evidências dos testes realizados:**
+
+![Swagger UI](imagens/swagger_ui.png 'Swagger UI')
+
+---
 
 <a name="referencias"></a>
 
