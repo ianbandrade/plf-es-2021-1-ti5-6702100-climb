@@ -263,16 +263,17 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 ## 4.2. Avaliação
 
-| | | |
-|-|-|-|
-|**Atributo de Qualidade:**|Resistência a falhas |
-|**Requisito de Qualidade:**|Ser robusto perante falhas|
-|**Preocupação:**|O Sistema manter seu funcionamento  mesmo  em casos de falhas|
-|**Cenário(s):**|Cenário 1|
-|**Ambiente:**|Sistema em operação|
-|**Estímulo:**|Entrada de informações inválidas e falha de comunicação entre sistema|
-|**Mecanismo:**|Componente do tipo _tooltip_ é exibido quando um erro ocorre e suas cores verde, amarelo e vermelho representam seu grau de importância.|
-|**Medida de Resposta:**|Mensagens de erros são exibidas para o usuário|
+|                             |                                                                                                                                          |     |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| **Atributo de Qualidade:**  | Resistência a falhas                                                                                                                     |
+| **Requisito de Qualidade:** | Ser robusto perante falhas                                                                                                               |
+| **Preocupação:**            | O Sistema manter seu funcionamento mesmo em casos de falhas                                                                              |
+| **Cenário(s):**             | Cenário 1                                                                                                                                |
+| **Ambiente:**               | Sistema em operação                                                                                                                      |
+| **Estímulo:**               | Entrada de informações inválidas e falha de comunicação entre sistema                                                                    |
+| **Mecanismo:**              | Componente do tipo _tooltip_ é exibido quando um erro ocorre e suas cores verde, amarelo e vermelho representam seu grau de importância. |
+| **Medida de Resposta:**     | Mensagens de erros são exibidas para o usuário                                                                                           |
+
 ---
 
 | **Considerações sobre a arquitetura:** |            |
@@ -319,28 +320,6 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 ---
 
-### **Evidências dos testes realizados:**
-
-**Resistência a falhas - falha de comunicação entre sistemas**
-
-![Mensagem de falha de comunicação entre sistema](https://user-images.githubusercontent.com/16245919/118180648-2992e780-b40d-11eb-8277-5bad060ee87f.png
-'erro ao acessar rota não autenticada')
-
-**Resistência a falhas - entrada de dados inválidas**
-
-![Entrada de dados inválidas](imagens/entrada_dado_invalido.png
-'Mensagem de aviso sobre formato incorreto de entrada')
-
-**Tempo de resposta adequado**
-
-![Tempo de resposta adequado](imagens/tempo_de_resposta.png 'Tempo de resposta adequado')
-
-**Vários usuários simultâneos**
-
-![Vários usuários simultâneos](imagens/usuarios_simultaneos.png 'Vários usuários simultâneos')
-
----
-
 | **Atributo de Qualidade:** | Tempo de resposta adequado.                                                                                                                                                                                                                   |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Requisito de Qualidade** | O sistema deve garantir a manutenibilidade, através de uma documentação consistente.                                                                                                                                                          |
@@ -357,13 +336,39 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 | **Pontos de Sensibilidade:**           | Não existe |
 | **_Tradeoff_:**                        | Não existe |
 
+---
+
 ### **Evidências dos testes realizados:**
+
+**Resistência a falhas - falha de comunicação entre sistemas**
+
+![Mensagem de falha de comunicação entre sistema](https://user-images.githubusercontent.com/16245919/118180648-2992e780-b40d-11eb-8277-5bad060ee87f.png 'erro ao acessar rota não autenticada')
+
+**Resistência a falhas - entrada de dados inválidas**
+
+![Entrada de dados inválidas](imagens/entrada_dado_invalido.png 'Mensagem de aviso sobre formato incorreto de entrada')
+
+**Tempo de resposta adequado**
+
+![Tempo de resposta adequado](imagens/tempo_de_resposta.png 'Tempo de resposta adequado')
+
+**Vários usuários simultâneos**
+
+![Vários usuários simultâneos](imagens/usuarios_simultaneos.png 'Vários usuários simultâneos')
+
+**Swagger UI**
 
 ![Swagger UI](imagens/swagger_ui.png 'Swagger UI')
 
+**Chamada exemplo no navegador (utilizando a rota de login)**
+
 ![Resposta da API no navegador](imagens/signin_network.png 'Resposta da API no navegador')
 
+**Token de resposta ao efetuar login**
+
 ![Token de resposta](imagens/signin_network_response.png 'Token de resposta')
+
+**Exemplo da mesma chamada, através do Swagger**
 
 ![Exemplo funcionamento do Swagger](imagens/swagger_example.gif 'Exemplo funcionamento do Swagger')
 
