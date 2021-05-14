@@ -331,6 +331,12 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 ![Swagger UI](imagens/swagger_ui.png 'Swagger UI')
 
+![Resposta da API no navegador](imagens/signin_network.png 'Resposta da API no navegador')
+
+![Token de resposta](imagens/signin_network_response.png 'Token de resposta')
+
+![Exemplo funcionamento do Swagger](imagens/swagger_example.gif 'Exemplo funcionamento do Swagger')
+
 ---
 
 <a name="referencias"></a>
