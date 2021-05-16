@@ -19,4 +19,18 @@ class User {
       this.gitHubAccount,
       this.gitLabAccount,
       this.image});
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      name: json['name'],
+      role: json['role'],
+      gitHubAccount: json['gitHubAccount'],
+      gitHubToken: json['gitHubToken'],
+      gitLabAccount: json['gitLabAccount'],
+      gitLabToken: json['gitLabToken'],
+      image: json['image'],
+      status: json['status'],
+    );
+  }
 }
