@@ -48,9 +48,10 @@ class AuthService {
 
   async isAuthenticated(
     router: NextRouter,
-    redirectPath: { success?: string; error?: string; useDefault?: boolean }
+    redirectPath: { success?: string; error?: string; useDefault?: boolean },
+    setUser?: (user: User) => void
   ): Promise<boolean> {
-    const result = getCurrentUser() && this.me();
+    const result = getCurrentUser() && (await this.me());
 
     if (!result) {
       if (redirectPath.useDefault) router.push(this.LOGIN_PATH);
@@ -58,6 +59,7 @@ class AuthService {
       return false;
     } else {
       if (redirectPath.success) router.push(redirectPath.success);
+      if (setUser) setUser(result);
       return true;
     }
   }

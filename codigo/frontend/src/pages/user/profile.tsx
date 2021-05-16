@@ -11,12 +11,11 @@ const UserPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    authService
-      .isAuthenticated(router, { error: authService.LOGIN_PATH })
-      .then(() => {
-        const user = getCurrentUser();
-        if (user) setUser(user);
-      });
+    authService.isAuthenticated(
+      router,
+      { error: authService.LOGIN_PATH },
+      setUser
+    );
   }, []);
 
   return (
