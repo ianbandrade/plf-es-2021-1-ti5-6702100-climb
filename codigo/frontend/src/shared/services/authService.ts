@@ -1,4 +1,5 @@
 import axios from "axios";
+import { NextRouter, useRouter } from "next/router";
 import apiClient from "../api/api-client";
 import {
   setCurrentUser,
@@ -11,23 +12,23 @@ class AuthService {
   private readonly DEFAULT_PATH = "auth";
   public readonly LOGIN_PATH = "/";
 
-  async me(): Promise<User | undefined> {
-    try {
-      const user = (await axios.get<User>(`api/me`)).data;
-      setCurrentUser(user);
-      return user;
-    } catch (e) {
-      if (e.status === 401) {
-        this.logout();
+  async me(): Promise<User | void> {
+    return await apiClient
+      .get<User>(`${this.DEFAULT_PATH}/me`)
+      .then((res) => {
+        setCurrentUser(res.data);
+        return res.data;
+      })
+      .catch(() => {
+        clearCurrentUser();
         return;
-      }
-    }
+      });
   }
 
   async signIn(credentials: { email: string; password: string }) {
     const user = (
-      await axios.post<{ success: boolean; user: User }>(
-        `api/login`,
+      await apiClient.post<{ success: boolean; user: User }>(
+        `${this.DEFAULT_PATH}/signin`,
         credentials
       )
     ).data.user;
@@ -35,10 +36,30 @@ class AuthService {
     return user;
   }
 
-  async logout() {
-    await apiClient.post<User>(`${this.DEFAULT_PATH}/logout`);
-    clearCurrentUser();
-    return;
+  async logout(router: NextRouter) {
+    await apiClient
+      .post<boolean>(`${this.DEFAULT_PATH}/logout`)
+      .catch()
+      .finally(() => {
+        clearCurrentUser();
+        router.push(this.LOGIN_PATH);
+      });
+  }
+
+  async isAuthenticated(
+    router: NextRouter,
+    redirectPath: { success?: string; error?: string; useDefault?: boolean }
+  ): Promise<boolean> {
+    const result = getCurrentUser() && this.me();
+
+    if (!result) {
+      if (redirectPath.useDefault) router.push(this.LOGIN_PATH);
+      else if (redirectPath.error) router.push(redirectPath.error);
+      return false;
+    } else {
+      if (redirectPath.success) router.push(redirectPath.success);
+      return true;
+    }
   }
 }
 

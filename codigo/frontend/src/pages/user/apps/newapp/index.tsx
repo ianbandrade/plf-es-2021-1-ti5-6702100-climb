@@ -7,6 +7,8 @@ import { GitProviders } from "../../../../shared/interfaces/GitProviders";
 import { githubService } from "../../../../shared/services/githubService";
 import { gitlabService } from "../../../../shared/services/gitlabService";
 import { getMessages } from "../../../../shared/utils/toast-messages";
+import { authService } from "../../../../shared/services/authService";
+import { useRouter } from "next/router";
 
 const data = {
   github: null,
@@ -17,8 +19,10 @@ const NewApp = () => {
   const [gitProvider, setGitProvider] = useState<"github" | "gitlab">("github");
   const [providers, setProviders] = useState<GitProviders>(data);
   const toast = useToast();
+  const router = useRouter();
 
   useEffect(() => {
+    authService.isAuthenticated(router, { useDefault: true });
     fetchData();
   }, []);
 

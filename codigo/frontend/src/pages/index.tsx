@@ -29,11 +29,7 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    authService.me().then((user) => {
-      if (user) {
-        router.push(PROFILE_PATH);
-      }
-    });
+    authService.isAuthenticated(router, { success: PROFILE_PATH });
   }, []);
 
   function handleChangeEmail(e: any) {

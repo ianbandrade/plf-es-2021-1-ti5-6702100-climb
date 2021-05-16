@@ -41,9 +41,7 @@ export class AuthController {
   @UseGuards(AuthGuard())
   @Post('logout')
   async logOut(@Res() response: Response) {
-    return response.setHeader(
-      'Set-Cookie',
-      this.authService.getCookieForLogOut(),
-    );
+    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    return response.send(true);
   }
 }

@@ -1,13 +1,18 @@
 import { Flex, TabList, Tabs } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "../../shared/auth/localStorageManager";
 import TabContainer from "../TabContainer";
 import RegularHeader from "./RegularHeader";
+import { User } from "../../shared/interfaces/user";
+import { UserRole } from "../../shared/enum/user-role";
+
+interface UserHeaderProps {
+  user: User;
+}
 
 const BASE_URL = "/user";
 
-const UserHeader = () => {
+const UserHeader = ({ user }: UserHeaderProps) => {
   const router = useRouter();
 
   const [pages, setPages] = useState([
@@ -19,12 +24,13 @@ const UserHeader = () => {
   const index = pages.findIndex((page) => router.pathname.includes(page.url));
 
   useEffect(() => {
-    const currentUser = getCurrentUser();
-
-    if (currentUser.role === "ADMIN") {
+    if (
+      user?.role === UserRole.ADMIN &&
+      !pages.some((item) => item.text === "Administração")
+    ) {
       setPages([...pages, { url: `/user/admin`, text: "Administração" }]);
     }
-  }, []);
+  }, [user]);
 
   const renderedTabs = pages.map((page) => (
     <TabContainer key={page.url} text={page.text} url={page.url} />

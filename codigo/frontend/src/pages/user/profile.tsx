@@ -2,6 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import Profile from "../../components/Profile";
+import { getCurrentUser } from "../../shared/auth/localStorageManager";
 import { authService } from "../../shared/services/authService";
 import { UserContext } from "../../store/UserProvider";
 
@@ -10,14 +11,12 @@ const UserPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    debugger;
-    authService.me().then((user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        router.push(authService.LOGIN_PATH);
-      }
-    });
+    authService
+      .isAuthenticated(router, { error: authService.LOGIN_PATH })
+      .then(() => {
+        const user = getCurrentUser();
+        if (user) setUser(user);
+      });
   }, []);
 
   return (

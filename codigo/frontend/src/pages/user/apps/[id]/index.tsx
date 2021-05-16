@@ -11,6 +11,7 @@ import { HeadingActionButton } from "../../../../components/SubHeading/ActionBut
 import apiClient from "../../../../shared/api/api-client";
 import { Activities, Activity } from "../../../../shared/interfaces/Activities";
 import Environment from "../../../../shared/interfaces/environment";
+import { authService } from "../../../../shared/services/authService";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 import { colors } from "../../../../styles/customTheme";
 const LIGHT = "light";
@@ -50,6 +51,7 @@ const ConfigApp = () => {
       : { bgColor: colors.dark.Nord1 };
 
   useEffect(() => {
+    authService.isAuthenticated(router, { useDefault: true });
     fetchData();
   }, [id]);
 
