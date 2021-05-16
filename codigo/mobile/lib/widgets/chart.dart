@@ -31,25 +31,37 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
         ),
       ),
     );
-    return new charts.LineChart(
-      seriesList,
-      defaultRenderer:
-          new charts.LineRendererConfig(includeArea: true, stacked: true),
-      animate: animate,
-      primaryMeasureAxis: axis,
-      domainAxis: axis,
-      behaviors: [
-        new charts.ChartTitle('Consumo de CPU',
-            behaviorPosition: charts.BehaviorPosition.bottom,
-            titleStyleSpec: charts.TextStyleSpec(
-              fontFamily: 'Alatsi',
-              color: charts.ColorUtil.fromDartColor(
-                Theme.of(context).accentColor,
-              ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 200,
+            width: 300,
+            child: new charts.LineChart(
+              seriesList,
+              defaultRenderer: new charts.LineRendererConfig(
+                  includeArea: true, stacked: true),
+              animate: animate,
+              primaryMeasureAxis: axis,
+              domainAxis: axis,
+              behaviors: [
+                new charts.ChartTitle('Consumo de CPU',
+                    behaviorPosition: charts.BehaviorPosition.bottom,
+                    titleStyleSpec: charts.TextStyleSpec(
+                      fontFamily: 'Alatsi',
+                      color: charts.ColorUtil.fromDartColor(
+                        Theme.of(context).accentColor,
+                      ),
+                    ),
+                    titleOutsideJustification:
+                        charts.OutsideJustification.middleDrawArea),
+              ],
             ),
-            titleOutsideJustification:
-                charts.OutsideJustification.middleDrawArea),
-      ],
+          ),
+        ),
+      ),
     );
   }
 

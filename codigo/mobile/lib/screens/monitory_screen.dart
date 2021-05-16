@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/monitory_application.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
-import 'package:mobile/widgets/cpu_chart.dart';
+import 'package:mobile/widgets/chart.dart';
 import 'package:mobile/widgets/logo.dart';
 
 class MonitoryPage extends StatefulWidget {
@@ -29,28 +29,20 @@ class _MonitoryPageState extends State<MonitoryPage> {
         ),
         actions: [ChangeThemeSwitch()],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Text(
-              routeData.appName,
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Container(
-                    height: 200,
-                    width: 300,
-                    child: StackedAreaCustomColorLineChart.withSampleData(),
-                  ),
-                ),
+      body: ListView(
+        children: [
+          Column(
+            children: [
+              Text(
+                routeData.appName,
+                style: Theme.of(context).textTheme.headline3,
               ),
-            )
-          ],
-        ),
+              StackedAreaCustomColorLineChart.withSampleData(),
+              StackedAreaCustomColorLineChart.withSampleData(),
+              StackedAreaCustomColorLineChart.withSampleData(),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -5,10 +5,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/models/application.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/shared/api.dart';
-import 'package:mobile/widgets/app_tile.dart';
 import 'package:mobile/widgets/apps_list.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
 import 'package:mobile/widgets/logo.dart';
+import 'package:mobile/widgets/refresh_widget.dart';
 import 'package:mobile/widgets/user_profile.dart';
 
 class UserPage extends StatefulWidget {
@@ -106,10 +106,10 @@ class _UserPageState extends State<UserPage> {
     )
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    ApiClient().get(Uri.http(env['API_HOST'], '/applications')).then((res) {
+  Future fetchApplicationsData() {
+    return ApiClient()
+        .get(Uri.http(env['API_HOST'], '/applications'))
+        .then((res) {
       final parsedApp = json.decode(res.body);
       final items = parsedApp['items'];
       for (var i = 0; i < items.length; i++) {
@@ -120,6 +120,12 @@ class _UserPageState extends State<UserPage> {
         });
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchApplicationsData();
   }
 
   @override
@@ -138,20 +144,23 @@ class _UserPageState extends State<UserPage> {
         ),
         actions: [ChangeThemeSwitch()],
       ),
-      body: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Column(
-          children: [
-            Center(
-              child: UserProfile(
-                name: routeData.name,
-                image: routeData.image,
+      body: RefreshWidget(
+        onRefresh: fetchApplicationsData,
+        child: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              Center(
+                child: UserProfile(
+                  name: routeData.name,
+                  image: routeData.image,
+                ),
               ),
-            ),
-            AppList(
-              applications: _applications,
-            )
-          ],
+              AppList(
+                applications: _applications,
+              )
+            ],
+          ),
         ),
       ),
     );
