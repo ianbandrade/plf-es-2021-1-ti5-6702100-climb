@@ -22,11 +22,7 @@ const NewApp = () => {
   const router = useRouter();
 
   useEffect(() => {
-    authService
-      .isAuthenticated(router, { useDefault: true })
-      .then((isLogged) => {
-        if (isLogged) fetchData();
-      });
+    fetchData();
   }, []);
 
   async function fetchData() {

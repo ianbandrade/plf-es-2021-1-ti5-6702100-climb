@@ -7,16 +7,13 @@ import {
   UseToastOptions,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import { authService } from "../shared/services/authService";
-import { setCurrentUser } from "../shared/auth/localStorageManager";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
-import apiClient from "../shared/api/api-client";
-import { User } from "../shared/interfaces/user";
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
@@ -27,10 +24,6 @@ const Home = () => {
   const [password, setPassword] = useState("");
   const toast = useToast();
   const router = useRouter();
-
-  useEffect(() => {
-    authService.isAuthenticated(router, { success: PROFILE_PATH });
-  }, []);
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);

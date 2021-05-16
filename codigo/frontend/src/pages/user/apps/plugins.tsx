@@ -27,11 +27,7 @@ const Plugins = (): JSX.Element => {
   const router = useRouter();
 
   useEffect(() => {
-    authService
-      .isAuthenticated(router, { useDefault: true })
-      .then((isLogged) => {
-        if (isLogged) getPlugins();
-      });
+    getPlugins();
   }, []);
 
   async function getPlugins() {

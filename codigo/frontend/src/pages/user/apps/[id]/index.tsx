@@ -51,11 +51,7 @@ const ConfigApp = () => {
       : { bgColor: colors.dark.Nord1 };
 
   useEffect(() => {
-    authService
-      .isAuthenticated(router, { useDefault: true })
-      .then((isLogged) => {
-        if (isLogged) fetchData();
-      });
+    fetchData();
   }, [id]);
 
   useEffect(() => {

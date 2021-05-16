@@ -97,22 +97,16 @@ const Users = () => {
   const router = useRouter();
 
   useEffect(() => {
-    authService
-      .isAuthenticated(router, { useDefault: true })
-      .then((isLogged) => {
-        if (isLogged) {
-          userService
-            .getAll({ role: UserRole.USER })
-            .then((res) => {
-              const { data } = res;
-              setUsers(data.items);
-            })
-            .catch((e) => {
-              getMessages(e?.response?.data).forEach((description, i) =>
-                showToast(description, "error", i)
-              );
-            });
-        }
+    userService
+      .getAll({ role: UserRole.USER })
+      .then((res) => {
+        const { data } = res;
+        setUsers(data.items);
+      })
+      .catch((e) => {
+        getMessages(e?.response?.data).forEach((description, i) =>
+          showToast(description, "error", i)
+        );
       });
   }, []);
 
