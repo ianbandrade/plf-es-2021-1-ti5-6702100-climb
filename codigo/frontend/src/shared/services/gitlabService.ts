@@ -89,7 +89,6 @@ class GitlabService {
         operationName: "Repository",
       }
     );
-    debugger;
 
     const { repository, webUrl, id } = data.data.project;
 

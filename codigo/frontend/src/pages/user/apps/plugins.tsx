@@ -1,4 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import AccordionInstance from "../../../components/AccordionInstance";
 import Modal from "../../../components/Modal";
@@ -7,6 +8,7 @@ import { HeadingActionButton } from "../../../components/SubHeading/ActionButton
 import api from "../../../shared/api/api-client";
 import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { Plugin } from "../../../shared/interfaces/PreConfigCardInterface";
+import { authService } from "../../../shared/services/authService";
 
 interface PluginsResponse {
   plugins: Plugin[];
@@ -22,6 +24,7 @@ const Plugins = (): JSX.Element => {
   const [flag, setFlag] = useState<boolean>(false);
   const [plugins, setPlugins] = useState<Plugin[]>([]);
   const [instances, setInstances] = useState<Instance[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     getPlugins();

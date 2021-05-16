@@ -24,11 +24,11 @@ export class AuthController {
   async signIn(
     @Body(ValidationPipe) credentiaslsDto: CredentialsDto,
     @Res() response: Response,
-  ): Promise<{ token: string }> {
-    const { token, cookie } = await this.authService.signIn(credentiaslsDto);
+  ): Promise<{ user: User }> {
+    const { user, cookie } = await this.authService.signIn(credentiaslsDto);
     response.setHeader('Set-Cookie', cookie);
-    response.send({ token });
-    return { token };
+    response.send({ user });
+    return { user };
   }
 
   @Get('/me')
@@ -42,9 +42,7 @@ export class AuthController {
   @Post('logout')
   @ApiBearerAuth()
   async logOut(@Res() response: Response) {
-    return response.setHeader(
-      'Set-Cookie',
-      this.authService.getCookieForLogOut(),
-    );
+    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    return response.send(true);
   }
 }
