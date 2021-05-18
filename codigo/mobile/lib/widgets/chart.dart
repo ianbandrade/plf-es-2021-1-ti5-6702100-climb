@@ -6,14 +6,17 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class StackedAreaCustomColorLineChart extends StatelessWidget {
+class Chart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
   final String chartTitle;
-  StackedAreaCustomColorLineChart({
+  final String measurementUnity;
+
+  Chart({
     this.seriesList,
     this.animate,
     this.chartTitle,
+    this.measurementUnity,
   });
 
   /// Creates a [LineChart] with sample data and no transition.
@@ -61,7 +64,7 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
               domainAxis: axisTime,
               behaviors: [
                 new charts.ChartTitle(
-                  'Hz',
+                  measurementUnity,
                   behaviorPosition: charts.BehaviorPosition.top,
                   titleOutsideJustification: charts.OutsideJustification.start,
                   titleStyleSpec: charts.TextStyleSpec(
@@ -72,16 +75,18 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
                   ),
                   innerPadding: 12,
                 ),
-                new charts.ChartTitle(chartTitle,
-                    behaviorPosition: charts.BehaviorPosition.bottom,
-                    titleStyleSpec: charts.TextStyleSpec(
-                      fontFamily: 'Alatsi',
-                      color: charts.ColorUtil.fromDartColor(
-                        Theme.of(context).accentColor,
-                      ),
+                new charts.ChartTitle(
+                  chartTitle,
+                  behaviorPosition: charts.BehaviorPosition.bottom,
+                  titleStyleSpec: charts.TextStyleSpec(
+                    fontFamily: 'Alatsi',
+                    color: charts.ColorUtil.fromDartColor(
+                      Theme.of(context).accentColor,
                     ),
-                    titleOutsideJustification:
-                        charts.OutsideJustification.middleDrawArea),
+                  ),
+                  titleOutsideJustification:
+                      charts.OutsideJustification.middleDrawArea,
+                ),
               ],
             ),
           ),
@@ -91,35 +96,5 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
-    final data = [
-      new TimeSeriesSales(new DateTime(2018, 8, 22, 1, 02, 00), 25),
-      new TimeSeriesSales(new DateTime(2018, 8, 22, 1, 07, 30), 12),
-      new TimeSeriesSales(new DateTime(2018, 8, 22, 1, 12, 30), 23),
-      new TimeSeriesSales(new DateTime(2018, 8, 22, 2, 17, 30), 63),
-    ];
-    return [
-      new charts.Series<TimeSeriesSales, DateTime>(
-        id: 'Mobile',
 
-        // colorFn specifies that the line will be green.
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        // areaColorFn specifies that the area skirt will be light green.
-        areaColorFn: (_, __) =>
-            charts.MaterialPalette.green.shadeDefault.lighter,
-        domainFn: (TimeSeriesSales sales, _) => sales.time,
-        measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: data,
-      )
-    ];
-  }
-}
-
-/// Sample linear data type.
-
-class TimeSeriesSales {
-  final DateTime time;
-  final int sales;
-
-  TimeSeriesSales(this.time, this.sales);
 }

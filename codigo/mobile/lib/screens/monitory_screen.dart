@@ -40,20 +40,23 @@ class _MonitoryPageState extends State<MonitoryPage> {
                 routeData.appName,
                 style: Theme.of(context).textTheme.headline3,
               ),
-              StackedAreaCustomColorLineChart(
-                seriesList: _createSampleData(),
+              Chart(
+                seriesList: _createData(Colors.red),
                 animate: true,
                 chartTitle: 'Consumo de CPU',
+                measurementUnity: 'Hz',
               ),
-              StackedAreaCustomColorLineChart(
-                seriesList: _createSampleData(),
+              Chart(
+                seriesList: _createData(Colors.green),
                 animate: true,
                 chartTitle: 'Consumo de Memória',
+                measurementUnity: 'MB',
               ),
-              StackedAreaCustomColorLineChart(
-                seriesList: _createSampleData(),
+              Chart(
+                seriesList: _createData(Colors.blue),
                 animate: true,
                 chartTitle: 'Consumo de Memória',
+                measurementUnity: 'OI',
               )
             ],
           ),
@@ -62,7 +65,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
     );
   }
 
-  static List<charts.Series<CPU, DateTime>> _createSampleData() {
+  static List<charts.Series<CPU, DateTime>> _createData(Color color) {
     var myFakeMobileData = [
       new CPU(cpuUsed: 25, time: new DateTime(2018, 8, 22, 17, 05, 00)),
       new CPU(cpuUsed: 12, time: new DateTime(2018, 8, 22, 17, 10, 00)),
@@ -74,14 +77,10 @@ class _MonitoryPageState extends State<MonitoryPage> {
     return [
       new charts.Series<CPU, DateTime>(
         id: 'Mobile',
-
-        // colorFn specifies that the line will be green.
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        // areaColorFn specifies that the area skirt will be light green.
-        areaColorFn: (_, __) =>
-            charts.MaterialPalette.green.shadeDefault.lighter,
-        domainFn: (CPU sales, _) => sales.time,
-        measureFn: (CPU sales, _) => sales.cpuUsed,
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(color),
+        areaColorFn: (_, __) => charts.ColorUtil.fromDartColor(color),
+        domainFn: (CPU data, _) => data.time,
+        measureFn: (CPU data, _) => data.cpuUsed,
         data: myFakeMobileData,
       )
     ];
