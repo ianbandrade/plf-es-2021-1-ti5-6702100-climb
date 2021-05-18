@@ -47,6 +47,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **08/04/2021** | Gabriel Chaves  | Atualização da imagem da Visão Geral da Solução                                                                    | 2.1.2      |
 | **25/04/2021** | Arthur Rocha    | Atualiza diagramas arquiteturais                                                                                   | 2.2.0      |
 | **13/05/2021** | Gabriel Chaves  | Adição da Avaliação da Arquitetura sobre desempenho                                                                | 3.0.0      |
+| **18/05/2021** | Arthur Rocha    | Adição da Avaliação da Arquitetura sobre segurança                                                                 | 3.1.0      |
 
 ## SUMÁRIO
 
