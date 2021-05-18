@@ -9,22 +9,36 @@ import 'package:flutter/material.dart';
 class StackedAreaCustomColorLineChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
-
-  StackedAreaCustomColorLineChart(this.seriesList, {this.animate});
+  final String chartTitle;
+  StackedAreaCustomColorLineChart({
+    this.seriesList,
+    this.animate,
+    this.chartTitle,
+  });
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaCustomColorLineChart.withSampleData() {
-    return new StackedAreaCustomColorLineChart(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: true,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    var axis = charts.NumericAxisSpec(
+    var axisNum = charts.NumericAxisSpec(
       renderSpec: charts.GridlineRendererSpec(
+        minimumPaddingBetweenLabelsPx: 0,
+        labelStyle: charts.TextStyleSpec(
+          fontSize: 12,
+          color: charts.MaterialPalette.gray.shade600,
+        ),
+      ),
+    );
+
+    var axisTime = charts.DateTimeAxisSpec(
+      tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+        minute: new charts.TimeFormatterSpec(
+          format: 'HH:mm', // or even HH:mm here too
+          transitionFormat: 'HH:mm',
+        ),
+      ),
+      renderSpec: charts.GridlineRendererSpec(
+        minimumPaddingBetweenLabelsPx: 10,
         labelStyle: charts.TextStyleSpec(
           fontSize: 12,
           color: charts.MaterialPalette.gray.shade600,
@@ -39,15 +53,26 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
           child: Container(
             height: 200,
             width: 300,
-            child: new charts.LineChart(
+            child: new charts.TimeSeriesChart(
               seriesList,
-              defaultRenderer: new charts.LineRendererConfig(
-                  includeArea: true, stacked: true),
               animate: animate,
-              primaryMeasureAxis: axis,
-              domainAxis: axis,
+              dateTimeFactory: const charts.LocalDateTimeFactory(),
+              primaryMeasureAxis: axisNum,
+              domainAxis: axisTime,
               behaviors: [
-                new charts.ChartTitle('Consumo de CPU',
+                new charts.ChartTitle(
+                  'Hz',
+                  behaviorPosition: charts.BehaviorPosition.top,
+                  titleOutsideJustification: charts.OutsideJustification.start,
+                  titleStyleSpec: charts.TextStyleSpec(
+                    fontFamily: 'Alatsi',
+                    color: charts.ColorUtil.fromDartColor(
+                      Theme.of(context).accentColor,
+                    ),
+                  ),
+                  innerPadding: 12,
+                ),
+                new charts.ChartTitle(chartTitle,
                     behaviorPosition: charts.BehaviorPosition.bottom,
                     titleStyleSpec: charts.TextStyleSpec(
                       fontFamily: 'Alatsi',
@@ -66,16 +91,15 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
-    var myFakeMobileData = [
-      new LinearSales(0, 15),
-      new LinearSales(1, 75),
-      new LinearSales(2, 300),
-      new LinearSales(3, 225),
+  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
+    final data = [
+      new TimeSeriesSales(new DateTime(2018, 8, 22, 1, 02, 00), 25),
+      new TimeSeriesSales(new DateTime(2018, 8, 22, 1, 07, 30), 12),
+      new TimeSeriesSales(new DateTime(2018, 8, 22, 1, 12, 30), 23),
+      new TimeSeriesSales(new DateTime(2018, 8, 22, 2, 17, 30), 63),
     ];
-
     return [
-      new charts.Series<LinearSales, int>(
+      new charts.Series<TimeSeriesSales, DateTime>(
         id: 'Mobile',
 
         // colorFn specifies that the line will be green.
@@ -83,18 +107,19 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
         // areaColorFn specifies that the area skirt will be light green.
         areaColorFn: (_, __) =>
             charts.MaterialPalette.green.shadeDefault.lighter,
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: myFakeMobileData,
+        domainFn: (TimeSeriesSales sales, _) => sales.time,
+        measureFn: (TimeSeriesSales sales, _) => sales.sales,
+        data: data,
       )
     ];
   }
 }
 
 /// Sample linear data type.
-class LinearSales {
-  final int year;
+
+class TimeSeriesSales {
+  final DateTime time;
   final int sales;
 
-  LinearSales(this.year, this.sales);
+  TimeSeriesSales(this.time, this.sales);
 }

@@ -152,8 +152,8 @@ class _UserPageState extends State<UserPage> {
             children: [
               Center(
                 child: UserProfile(
-                  name: routeData.name,
-                  image: routeData.image,
+                  name: 'oi',
+                  image: null,
                 ),
               ),
               AppList(
