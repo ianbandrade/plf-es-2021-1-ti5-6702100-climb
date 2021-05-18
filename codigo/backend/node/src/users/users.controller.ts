@@ -18,7 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../auth/role.decorator';
 import { UserRole } from './user-roles.enum';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
 import { ReturList } from 'src/shared/dto/return-list.dto';
@@ -27,9 +27,9 @@ import { User } from './user.entity';
 @ApiTags('Users')
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
-@ApiBearerAuth()
+@ApiCookieAuth()
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) { }
 
   @Post()
   @Role(UserRole.ADMIN)
