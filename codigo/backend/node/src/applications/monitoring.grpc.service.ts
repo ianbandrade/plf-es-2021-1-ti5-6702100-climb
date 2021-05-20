@@ -10,8 +10,10 @@ import { MonitorNewDataDto } from './dto/monitoring/monitorData.dto';
 
 @Injectable()
 export class MonitoringGRPCService {
-  constructor(private httpService: HttpService,
-    private configService: ConfigService) { }
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService
+  ) { }
 
   async getDashboards(appName: string) {
     const queries = [
@@ -21,7 +23,7 @@ export class MonitoringGRPCService {
       },
       {
         name: 'responseStatusCode',
-        value: `sum by(statusCode) (label_replace(label_replace(round(increase(traefik_service_requests_total{exported_service=~"\\\\w+-(${appName})-.+", code=~"(2|4|5)\\\\d\\\\d"}[5m])), "app", "$1", "exported_service", "\\\\w+-(.+)-\\\\w+@\\\\w+"), "statusCode", "${1}XX", "code", "(\\\\d)\\\\d\\\\d"))`,
+        value: `sum by(statusCode) (label_replace(label_replace(round(increase(traefik_service_requests_total{exported_service=~"\\\\w+-(${appName})-.+", code=~"(2|4|5)\\\\d\\\\d"}[5m])), "app", "$1", "exported_service", "\\\\w+-(.+)-\\\\w+@\\\\w+"), "statusCode", "\${1}XX", "code", "(\\\\d)\\\\d\\\\d"))`,
       },
       {
         name: 'averageRequestTime',
@@ -35,20 +37,19 @@ export class MonitoringGRPCService {
     ]);
 
     const responses = await Promise.all(requests);
-
-    return Object.fromEntries(responses);
+    return {
+      results: Object.fromEntries(responses),
+    };
   }
 
   private async getMetrics(query: string) {
     const requestConfig = { params: { query } };
-    console.log('chamou');
 
     return this.httpService
       .get(this.configService.get<string>('prometheusHost'), requestConfig)
       .toPromise()
-      .then((response) => response.data.data)
+      .then((response) => response.data.data.result)
       .catch((e) => {
-        console.error(e.message);
         throw new InternalServerErrorException('Erro na requisição');
       });
   }
@@ -64,7 +65,7 @@ export class MonitoringGRPCService {
     const subject = new BehaviorSubject(mockedData);
     const interval = setInterval(
       () => this.updateSubject(appName, subject),
-      1000,
+      5000,
     );
 
     this.grpcMap.set(this.getConnectionKey(clientId, appName), {
