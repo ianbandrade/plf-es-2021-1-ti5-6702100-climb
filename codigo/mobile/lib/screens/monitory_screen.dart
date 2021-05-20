@@ -1,15 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:mobile/models/cpu.dart';
+import 'package:mobile/models/DashboardData.dart';
 import 'package:mobile/models/monitory_application.dart';
 import 'package:mobile/models/request.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
 import 'package:mobile/widgets/charts/gauge_chart.dart';
 import 'package:mobile/widgets/charts/horizontal_bar_chart.dart';
-import 'package:mobile/widgets/charts/line_chart.dart';
 import 'package:mobile/widgets/charts/pie_chart.dart';
 import 'package:mobile/widgets/logo.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:intl/intl.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MonitoryPage extends StatefulWidget {
   @override
@@ -17,8 +19,75 @@ class MonitoryPage extends StatefulWidget {
 }
 
 class _MonitoryPageState extends State<MonitoryPage> {
+  Socket socket;
+  @override
+  void initState() {
+    super.initState();
+    connectToServer();
+  }
+
+  void connectToServer() {
+    print('executou');
+    try {
+      // Configure socket transports must be sepecified
+      socket = io('http://192.168.0.163:3001', <String, dynamic>{
+        'transports': ['websocket'],
+        'autoConnect': false,
+      });
+
+      // Connect to websocket
+      socket.connect();
+      socket.emit('message', 'blookg');
+      // Handle socket events
+      socket.on('connect', (_) => print('connect: ${socket.id}'));
+      socket.on('message', (data) => getAppStaticsData(data));
+      socket.on('disconnect', (_) => print('disconnect'));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  getAppStaticsData(data) {}
+
+  final test = {
+    "results": {
+      "openConnections": [
+        {
+          "metric": {},
+          "value": [1621479446.37, "0"]
+        }
+      ],
+      "responseStatusCode": [
+        {
+          "metric": {"statusCode": "2XX"},
+          "value": [1621479707.554, "2"]
+        },
+        {
+          "metric": {"statusCode": "4XX"},
+          "value": [1621479707.554, "1"]
+        }
+      ],
+      "averageRequestTime": [
+        {
+          "metric": {"method": "GET"},
+          "value": [1621480339.1, "10008.590702999996"]
+        },
+        {
+          "metric": {"method": "POST"},
+          "value": [1621480339.1, "2.334658"]
+        },
+        {
+          "metric": {"method": "DELETE"},
+          "value": [1621480339.1, "NaN"]
+        }
+      ]
+    }
+  };
+
   @override
   Widget build(BuildContext context) {
+    //final test2 = new DashboardData(results: new  Map<String, >(""));
+    print(test['results']);
     final MonitoryApplication routeData =
         ModalRoute.of(context).settings.arguments;
 
@@ -68,15 +137,15 @@ class _MonitoryPageState extends State<MonitoryPage> {
     );
   }
 
-  static List<charts.Series<Request, int>> createDataPie() {
+  static List<charts.Series<Request, String>> createDataPie() {
     final data = [
-      new Request(code: 200, quantity: 63000, color: Colors.green),
-      new Request(code: 400, quantity: 2300, color: Colors.orange),
-      new Request(code: 500, quantity: 0, color: Colors.red),
+      new Request(code: "2XX", quantity: 63000, color: Colors.green),
+      new Request(code: "4XX", quantity: 2300, color: Colors.orange),
+      new Request(code: "5XX", quantity: 0, color: Colors.red),
     ];
 
     return [
-      new charts.Series<Request, int>(
+      new charts.Series<Request, String>(
         id: 'Sales',
         domainFn: (Request sales, _) => sales.code,
         measureFn: (Request sales, _) => sales.quantity,
@@ -135,21 +204,22 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
   static List<charts.Series<Request, String>> createDataBarChart() {
     final globalSalesData = [
-      new Request(method: 'GET', avgResponsTime: 10006.944860000001),
-      new Request(method: 'POST', avgResponsTime: 12055),
-      new Request(method: 'DELETE', avgResponsTime: 17000),
-      new Request(method: 'PUT', avgResponsTime: 63000),
-      new Request(method: 'PATCH', avgResponsTime: 20000),
+      new Request(method: 'GET', avgResponsTime: "10006.944860000001"),
+      new Request(method: 'POST', avgResponsTime: "12055"),
+      new Request(method: 'DELETE', avgResponsTime: "17000"),
+      new Request(method: 'PUT', avgResponsTime: "63000"),
+      new Request(method: 'PATCH', avgResponsTime: "20000"),
     ];
 
     return [
       new charts.Series<Request, String>(
         id: 'Global Revenue',
-        domainFn: (Request sales, _) => sales.method,
-        measureFn: (Request sales, _) => sales.avgResponsTime,
+        domainFn: (Request request, _) => request.method,
+        measureFn: (Request request, _) =>
+            double.tryParse(request.avgResponsTime) ?? 0,
         data: globalSalesData,
         labelAccessorFn: (Request request, _) =>
-            '${convertMillisecondsToSeconds(request.avgResponsTime)}',
+            '${convertMillisecondsToSeconds(double.tryParse(request.avgResponsTime) ?? 0)}',
       )
     ];
   }

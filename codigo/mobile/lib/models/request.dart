@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Request {
-  final int code;
-  final double quantity;
-  final Color color;
-  final String method;
-  final double avgResponsTime;
+  String code;
+  double quantity;
+  Color color;
+  String method;
+  String avgResponsTime;
+  Map<String, List<Map<String, Object>>> currentConnections;
 
   Request(
-      {this.code, this.quantity, this.color, this.method, this.avgResponsTime});
+      {this.code, this.avgResponsTime, this.color, this.method, this.quantity});
 }
