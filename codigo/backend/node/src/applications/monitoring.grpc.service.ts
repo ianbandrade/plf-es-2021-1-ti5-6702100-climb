@@ -1,3 +1,5 @@
+
+import { ConfigService } from '@nestjs/config';
 import {
   HttpService,
   Injectable,
@@ -8,7 +10,8 @@ import { MonitorNewDataDto } from './dto/monitoring/monitorData.dto';
 
 @Injectable()
 export class MonitoringGRPCService {
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService,
+    private configService: ConfigService) { }
 
   async getDashboards(appName: string) {
     const queries = [
@@ -41,7 +44,7 @@ export class MonitoringGRPCService {
     console.log('chamou');
 
     return this.httpService
-      .get('http://climb.codes:9090/api/v1/query', requestConfig)
+      .get(this.configService.get<string>('prometheusHost'), requestConfig)
       .toPromise()
       .then((response) => response.data.data)
       .catch((e) => {
