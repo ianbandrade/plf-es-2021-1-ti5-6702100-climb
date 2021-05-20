@@ -7,7 +7,7 @@ class GaugeChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
   final String chartTitle;
-  final double value;
+  final int value;
   GaugeChart({
     this.animate,
     this.seriesList,

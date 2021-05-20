@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Request {
   String code;
-  double quantity;
+  String quantity;
   Color color;
   String method;
   String avgResponsTime;

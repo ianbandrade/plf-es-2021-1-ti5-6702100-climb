@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/models/DashboardData.dart';
+import 'package:mobile/models/MetricsData.dart';
+import 'package:mobile/models/MetricsDataResponse.dart';
 import 'package:mobile/models/monitory_application.dart';
 import 'package:mobile/models/request.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
@@ -19,6 +21,21 @@ class MonitoryPage extends StatefulWidget {
 }
 
 class _MonitoryPageState extends State<MonitoryPage> {
+  int connectionsNumber = 0;
+  Map<String, String> responseStatusCode = {
+    "2XX": "0",
+    "4XX": "0",
+    "5XX": "0",
+  };
+
+  Map<String, String> averageRequestTime = {
+    "GET": "???",
+    "POST": "???",
+    "PUT": "???",
+    "PATCH": "???",
+    "DELETE": "???"
+  };
+
   Socket socket;
   @override
   void initState() {
@@ -27,7 +44,6 @@ class _MonitoryPageState extends State<MonitoryPage> {
   }
 
   void connectToServer() {
-    print('executou');
     try {
       // Configure socket transports must be sepecified
       socket = io('http://192.168.0.163:3001', <String, dynamic>{
@@ -54,13 +70,13 @@ class _MonitoryPageState extends State<MonitoryPage> {
       "openConnections": [
         {
           "metric": {},
-          "value": [1621479446.37, "0"]
+          "value": [89798.37, "18"]
         }
       ],
       "responseStatusCode": [
         {
           "metric": {"statusCode": "2XX"},
-          "value": [1621479707.554, "2"]
+          "value": [1621479707.554, "20"]
         },
         {
           "metric": {"statusCode": "4XX"},
@@ -74,7 +90,11 @@ class _MonitoryPageState extends State<MonitoryPage> {
         },
         {
           "metric": {"method": "POST"},
-          "value": [1621480339.1, "2.334658"]
+          "value": [1621480339.1, "20.334658"]
+        },
+        {
+          "metric": {"method": "PUT"},
+          "value": [1621480339.1, "45556.334658"]
         },
         {
           "metric": {"method": "DELETE"},
@@ -86,8 +106,16 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final test2 = new DashboardData(results: new  Map<String, >(""));
-    print(test['results']);
+    final DashboardData dashboard = DashboardData.fromJson(test);
+
+    setState(() {
+      connectionsNumber =
+          int.tryParse(dashboard.results.openConnections[0].value[1]) ?? 0;
+      responseStatusCode = getReponseStatusCode(dashboard);
+      averageRequestTime = getAvgResponseTimeByMethod(dashboard);
+    });
+
+    print(averageRequestTime);
     final MonitoryApplication routeData =
         ModalRoute.of(context).settings.arguments;
 
@@ -115,18 +143,18 @@ class _MonitoryPageState extends State<MonitoryPage> {
                 style: Theme.of(context).textTheme.headline3,
               ),
               SimplePieChart(
-                seriesList: createDataPie(),
+                seriesList: createDataPie(responseStatusCode),
                 animate: true,
                 charTitle: 'Status code',
               ),
               HorizontalBarChart(
-                seriesList: createDataBarChart(),
+                seriesList: createDataBarChart(averageRequestTime),
                 animate: true,
                 chartTitle: 'Tempo médio de resposta',
               ),
               GaugeChart(
-                value: 150,
-                seriesList: createGaugeData(150),
+                value: connectionsNumber,
+                seriesList: createGaugeData(connectionsNumber),
                 chartTitle: 'Quantidade de Conexões',
                 animate: true,
               )
@@ -137,18 +165,59 @@ class _MonitoryPageState extends State<MonitoryPage> {
     );
   }
 
-  static List<charts.Series<Request, String>> createDataPie() {
-    final data = [
-      new Request(code: "2XX", quantity: 63000, color: Colors.green),
-      new Request(code: "4XX", quantity: 2300, color: Colors.orange),
-      new Request(code: "5XX", quantity: 0, color: Colors.red),
-    ];
+  static Map<String, String> getReponseStatusCode(DashboardData dashboard) {
+    Map<String, String> auxResponseStatusCode = {
+      "2XX": "0",
+      "4XX": "0",
+      "5XX": "0",
+    };
+    dashboard.results.responseStatusCode.forEach((item) =>
+        auxResponseStatusCode[item.metric['statusCode']] = item.value[1]);
+    return auxResponseStatusCode;
+  }
+
+  static Map<String, String> getAvgResponseTimeByMethod(
+      DashboardData dashboard) {
+    Map<String, String> auxAverageRequestTime = {
+      "GET": "???",
+      "POST": "???",
+      "PUT": "???",
+      "PATCH": "???",
+      "DELETE": "???"
+    };
+
+    dashboard.results.averageRequestTime.forEach((item) =>
+        auxAverageRequestTime[item.metric['method']] =
+            item.value[1] == "NaN" ? "???" : item.value[1]);
+    return auxAverageRequestTime;
+  }
+
+  static List<charts.Series<Request, String>> createDataPie(
+      Map<String, String> responseCodes) {
+    List<Request> data = [];
+    responseCodes.forEach((key, value) {
+      Color color = Colors.green;
+
+      if (key == '4XX')
+        color = Colors.orange;
+      else if (key == '5XX') {
+        color = Colors.red;
+      }
+
+      final Request request =
+          new Request(code: key, quantity: value, color: color);
+      data.add(request);
+    });
 
     return [
       new charts.Series<Request, String>(
         id: 'Sales',
         domainFn: (Request sales, _) => sales.code,
-        measureFn: (Request sales, _) => sales.quantity,
+        measureFn: (Request sales, _) =>
+            int.tryParse(
+              sales.quantity,
+            ) ??
+            '??',
         colorFn: (Request segment, _) =>
             charts.ColorUtil.fromDartColor(segment.color),
         data: data,
@@ -156,27 +225,37 @@ class _MonitoryPageState extends State<MonitoryPage> {
     ];
   }
 
-  static List<charts.Series<GaugeSegment, String>> createGaugeData(int value) {
+  static List<charts.Series<GaugeSegment, String>> createGaugeData(
+      int connectionsNumber) {
     final data = [
-      new GaugeSegment(segment: 'Full', size: 180 - value, color: Colors.grey)
+      new GaugeSegment(
+          segment: 'Full', size: 180 - connectionsNumber, color: Colors.grey)
     ];
 
-    if (value < 100) {
-      data.insert(0,
-          new GaugeSegment(segment: 'Green', size: value, color: Colors.green));
-    } else if (value < 130) {
+    if (connectionsNumber < 100) {
       data.insert(
           0,
           new GaugeSegment(
-              segment: 'Yellow', size: value, color: Colors.yellow));
-    } else if (value < 150) {
+              segment: 'Green', size: connectionsNumber, color: Colors.green));
+    } else if (connectionsNumber < 130) {
       data.insert(
           0,
           new GaugeSegment(
-              segment: 'Orange', size: value, color: Colors.orange));
+              segment: 'Yellow',
+              size: connectionsNumber,
+              color: Colors.yellow));
+    } else if (connectionsNumber < 150) {
+      data.insert(
+          0,
+          new GaugeSegment(
+              segment: 'Orange',
+              size: connectionsNumber,
+              color: Colors.orange));
     } else {
       data.insert(
-          0, new GaugeSegment(segment: 'Red', size: value, color: Colors.red));
+          0,
+          new GaugeSegment(
+              segment: 'Red', size: connectionsNumber, color: Colors.red));
     }
 
     return [
@@ -202,14 +281,12 @@ class _MonitoryPageState extends State<MonitoryPage> {
     return '${seconds.toStringAsFixed(2)}$formater'.replaceAll('.', ',');
   }
 
-  static List<charts.Series<Request, String>> createDataBarChart() {
-    final globalSalesData = [
-      new Request(method: 'GET', avgResponsTime: "10006.944860000001"),
-      new Request(method: 'POST', avgResponsTime: "12055"),
-      new Request(method: 'DELETE', avgResponsTime: "17000"),
-      new Request(method: 'PUT', avgResponsTime: "63000"),
-      new Request(method: 'PATCH', avgResponsTime: "20000"),
-    ];
+  static List<charts.Series<Request, String>> createDataBarChart(
+      Map<String, String> averageRequestTime) {
+    List<Request> globalSalesData = [];
+    averageRequestTime.forEach((key, value) {
+      globalSalesData.add(new Request(method: key, avgResponsTime: value));
+    });
 
     return [
       new charts.Series<Request, String>(
