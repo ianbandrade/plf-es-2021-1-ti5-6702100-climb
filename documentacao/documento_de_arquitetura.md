@@ -367,6 +367,46 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 ![Entrada de dados inválidas](imagens/entrada_dado_invalido.png 'Mensagem de aviso sobre formato incorreto de entrada')
 
+**Segurança - exemplo de _endpoints_ que necessitam de autenticação**
+
+![Endpoints com autenticação](imagens/swagger-usuarios.png 'Endpoints com autenticação')
+
+**Segurança - exemplo de _endpoints_ que não precisam de autenticação**
+
+![Endpoints sem autenticação sign in](imagens/swagger-signin.png 'Endpoints sem autenticação sign in')
+![Endpoints sem autenticação webhooks](imagens/swagger-webhooks.png 'Endpoints sem autenticação webhooks')
+
+**Segurança - tetantativa de buscar dados do usuário sem estar autenticado**
+
+![Buscar dados sem token](imagens/swagger-me-401.png 'Buscar dados sem token')
+
+**Segurança - acessando rota pública de _sign in_ com credentiais de administrador para gerar token jwt**
+
+![Ambiente sem token antes da autenticacao](imagens/swagger-without-cookie.png 'Ambiente sem token antes da autenticacao')
+![Resposta do envio das credencias corretas](imagens/swagger-admin-login-success.png 'Resposta do envio das credencias corretas')
+![Novo cookie armazenado no navegador](imagens/new-cookie-setted.png 'Novo cookie armazenado no navegador')
+
+**Segurança - buscar dados do usuário com acesso administrador**
+
+![Busca dados do usuário requerente com sucesso](imagens/swagger-me-with-admin-200.png 'Busca dados do usuário requerente com sucesso')
+
+**Segurança - buscar dados de todos os usuários com acesso administrador**
+
+![Busca dados de todos os usuários com acesso de administrador com sucesso](imagens/swagger-get-users-with-admin.png 'Busca dados de todos os usuários com acesso de administrador com sucesso')
+
+**Segurança - acessando rota pública de _sign in_ com credentiais de usuário para gerar token jwt**
+
+![Resposta do envio das credencias corretas de usuário](imagens/swagger-user-login-success.png 'Resposta do envio das credencias corretas de usuário')
+retas de usuário](imagens/swagger-user-login-success.png 'Resposta do envio das credencias corretas de usuário')
+
+**Segurança - buscar dados do usuário com acesso comum**
+
+![Busca dados do usuário requerente com sucesso](imagens/swagger-me-with-user-200.png 'Busca dados do usuário requerente com sucesso')
+
+**Segurança - buscar dados de todos os usuários com acesso comum**
+
+![Busca dados de todos os usuários com acesso de administrador com falha](imagens/swagger-get-users-with-user.png 'Busca dados de todos os usuários com acesso de administrador com falha')
+
 **Tempo de resposta adequado**
 
 ![Tempo de resposta adequado](imagens/tempo_de_resposta.png 'Tempo de resposta adequado')
