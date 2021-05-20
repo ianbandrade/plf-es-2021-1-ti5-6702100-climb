@@ -83,17 +83,27 @@ const Home = () => {
           router.push(PROFILE_PATH);
         }
       })
-      .catch((e) =>
-        getMessages(e?.response?.data).forEach((description, i) =>
+      .catch((e) => {
+        if (e?.response?.data) {
+          getMessages(e.response.data).forEach((description, i) =>
+            showToast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            })
+          );
+        } else
           showToast({
             title: "Erro!",
-            description: `${description}`,
+            description:
+              "Não foi possível comunicar com o servidor para efetuar o acesso.",
+            id: 1,
             status: "error",
-            id: i,
             position: "bottom-left",
-          })
-        )
-      );
+          });
+      });
   }
 
   const showToast = (data: UseToastOptions) => {

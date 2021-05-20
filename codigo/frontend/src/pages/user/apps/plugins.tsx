@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AccordionInstance from "../../../components/AccordionInstance";
 import Modal from "../../../components/Modal";
@@ -7,6 +7,7 @@ import { HeadingActionButton } from "../../../components/SubHeading/ActionButton
 import api from "../../../shared/api/api-client";
 import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { Plugin } from "../../../shared/interfaces/PreConfigCardInterface";
+import { getMessages } from "../../../shared/utils/toast-messages";
 
 interface PluginsResponse {
   plugins: Plugin[];
@@ -22,15 +23,39 @@ const Plugins = (): JSX.Element => {
   const [flag, setFlag] = useState<boolean>(false);
   const [plugins, setPlugins] = useState<Plugin[]>([]);
   const [instances, setInstances] = useState<Instance[]>([]);
+  const toast = useToast();
 
   useEffect(() => {
     getPlugins();
   }, []);
 
   async function getPlugins() {
-    await api.get<PluginsResponse>("/plugins").then((res) => {
-      setPlugins(res.data.plugins);
-    });
+    await api
+      .get<PluginsResponse>("/plugins")
+      .then((res) => {
+        setPlugins(res.data.plugins);
+      })
+      .catch((e) => {
+        if (e?.response?.data) {
+          getMessages(e.response.data).forEach((description, i) =>
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            })
+          );
+        } else
+          toast({
+            title: "Erro!",
+            description:
+              "Não foi possível comunicar com o servidor para carregar os plugins pré-configurados.",
+            id: 1,
+            status: "error",
+            position: "bottom-left",
+          });
+      });
   }
 
   async function getPluginInstances(selectedId: string) {
@@ -39,6 +64,27 @@ const Plugins = (): JSX.Element => {
       .then((res) => {
         setInstances(res.data.instances);
         setFlag(true);
+      })
+      .catch((e) => {
+        if (e?.response?.data) {
+          getMessages(e.response.data).forEach((description, i) =>
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            })
+          );
+        } else
+          toast({
+            title: "Erro!",
+            description:
+              "Não foi possível comunicar com o servidor para carregar os plugins pré-configurados.",
+            id: 1,
+            status: "error",
+            position: "bottom-left",
+          });
       });
   }
 
@@ -96,7 +142,7 @@ const Plugins = (): JSX.Element => {
           )
         ) : (
           <Text mt={5} fontSize="3xl" fontWeight="bold">
-            Ainda não existem plugins pré-configuradas!
+            Ainda não existem plugins pré-configurados!
           </Text>
         )}
       </Flex>

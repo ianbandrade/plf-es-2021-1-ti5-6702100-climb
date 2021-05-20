@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { Flex, useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
@@ -29,16 +29,25 @@ const NewApp = () => {
         setProviders({ github: res.organizations, gitlab: null });
       })
       .catch((error) => {
-        console.log(error);
-        getMessages(error?.response.data).forEach((description, i) => {
+        if (error?.response?.data) {
+          getMessages(error.response.data).forEach((description, i) =>
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            })
+          );
+        } else
           toast({
             title: "Erro!",
-            description: `${description}`,
+            description:
+              "Não foi possível comunicar com o servidor para carregar as aplicações.",
+            id: 1,
             status: "error",
-            id: i,
             position: "bottom-left",
           });
-        });
       });
 
     await gitlabService
@@ -51,15 +60,17 @@ const NewApp = () => {
         });
       })
       .catch((error) => {
-        getMessages(error?.response.data).forEach((description, i) => {
-          toast({
-            title: "Erro!",
-            description: `${description}`,
-            status: "error",
-            id: i,
-            position: "bottom-left",
-          });
-        });
+        if (error?.response?.data) {
+          getMessages(error.response.data).forEach((description, i) =>
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            })
+          );
+        }
       });
   }
 
