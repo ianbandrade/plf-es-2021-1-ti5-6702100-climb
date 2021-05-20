@@ -37,4 +37,4 @@ import { serveStaticConfig } from './configuration/configs/servestatic.config';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
