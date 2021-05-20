@@ -6,13 +6,13 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class Chart extends StatelessWidget {
+class LineChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
   final String chartTitle;
   final String measurementUnity;
 
-  Chart({
+  LineChart({
     this.seriesList,
     this.animate,
     this.chartTitle,
@@ -41,7 +41,7 @@ class Chart extends StatelessWidget {
         ),
       ),
       renderSpec: charts.GridlineRendererSpec(
-        minimumPaddingBetweenLabelsPx: 10,
+        minimumPaddingBetweenLabelsPx: 0,
         labelStyle: charts.TextStyleSpec(
           fontSize: 12,
           color: charts.MaterialPalette.gray.shade600,
@@ -69,6 +69,7 @@ class Chart extends StatelessWidget {
                   titleOutsideJustification: charts.OutsideJustification.start,
                   titleStyleSpec: charts.TextStyleSpec(
                     fontFamily: 'Alatsi',
+                    fontSize: 12,
                     color: charts.ColorUtil.fromDartColor(
                       Theme.of(context).accentColor,
                     ),

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/cpu.dart';
 import 'package:mobile/models/monitory_application.dart';
+import 'package:mobile/models/request.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
-import 'package:mobile/widgets/chart.dart';
+import 'package:mobile/widgets/charts/gauge_chart.dart';
+import 'package:mobile/widgets/charts/horizontal_bar_chart.dart';
+import 'package:mobile/widgets/charts/line_chart.dart';
+import 'package:mobile/widgets/charts/pie_chart.dart';
 import 'package:mobile/widgets/logo.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
 
 class MonitoryPage extends StatefulWidget {
   @override
@@ -40,23 +45,21 @@ class _MonitoryPageState extends State<MonitoryPage> {
                 routeData.appName,
                 style: Theme.of(context).textTheme.headline3,
               ),
-              Chart(
-                seriesList: _createData(Colors.red),
+              SimplePieChart(
+                seriesList: createDataPie(),
                 animate: true,
-                chartTitle: 'Consumo de CPU',
-                measurementUnity: 'Hz',
+                charTitle: 'Status code',
               ),
-              Chart(
-                seriesList: _createData(Colors.green),
+              HorizontalBarChart(
+                seriesList: createDataBarChart(),
                 animate: true,
-                chartTitle: 'Consumo de Memória',
-                measurementUnity: 'MB',
+                chartTitle: 'Tempo médio de resposta',
               ),
-              Chart(
-                seriesList: _createData(Colors.blue),
+              GaugeChart(
+                value: 150,
+                seriesList: createGaugeData(150),
+                chartTitle: 'Quantidade de Conexões',
                 animate: true,
-                chartTitle: 'Consumo de Memória',
-                measurementUnity: 'OI',
               )
             ],
           ),
@@ -65,24 +68,97 @@ class _MonitoryPageState extends State<MonitoryPage> {
     );
   }
 
-  static List<charts.Series<CPU, DateTime>> _createData(Color color) {
-    var myFakeMobileData = [
-      new CPU(cpuUsed: 25, time: new DateTime(2018, 8, 22, 17, 05, 00)),
-      new CPU(cpuUsed: 12, time: new DateTime(2018, 8, 22, 17, 10, 00)),
-      new CPU(cpuUsed: 45, time: new DateTime(2018, 8, 22, 17, 15, 00)),
-      new CPU(cpuUsed: 30, time: new DateTime(2018, 8, 22, 17, 20, 00)),
-      new CPU(cpuUsed: 80, time: new DateTime(2018, 8, 22, 17, 25, 00))
+  static List<charts.Series<Request, int>> createDataPie() {
+    final data = [
+      new Request(code: 200, quantity: 63000, color: Colors.green),
+      new Request(code: 400, quantity: 2300, color: Colors.orange),
+      new Request(code: 500, quantity: 0, color: Colors.red),
     ];
 
     return [
-      new charts.Series<CPU, DateTime>(
-        id: 'Mobile',
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(color),
-        areaColorFn: (_, __) => charts.ColorUtil.fromDartColor(color),
-        domainFn: (CPU data, _) => data.time,
-        measureFn: (CPU data, _) => data.cpuUsed,
-        data: myFakeMobileData,
+      new charts.Series<Request, int>(
+        id: 'Sales',
+        domainFn: (Request sales, _) => sales.code,
+        measureFn: (Request sales, _) => sales.quantity,
+        colorFn: (Request segment, _) =>
+            charts.ColorUtil.fromDartColor(segment.color),
+        data: data,
       )
     ];
   }
+
+  static List<charts.Series<GaugeSegment, String>> createGaugeData(int value) {
+    final data = [
+      new GaugeSegment(segment: 'Full', size: 180 - value, color: Colors.grey)
+    ];
+
+    if (value < 100) {
+      data.insert(0,
+          new GaugeSegment(segment: 'Green', size: value, color: Colors.green));
+    } else if (value < 130) {
+      data.insert(
+          0,
+          new GaugeSegment(
+              segment: 'Yellow', size: value, color: Colors.yellow));
+    } else if (value < 150) {
+      data.insert(
+          0,
+          new GaugeSegment(
+              segment: 'Orange', size: value, color: Colors.orange));
+    } else {
+      data.insert(
+          0, new GaugeSegment(segment: 'Red', size: value, color: Colors.red));
+    }
+
+    return [
+      new charts.Series<GaugeSegment, String>(
+        id: 'Segments',
+        domainFn: (GaugeSegment segment, _) => segment.segment,
+        measureFn: (GaugeSegment segment, _) => segment.size,
+        colorFn: (GaugeSegment segment, _) =>
+            charts.ColorUtil.fromDartColor(segment.color),
+        data: data,
+      )
+    ];
+  }
+
+  static String convertMillisecondsToSeconds(double milliseconds) {
+    double seconds = milliseconds / 1000;
+    String formater = 's';
+    if (seconds > 60) {
+      seconds = seconds / 60;
+      formater = 'm';
+    }
+
+    return '${seconds.toStringAsFixed(2)}$formater'.replaceAll('.', ',');
+  }
+
+  static List<charts.Series<Request, String>> createDataBarChart() {
+    final globalSalesData = [
+      new Request(method: 'GET', avgResponsTime: 10006.944860000001),
+      new Request(method: 'POST', avgResponsTime: 12055),
+      new Request(method: 'DELETE', avgResponsTime: 17000),
+      new Request(method: 'PUT', avgResponsTime: 63000),
+      new Request(method: 'PATCH', avgResponsTime: 20000),
+    ];
+
+    return [
+      new charts.Series<Request, String>(
+        id: 'Global Revenue',
+        domainFn: (Request sales, _) => sales.method,
+        measureFn: (Request sales, _) => sales.avgResponsTime,
+        data: globalSalesData,
+        labelAccessorFn: (Request request, _) =>
+            '${convertMillisecondsToSeconds(request.avgResponsTime)}',
+      )
+    ];
+  }
+}
+
+class GaugeSegment {
+  final String segment;
+  final int size;
+  final Color color;
+
+  GaugeSegment({this.segment, this.size, this.color});
 }

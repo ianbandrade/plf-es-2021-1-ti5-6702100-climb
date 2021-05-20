@@ -1,6 +1,6 @@
 class CPU {
   final DateTime time;
-  final int cpuUsed;
+  final double cpuUsed;
 
   CPU({
     this.time,

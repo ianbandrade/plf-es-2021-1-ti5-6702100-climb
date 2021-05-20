@@ -29,6 +29,7 @@ class AppList extends StatelessWidget {
                 orgRepo: '${app.repositoryOwner}/${app.repositoryName}',
                 provider: app.provider,
               );
-            });
+            },
+          );
   }
 }
