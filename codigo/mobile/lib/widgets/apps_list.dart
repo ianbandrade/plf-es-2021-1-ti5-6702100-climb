@@ -10,18 +10,26 @@ class AppList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: applications.length,
-        itemBuilder: (ctx, index) {
-          final app = applications[index];
-          print(app);
-          return AppTile(
-            appName: app.name,
-            orgRepo: '${app.repositoryOwner}/${app.repositoryName}',
-            provider: app.provider,
+    final userHasNoApp = applications.length == 0 ? true : false;
+    return userHasNoApp
+        ? Center(
+            child: Text(
+              'Usuário não possui nenhuma aplicação ainda',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          )
+        : ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: applications.length,
+            itemBuilder: (ctx, index) {
+              final app = applications[index];
+              return AppTile(
+                appName: app.name,
+                orgRepo: '${app.repositoryOwner}/${app.repositoryName}',
+                provider: app.provider,
+              );
+            },
           );
-        });
   }
 }

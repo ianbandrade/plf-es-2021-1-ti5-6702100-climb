@@ -26,4 +26,20 @@ class Application {
     this.userId,
     this.enviroments,
   });
+
+  factory Application.fromJson(Map<String, dynamic> json) {
+    return Application(
+      id: json['id'],
+      branch: json['branch'],
+      enviroments: json['enviroments'],
+      name: json['name'],
+      provider: json['provider'],
+      repository: json['repository'],
+      repositoryName: json['repositoryName'],
+      repositoryOwner: json['repositoryOwner'],
+      repositoryPath: json['repositoryPath'],
+      repositoryURL: json['repositoryUrl'],
+      userId: json['userId'],
+    );
+  }
 }
