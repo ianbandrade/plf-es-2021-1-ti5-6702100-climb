@@ -16,6 +16,7 @@ import {
   useColorMode,
   useDisclosure,
   useToast,
+  UseToastOptions,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
@@ -30,7 +31,7 @@ import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UpdateUser } from "../../../shared/interfaces/update-user";
 import { User } from "../../../shared/interfaces/user";
 import { userService } from "../../../shared/services/userService";
-import { getMessages } from "../../../shared/utils/toast-messages";
+import { messageFactory, showDefaultFetchError, newBaseToast } from "../../../shared/utils/toast-messages";
 import { colors } from "../../../styles/customTheme";
 
 const LIGHT = "light";
@@ -101,25 +102,9 @@ const Users = () => {
       })
       .catch((e) => {
         if (e?.response?.data) {
-          getMessages(e.response.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description: `${description}`,
-              status: "error",
-              id: i,
-              position: "bottom-left",
-            })
-          );
+          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
         } else
-          toast({
-            title: "Erro!",
-            description:
-              "Não foi possível comunicar com o servidor para carregar os usuários.",
-            id: 1,
-            status: "error",
-            position: "bottom-left",
-          });
-      });
+          showDefaultFetchError("para carregar os usuários.")});
   }, []);
 
   const isAddUserValid = (newUser: CreateUser): boolean => {
@@ -199,9 +184,7 @@ const Users = () => {
           showToast(`${newUser.name} cadastrado com sucesso`, "success");
         })
         .catch((e) => {
-          getMessages(e?.response?.data).forEach((description, i) =>
-            showToast(description, "error", i)
-          );
+          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
         });
     }
   };
@@ -223,9 +206,7 @@ const Users = () => {
         showToast(`${nameField} atualizado`, "success");
       })
       .catch((e) => {
-        getMessages(e?.response?.data).forEach((description, i) =>
-          showToast(description, "error", i)
-        );
+        messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
       });
   };
 
@@ -239,9 +220,7 @@ const Users = () => {
         setIsDeleteModalOpen(false);
       })
       .catch((e) => {
-        getMessages(e?.response?.data).forEach((description, i) =>
-          showToast(description, "error", i)
-        );
+        messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
       });
   };
 
@@ -251,20 +230,17 @@ const Users = () => {
     id: number = 1
   ) {
     if (!toast.isActive(id)) {
-      const title = {
-        ["error"]: "Erro!",
-        ["warning"]: "Aviso!",
-        ["success"]: "Sucesso!",
-      };
       toast({
-        title: title[status],
         description,
-        status,
-        position: "bottom-left",
-        duration: 4000,
         id,
+        ...newBaseToast(status),
       });
     }
+  }
+
+  function showToastMessage(message:UseToastOptions, id = 1){
+    if (!toast.isActive(id))
+      toast(message)
   }
 
   function handleConfirmModal() {

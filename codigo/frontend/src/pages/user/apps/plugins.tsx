@@ -1,4 +1,4 @@
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import { Flex, Text, useToast, UseToastOptions } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AccordionInstance from "../../../components/AccordionInstance";
 import Modal from "../../../components/Modal";
@@ -7,7 +7,7 @@ import { HeadingActionButton } from "../../../components/SubHeading/ActionButton
 import api from "../../../shared/api/api-client";
 import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { Plugin } from "../../../shared/interfaces/PreConfigCardInterface";
-import { getMessages } from "../../../shared/utils/toast-messages";
+import { messageFactory, showDefaultFetchError } from "../../../shared/utils/toast-messages";
 
 interface PluginsResponse {
   plugins: Plugin[];
@@ -29,37 +29,22 @@ const Plugins = (): JSX.Element => {
     getPlugins();
   }, []);
 
-  async function getPlugins() {
-    await api
+  function getPlugins() {
+    api
       .get<PluginsResponse>("/plugins")
       .then((res) => {
         setPlugins(res.data.plugins);
       })
       .catch((e) => {
         if (e?.response?.data) {
-          getMessages(e.response.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description: `${description}`,
-              status: "error",
-              id: i,
-              position: "bottom-left",
-            })
-          );
+          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
         } else
-          toast({
-            title: "Erro!",
-            description:
-              "Não foi possível comunicar com o servidor para carregar os plugins pré-configurados.",
-            id: 1,
-            status: "error",
-            position: "bottom-left",
-          });
+          showToastMessage(showDefaultFetchError("para carregar os plugins pré-configurados."))
       });
   }
 
-  async function getPluginInstances(selectedId: string) {
-    await api
+  function getPluginInstances(selectedId: string) {
+    api
       .get<InstancesResponse>(`/plugins/${selectedId}/instances`)
       .then((res) => {
         setInstances(res.data.instances);
@@ -67,25 +52,10 @@ const Plugins = (): JSX.Element => {
       })
       .catch((e) => {
         if (e?.response?.data) {
-          getMessages(e.response.data).forEach((description, i) =>
-            toast({
-              title: "Erro!",
-              description: `${description}`,
-              status: "error",
-              id: i,
-              position: "bottom-left",
-            })
-          );
+          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
         } else
-          toast({
-            title: "Erro!",
-            description:
-              "Não foi possível comunicar com o servidor para carregar os plugins pré-configurados.",
-            id: 1,
-            status: "error",
-            position: "bottom-left",
-          });
-      });
+          showToastMessage(showDefaultFetchError("carregar os plugins pré-configurados."))
+      })
   }
 
   const toggleCardSelect = (index: number): void => {
@@ -100,6 +70,11 @@ const Plugins = (): JSX.Element => {
     setTitle(selectedTitle);
   };
 
+  function showToastMessage(message: UseToastOptions, id = 1){
+    if (!toast.isActive(id))
+      toast(message)
+  }
+  
   return (
     <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Plugins pré-configurados" />
