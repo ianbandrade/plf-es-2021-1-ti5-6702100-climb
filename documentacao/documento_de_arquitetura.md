@@ -376,11 +376,11 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 ![Endpoints sem autenticação sign in](imagens/swagger-signin.png 'Endpoints sem autenticação sign in')
 ![Endpoints sem autenticação webhooks](imagens/swagger-webhooks.png 'Endpoints sem autenticação webhooks')
 
-**Segurança - tetantativa de buscar dados do usuário sem estar autenticado**
+**Segurança - tentativa de buscar dados do usuário sem estar autenticado**
 
 ![Buscar dados sem token](imagens/swagger-me-401.png 'Buscar dados sem token')
 
-**Segurança - acessando rota pública de _sign in_ com credentiais de administrador para gerar token jwt**
+**Segurança - acessando rota pública de _sign in_ com credenciais de administrador para gerar _token jwt_**
 
 ![Ambiente sem token antes da autenticacao](imagens/swagger-without-cookie.png 'Ambiente sem token antes da autenticacao')
 ![Resposta do envio das credencias corretas](imagens/swagger-admin-login-success.png 'Resposta do envio das credencias corretas')
@@ -394,10 +394,9 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 ![Busca dados de todos os usuários com acesso de administrador com sucesso](imagens/swagger-get-users-with-admin.png 'Busca dados de todos os usuários com acesso de administrador com sucesso')
 
-**Segurança - acessando rota pública de _sign in_ com credentiais de usuário para gerar token jwt**
+**Segurança - acessando rota pública de _sign in_ com credenciais de usuário para gerar _token jwt_**
 
 ![Resposta do envio das credencias corretas de usuário](imagens/swagger-user-login-success.png 'Resposta do envio das credencias corretas de usuário')
-retas de usuário](imagens/swagger-user-login-success.png 'Resposta do envio das credencias corretas de usuário')
 
 **Segurança - buscar dados do usuário com acesso comum**
 
