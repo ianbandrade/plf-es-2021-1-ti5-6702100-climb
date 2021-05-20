@@ -36,6 +36,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
     "DELETE": "???"
   };
 
+  DashboardData dashboard;
   Socket socket;
   @override
   void initState() {
@@ -63,7 +64,16 @@ class _MonitoryPageState extends State<MonitoryPage> {
     }
   }
 
-  getAppStaticsData(data) {}
+  getAppStaticsData(data) {
+    if (!mounted) return;
+    setState(() {
+      dashboard = DashboardData.fromJson(data);
+      connectionsNumber =
+          int.tryParse(dashboard.results.openConnections[0].value[1]) ?? 0;
+      responseStatusCode = getReponseStatusCode(dashboard);
+      averageRequestTime = getAvgResponseTimeByMethod(dashboard);
+    });
+  }
 
   final test = {
     "results": {
@@ -106,14 +116,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final DashboardData dashboard = DashboardData.fromJson(test);
-
-    setState(() {
-      connectionsNumber =
-          int.tryParse(dashboard.results.openConnections[0].value[1]) ?? 0;
-      responseStatusCode = getReponseStatusCode(dashboard);
-      averageRequestTime = getAvgResponseTimeByMethod(dashboard);
-    });
+    //final DashboardData dashboard = DashboardData.fromJson(test);
 
     print(averageRequestTime);
     final MonitoryApplication routeData =
