@@ -43,13 +43,15 @@ export class ApplicationsGateway
   }
 
   @SubscribeMessage('message')
-  handleMessage(
+  async handleMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody() applicationName: string,
   ) {
-    this.grpc.getAppData(client.id, applicationName).subscribe((mockedData) => {
-      client.emit('message', mockedData);
-    });
+    (await this.grpc.getAppData(client.id, applicationName)).subscribe(
+      (mockedData) => {
+        client.emit('message', mockedData);
+      },
+    );
     this.map.set(client.id, applicationName);
   }
 }
