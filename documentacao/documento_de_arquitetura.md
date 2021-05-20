@@ -48,6 +48,7 @@ mostrar algum resultado relevante do trabalho (até 10 linhas)._
 | **25/04/2021** | Arthur Rocha    | Atualiza diagramas arquiteturais                                                                                   | 2.2.0      |
 | **13/05/2021** | Gabriel Chaves  | Adição da Avaliação da Arquitetura sobre desempenho                                                                | 3.0.0      |
 | **18/05/2021** | Arthur Rocha    | Adição da Avaliação da Arquitetura sobre segurança                                                                 | 3.1.0      |
+| **20/05/2021** | Andrew Costa    | Atualização da Avaliação da Arquitetura sobre resistência as falhas                                                | 3.1.0      |
 
 ## SUMÁRIO
 
@@ -254,7 +255,7 @@ _Esta seção descreve a avaliação da arquitetura apresentada, baseada no mét
 
 _Apresente os cenários de testes utilizados na realização dos testes da sua aplicação. Escolha cenários de testes que demonstrem os requisitos não funcionais sendo satisfeitos. Os requisitos a seguir são apenas exemplos de possíveis requisitos, devendo ser revistos, adequados a cada projeto e complementados de forma a terem uma especificação completa e auto-explicativa._
 
-**Cenário 1 - Resistencia a falhas:** A aplicação deverá manter em funcionamento mesmo em condições de falhas, as mensagens de exceção deverão ser retornadas para o usuário.
+**Cenário 1 - Resistencia a falhas:** A aplicação deverá manter em funcionamento mesmo em condições de falhas, as mensagens de exceção deverão ser retornadas para o usuário de forma que ele possa identificar e tomar medidas de correção para o sintoma apresentado. Além disso, com o uso de _Toasts_, as mensagens podem ser fácilmente captadas pelo usuário e classificadas ao usuário pelo nível de importância seguindo os seguintes de categorização: sucesso (verde), aviso (amarelo) e erro (vermelho).
 
 **Cenário 2 - Segurança:** Para garantir a identidade de cada cliente, a aplicação conta com a implementação de autenticação via JWT (JSON Web Token) armazenados em _cookies_. Nesse _token_ contém os dados do usuário responsável pela requisicição, assim torna possível que, em _endpoints_ que necessitam de autenticação, possamos buscar os dados do usuário e saber se ele tem permição para executar tal chamada. O _token_ JWT é gerado e cadastrado como um token válido no _endpoint_ de login, a resposta desse _endpoint_ contém os dados publicos do usuário no _body_ e um _header_ de `set-cookie` com os dados de tempo de expiração, _http-only_, o próprio JWT e outros atributos. Assim todas as requisições feitas pelo usuário ao mesmo host que retornou o _cookie_ irão com o dado de autenticação no cabeçalho. Algumas rotas necessitam de serem públicas, pois interagem com sistemas externos de autenticação, com _webHooks_ e com o próprio usuário porém de forma pulica, como o _endpoint_ de login.
 
@@ -264,9 +265,8 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 
 ## 4.2. Avaliação
 
-|                             |                                                                                                                                          |     |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --- |
 | **Atributo de Qualidade:**  | Resistência a falhas                                                                                                                     |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | **Requisito de Qualidade:** | Ser robusto perante falhas                                                                                                               |
 | **Preocupação:**            | O Sistema manter seu funcionamento mesmo em casos de falhas                                                                              |
 | **Cenário(s):**             | Cenário 1                                                                                                                                |
@@ -274,8 +274,6 @@ _Apresente os cenários de testes utilizados na realização dos testes da sua a
 | **Estímulo:**               | Entrada de informações inválidas e falha de comunicação entre sistema                                                                    |
 | **Mecanismo:**              | Componente do tipo _tooltip_ é exibido quando um erro ocorre e suas cores verde, amarelo e vermelho representam seu grau de importância. |
 | **Medida de Resposta:**     | Mensagens de erros são exibidas para o usuário                                                                                           |
-
----
 
 | **Considerações sobre a arquitetura:** |            |
 | -------------------------------------- | ---------- |
