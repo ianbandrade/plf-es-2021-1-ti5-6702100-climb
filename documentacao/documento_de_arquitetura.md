@@ -26,8 +26,7 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 ---
 
-_**Resumo**. Escrever aqui o resumo. O resumo deve contextualizar rapidamente o trabalho, descrever seu objetivo e, ao final,
-mostrar algum resultado relevante do trabalho (até 10 linhas)._
+_**Resumo**. Este trabalho está inserido em um contexto de ferramentas de implantação de aplicações baseadas em tecnologia de containerização em ambientes de execução on premises. A solução é baseada no modelo de plataforma como serviço, no qual é destinado a auxiliar o processo de implantação de aplicações em equipes não especializadas e técnicas de modo que a solução possa ser trazer benefícios semelhantes aos serviços oferecidos paas em nuvem, como por exemplo, Heroku da Salesforce._
 
 ---
 
