@@ -44,7 +44,7 @@ _**Resumo**. Este trabalho está inserido em um contexto de ferramentas de impla
 | **18/03/2021** | Ian Bittencourt | Adição de novas história de usuários, bem como definições e aberviaturas                                           | 2.1.0      |
 | **25/03/2021** | Gabriel Chaves  | Adição de uma breve explicação da Visão Geral da Solução                                                           | 2.1.1      |
 | **08/04/2021** | Gabriel Chaves  | Atualização da imagem da Visão Geral da Solução                                                                    | 2.1.2      |
-| **25/04/2021** | Arthur Rocha    | Atualiza diagramas arquiteturais                                                                                   | 2.2.0      |
+| **25/04/2021** | Arthur Rocha    | Atualização dos diagramas arquiteturais                                                                                   | 2.2.0      |
 | **13/05/2021** | Gabriel Chaves  | Adição da Avaliação da Arquitetura sobre desempenho                                                                | 3.0.0      |
 | **18/05/2021** | Arthur Rocha    | Adição da Avaliação da Arquitetura sobre segurança                                                                 | 3.1.0      |
 | **20/05/2021** | Andrew Costa    | Atualização da Avaliação da Arquitetura sobre resistência as falhas                                                | 3.1.0      |
@@ -105,7 +105,7 @@ Os objetivos específicos são:
 
 - **_PaaS_:** vindo do inglês, _Platform as a Service_ é um serviço de hospedagem e implementação vde hardware e software;
 
-- **_rollback_:** vindo do inglês, reversão, é a possibilidade de desfazer uma ação (no contexto, uma implantação);
+- **_Rollback_:** vindo do inglês, reversão, é a possibilidade de desfazer uma ação (no contexto, uma implantação);
 
 - **Usuários diretos:** usuários que interagem diretamente com o sistema, na operação e execução de uma implantação;
 
@@ -138,8 +138,8 @@ Os objetivos específicos são:
 | **ID** | **Descrição**                                                                                                                                           |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | RNF001 | Deve garantir resiliência permitindo o _rollback_ para desfazer uma implantação errônea.                                                                |
-| RNF002 | Deve ser capaz de servir 2000 usuários simultâneos deixando o aumento desse limite a critério da corporação com base na infraestrutura que for utilizar |
-| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros                                        |
+| RNF002 | Deve ser capaz de servir 2000 usuários simultâneos deixando o aumento desse limite a critério da corporação com base na infraestrutura que for utilizar. |
+| RNF003 | Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros.                                        |
 | RNF004 | Deve garantir um bom desempenho retornando respostas com limite de 5 segundos de retorno.                                                               |
 | RNF005 | Deve garantir robustez e confiabilidade retornando respostas adequadas à execução mesmo com algum serviço indisponível.                                 |
 
@@ -188,7 +188,7 @@ Os objetivos específicos são:
 
 ![Visão Geral da Solução](imagens/diagrama_de_visao_geral.png 'Visão Geral da Solução')
 
-**Figura 1 - Visão Geral da Solução**
+**Figura 1 - Visão Geral da Solução. Fonte: Autores.**
 
 O projeto terá dois tipos de front-end, web e móvel nativo, sendo que o móvel usará uma comunicação em tempo real. Eles se comunicarão com uma aplicação de back-end, na qual possui a função de servir os dados referentes aos usuários, realizar integrações com o GitHub e Gitlab, e encaminhar solicitações de orquestração das aplicações dos usuários para outro serviço de back-end. Este outro serviço tem como objetivo realizar o gerenciamento da orquestração das aplicações, utilizando para isso o Kubernetes em conjunto com o Traefik, que serão monitorados pela dupla Prometheus e Grafana.
 
@@ -217,42 +217,26 @@ O projeto terá dois tipos de front-end, web e móvel nativo, sendo que o móvel
 
 ## 3.2. Visão Lógica
 
-_Apresente os artefatos que serão utilizados descrevendo em linhas gerais as motivações que levaram a equipe a utilizar estes diagramas._
-
 ### Diagrama de Classes
 
 ![Diagrama de classes](imagens/diagrama_de_classe.png 'Diagrama de classes')
 
-**Figura 2 – Diagrama de classes (exemplo). Fonte: o próprio autor.**
-
-Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
+**Figura 2 – Diagrama de classes (exemplo). Fonte: Autores**
 
 ### Diagrama de componentes
 
-_Apresente o diagrama de componentes da aplicação, indicando, os elementos da arquitetura e as interfaces entre eles. Liste os estilos/padrões arquiteturais utilizados e faça uma descrição sucinta dos componentes indicando o papel de cada um deles dentro da arquitetura/estilo/padrão arquitetural. Indique também quais componentes serão reutilizados (navegadores, SGBDs, middlewares, etc), quais componentes serão adquiridos por serem proprietários e quais componentes precisam ser desenvolvidos._
-
 ![Diagrama de componentes](imagens/diagrama_de_componentes.png 'Diagrama de componentes')
 
-**Figura 3 – Diagrama de Componentes (exemplo). Fonte: o próprio autor.**
-
-_Apresente uma descrição detalhada dos artefatos que constituem o diagrama de implantação._
-
-Ex: conforme diagrama apresentado na Figura 3, as entidades participantes da solução são:
+**Figura 3 – Diagrama de Componentes. Fonte: Autores.**
 
 - **Componente 1** - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nunc magna, accumsan eget porta a, tincidunt sed mauris. Suspendisse orci nulla, sagittis a lorem laoreet, tincidunt imperdiet ipsum. Morbi malesuada pretium suscipit.
 - **Componente 2** - Praesent nec nisi hendrerit, ullamcorper tortor non, rutrum sem. In non lectus tortor. Nulla vel tincidunt eros.
-
-Obs: Acrescente uma breve descrição sobre o diagrama apresentado na Figura 3.
 
 <a name="avaliacao"></a>
 
 # 4. Avaliação da Arquitetura
 
-_Esta seção descreve a avaliação da arquitetura apresentada, baseada no método ATAM._
-
 ## 4.1. Cenários
-
-_Apresente os cenários de testes utilizados na realização dos testes da sua aplicação. Escolha cenários de testes que demonstrem os requisitos não funcionais sendo satisfeitos. Os requisitos a seguir são apenas exemplos de possíveis requisitos, devendo ser revistos, adequados a cada projeto e complementados de forma a terem uma especificação completa e auto-explicativa._
 
 **Cenário 1 - Resistencia a falhas:** A aplicação deverá manter em funcionamento mesmo em condições de falhas, as mensagens de exceção deverão ser retornadas para o usuário de forma que ele possa identificar e tomar medidas de correção para o sintoma apresentado. Além disso, com o uso de _Toasts_, as mensagens podem ser fácilmente captadas pelo usuário e classificadas ao usuário pelo nível de importância seguindo os seguintes de categorização: sucesso (verde), aviso (amarelo) e erro (vermelho).
 
