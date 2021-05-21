@@ -26,7 +26,7 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 ---
 
-_**Resumo**. Este trabalho está inserido em um contexto de ferramentas de implantação de aplicações baseadas em tecnologia de containerização em ambientes de execução on premises. A solução é baseada no modelo de plataforma como serviço, no qual é destinado a auxiliar o processo de implantação de aplicações em equipes não especializadas e técnicas de modo que a solução possa ser trazer benefícios semelhantes aos serviços oferecidos paas em nuvem, como por exemplo, Heroku da Salesforce._
+_**Resumo**. Este trabalho está inserido em um contexto de ferramentas de implantação de aplicações baseadas em tecnologia de containerização em ambientes de execução on premises. A solução é baseada no modelo de plataforma como serviço, no qual é destinado a auxiliar o processo de implantação de aplicações em equipes não especializadas e não  técnicas de modo que a solução possa ser trazer benefícios semelhantes aos serviços oferecidos paas em nuvem, como por exemplo, Heroku da Salesforce._
 
 ---
 
@@ -44,10 +44,11 @@ _**Resumo**. Este trabalho está inserido em um contexto de ferramentas de impla
 | **18/03/2021** | Ian Bittencourt | Adição de novas história de usuários, bem como definições e aberviaturas                                           | 2.1.0      |
 | **25/03/2021** | Gabriel Chaves  | Adição de uma breve explicação da Visão Geral da Solução                                                           | 2.1.1      |
 | **08/04/2021** | Gabriel Chaves  | Atualização da imagem da Visão Geral da Solução                                                                    | 2.1.2      |
-| **25/04/2021** | Arthur Rocha    | Atualização dos diagramas arquiteturais                                                                                   | 2.2.0      |
+| **25/04/2021** | Arthur Rocha    | Atualização dos diagramas arquiteturais                                                                            | 2.2.0      |
 | **13/05/2021** | Gabriel Chaves  | Adição da Avaliação da Arquitetura sobre desempenho                                                                | 3.0.0      |
 | **18/05/2021** | Arthur Rocha    | Adição da Avaliação da Arquitetura sobre segurança                                                                 | 3.1.0      |
-| **20/05/2021** | Andrew Costa    | Atualização da Avaliação da Arquitetura sobre resistência as falhas                                                | 3.1.0      |
+| **20/05/2021** | Andrew Costa    | Atualização da Avaliação da Arquitetura sobre resistência as falhas                                                | 3.1.1      |
+| **20/05/2021** | Andrew Costa    | Adição de resumo sobre o trabalho                                                                                  | 3.2.0      |
 
 ## SUMÁRIO
 
