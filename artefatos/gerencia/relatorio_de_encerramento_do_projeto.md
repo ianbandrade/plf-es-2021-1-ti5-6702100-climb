@@ -45,7 +45,7 @@ Sim, todas os requisitos que foram levantados no início do projeto foram entreg
  - Rotas autenticadas por Cookies;
  - Integração com GitHub e GitLab para facilitar a importação do código das aplicações;
  - Alta performance;
- - Utilização on-premise;
+ - Utilização on-premise
 ### 3.2  Pontos fracos:
  - O Climb não é uma aplicação tão tradicional quanto ao desenvolvimento;
 
@@ -62,7 +62,7 @@ a viabilidade do Climb em um cenário real do mercado, através de uma possível
 
 # 6. Conclusão
 
-O Climb é uma Platform as a Service(PaaS) em que uma organização poderia utilizar para hospedar as aplicações de seus diversos usuários de forma on premise ou até mesmo em cloud utilizando máquinas virtuais. Ademais, trata-se de uma aplicação de fácil utilização, em que os usuários poderão implantar as suas aplicações e monitora-las de forma móvel com simples passos, e ter alguns serviços pré-configurados, como Postgresql e RabbitMQ. Além disso, o Climb é bastante performática seguindo as melhores métricas de qualidade, como desempenho, escalabilidade e segurança, contendo rotas autenticadas utilizando cookies. Sob esse contexto, é possível percerber que o CLimb é uma aplicação bastante complexa, utilizando muitas tecnologias e protocolos de comunição, sendo bastante difícil de se desenvolver, pois foi necessário apreender mais sobre essas tecnologias. 
+O Climb é uma Platform as a Service (_PaaS_) em que uma organização poderia utilizar para hospedar as aplicações de seus diversos usuários de forma on premise ou até mesmo em cloud utilizando máquinas virtuais. Ademais, trata-se de uma aplicação de fácil utilização, em que os usuários poderão implantar as suas aplicações e monitora-las de forma móvel com simples passos, e ter alguns serviços pré-configurados, como Postgresql e RabbitMQ. Além disso, o Climb é bastante performática seguindo as melhores métricas de qualidade, como desempenho, escalabilidade e segurança, contendo rotas autenticadas utilizando cookies. Sob esse contexto, é possível percerber que o Climb é uma aplicação bastante complexa, utilizando muitas tecnologias e protocolos de comunição, sendo bastante difícil de se desenvolver, pois foi necessário apreender mais sobre essas tecnologias. 
 
 Além disso, foram produzidos muitos artefatos de gerenciamento do projeto, como a definição do escopo, documento de arquitetura, controle das partes interessadas, atas de reunião, diagrama de classe, diagrama de componente e prototipação de interfaces utilizando a ferramenta Figma para validar o que se deve ser desenvolvido antes de realizar a codifição do software. Portanto, o Climb é uma aplicação bastante robusta, contendo todos os requisitos definidos inicialmente no projeto, seguindo as melhores práticas da engenharia de software.
 
