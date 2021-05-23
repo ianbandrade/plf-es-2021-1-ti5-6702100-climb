@@ -33,7 +33,7 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 Construir um sistema simples e prático para implantação de aplicações escalonáveis, em um ambiente local (on-premise), utilizando uma interface amigável por meio de uma plataforma como um serviço, incluindo integração com um local de hospedagem de repositórios Git, sem a necessidade de uma equipe especializada em implantações de aplicações.
 
 
-## Requisitos (do produto e/ou do projeto) |
+## Requisitos (do produto e/ou do projeto)
 
 - Funcionais:
    - Integração com GitHub;
@@ -51,7 +51,7 @@ Construir um sistema simples e prático para implantação de aplicações escal
    - Disponibilizar aplicativos pré configurado por meio de template;
    - Cadastro por meio de carga arquivo ou por meio do acesso a organização.
 - Não-funcionais
-   -Deve garantir resiliência permitindo o rollback para desfazer uma implantação errônea;
+   - Deve garantir resiliência permitindo o rollback para desfazer uma implantação errônea;
    - Deve ser capaz de servir 2000 usuários simultâneos deixando o aumento desse limite a critério da corporação com base na infraestrutura que for utilizar;
    - Deve garantir que todas as hierarquias de autorizações sejam obedecidas e que os dados sensíveis estejam seguros;
    - Deve garantir um bom desempenho retornando respostas com limite de 5 segundos de retorno;
