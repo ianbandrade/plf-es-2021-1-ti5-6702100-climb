@@ -44,10 +44,10 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Mi
 
 | Nome | Expectativas | Influência | Importância / Poder | Apoio | Observações |
 | --- | --- | --- | --- | --- | --- |
-|   | Aterfatos da projeção da arquitetura do software | Média | Média | Apoiador |
-|   | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Alta | Alta | Apoiador |
-|   | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Média | Média | Apoiador |
-|   | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Alta | Alta | Apoiador |
-|   | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Média | Média | Apoiador |
-|   | Artefatos de gerenciamento de projeto | Alta | Alta | Apoiador |
-|   | Software implantando nos computadores do estabelecimento com os requisitos solicitados implementados | Alta | Alta | Apoiador |
+| 1  | Aterfatos da projeção da arquitetura do software | Média | Média | Apoiador |
+| 2 | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Alta | Alta | Apoiador | -
+| 3  | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Média | Média | Apoiador | -
+| 4  | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Alta | Alta | Apoiador | -
+| 5  | Software implementado como um aplicativo móvel com arquitetura distribuída e funcionalidades de tempo real | Média | Média | Apoiador | -
+| 6  | Artefatos de gerenciamento de projeto | Alta | Alta | Apoiador | -
+| 7  | Software implantando nos computadores do estabelecimento com os requisitos solicitados implementados | Alta | Alta | Apoiador | -
