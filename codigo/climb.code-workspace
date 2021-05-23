@@ -5,6 +5,12 @@
     },
     {
       "path": "./backend/node"
+    },
+    {
+      "path": "./backend/golang"
+    },
+    {
+      "path": "./mobile"
     }
   ],
   "settings": {
