@@ -27,6 +27,7 @@ import {
 } from 'src/shared/utils/version-control-services';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { getConnection } from 'typeorm';
 import { v4 } from 'uuid';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { ReqCreateDto } from './dto/deploys/req-create.dto';
@@ -40,6 +41,7 @@ import { GetApplication } from './dto/get-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { Activity } from './entities/activities/activity.entity';
 import { ActivityRepository } from './entities/activities/activity.repository';
+import { applicationCacheId } from './entities/application.cache';
 import { Application } from './entities/application.entity';
 import { ApplicationRepository } from './entities/application.repository';
 import { Deploys } from './entities/deploys/deploys.entity';
@@ -64,7 +66,7 @@ export class ApplicationsService {
     private userService: UsersService,
     private amqpConnection: AmqpConnection,
     private httpService: HttpService,
-  ) {}
+  ) { }
 
   async create(createApplicationDto: CreateApplicationDto, user: User) {
     const {
@@ -90,6 +92,9 @@ export class ApplicationsService {
     this.createNewDeploy(application, user, commit);
     this.createActivity(application, commit);
     this.createApplicationHook(application);
+    getConnection().queryResultCache.remove([
+      applicationCacheId.findAllApplications(),
+    ]);
 
     return application;
   }
@@ -139,7 +144,11 @@ export class ApplicationsService {
       error,
     });
     try {
-      return await activity.save();
+      const savedActivity = await activity.save();
+      getConnection().queryResultCache.remove([
+        applicationCacheId.findAllApplications(),
+      ]);
+      return savedActivity;
     } catch (e) {
       postgresCatch(e);
     }
@@ -213,7 +222,12 @@ export class ApplicationsService {
   }
 
   private async findCompleteApplication(appId: string, user: User) {
-    const application = await this.applicationRepository.findOne(appId);
+    const application = await this.applicationRepository.findOne(appId, {
+      cache: {
+        id: applicationCacheId.findApplicationById(appId),
+        milliseconds: 30000,
+      },
+    });
     this.verifyApplicationFetch(application, user);
     return application;
   }
@@ -228,6 +242,10 @@ export class ApplicationsService {
   async findOnebyName(name: string, user: User) {
     const application = await this.applicationRepository.findOne({
       where: { name },
+      cache: {
+        id: applicationCacheId.findApplicationById(name),
+        milliseconds: 30000,
+      },
     });
     this.verifyApplicationFetch(application, user);
 
@@ -314,6 +332,11 @@ export class ApplicationsService {
       );
       this.createActivity(application, commit);
 
+      getConnection().queryResultCache.remove([
+        applicationCacheId.findAllApplications(),
+        applicationCacheId.findApplicationById(application.id),
+        applicationCacheId.findApplicationById(application.name),
+      ]);
       return this.findOnebyId(id, user);
     } catch (e) {
       throw new InternalServerErrorException(e);
@@ -400,6 +423,11 @@ export class ApplicationsService {
 
       if (await this.deleteWebHooks(application)) {
         await this.applicationRepository.delete(deploy.applicationId);
+        getConnection().queryResultCache.remove([
+          applicationCacheId.findAllApplications(),
+          applicationCacheId.findApplicationById(application.id),
+          applicationCacheId.findApplicationByName(application.name),
+        ]);
       }
     }
   }
@@ -683,7 +711,7 @@ export class ApplicationsService {
           )
           .toPromise()
       ).data;
-    } catch (e) {}
+    } catch (e) { }
   }
 
   private async createGitlabApplicationHook(application: Application) {
@@ -714,7 +742,7 @@ export class ApplicationsService {
           )
           .toPromise()
       ).data;
-    } catch (e) {}
+    } catch (e) { }
   }
 
   async getAppActivities(user: User, appId: string) {
