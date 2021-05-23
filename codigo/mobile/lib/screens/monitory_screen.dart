@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/models/DashboardData.dart';
-import 'package:mobile/models/MetricsData.dart';
-import 'package:mobile/models/MetricsDataResponse.dart';
 import 'package:mobile/models/monitory_application.dart';
 import 'package:mobile/models/request.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
@@ -47,14 +43,14 @@ class _MonitoryPageState extends State<MonitoryPage> {
   void connectToServer() {
     try {
       // Configure socket transports must be sepecified
-      socket = io('http://192.168.0.163:3001', <String, dynamic>{
+      socket = io('http://${env["API_HOST"]}/applications', <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,
       });
 
       // Connect to websocket
       socket.connect();
-      socket.emit('message', 'blookg');
+      socket.emit('message', 'express-3');
       // Handle socket events
       socket.on('connect', (_) => print('connect: ${socket.id}'));
       socket.on('message', (data) => getAppStaticsData(data));
@@ -65,7 +61,6 @@ class _MonitoryPageState extends State<MonitoryPage> {
   }
 
   getAppStaticsData(data) {
-    if (!mounted) return;
     setState(() {
       dashboard = DashboardData.fromJson(data);
       connectionsNumber =
@@ -75,50 +70,8 @@ class _MonitoryPageState extends State<MonitoryPage> {
     });
   }
 
-  final test = {
-    "results": {
-      "openConnections": [
-        {
-          "metric": {},
-          "value": [89798.37, "18"]
-        }
-      ],
-      "responseStatusCode": [
-        {
-          "metric": {"statusCode": "2XX"},
-          "value": [1621479707.554, "20"]
-        },
-        {
-          "metric": {"statusCode": "4XX"},
-          "value": [1621479707.554, "1"]
-        }
-      ],
-      "averageRequestTime": [
-        {
-          "metric": {"method": "GET"},
-          "value": [1621480339.1, "10008.590702999996"]
-        },
-        {
-          "metric": {"method": "POST"},
-          "value": [1621480339.1, "20.334658"]
-        },
-        {
-          "metric": {"method": "PUT"},
-          "value": [1621480339.1, "45556.334658"]
-        },
-        {
-          "metric": {"method": "DELETE"},
-          "value": [1621480339.1, "NaN"]
-        }
-      ]
-    }
-  };
-
   @override
   Widget build(BuildContext context) {
-    //final DashboardData dashboard = DashboardData.fromJson(test);
-
-    print(averageRequestTime);
     final MonitoryApplication routeData =
         ModalRoute.of(context).settings.arguments;
 
@@ -127,7 +80,10 @@ class _MonitoryPageState extends State<MonitoryPage> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            socket.disconnect();
+            Navigator.of(context).pop();
+          },
         ),
         title: Center(
           child: Logo(
@@ -145,6 +101,12 @@ class _MonitoryPageState extends State<MonitoryPage> {
                 routeData.appName,
                 style: Theme.of(context).textTheme.headline3,
               ),
+              GaugeChart(
+                value: connectionsNumber,
+                seriesList: createGaugeData(connectionsNumber),
+                chartTitle: 'Quantidade de Conexões',
+                animate: true,
+              ),
               SimplePieChart(
                 seriesList: createDataPie(responseStatusCode),
                 animate: true,
@@ -155,12 +117,6 @@ class _MonitoryPageState extends State<MonitoryPage> {
                 animate: true,
                 chartTitle: 'Tempo médio de resposta',
               ),
-              GaugeChart(
-                value: connectionsNumber,
-                seriesList: createGaugeData(connectionsNumber),
-                chartTitle: 'Quantidade de Conexões',
-                animate: true,
-              )
             ],
           ),
         ],
@@ -230,24 +186,27 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
   static List<charts.Series<GaugeSegment, String>> createGaugeData(
       int connectionsNumber) {
+    int value = 180 - connectionsNumber;
+    if (value < 0) {
+      value = 0;
+    }
     final data = [
-      new GaugeSegment(
-          segment: 'Full', size: 180 - connectionsNumber, color: Colors.grey)
+      new GaugeSegment(segment: 'Full', size: value, color: Colors.grey)
     ];
 
-    if (connectionsNumber < 100) {
+    if (connectionsNumber <= 100) {
       data.insert(
           0,
           new GaugeSegment(
               segment: 'Green', size: connectionsNumber, color: Colors.green));
-    } else if (connectionsNumber < 130) {
+    } else if (connectionsNumber <= 130) {
       data.insert(
           0,
           new GaugeSegment(
               segment: 'Yellow',
               size: connectionsNumber,
               color: Colors.yellow));
-    } else if (connectionsNumber < 150) {
+    } else if (connectionsNumber <= 150) {
       data.insert(
           0,
           new GaugeSegment(
@@ -274,8 +233,12 @@ class _MonitoryPageState extends State<MonitoryPage> {
   }
 
   static String convertMillisecondsToSeconds(double milliseconds) {
-    double seconds = milliseconds / 1000;
     String formater = 's';
+    if (milliseconds < 1000) {
+      formater = 'ms';
+      return '${milliseconds.toStringAsFixed(2)}$formater'.replaceAll('.', ',');
+    }
+    double seconds = milliseconds / 1000;
     if (seconds > 60) {
       seconds = seconds / 60;
       formater = 'm';
@@ -298,8 +261,9 @@ class _MonitoryPageState extends State<MonitoryPage> {
         measureFn: (Request request, _) =>
             double.tryParse(request.avgResponsTime) ?? 0,
         data: globalSalesData,
-        labelAccessorFn: (Request request, _) =>
-            '${convertMillisecondsToSeconds(double.tryParse(request.avgResponsTime) ?? 0)}',
+        labelAccessorFn: (Request request, _) => request.avgResponsTime != 'NaN'
+            ? '${convertMillisecondsToSeconds(double.tryParse(request.avgResponsTime) ?? 0)}'
+            : '10',
       )
     ];
   }
