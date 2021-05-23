@@ -9,7 +9,7 @@
 | Gerente do Projeto: Gabriel Moreira Chaves |
 | Período de realização: 04/02/21 - 10/06/21 |
 
-# 1. Objetivo geral do projeto:
+# 1. Objetivo geral do projeto
 O objetivo principal do nosso trabalho é construir um sistema simples e prático para implantação de aplicações escalonáveis.
 
 ## 1.1  Objetivos específicos:
@@ -20,7 +20,7 @@ O objetivo principal do nosso trabalho é construir um sistema simples e prátic
 
 1.1.3 Implementar o serviço de hospedagem _PaaS_.
 
-# 2.  Resultados alcançados no projeto (Planejado x Realizado):
+# 2.  Resultados alcançados no projeto (Planejado x Realizado)
 
 ### 2.1  Os objetivos do projeto foram atingidos?
 
@@ -49,13 +49,13 @@ Sim, todas os requisitos que foram levantados no início do projeto foram entreg
 ### 3.2  Pontos fracos:
  - O Climb não é uma aplicação tão tradicional quanto ao desenvolvimento;
 
-# 4. Liçoes aprendidas:
+# 4. Liçoes aprendidas
 
 Durante o processo de desenvolvimento do Climb, muitas lições foram apreendidas pelos integrantes do grupo, como a utilização de diversas tecnologias e protocolos
 de comunicação para compor um software complexo, sendo algumas delas: Next.js, Flutter, Nest.js, Kubernetes, HTTP, Websocket, RabbitMQ, gRPC, Grafana, 
 Prometheus. Além disso, foram apreendidas muitas técnicas para gerenciar o projeto, como a utilização de algumas ferramentas usando a metodologia SCRUM.
 
-# 5. Questões em Aberto:
+# 5. Questões em Aberto
 
 Todos os requisitos e artefatos do projeto foram entregados no prazo especificado, além disso os integrantes do grupo realizarão um estudo para poder entender
 a viabilidade do Climb em um cenário real do mercado, através de uma possível publicação na Conferência Brasileira de Software (CBSoft).
