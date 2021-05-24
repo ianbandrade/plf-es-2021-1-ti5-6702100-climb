@@ -5,6 +5,7 @@ import { UserRepository } from '../users/users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
+import { SiginInReturn } from './dto/sign-in-return';
 
 @Injectable()
 export class AuthService {
@@ -15,9 +16,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signIn(
-    credentialsDto: CredentialsDto,
-  ): Promise<{ user: User; cookie: string }> {
+  async signIn(credentialsDto: CredentialsDto): Promise<SiginInReturn> {
     const user = await this.userRepository.checkCredentials(credentialsDto);
 
     if (user === null) {
@@ -43,7 +42,7 @@ export class AuthService {
     return { user, cookie: this.getCookieToken(token) };
   }
 
-  getCookieToken(token: string) {
+  getCookieToken(token: string): string {
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${+this.configService.get(
       'jwt.signOptions.expiresIn',
     )}`;

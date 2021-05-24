@@ -15,7 +15,7 @@ export class ApplicationRepository extends Repository<Application> {
   async createApplication(
     createApplicationDto: CreateApplicationDto,
     user: User,
-  ) {
+  ): Promise<Application> {
     const {
       name,
       provider,

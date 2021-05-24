@@ -14,7 +14,7 @@ export class MonitoringGRPCService {
     private configService: ConfigService,
   ) {}
 
-  async getDashboards(appName: string) {
+  async getDashboards(appName: string): Promise<MonitorNewDataDto> {
     const queries = [
       {
         name: 'openConnections',
@@ -41,7 +41,7 @@ export class MonitoringGRPCService {
     };
   }
 
-  private async getMetrics(query: string) {
+  private async getMetrics(query: string): Promise<any> {
     const requestConfig = { params: { query } };
 
     return this.httpService
@@ -53,12 +53,15 @@ export class MonitoringGRPCService {
       });
   }
 
-  private grpcMap = new Map<
+  private socketClientMap = new Map<
     string,
     { subject: BehaviorSubject<MonitorNewDataDto>; interval: NodeJS.Timeout }
   >();
 
-  public async getAppData(clientId: string, appName: string) {
+  public async getAppData(
+    clientId: string,
+    appName: string,
+  ): Promise<BehaviorSubject<MonitorNewDataDto>> {
     const mockedData: MonitorNewDataDto = await this.getDashboards(appName);
 
     const subject = new BehaviorSubject(mockedData);
@@ -67,7 +70,7 @@ export class MonitoringGRPCService {
       5000,
     );
 
-    this.grpcMap.set(this.getConnectionKey(clientId, appName), {
+    this.socketClientMap.set(this.getConnectionKey(clientId, appName), {
       subject,
       interval,
     });
@@ -76,24 +79,24 @@ export class MonitoringGRPCService {
   }
 
   private async updateSubject(
-    appName,
+    appName: string,
     subject: BehaviorSubject<MonitorNewDataDto>,
-  ) {
+  ): Promise<void> {
     const data = await this.getDashboards(appName);
 
     subject.next(data);
   }
 
-  public close(clientId: string, appName: string) {
-    const connection = this.grpcMap.get(
+  public close(clientId: string, appName: string): boolean {
+    const connection = this.socketClientMap.get(
       this.getConnectionKey(clientId, appName),
     );
     connection.subject.unsubscribe();
     clearInterval(connection.interval);
-    return this.grpcMap.delete(clientId + appName);
+    return this.socketClientMap.delete(clientId + appName);
   }
 
-  private getConnectionKey(clientId: string, appName: string) {
+  private getConnectionKey(clientId: string, appName: string): string {
     return clientId + appName;
   }
 }

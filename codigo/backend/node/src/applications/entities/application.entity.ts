@@ -12,7 +12,7 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
-import { Deploys } from './deploys/deploys.entity';
+import { Deploy } from './deploys/deploys.entity';
 import { Activity } from './activities/activity.entity';
 
 @Entity()
@@ -65,11 +65,11 @@ export class Application extends BaseEntity {
   @JoinTable()
   environments: Environment[];
 
-  @OneToMany(() => Deploys, (deploy) => deploy.application, {
+  @OneToMany(() => Deploy, (deploy) => deploy.application, {
     eager: true,
   })
   @JoinTable()
-  deploys: Deploys[];
+  deploys: Deploy[];
 
   @CreateDateColumn()
   createdAt?: Date;

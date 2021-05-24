@@ -20,7 +20,7 @@ import { ReqInstanceDto } from './dto/instances/req-instance.dto';
 import { DeployStatusEnum } from 'src/shared/enum/application-status.enum';
 import { Credential } from './entities/credentials/credentials.entity';
 import { v4 } from 'uuid';
-import { CreatePuglinDto } from './dto/create-plugin.dto';
+import { CreatePluginDto } from './dto/create-plugin.dto';
 import { Plugin } from './entities/plugin.entity';
 import * as dotenv from 'dotenv';
 import configuration from 'src/configuration/configuration';
@@ -110,7 +110,7 @@ export class PluginsService {
     return deleteResult.affected > 0;
   }
 
-  sendNewInstance(instance: Instance, plugin: Plugin) {
+  sendNewInstance(instance: Instance, plugin: Plugin): void {
     const payload: ReqInstanceDto = {
       id: instance.id,
       plugin: {
@@ -121,9 +121,7 @@ export class PluginsService {
     this.amqpConnection.publish('', plugins.deploy.req.routingKey, payload);
   }
 
-  async createPlugiin(
-    bcreatePluginnDto: CreatePuglinDto,
-  ): Promise<BasicPlugin> {
+  async createPlugin(bcreatePluginnDto: CreatePluginDto): Promise<BasicPlugin> {
     const {
       id,
       name,
@@ -138,7 +136,11 @@ export class PluginsService {
     routingKey: plugins.deploy.res.routingKey,
     queue: plugins.deploy.res.queue,
   })
-  async deployResponse({ id, success, credentials }: ResInstanceDto) {
+  async deployResponse({
+    id,
+    success,
+    credentials,
+  }: ResInstanceDto): Promise<Instance> {
     try {
       const instance = await this.instanceRepository.findOne(id);
 
@@ -158,7 +160,7 @@ export class PluginsService {
   private mapCredentials(
     baseCredentials: BasicCredentials[],
     instanceId: string,
-  ) {
+  ): Credential[] {
     return baseCredentials.map<Credential>(({ key, value }) => {
       const credential = new Credential();
 

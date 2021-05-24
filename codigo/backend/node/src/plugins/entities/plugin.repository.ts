@@ -1,7 +1,7 @@
 import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
 import { EntityRepository, Repository } from 'typeorm';
 import { v4 } from 'uuid';
-import { CreatePuglinDto } from '../dto/create-plugin.dto';
+import { CreatePluginDto } from '../dto/create-plugin.dto';
 import { Plugin } from './plugin.entity';
 
 @EntityRepository(Plugin)
@@ -11,7 +11,7 @@ export class PluginRepository extends Repository<Plugin> {
     description,
     image,
     dockerImage,
-  }: CreatePuglinDto): Promise<Plugin> {
+  }: CreatePluginDto): Promise<Plugin> {
     const plugins = new Plugin();
 
     plugins.id = v4();

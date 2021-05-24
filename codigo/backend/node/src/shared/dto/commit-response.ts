@@ -1,8 +1,14 @@
+class CommitStats {
+  additions: number;
+  deletions: number;
+  total: number;
+}
+
 export class GitlabCommit {
   id: string;
   short_id: string;
   created_at: string;
-  parent_ids: [];
+  parent_ids: string[];
   title: string;
   message: string;
   author_name: string;
@@ -12,14 +18,85 @@ export class GitlabCommit {
   committer_email: string;
   committed_date: string;
   web_url: string;
-  stats: {
-    additions: number;
-    deletions: number;
-    total: number;
-  };
+  stats: CommitStats;
   status: boolean;
   project_id: number;
   last_pipeline: null;
+}
+
+class GithubCommitFile {
+  filename: string;
+  additions: number;
+  deletions: number;
+  changes: number;
+  status: string;
+  raw_url: string;
+  blob_url: string;
+  patch: string;
+}
+
+class GithubCommitParents {
+  url: string;
+  sha: string;
+}
+
+class GithubCommitCommiter {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: false;
+}
+
+class GithubCommitAuthor {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: false;
+}
+
+class GithubCommitVerification {
+  verified: false;
+  reason: string;
+  signature: null;
+  payload: null;
+}
+
+class GithubCommitDetail {
+  url: string;
+  author: GithubCommitAuthor;
+  committer: GithubCommitCommiter;
+  message: string;
+  tree: GithubCommitParents;
+  comment_count: number;
+  verification: GithubCommitVerification;
 }
 
 export class GithubCommit {
@@ -28,88 +105,10 @@ export class GithubCommit {
   node_id: string;
   html_url: string;
   comments_url: string;
-  commit: {
-    url: string;
-    author: {
-      name: string;
-      email: string;
-      date: string;
-    };
-    committer: {
-      name: string;
-      email: string;
-      date: string;
-    };
-    message: string;
-    tree: {
-      url: string;
-      sha: string;
-    };
-    comment_count: number;
-    verification: {
-      verified: false;
-      reason: string;
-      signature: null;
-      payload: null;
-    };
-  };
-  author: {
-    login: string;
-    id: number;
-    node_id: string;
-    avatar_url: string;
-    gravatar_id: string;
-    url: string;
-    html_url: string;
-    followers_url: string;
-    following_url: string;
-    gists_url: string;
-    starred_url: string;
-    subscriptions_url: string;
-    organizations_url: string;
-    repos_url: string;
-    events_url: string;
-    received_events_url: string;
-    type: string;
-    site_admin: false;
-  };
-  committer: {
-    login: string;
-    id: number;
-    node_id: string;
-    avatar_url: string;
-    gravatar_id: string;
-    url: string;
-    html_url: string;
-    followers_url: string;
-    following_url: string;
-    gists_url: string;
-    starred_url: string;
-    subscriptions_url: string;
-    organizations_url: string;
-    repos_url: string;
-    events_url: string;
-    received_events_url: string;
-    type: string;
-    site_admin: false;
-  };
-  parents: {
-    url: string;
-    sha: string;
-  }[];
-  stats: {
-    additions: number;
-    deletions: number;
-    total: number;
-  };
-  files: {
-    filename: string;
-    additions: number;
-    deletions: number;
-    changes: number;
-    status: string;
-    raw_url: string;
-    blob_url: string;
-    patch: string;
-  }[];
+  commit: GithubCommitDetail;
+  author: GithubCommitAuthor;
+  committer: GithubCommitCommiter;
+  parents: GithubCommitParents[];
+  stats: CommitStats;
+  files: GithubCommitFile[];
 }
