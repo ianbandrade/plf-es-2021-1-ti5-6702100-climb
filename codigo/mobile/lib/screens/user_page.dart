@@ -17,93 +17,20 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  User user = new User(
-    id: 'dsad',
-    name: 'João Guilherme',
-    gitHubAccount: 'JoaoGuiMB',
-    gitLabAccount: 'Masdasd',
-    image: 'asdsad',
-  );
-
   final List<Application> _applications = [
     new Application(
       id: '1',
       branch: 'master',
       enviroments: [],
-      name: "blookg",
+      name: "express-3",
       provider: "GITHUB",
       repository: 'dasdasd',
-      repositoryName: 'oi',
+      repositoryName: 'express',
       repositoryPath: '/',
       repositoryOwner: 'JoaoGuiMB',
       repositoryURL: 'asdasd',
       userId: '354354',
     ),
-    new Application(
-      id: '2',
-      branch: 'master',
-      enviroments: [],
-      name: "tis5",
-      provider: "GITLAB",
-      repository: 'dasdasd',
-      repositoryName: 'oi',
-      repositoryPath: '/',
-      repositoryOwner: 'JoaoGuiMB',
-      repositoryURL: 'asdasd',
-      userId: '354354',
-    ),
-    new Application(
-      id: '2',
-      branch: 'master',
-      enviroments: [],
-      name: "tis5",
-      provider: "GITLAB",
-      repository: 'dasdasd',
-      repositoryName: 'oi',
-      repositoryPath: '/',
-      repositoryOwner: 'JoaoGuiMB',
-      repositoryURL: 'asdasd',
-      userId: '354354',
-    ),
-    new Application(
-      id: '2',
-      branch: 'master',
-      enviroments: [],
-      name: "tis5",
-      provider: "GITLAB",
-      repository: 'dasdasd',
-      repositoryName: 'oi',
-      repositoryPath: '/',
-      repositoryOwner: 'JoaoGuiMB',
-      repositoryURL: 'asdasd',
-      userId: '354354',
-    ),
-    new Application(
-      id: '2',
-      branch: 'master',
-      enviroments: [],
-      name: "tis5",
-      provider: "GITLAB",
-      repository: 'dasdasd',
-      repositoryName: 'oi',
-      repositoryPath: '/',
-      repositoryOwner: 'JoaoGuiMB',
-      repositoryURL: 'asdasd',
-      userId: '354354',
-    ),
-    new Application(
-      id: '2',
-      branch: 'master',
-      enviroments: [],
-      name: "tis5",
-      provider: "GITLAB",
-      repository: 'dasdasd',
-      repositoryName: 'oi',
-      repositoryPath: '/',
-      repositoryOwner: 'JoaoGuiMB',
-      repositoryURL: 'asdasd',
-      userId: '354354',
-    )
   ];
 
   Future fetchApplicationsData() {
@@ -131,7 +58,7 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     final User routeData = ModalRoute.of(context).settings.arguments;
-    print(_applications.length);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -152,8 +79,8 @@ class _UserPageState extends State<UserPage> {
             children: [
               Center(
                 child: UserProfile(
-                  name: 'oi',
-                  image: null,
+                  name: routeData.gitHubAccount,
+                  image: routeData.image,
                 ),
               ),
               AppList(

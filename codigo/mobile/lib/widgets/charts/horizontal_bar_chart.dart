@@ -80,7 +80,6 @@ class HorizontalBarChart extends StatelessWidget {
       seconds = seconds / 60;
       formater = 'm';
     }
-    print('${seconds.toStringAsFixed(2)}$formater'.replaceAll('.', ','));
     return '${seconds.toStringAsFixed(2)}$formater'.replaceAll('.', ',');
   }
 
