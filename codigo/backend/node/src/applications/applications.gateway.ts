@@ -19,7 +19,7 @@ export class ApplicationsGateway
   server: Server;
   private logger: Logger = new Logger(ApplicationsGateway.name);
 
-  constructor(private grpc: MonitoringGRPCService) { }
+  constructor(private grpc: MonitoringGRPCService) {}
 
   private map = new Map<string, string>();
 

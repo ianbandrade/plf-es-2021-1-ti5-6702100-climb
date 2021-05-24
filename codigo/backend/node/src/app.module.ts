@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { WinstonModule } from 'nest-winston';
-
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { VersionControlModule } from './version-control/version-control.module';
@@ -37,4 +36,4 @@ import { serveStaticConfig } from './configuration/configs/servestatic.config';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

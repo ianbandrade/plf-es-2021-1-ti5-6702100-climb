@@ -29,7 +29,7 @@ import { User } from './user.entity';
 @UseGuards(AuthGuard(), RolesGuard)
 @ApiCookieAuth()
 export class UsersController {
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService) {}
 
   @Post()
   @Role(UserRole.ADMIN)

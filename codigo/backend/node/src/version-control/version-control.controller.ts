@@ -15,7 +15,7 @@ import { VersionControlService } from './version-control.service';
 @ApiTags('Version Control')
 @Controller('version-control')
 export class VersionControlController {
-  constructor(private versionControlService: VersionControlService) { }
+  constructor(private versionControlService: VersionControlService) {}
 
   @Post('github')
   @ApiCookieAuth()

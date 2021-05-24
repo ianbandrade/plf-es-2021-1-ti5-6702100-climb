@@ -1,4 +1,3 @@
-
 import { ConfigService } from '@nestjs/config';
 import {
   HttpService,
@@ -12,8 +11,8 @@ import { MonitorNewDataDto } from './dto/monitoring/monitorData.dto';
 export class MonitoringGRPCService {
   constructor(
     private httpService: HttpService,
-    private configService: ConfigService
-  ) { }
+    private configService: ConfigService,
+  ) {}
 
   async getDashboards(appName: string) {
     const queries = [
@@ -49,7 +48,7 @@ export class MonitoringGRPCService {
       .get(this.configService.get<string>('prometheusHost'), requestConfig)
       .toPromise()
       .then((response) => response.data.data.result)
-      .catch((e) => {
+      .catch(() => {
         throw new InternalServerErrorException('Erro na requisição');
       });
   }

@@ -66,7 +66,7 @@ export class ApplicationsService {
     private userService: UsersService,
     private amqpConnection: AmqpConnection,
     private httpService: HttpService,
-  ) { }
+  ) {}
 
   async create(createApplicationDto: CreateApplicationDto, user: User) {
     const {
@@ -711,7 +711,7 @@ export class ApplicationsService {
           )
           .toPromise()
       ).data;
-    } catch (e) { }
+    } catch (e) {}
   }
 
   private async createGitlabApplicationHook(application: Application) {
@@ -742,7 +742,7 @@ export class ApplicationsService {
           )
           .toPromise()
       ).data;
-    } catch (e) { }
+    } catch (e) {}
   }
 
   async getAppActivities(user: User, appId: string) {

@@ -27,7 +27,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @ApiCookieAuth()
 @UseGuards(AuthGuard(), RolesGuard)
 export class PluginsController {
-  constructor(private readonly pluginsService: PluginsService) { }
+  constructor(private readonly pluginsService: PluginsService) {}
 
   @Get()
   async findAll(): Promise<GetPuglinsDto> {

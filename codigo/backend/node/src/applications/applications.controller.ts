@@ -24,7 +24,7 @@ import { UpdateApplicationDto } from './dto/update-application.dto';
 @ApiTags('Applications')
 @Controller('applications')
 export class ApplicationsController {
-  constructor(private readonly applicationsService: ApplicationsService) { }
+  constructor(private readonly applicationsService: ApplicationsService) {}
 
   @UseGuards(AuthGuard())
   @ApiCookieAuth()

@@ -6,7 +6,6 @@ import {
   Get,
   UseGuards,
   Res,
-  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CredentialsDto } from './dto/credentials.dto';
@@ -19,7 +18,7 @@ import { Response } from 'express';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Post('/signin')
   async signIn(

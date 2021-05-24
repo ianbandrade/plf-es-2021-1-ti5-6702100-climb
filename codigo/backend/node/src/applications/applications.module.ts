@@ -24,9 +24,9 @@ import { ConfigModule } from '@nestjs/config';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
     HttpModule,
-    ConfigModule
+    ConfigModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService, ApplicationsGateway, MonitoringGRPCService],
 })
-export class ApplicationsModule { }
+export class ApplicationsModule {}
