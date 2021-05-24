@@ -20,13 +20,13 @@ Professores:
 
 ---
 
-_Curso de Engenharia de Software, Unidade Praça da Liberdade_
+Curso de Engenharia de Software, Unidade Praça da Liberdade_
 
-_Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Minas Gerais (PUC MINAS), Belo Horizonte – MG – Brasil_
+Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Minas Gerais (PUC MINAS), Belo Horizonte – MG – Brasil
 
 ---
 
-_**Resumo**. Este trabalho está inserido em um contexto de ferramentas de implantação de aplicações baseadas em tecnologia de containerização em ambientes de execução on premises. A solução é baseada no modelo de plataforma como serviço, no qual é destinado a auxiliar o processo de implantação de aplicações em equipes não especializadas e não técnicas de modo que a solução possa ser trazer benefícios semelhantes aos serviços oferecidos paas em nuvem, como por exemplo, Heroku da Salesforce._
+**Resumo**. Este trabalho está inserido em um contexto de ferramentas de implantação de aplicações baseadas em tecnologia de containerização que são executadas em ambientes corporativos, mais especificamente, as corporações que ainda optam por questões de segurança ao modelo de execução das aplicações em servidores _on premises_. A solução é baseada no modelo de plataforma como serviço, no qual é destinado a auxiliar o processo de implantação de aplicações em equipes não especializadas e não técnicas, de modo que a solução possa ser trazer benefícios semelhantes aos serviços oferecidos Paas em nuvem, como por exemplo, Heroku da Salesforce. Além disso, a solução possui características de sistemas distribuídos como a comunicação em tempo real para o monitoramento, uso de sistema de mensageria para o processamento de tarefas em fila e execução da solução cliente _web_ e móvel.
 
 ---
 
@@ -49,6 +49,7 @@ _**Resumo**. Este trabalho está inserido em um contexto de ferramentas de impla
 | **18/05/2021** | Arthur Rocha    | Adição da Avaliação da Arquitetura sobre segurança                                                                 | 3.1.0      |
 | **20/05/2021** | Andrew Costa    | Atualização da Avaliação da Arquitetura sobre resistência as falhas                                                | 3.1.1      |
 | **20/05/2021** | Andrew Costa    | Adição de resumo sobre o trabalho                                                                                  | 3.2.0      |
+| **23/05/2021** | Andrew Costa    | Atualização de resumo sobre o trabalho                                                                                  | 3.2.1      |
 
 ## SUMÁRIO
 
