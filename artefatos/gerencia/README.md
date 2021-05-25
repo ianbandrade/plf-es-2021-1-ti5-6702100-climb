@@ -1,17 +1,13 @@
 # Artefatos relativos à Disciplina de Gerência de projetos
 
-Este diretório mantém os artefatos relatório à gerência do projeto. 
+Este diretório mantém os artefatos dos relatórios pertencentes à gerência do projeto.
 
-Os principais documentos a serem produzidos são:
+* [declaracao_de_escopo.md](declaracao_de_escopo.md) -  Definição de escopo do projeto;
 
-* `Termo de Abertura de Projeto.docx`
-	* Termo de Abertura do Projeto.
+* [EAP.pdf](EAP.pdf) - Diagrama de Estrutura Analítica do Projeto (EAP);
 
-* `Registro das Partes Interessadas.xlsx`
-	* Registro das Partes Interessadas.
+* [partes_interessadas.md](partes_interessadas.md) - Registro das Partes Interessadas;
 
-* `Declaracao de escopo.docx`
-	* Declaracao de escopo.
+* [relatorio_de_encerramento_do_projeto.md](relatorio_de_encerramento_do_projeto.md) - Documento de relatório de encerramento de projeto;
 
-
-Demais artefatos que julgar pertinentes.
+* [termo_de_abertura_do_projeto](termo_de_abertura_do_projeto.md) - Termo de encerramento de projeto.
