@@ -1,4 +1,4 @@
-# Lista das Atas de Reuniõwa
+# Lista das Atas de Reunião
 
 * [ATA-2021-02-06.md](ATA-2021-02-06.md) - Ata de definição Inicial do Trabalho, apresentação de ideias.
 * [ATA-2021-02-09.md](ATA-2021-02-09.md) - Ata de especificação do tema, planejamento do projeto e sprint I.
