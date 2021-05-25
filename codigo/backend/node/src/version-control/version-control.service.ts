@@ -34,7 +34,7 @@ export class VersionControlService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async github(user: User, code: string) {
+  async github(user: User, code: string): Promise<void> {
     await this.checkUser(user.id);
 
     const accessToken = await this.getAccessToken(
@@ -59,7 +59,7 @@ export class VersionControlService {
     });
   }
 
-  async gitlab(user: User, code: string, redirectUrl: string) {
+  async gitlab(user: User, code: string, redirectUrl: string): Promise<void> {
     await this.checkUser(user.id);
 
     const accessToken = await this.getAccessToken(
@@ -87,7 +87,7 @@ export class VersionControlService {
   }
 
   @Cron(CronExpression.EVERY_HOUR)
-  private async updateAccounts() {
+  private async updateAccounts(): Promise<void> {
     const allUsers = await this.usersRepository.find();
     const usersChunks = chunkArray(allUsers, 25);
 
@@ -107,7 +107,7 @@ export class VersionControlService {
     }
   }
 
-  private async checkUser(id: string) {
+  private async checkUser(id: string): Promise<void> {
     const user = await this.usersRepository.findOne(id);
 
     if (!user) {

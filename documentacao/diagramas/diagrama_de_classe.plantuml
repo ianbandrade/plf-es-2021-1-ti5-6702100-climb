@@ -485,133 +485,9 @@ abstract class BaseQueryParametersDto {
   + limit: number
 }
 
-class CommitStats {
-  + additions: number
-  + deletions: number
-  + total: number
-}
+class GitlabCommit
 
-class GitlabCommit {
-  + id: string
-  + short_id: string
-  + created_at: string
-  + parent_ids: string[]
-  + title: string
-  + message: string
-  + author_name: string
-  + author_email: string
-  + authored_date: string
-  + committer_name: string
-  + committer_email: string
-  + committed_date: string
-  + web_url: string
-  + stats: CommitStats
-  + status: boolean
-  + project_id: number
-  + last_pipeline: null
-}
-
-+ GitlabCommit "1" -- "1" CommitStats: contains
-
-class GithubCommitFile {
-  + filename: string
-  + additions: number
-  + deletions: number
-  + changes: number
-  + status: string
-  + raw_url: string
-  + blob_url: string
-  + patch: string
-}
-
-class GithubCommitParents {
-  + url: string
-  + sha: string
-}
-
-class GithubCommitCommiter {
-  + login: string
-  + id: number
-  + node_id: string
-  + avatar_url: string
-  + gravatar_id: string
-  + url: string
-  + html_url: string
-  + followers_url: string
-  + following_url: string
-  + gists_url: string
-  + starred_url: string
-  + subscriptions_url: string
-  + organizations_url: string
-  + repos_url: string
-  + events_url: string
-  + received_events_url: string
-  + type: string
-  + site_admin: false
-}
-
-class GithubCommitAuthor {
-  + login: string
-  + id: number
-  + node_id: string
-  + avatar_url: string
-  + gravatar_id: string
-  + url: string
-  + html_url: string
-  + followers_url: string
-  + following_url: string
-  + gists_url: string
-  + starred_url: string
-  + subscriptions_url: string
-  + organizations_url: string
-  + repos_url: string
-  + events_url: string
-  + received_events_url: string
-  + type: string
-  + site_admin: false
-}
-
-class GithubCommitVerification {
-  + verified: false
-  + reason: string
-  + signature: null
-  + payload: null
-}
-
-class GithubCommitDetail {
-  + url: string
-  + author: GithubCommitAuthor
-  + committer: GithubCommitCommiter
-  + message: string
-  + tree: GithubCommitParents
-  + comment_count: number
-  + verification: GithubCommitVerification
-}
-
-class GithubCommit {
-  + url: string
-  + sha: string
-  + node_id: string
-  + html_url: string
-  + comments_url: string
-  + commit: GithubCommitDetail
-  + author: GithubCommitAuthor
-  + committer: GithubCommitCommiter
-  + parents: GithubCommitParents[]
-  + stats: CommitStats
-  + files: GithubCommitFile[]
-}
-
-GithubCommit "1" -- "1" GithubCommitDetail: contains
-GithubCommit "1" -- "1" GithubCommitAuthor: contains
-GithubCommit "1" -- "*" GithubCommitParents: contains
-GithubCommit "1" -- "1" CommitStats: contains
-GithubCommit "1" -- "*" GithubCommitFile: contains
-
-GithubCommitDetail "1" -- "1" GithubCommitAuthor: contains
-GithubCommitDetail "1" -- "1" GithubCommitCommiter: contains
-GithubCommitDetail "1" -- "1" GithubCommitParents: contains
-GithubCommitDetail "1" -- "1" GithubCommitVerification: contains
+class GithubCommit 
 
 class Message {
   + message: string
@@ -628,6 +504,192 @@ class RepositoryData {
 class ReturList<T> {
   + items: T[]
   + total: number
+}
+
+class GitlabWebhookEventDto
+
+class GithubWebhookEventDto
+
+class GithubWebhook
+
+class GitlabWebhook
+
+' ==============================================================================
+
+
+' ==================================== User ====================================
+
+class User  {
+  + id: string
+  + email: string
+  + name: string
+  + role: string
+  + status: boolean
+  + password: string
+  + salt: string
+  + image: string
+  + gitHubAccount: string
+  + gitLabAccount: string
+  + gitHubToken: string
+  + gitLabToken: string
+  + createdAt: Date
+  + updatedAt: Date
+  + applications: Application[]
+  + pluginsInstances: Instance[]
+  + checkPassword(password: string): boolean
+  + static publicAttributes(): string[]
+}
+
+User <|-- BaseEntity
+
+class UsersController {
+  + createUser(createUserDto: CreateUserDto): ReturnUserDto
+  + createManyUsers(createManyUsersDto: CreateManyUsersDto): boolean
+  + findUsers(query: FindUsersQueryDto): ReturList<User>
+  + findUserById(id: string): ReturnUserDto
+  + updateUser(updateUserDto: UpdateUserDto, id: string): User
+  + deleteUser(id: string): Message
+}
+
+class UsersModule {}
+
+class UserRepository {
+  + findUsers(queryDto: FindUsersQueryDto): ReturList<User>
+  + createUser(createUserDto: CreateUserDto): User
+  + createManyUsers(createManyUsersDto: CreateManyUsersDto): boolean
+  + checkCredentials(credentialsDto: CredentialsDto): User
+  + hashPassword(password: string, salt: string): string
+}
+
+UserRepository <|-- Repository
+
+class UsersService {
+  + createUser(createUserDto: CreateUserDto): User
+  + createManyUsers(createManyUsersDto: CreateManyUsersDto): boolean
+  + findUsers(queryDto: FindUsersQueryDto): User
+  + findUserById(userId: string): User
+  + findCompleteUserById(userId: string): User
+  + updateUser(updateUserDto: UpdateUserDto, id: string): User
+  + deleteUser(userId: string): void
+}
+
+UsersService <|.. OnModuleInit
+
+class CreateManyUsersDto {
+  + users: CreateUserDto[]
+}
+
+class CreateUserDto {
+  + email: string
+  + name: string
+  + password: string
+  + passwordConfirmation: string
+  + role: UserRole
+}
+
+class FindUsersQueryDto {
+  + name: string
+  + email: string
+  + status: boolean
+  + role: UserRole
+}
+
+FindUsersQueryDto <|-- BaseQueryParametersDto
+
+class ReturnUserDto {
+  user: User
+}
+
+class UpdateUserDto {
+  + name: string
+  + email: string
+  + role: UserRole
+  + status: boolean
+}
+
+' ==============================================================================
+
+
+' =============================== VersionControl ===============================
+
+class VersionControlController {
+  + github(user: User, gitRequest: GitRequest): Message
+  + gitlab(user: User, gitRequest: GitRequest): Message 
+}
+
+class VersionControlModule {}
+
+class VersionControlService {
+  + github(user: User, code: string): void
+  + gitlab(user: User, code: string, redirectUrl: string): void
+  - updateAccounts(): void
+  - checkUser(id: string): void
+  - getAccessToken(tokenURI: string, params: TokenParams): string
+  - getGitHubAccount(token: string): GithubUser
+  - getGitLabAccount(token: string): GitlabUser
+}
+
+class GitRequest {
+  + code: string
+  + redirectUrl: string
+}
+
+ class GithubUser {
+  login: string
+  id: number
+  node_id: string
+  avatar_url: string
+  gravatar_id: string
+  url: string
+  html_url: string
+  followers_url: string
+  following_url: string
+  gists_url: string
+  starred_url: string
+  subscriptions_url: string
+  organizations_url: string
+  repos_url: string
+  events_url: string
+  received_events_url: string
+  type: string
+  site_admin: boolean
+  name: string
+  company: string
+  blog: string
+  location: string
+  email: string
+  hireable: boolean
+  bio: string
+  twitter_username: string
+  public_repos: number
+  public_gists: number
+  followers: number
+  following: number
+  created_at: string
+  updated_at: string
+}
+
+ class GitlabUser {
+  id: number
+  username: string
+  name: string
+  state: string
+  avatar_url: string
+  web_url: string
+  created_at: string
+  bio: string
+  bio_html: string
+  bot: boolean
+  location: string
+  public_email: string
+  skype: string
+  linkedin: string
+  twitter: string
+  website_url: string
+  organization: string
+  job_title: string
+  followers: number
+  following: number
 }
 
 ' ==============================================================================
@@ -651,6 +713,9 @@ interface NestInterceptor<T, R> {
   intercept(context: ExecutionContext, next: CallHandler<T>): R
 }
 
+interface OnModuleInit {
+    onModuleInit(): any
+}
 ' ==============================================================================
 
 
