@@ -20,7 +20,7 @@ Professores:
 
 ---
 
-Curso de Engenharia de Software, Unidade Praça da Liberdade_
+Curso de Engenharia de Software, Unidade Praça da Liberdade\_
 
 Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Minas Gerais (PUC MINAS), Belo Horizonte – MG – Brasil
 
@@ -49,7 +49,7 @@ Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Min
 | **18/05/2021** | Arthur Rocha    | Adição da Avaliação da Arquitetura sobre segurança                                                                 | 3.1.0      |
 | **20/05/2021** | Andrew Costa    | Atualização da Avaliação da Arquitetura sobre resistência as falhas                                                | 3.1.1      |
 | **20/05/2021** | Andrew Costa    | Adição de resumo sobre o trabalho                                                                                  | 3.2.0      |
-| **23/05/2021** | Andrew Costa    | Atualização de resumo sobre o trabalho                                                                                  | 3.2.1      |
+| **23/05/2021** | Andrew Costa    | Atualização de resumo sobre o trabalho                                                                             | 3.2.1      |
 
 ## SUMÁRIO
 
