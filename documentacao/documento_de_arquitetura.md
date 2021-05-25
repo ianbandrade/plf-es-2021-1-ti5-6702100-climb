@@ -53,10 +53,9 @@ Instituto de Informática e Ciências Exatas – Pontifícia Universidade de Min
 
 ## SUMÁRIO
 
-1. [Apresentação](#apresentacao 'Apresentação') <br />
-   1.1. Problema <br />
-   1.2. Objetivos do trabalho <br />
-   1.3. Definições e Abreviaturas <br />
+1.1. Problema <br />
+1.2. Objetivos do trabalho <br />
+1.3. Definições e Abreviaturas <br />
 
 2. [Requisitos](#requisitos 'Requisitos') <br />
    2.1. Requisitos Funcionais <br />
@@ -85,7 +84,7 @@ Algumas corporações optam pelo método de implantação interna, pois proporci
 
 Entretanto, a configuração do ambiente para hospedagem de cada projeto de forma local se torna complexa quando não se tem uma equipe especializada e também se torna um projeto custoso.
 
-Segundo o site Ever It, no artigo [Custos da virtualização](https://www.everit.com.br/custos-da-virtualizacao-qual-o-valor-do-orcamento/), ter uma rede privada e um data center local custa em torno de R$ 31.290,93 + US$ 1.900,00, mais também há o custo da equipe de TI, que varia entre especialidades e responsabilidades.
+Segundo o site Ever It, no artigo [Custos (2018)](https://www.everit.com.br/custos-da-virtualizacao-qual-o-valor-do-orcamento/), ter uma rede privada e um data center local custa em torno de R$ 31.290,93 + US$ 1.900,00, mais também há o custo da equipe de TI, que varia entre especialidades e responsabilidades.
 
 Dessa forma, adotar um serviço que ajuda na redução do tempo de codificação, adição de funcionalidades de desenvolvimento sem adição de funcionários, desenvolvimento simplificado para diversas plataformas, suporte à equipes de desenvolvimento distribuído geograficamente e gerenciamento eficaz do ciclo de vida da aplicação é muito interessante para este cenário.
 
@@ -246,7 +245,7 @@ O projeto terá dois tipos de front-end, web e móvel nativo, sendo que o móvel
 
 **Cenário 3 - Desempenho:** O sistema deve garantir um tempo de resposta adequado. Foi estipulado que devido a proposta do projeto ser uma aplicação que permitirá os membros de uma instituição que deseja que as suas aplicações desenvolvidas sejam expostas, a quantidade de usuários simultâneos raramente deve ultrapassar a quantidade de 100 usuários. Estipulamos que em condições de funcionamento comum o tempo de resposta não deve ultrapassar 5 segundos de resposta, então fizemos um teste com 200 usuários virtuais, por ser o dobro do que consideramos que raramente deve acontecer. Estipulamos também que o sistema deve continuar funcionando pelo menos com 2000 usuários simultâneos sem que a aplicação pare de funcionar, este valor foi pensado por ser 20 vezes a quantidade que raramente deve ter. É claro que o tempo de resposta será bem maior, porém o interesse é saber se o sistema irá continuar em funcionamento.
 
-**Cenário 4 - Manuntenbilidade:** Para realizar a manuntenbilidade do sistema, no _front-end_,foi necessário adotar padrões e princípios de organização e código. Como organização, a criação de pastas foi feita, para que seja necessário identificar e separar cada cenário e sua responsabilidade em relação ao sistema, por exemplo: a pasta 'shared' é interessante quando há necessidade de se compartilhar, de forma global, alguma funcionalidade específica do código, que outras funcionalidades utilizariam. Além disso, a linguagem TypeScript foi escolhida para compor o sistema, pois, nela é possível determiarmos tipos, dessa forma o desenvolvedor que necessita atualizar algum trecho do código, com a ajuda do _IntelliSense_ de sua IDE, conseguirá ter visibilidade de como será implantado o retorno ou recebimento desta alteração. Além disso, acatamos as documentações do [Next.JS](https://nextjs.org/) (_framework_ React.JS utilizado) e do [Chakra UI](https://chakra-ui.com/) (biblioteca de UI utilizada) como guias, aplicando todos os padrões descritos nelas. Já no _back-end_, com a intenção de facilitar a visualização das rotas, adotamos a utilização do [Swagger UI](https://swagger.io/), no qual proporciona uma documentação padronizada da API, contendo um guia de como todas as chamadas são feitas.
+**Cenário 4 - Manuntenbilidade:** Para realizar a manuntenbilidade do sistema, no _front-end_,foi necessário adotar padrões e princípios de organização e código. Como organização, a criação de pastas foi feita, para que seja necessário identificar e separar cada cenário e sua responsabilidade em relação ao sistema, por exemplo: a pasta 'shared' é interessante quando há necessidade de se compartilhar, de forma global, alguma funcionalidade específica do código, que outras funcionalidades utilizariam. Além disso, a linguagem TypeScript foi escolhida para compor o sistema, pois, nela é possível determiarmos tipos, dessa forma o desenvolvedor que necessita atualizar algum trecho do código, com a ajuda do _IntelliSense_ de sua IDE, conseguirá ter visibilidade de como será implantado o retorno ou recebimento desta alteração. Além disso, acatamos as documentações do [NextJS (2016)](https://nextjs.org/) (_framework_ React.JS utilizado) e do [Chakra UI (2019)](https://chakra-ui.com/) (biblioteca de UI utilizada) como guias, aplicando todos os padrões descritos nelas. Já no _back-end_, com a intenção de facilitar a visualização das rotas, adotamos a utilização do [SWAGGER UI (2011)](https://swagger.io/), no qual proporciona uma documentação padronizada da API, contendo um guia de como todas as chamadas são feitas.
 
 ## 4.2. Avaliação
 
@@ -425,15 +424,13 @@ Verifique no link abaixo como devem ser as referências no padrão ABNT:
 
 http://www.pucminas.br/imagedb/documento/DOC\_DSC\_NOME\_ARQUI20160217102425.pdf
 
-**[1]** - _ELMASRI, Ramez; NAVATHE, Sham. **Sistemas de banco de dados**. 7. ed. São Paulo: Pearson, c2019. E-book. ISBN 9788543025001._
+**[1]** - _**CUSTOS da virtualização: qual o valor do orçamento?**. [S. l.], 25 set. 2018. Disponível em: <https://www.everit.com.br/custos-da-virtualizacao-qual-o-valor-do-orcamento/>. Acesso em: 12 maio 2021._
 
-**[2]** - _COPPIN, Ben. **Inteligência artificial**. Rio de Janeiro, RJ: LTC, c2010. E-book. ISBN 978-85-216-2936-8._
+**[2]** -_**NEXTJS**. [S. l.], 25 out. 2016. Disponível em: <https://nextjs.org/>. Acesso em: 21 maio 2021._
 
-**[3]** - _CORMEN, Thomas H. et al. **Algoritmos: teoria e prática**. Rio de Janeiro, RJ: Elsevier, Campus, c2012. xvi, 926 p. ISBN 9788535236996._
+**[3]** - _**CHAKRA UI**. [S. l.], 19 dez. 2019. Disponível em: <https://chakra-ui.com/>. Acesso em: 21 maio 2021._
 
-**[4]** - _SUTHERLAND, Jeffrey Victor. **Scrum: a arte de fazer o dobro do trabalho na metade do tempo**. 2. ed. rev. São Paulo, SP: Leya, 2016. 236, [4] p. ISBN 9788544104514._
-
-**[5]** - _RUSSELL, Stuart J.; NORVIG, Peter. **Inteligência artificial**. Rio de Janeiro: Elsevier, c2013. xxi, 988 p. ISBN 9788535237016._
+**[4]** - _**SWAGGER UI**. [S. l.], 11 jul. 2011. Disponível em: <https://swagger.io/>. Acesso em: 21 maio 2021._
 
 <a name="apendices"></a>
 
