@@ -15,8 +15,9 @@ import {
   githubApiBaseUrl,
   gitlabApiBaseUrl,
 } from 'src/shared/utils/version-control-services';
+import { GithubUser, GitlabUser } from './dto/git-user.dto';
 
-interface tokenParams {
+interface TokenParams {
   client_id: string;
   client_secret: string;
   code: string;
@@ -33,7 +34,7 @@ export class VersionControlService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async github(user: User, code: string) {
+  async github(user: User, code: string): Promise<void> {
     await this.checkUser(user.id);
 
     const accessToken = await this.getAccessToken(
@@ -58,7 +59,7 @@ export class VersionControlService {
     });
   }
 
-  async gitlab(user: User, code: string, redirectUrl: string) {
+  async gitlab(user: User, code: string, redirectUrl: string): Promise<void> {
     await this.checkUser(user.id);
 
     const accessToken = await this.getAccessToken(
@@ -86,7 +87,7 @@ export class VersionControlService {
   }
 
   @Cron(CronExpression.EVERY_HOUR)
-  private async updateAccounts() {
+  private async updateAccounts(): Promise<void> {
     const allUsers = await this.usersRepository.find();
     const usersChunks = chunkArray(allUsers, 25);
 
@@ -97,16 +98,16 @@ export class VersionControlService {
           const gitlabUser = await this.getGitLabAccount(user.gitLabToken);
 
           this.usersRepository.update(user.id, {
-            image: githubUser.image || gitlabUser.image,
+            image: githubUser.avatar_url || gitlabUser.avatar_url,
             gitHubAccount: githubUser.login,
-            gitLabAccount: gitlabUser.account,
+            gitLabAccount: gitlabUser.username,
           });
         }),
       );
     }
   }
 
-  private async checkUser(id: string) {
+  private async checkUser(id: string): Promise<void> {
     const user = await this.usersRepository.findOne(id);
 
     if (!user) {
@@ -118,7 +119,7 @@ export class VersionControlService {
 
   private async getAccessToken(
     tokenURI: string,
-    params: tokenParams,
+    params: TokenParams,
   ): Promise<string> {
     const requestConfig = { params, headers: { accept: 'application/json' } };
 
@@ -137,9 +138,9 @@ export class VersionControlService {
       });
   }
 
-  private async getGitHubAccount(token: string) {
+  private async getGitHubAccount(token: string): Promise<GithubUser> {
     return this.httpService
-      .get(`${githubApiBaseUrl}/user`, {
+      .get<GithubUser>(`${githubApiBaseUrl}/user`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .toPromise()
@@ -147,9 +148,9 @@ export class VersionControlService {
       .catch(() => null);
   }
 
-  private async getGitLabAccount(token: string) {
+  private async getGitLabAccount(token: string): Promise<GitlabUser> {
     return this.httpService
-      .get(`${gitlabApiBaseUrl}/user`, {
+      .get<GitlabUser>(`${gitlabApiBaseUrl}/user`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .toPromise()

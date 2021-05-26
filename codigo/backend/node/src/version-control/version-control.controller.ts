@@ -11,11 +11,12 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/users/user.entity';
 import { GitRequest } from './dto/git-request.dto';
 import { VersionControlService } from './version-control.service';
+import { Message } from 'src/shared/dto/message.dto';
 
 @ApiTags('Version Control')
 @Controller('version-control')
 export class VersionControlController {
-  constructor(private versionControlService: VersionControlService) { }
+  constructor(private versionControlService: VersionControlService) {}
 
   @Post('github')
   @ApiCookieAuth()
@@ -23,7 +24,7 @@ export class VersionControlController {
   async github(
     @GetUser() user: User,
     @Body(ValidationPipe) { code }: GitRequest,
-  ) {
+  ): Promise<Message> {
     await this.versionControlService.github(user, code);
 
     return {
@@ -37,7 +38,7 @@ export class VersionControlController {
   async gitlab(
     @GetUser() user: User,
     @Body(ValidationPipe) { code, redirectUrl }: GitRequest,
-  ) {
+  ): Promise<Message> {
     await this.versionControlService.gitlab(user, code, redirectUrl);
 
     return {

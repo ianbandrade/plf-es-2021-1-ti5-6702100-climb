@@ -4,7 +4,7 @@ import 'package:mobile/screens/monitory_screen.dart';
 import 'package:mobile/screens/user_page.dart';
 
 var customRoutes = <String, WidgetBuilder>{
-  '/user': (context) => HomePage(),
-  '/': (context) => UserPage(),
+  '/': (context) => HomePage(),
+  '/user': (context) => UserPage(),
   '/monitory': (context) => MonitoryPage()
 };

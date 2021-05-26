@@ -18,16 +18,17 @@ import { CreateInstancesDto } from './dto/instances/create-instances.dto';
 import { Instance } from './entities/instance/instance.entity';
 import { Role } from 'src/auth/role.decorator';
 import { UserRole } from 'src/users/user-roles.enum';
-import { CreatePuglinDto } from './dto/create-plugin.dto';
+import { CreatePluginDto } from './dto/create-plugin.dto';
 import { BasicInstance } from './dto/instances/basic-instance.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { BasicPlugin } from './dto/basic-plugin.dto';
 
 @ApiTags('Plugins')
 @Controller('plugins')
 @ApiCookieAuth()
 @UseGuards(AuthGuard(), RolesGuard)
 export class PluginsController {
-  constructor(private readonly pluginsService: PluginsService) { }
+  constructor(private readonly pluginsService: PluginsService) {}
 
   @Get()
   async findAll(): Promise<GetPuglinsDto> {
@@ -52,8 +53,8 @@ export class PluginsController {
 
   @Post()
   @Role(UserRole.ADMIN)
-  async createPuglin(@Body() body: CreatePuglinDto) {
-    return this, this.pluginsService.createPlugiin(body);
+  async createPuglin(@Body() body: CreatePluginDto): Promise<BasicPlugin> {
+    return this.pluginsService.createPlugin(body);
   }
 
   @Post(':pluginId/instances')

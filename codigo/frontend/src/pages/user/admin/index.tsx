@@ -552,9 +552,9 @@ const Users = () => {
             {users.length !== 0 ? (
               <UserTable {...userTableProps} />
             ) : (
-              <Text fontSize="3xl">
+              <Text fontSize="2xl">
                 Sem usuários para serem listados, importe por <code>.csv</code>{" "}
-                ou crie um usuário {addUserComponent}
+                ou crie um usuário
               </Text>
             )}
           </Skeleton>

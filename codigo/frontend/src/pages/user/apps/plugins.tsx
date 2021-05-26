@@ -117,7 +117,7 @@ const Plugins = (): JSX.Element => {
             }
           )
         ) : (
-          <Text mt={5} fontSize="3xl" fontWeight="bold">
+          <Text mt={5} fontSize="2xl" fontWeight="bold">
             Ainda não existem plugins pré-configurados!
           </Text>
         )}

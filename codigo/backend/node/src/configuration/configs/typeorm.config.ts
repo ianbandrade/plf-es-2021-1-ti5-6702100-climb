@@ -5,6 +5,13 @@ export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
   useFactory: async (configService: ConfigService) => ({
     type: 'postgres',
+    cache: {
+      type: 'redis',
+      duration: 30000,
+      options: {
+        host: configService.get<string>('redis.host'),
+      },
+    },
     host: configService.get<string>('database.host'),
     port: configService.get<number>('database.port'),
     database: configService.get<string>('database.name'),

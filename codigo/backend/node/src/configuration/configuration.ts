@@ -2,6 +2,11 @@ export default () => ({
   env: process.env.NODE_ENV || 'development',
   port: +process.env.PORT || 3333,
   publicHost: process.env.NEST_PUBLIC_API_HOST || undefined,
+  prometheusHost: process.env.PROMETHEUS_HOST || undefined,
+  redis: {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: +process.env.REDIS_PORT || 6379,
+  },
   database: {
     host: process.env.DATABASE_HOST || 'localhost',
     port: +process.env.DATABASE_PORT || 5432,

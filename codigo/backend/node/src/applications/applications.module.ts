@@ -11,6 +11,7 @@ import { rabbitMQConfig } from 'src/configuration/configs/rabbitmq.config';
 import { ActivityRepository } from './entities/activities/activity.repository';
 import { ApplicationsGateway } from './applications.gateway';
 import { MonitoringGRPCService } from './monitoring.grpc.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -23,8 +24,9 @@ import { MonitoringGRPCService } from './monitoring.grpc.service';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
     HttpModule,
+    ConfigModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService, ApplicationsGateway, MonitoringGRPCService],
 })
-export class ApplicationsModule { }
+export class ApplicationsModule {}

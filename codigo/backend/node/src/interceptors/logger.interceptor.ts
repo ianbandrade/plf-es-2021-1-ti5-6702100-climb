@@ -17,7 +17,7 @@ export class LoggerInterceptor implements NestInterceptor {
     return next.handle();
   }
 
-  private log(req: any) {
+  private log(req: any): void {
     const body = { ...req?.body };
     delete body?.password;
     delete body?.passwordConfirmation;

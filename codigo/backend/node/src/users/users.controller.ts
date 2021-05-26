@@ -23,13 +23,14 @@ import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import { User } from './user.entity';
+import { Message } from 'src/shared/dto/message.dto';
 
 @ApiTags('Users')
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
 @ApiCookieAuth()
 export class UsersController {
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService) {}
 
   @Post()
   @Role(UserRole.ADMIN)
@@ -66,13 +67,13 @@ export class UsersController {
   async updateUser(
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
     @Param('id') id: string,
-  ) {
+  ): Promise<User> {
     return this.usersService.updateUser(updateUserDto, id);
   }
 
   @Delete(':id')
   @Role(UserRole.ADMIN)
-  async deleteUser(@Param('id') id: string) {
+  async deleteUser(@Param('id') id: string): Promise<Message> {
     await this.usersService.deleteUser(id);
 
     return {

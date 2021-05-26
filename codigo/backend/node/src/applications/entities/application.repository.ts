@@ -8,13 +8,14 @@ import { FindApplicationQueryDto } from '../dto/find-application-query.dto';
 import { User } from 'src/users/user.entity';
 import { Environment } from './environments/environments.entity';
 import { postgresCatch } from 'src/shared/utils/postgres-creation-default-catch';
+import { applicationCacheId } from './application.cache';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
   async createApplication(
     createApplicationDto: CreateApplicationDto,
     user: User,
-  ) {
+  ): Promise<Application> {
     const {
       name,
       provider,
@@ -93,6 +94,7 @@ export class ApplicationRepository extends Repository<Application> {
       Application.publicAttributes.map((userKey) => `application.${userKey}`),
     );
 
+    query.cache(applicationCacheId.findAllApplications());
     const [users, total] = await query.getManyAndCount();
 
     return { items: users, total };

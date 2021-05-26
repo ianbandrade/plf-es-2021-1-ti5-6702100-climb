@@ -12,7 +12,7 @@ import {
 import { Application } from '../application.entity';
 
 @Entity()
-export class Deploys extends BaseEntity {
+export class Deploy extends BaseEntity {
   @Column({ nullable: false, primary: true })
   id: string;
 

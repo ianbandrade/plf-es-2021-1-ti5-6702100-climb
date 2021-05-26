@@ -17,10 +17,6 @@ class HomePage extends StatelessWidget {
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
 
-    bool checkFieldsEmpty() {
-      return _emailController.text.isEmpty || _emailController.text.isEmpty;
-    }
-
     final storage = new FlutterSecureStorage();
 
     _handleSignIn() async {
@@ -30,29 +26,19 @@ class HomePage extends StatelessWidget {
           'password': _passwordController.text,
         },
       );
+
       try {
-        final response = await http.post(
-          Uri.http(env['API_HOST'], '/auth/signin'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+        final response = await ApiClient().signIn(
           body: body,
         );
 
-        if (response.statusCode == 201) {
-          final token = json.decode(response.body)['token'];
-
-          if (token != null) {
-            await storage.write(key: 'token', value: token);
-            ApiClient().get(Uri.http(env['API_HOST'], '/auth/me')).then((res) {
-              final parsedUser = json.decode(res.body);
-              User userData = User.fromJson(parsedUser);
-              Navigator.of(context).pushNamed('/user', arguments: userData);
-            });
-          }
+        if (response.statusCode == 200) {
+          final parsedUser = json.decode(response.body)['user'];
+          User userData = User.fromJson(parsedUser);
+          Navigator.of(context).pushNamed('/user', arguments: userData);
         } else {
           final messages = json.decode(response.body)['message'];
-          var text = null;
+          var text;
           if (messages.runtimeType == String) {
             text = messages;
           } else {
