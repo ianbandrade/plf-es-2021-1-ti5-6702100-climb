@@ -49,6 +49,10 @@ const Profile = ({ user, setUser }: ProfileProps) => {
   const router = useRouter();
   const { code, state } = router.query;
 
+  useEffect(() => {
+    authService.isAuthenticated(router, { useDefault: true }, setUser);
+  }, []);
+
   const toggleIntegrationButton = async (): Promise<void> => {
     if (code) {
       const body = { code, redirectUrl };
