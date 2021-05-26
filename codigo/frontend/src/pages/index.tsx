@@ -12,7 +12,7 @@ import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import { authService } from "../shared/services/authService";
-import { getMessages } from "../shared/utils/toast-messages";
+import { showDefaultFetchError, messageFactory, newBaseToast } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
@@ -25,6 +25,20 @@ const Home = () => {
   const toast = useToast();
   const router = useRouter();
 
+  const createWarningToast = (description: string, id: string | number): UseToastOptions => (
+    {
+      description,
+      id,
+      ...newBaseToast("warning"),
+    }
+  )
+
+  const validate = () => {
+    isEmailOrPassEmpty();
+    isInvalidMail();
+    isInvalidPassword()
+  }
+
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
   }
@@ -33,87 +47,63 @@ const Home = () => {
   }
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
-    if (isEmailOrPassEmpty())
-      return showToast({
-        title: "Atenção!",
-        description: "Prencha os campos de e-mail e senha",
-        status: "warning",
-        id: "empty",
-        position: "bottom-left",
-      });
-    if (isInvalidMail())
-      return showToast({
-        title: "Atenção!",
-        description: "Email inválido",
-        status: "warning",
-        id: "mail",
-        position: "bottom-left",
-      });
-    if (isInvalidPassword())
-      return showToast({
-        title: "Atenção!",
-        description: "A senha deve conter 6 ou mais caracteres",
-        status: "warning",
-        id: "password",
-        position: "bottom-left",
-      });
-
+    console.log("Hello")
+    try {
+      validate();
+    } catch (e) {
+      return showToastMessage(
+        createWarningToast(e, 1));
+    }
     const body = { email: email.replace(" ", ""), password: password };
     authService
       .signIn(body)
       .then((res) => {
         if (res) {
-          showToast({
+          showToastMessage({
             title: "Sucesso!",
             description: "Acesso autorizado",
-            status: "success",
             id: "login",
-            position: "bottom-left",
+            ...newBaseToast("success"),
           });
           router.push(PROFILE_PATH);
         }
       })
       .catch((e) => {
-        getMessages(e?.response?.data).forEach((description, i) =>
-          showToast({
-            title: "Erro!",
-            description: `${description}`,
-            status: "error",
-            id: i,
-            position: "bottom-left",
-          })
-        );
+        console.log(e?.response?.data)
+        if (e?.response?.data) {
+          messageFactory(e.response.data, 'warning').forEach(message => showToastMessage(message))
+        } else
+          showDefaultFetchError("para efetuar o acesso")
       });
   }
 
-  const showToast = (data: UseToastOptions) => {
+  const showToastMessage = (data: UseToastOptions) => {
     if (data.id) if (toast.isActive(data.id)) return;
     toast({ ...data, duration: data.duration || DEFAULT_DURATION });
   };
 
-  const isEmailOrPassEmpty = () => !(email && password);
-  const isInvalidMail = () =>
-    !/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email);
-  const isInvalidPassword = () => password.length < 6;
+  const isEmailOrPassEmpty = () => { if (!(email && password)) throw ("Prencha os campos de e-mail e senha") };
+  const isInvalidMail = () => { if (!/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email)) throw ("Email inválido") }
+  const isInvalidPassword = () => { if (password.length < 6) throw ("A senha deve conter 6 ou mais caracteres") };
 
   const { colorMode } = useColorMode();
 
   const { formColor, textColor, inputBgColor, inputTextColor, labelColor } =
     colorMode === LIGHT
       ? {
-          formColor: colors.dark.Nord2,
-          textColor: colors.light.Nord6,
-          inputTextColor: colors.dark.Nord2,
-          labelColor: colors.light.Nord6,
-          inputBgColor: colors.light.Nord4,
-        }
+        formColor: colors.dark.Nord2,
+        textColor: colors.light.Nord6,
+        inputTextColor: colors.dark.Nord2,
+        labelColor: colors.light.Nord6,
+        inputBgColor: colors.light.Nord4,
+      }
       : {
-          formColor: colors.light.Nord6,
-          textColor: colors.dark.Nord2,
-          inputTextColor: colors.light.Nord6,
-          labelColor: colors.dark.Nord2,
-          inputBgColor: colors.dark.Nord0,
-        };
+        formColor: colors.light.Nord6,
+        textColor: colors.dark.Nord2,
+        inputTextColor: colors.light.Nord6,
+        labelColor: colors.dark.Nord2,
+        inputBgColor: colors.dark.Nord0,
+      };
   return (
     <>
       <Flex

@@ -16,10 +16,11 @@ const Layout = ({ children }: LayoutProps) => {
   const isAdminPage = router.pathname.includes("/admin");
   const isUserPage = router.pathname.includes("/user");
   const isLoginPage = router.pathname === "/";
-  const { setUser } = useContext(UserContext);
+  const { setUser, user } = useContext(UserContext);
   const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
+    console.log("dokaok");
     if (isLoginPage) {
       authService
         .isAuthenticated(router, { success: "/user/profile" }, setUser)

@@ -59,34 +59,45 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     final User routeData = ModalRoute.of(context).settings.arguments;
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: Icon(Icons.menu),
-        title: Center(
-          child: Logo(
-            imageHeight: 20,
-            textStyle: Theme.of(context).textTheme.headline6,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                ApiClient()
+                    .post(Uri.http(env['API_HOST'], '/auth/logout'))
+                    .then((value) {
+                  Navigator.of(context).pop();
+                });
+              }),
+          title: Center(
+            child: Logo(
+              imageHeight: 20,
+              textStyle: Theme.of(context).textTheme.headline6,
+            ),
           ),
+          actions: [ChangeThemeSwitch()],
         ),
-        actions: [ChangeThemeSwitch()],
-      ),
-      body: RefreshWidget(
-        onRefresh: fetchApplicationsData,
-        child: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: [
-              Center(
-                child: UserProfile(
-                  name: routeData.gitHubAccount,
-                  image: routeData.image,
+        body: RefreshWidget(
+          onRefresh: fetchApplicationsData,
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: [
+                Center(
+                  child: UserProfile(
+                    name: routeData.gitHubAccount,
+                    image: routeData.image,
+                  ),
                 ),
-              ),
-              AppList(
-                applications: _applications,
-              )
-            ],
+                AppList(
+                  applications: _applications,
+                )
+              ],
+            ),
           ),
         ),
       ),

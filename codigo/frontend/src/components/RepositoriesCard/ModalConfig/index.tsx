@@ -1,17 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import {
-  Modal,
-  ModalOverlay,
-  ModalHeader,
-  ModalContent,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Select,
-  Flex,
-  FormControl,
-  Icon,
   useColorMode,
   Button,
   Accordion,
@@ -25,6 +14,17 @@ import {
   Th,
   Tbody,
   useToast,
+  UseToastOptions,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  FormControl,
+  ModalBody,
+  Icon,
+  Select,
+  ModalFooter,
 } from "@chakra-ui/react";
 import { Repository } from "../../../shared/interfaces/Repository";
 
@@ -36,7 +36,8 @@ import { colors } from "../../../styles/customTheme";
 import Environment from "../../../shared/interfaces/environment";
 import { CreateApplication } from "../../../shared/interfaces/create-application";
 import apiClient from "../../../shared/api/api-client";
-import { getMessages } from "../../../shared/utils/toast-messages";
+import { messageFactory, newBaseToast } from "../../../shared/utils/toast-messages";
+import { Flex } from "@chakra-ui/layout";
 
 interface ModalConfigProps {
   isOpen: boolean;
@@ -62,17 +63,17 @@ const ModalConfig = ({
   const { addonInputColor, inputBgColor, inputColor, envButtonColor } =
     colorMode === LIGHT
       ? {
-          addonInputColor: colors.light.Nord5,
-          inputBgColor: colors.dark.Nord0,
-          inputColor: colors.light.Nord6,
-          envButtonColor: colors.light.Nord6,
-        }
+        addonInputColor: colors.light.Nord5,
+        inputBgColor: colors.dark.Nord0,
+        inputColor: colors.light.Nord6,
+        envButtonColor: colors.light.Nord6,
+      }
       : {
-          addonInputColor: colors.dark.Nord2,
-          inputBgColor: colors.light.Nord4,
-          inputColor: colors.dark.Nord2,
-          envButtonColor: colors.dark.Nord2,
-        };
+        addonInputColor: colors.dark.Nord2,
+        inputBgColor: colors.light.Nord4,
+        inputColor: colors.dark.Nord2,
+        envButtonColor: colors.dark.Nord2,
+      };
 
   const toast = useToast();
 
@@ -86,10 +87,6 @@ const ModalConfig = ({
   );
 
   const [pathInput, setPathInput] = useState("");
-  const [invalidInputs, setInvalidInputs] = useState({
-    name: false,
-    path: false,
-  });
 
   const router = useRouter();
 
@@ -100,11 +97,9 @@ const ModalConfig = ({
     };
     if (keyInput.length < 1) {
       toast({
-        title: "Aviso!",
         description: "Não é possível ter chave vazia",
-        status: "warning",
         id: keyInput,
-        position: "bottom-left",
+        ...newBaseToast("warning"),
       });
     } else {
       setEnvs([...envs, newEnv]);
@@ -135,39 +130,42 @@ const ModalConfig = ({
       repositoryOwner: organizationName,
     };
 
-    if (validateFields(newApplication)) {
-      //Make Request
-      apiClient
-        .post("applications", newApplication)
-        .then(() => {
-          toast({
-            title: "Sucesso",
-            status: "success",
-            description: "Aplicação criada com sucesso",
-            duration: 2000,
-            position: "top-right",
-          });
-          onClose();
-          clearAllFields();
-          router.push("/user/apps");
+    try {
+      validateFields(newApplication)
+    } catch (e) {
+      return showToastMessage(
+        {
+          ...newBaseToast("warning"),
+          description: e
         })
-        .catch((error) => {
-          getMessages(error?.response.data).forEach((description, i) => {
-            toast({
-              title: "Erro!",
-              description: `${description}`,
-              status: "error",
-              id: i,
-              position: "bottom-left",
-            });
-          });
-        });
     }
 
+    apiClient
+      .post("applications", newApplication)
+      .then(() => {
+        toast({
+          title: "Sucesso",
+          status: "success",
+          description: "Aplicação criada com sucesso",
+          duration: 2000,
+          position: "top-right",
+        });
+        onClose();
+        clearAllFields();
+        router.push("/user/apps");
+      })
+      .catch((e) =>
+        messageFactory(e.response.data, 'warning').forEach((message, i) => showToastMessage(message, i))
+      )
     console.log(newApplication);
   }
 
-  function clearAllFields() {
+  function showToastMessage(message: UseToastOptions, id = 1){
+    if (!toast.isActive(id))
+      toast(message)
+  }
+
+  function clearAllFields(){
     setAppNameInput("");
     setEnvs([]);
     setPathInput("");
@@ -179,42 +177,13 @@ const ModalConfig = ({
 
   function validateFields(newApplication: CreateApplication) {
     const { name, repositoryPath } = newApplication;
-    const auxInvalidInputs = {
-      name: false,
-      path: false,
-    };
-
     if (name.length < 1) {
-      toast({
-        title: "Aviso!",
-        description: "O nome da aplicação não pode ser vazio",
-        status: "warning",
-        id: 1,
-      });
-      auxInvalidInputs.name = true;
+      throw "O nome da aplicação não pode ser vazio"
     } else if (!validateNameFieldFormat(name)) {
-      toast({
-        title: "Aviso!",
-        description:
-          "O nome da aplicação possui formato inválido, pode conter apenas letras minúsculas ou números",
-        status: "warning",
-        id: 2,
-      });
-      auxInvalidInputs.name = true;
+      throw "O nome da aplicação possui formato inválido, pode conter apenas letras minúsculas ou números"
     } else if (repositoryPath.length < 1) {
-      toast({
-        title: "Aviso!",
-        description: "O caminho não pode ser vazio",
-        status: "warning",
-        id: 3,
-      });
-      auxInvalidInputs.path = true;
+      throw "O caminho não pode ser vazio"
     }
-    setInvalidInputs(auxInvalidInputs);
-    if (auxInvalidInputs.name || auxInvalidInputs.path) {
-      return false;
-    }
-    return true;
   }
 
   return (
@@ -245,7 +214,6 @@ const ModalConfig = ({
                     inputBgColor: inputBgColor,
                     inputTextColor: inputColor,
                   }}
-                  validate={invalidInputs.name}
                   maxLength={50}
                 />
                 <Flex
@@ -269,16 +237,16 @@ const ModalConfig = ({
                 >
                   {repository.branchs
                     ? repository.branchs.map(
-                        (branch: string, index: number) => (
-                          <option
-                            value={branch}
-                            key={index}
-                            style={{ color: inputBgColor }}
-                          >
-                            {branch}
-                          </option>
-                        )
+                      (branch: string, index: number) => (
+                        <option
+                          value={branch}
+                          key={index}
+                          style={{ color: inputBgColor }}
+                        >
+                          {branch}
+                        </option>
                       )
+                    )
                     : ""}
                 </Select>
               </Flex>
@@ -294,7 +262,6 @@ const ModalConfig = ({
                   inputBgColor: inputBgColor,
                   inputTextColor: inputColor,
                 }}
-                validate={invalidInputs.path}
               />
               <Accordion allowToggle>
                 <AccordionItem

@@ -13,6 +13,12 @@ html {
   --thumbBG: #2e3440;
 }
 
+#iframe {
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
 body::-webkit-scrollbar,
 div::-webkit-scrollbar,
 ul::-webkit-scrollbar {

@@ -18,6 +18,7 @@ class MonitoryPage extends StatefulWidget {
 
 class _MonitoryPageState extends State<MonitoryPage> {
   int connectionsNumber = 0;
+  MonitoryApplication routeData;
   Map<String, String> responseStatusCode = {
     "2XX": "0",
     "4XX": "0",
@@ -50,7 +51,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
       // Connect to websocket
       socket.connect();
-      socket.emit('message', 'express-3');
+      socket.emit('message', routeData.appName);
       // Handle socket events
       socket.on('connect', (_) => print('connect: ${socket.id}'));
       socket.on('message', (data) => getAppStaticsData(data));
@@ -72,8 +73,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final MonitoryApplication routeData =
-        ModalRoute.of(context).settings.arguments;
+    routeData = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
@@ -162,7 +162,6 @@ class _MonitoryPageState extends State<MonitoryPage> {
       else if (key == '5XX') {
         color = Colors.red;
       }
-
       final Request request =
           new Request(code: key, quantity: value, color: color);
       data.add(request);
