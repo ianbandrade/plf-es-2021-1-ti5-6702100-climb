@@ -1,5 +1,5 @@
 import { Flex, Spinner, Stack, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
@@ -8,9 +8,9 @@ import { GitProviders } from "../../../../shared/interfaces/GitProviders";
 import { githubService } from "../../../../shared/services/githubService";
 import { gitlabService } from "../../../../shared/services/gitlabService";
 import { getMessages } from "../../../../shared/utils/toast-messages";
-import { authService } from "../../../../shared/services/authService";
 import { useRouter } from "next/router";
-
+import GitButtons from "../../../../components/GitButtons";
+import { UserContext } from "../../../../store/UserProvider";
 const data = {
   github: null,
   gitlab: null,
@@ -20,7 +20,7 @@ const NewApp = () => {
   const [gitProvider, setGitProvider] = useState<"github" | "gitlab">("github");
   const [providers, setProviders] = useState<GitProviders>(data);
   const toast = useToast();
-  const router = useRouter();
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     fetchData();
@@ -32,6 +32,7 @@ const NewApp = () => {
         .getRepositories()
         .then((res) => {
           setProviders({ github: res.organizations, gitlab: null });
+          setGitProvider("github");
         })
         .catch((error) => {
           getMessages(error?.response.data).forEach((description, i) => {
@@ -55,7 +56,7 @@ const NewApp = () => {
             prevState.gitlab = res.organizations;
             return prevState;
           });
-          setGitProvider("gitlab");
+          if (gitProvider !== "github") setGitProvider("gitlab");
         })
         .catch((error) => {
           getMessages(error?.response.data).forEach((description, i) => {
@@ -77,13 +78,17 @@ const NewApp = () => {
       : setGitProvider("gitlab");
   }
 
-  return !providers.github && !providers.gitlab ? (
+  return !getCurrentUser()?.gitHubToken && !getCurrentUser()?.gitLabToken ? (
     <NotLinkedGit
-      title={"Carregando..."}
+      title={"Nenhum git vinculado, por favor vincule o seu git"}
       children={
-        <Stack direction="row" spacing={4}>
-          <Spinner size="xl" />
-        </Stack>
+        <Flex justifyContent={"space-between"} width="sm" mt="5">
+          <GitButtons
+            user={user}
+            setUser={setUser}
+            baseUrl={"/user/apps/newapp"}
+          />
+        </Flex>
       }
     />
   ) : (
