@@ -33,7 +33,6 @@ const RepositoriesCard = ({
           inputColor: colors.dark.Nord2,
         };
   const [filterInput, setFilterInput] = useState("");
-
   const [gitOrganizationsName, setgitOrganizationsName] = useState("github");
 
   const [repositories, setRepositories] = useState(
@@ -119,14 +118,15 @@ const RepositoriesCard = ({
           >
             <Icon as={AiFillGithub} boxSize="36px" />
           </Button>
-          <Button width="12" height="12" mr="2">
-            <Icon
-              as={RiGitlabFill}
-              boxSize="36px"
-              color={"#E24329"}
-              _hover={{ cursor: "pointer" }}
-              onClick={() => handleSelectGit("gitlab")}
-            />
+          <Button
+            width="12"
+            height="12"
+            mr="2"
+            color={"#E24329"}
+            _hover={{ cursor: "pointer" }}
+            onClick={() => handleSelectGit("gitlab")}
+          >
+            <Icon as={RiGitlabFill} boxSize="36px" />
           </Button>
         </Flex>
       </Flex>
@@ -159,7 +159,9 @@ const RepositoriesCard = ({
             )
           )
         ) : (
-          <NotLinkedGit />
+          <NotLinkedGit
+            title={`Conta do ${gitOrganizationsName} não está associada!`}
+          />
         )}
       </Flex>
     </Flex>
