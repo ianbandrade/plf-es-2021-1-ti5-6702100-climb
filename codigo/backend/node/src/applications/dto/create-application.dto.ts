@@ -4,7 +4,10 @@ import { ProvidersEnum } from 'src/shared/enum/providers.enum';
 import { BaseEnvironment } from '../dto/environments/basic-environment.dto';
 
 export class CreateApplicationDto {
-  @Matches(/^[a-z0-9][a-z0-9-]{3,}[a-z0-9]$/)
+  @Matches(/^[a-z0-9][a-z0-9-]{3,}[a-z0-9]$/, {
+    message:
+      'Nome da applicação deve conter somente letras minusculas, números e hífens que não estejam no começo ou no final e ter no mínimo 5 caracteres',
+  })
   @IsNotEmpty({
     message: 'Nome da applicação não pode ser vazio',
   })

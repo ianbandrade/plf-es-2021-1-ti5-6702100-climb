@@ -115,7 +115,7 @@ export class PluginsService {
       id: instance.id,
       plugin: {
         name: plugin.name,
-        dockerfile: plugin.dockerImage,
+        chart: plugin.dockerImage,
       },
     };
     this.amqpConnection.publish('', plugins.deploy.req.routingKey, payload);

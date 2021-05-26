@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { PluginsService } from './plugins.service';
@@ -60,7 +61,7 @@ export class PluginsController {
   @Post(':pluginId/instances')
   async createInstance(
     @Param('pluginId') pluginId: string,
-    @Body() createIntanceDto: CreateInstancesDto,
+    @Body(ValidationPipe) createIntanceDto: CreateInstancesDto,
     @GetUser() user: User,
   ): Promise<Instance> {
     return await this.pluginsService.createInstance(

@@ -401,45 +401,6 @@ export class ApplicationsService {
     return deployReq;
   }
 
-  @RabbitSubscribe({
-    exchange: defaultExchange,
-    routingKey: apps.delete.res.routingKey,
-    queue: apps.delete.res.queue,
-  })
-  async reciveDeleteDeployResponse(updateMessage: ResDeleteDto): Promise<void> {
-    const deploy = await this.deploysRepository.findOne(updateMessage.id);
-
-    if (deploy.type !== DeployType.DELETE) return;
-
-    deploy.status = updateMessage.success
-      ? DeployStatusEnum.SUCCESS
-      : DeployStatusEnum.FAIL;
-
-    deploy.error = updateMessage.error;
-
-    deploy.save();
-
-    if (updateMessage.success) {
-      await this.updateLastCreatingActivity(
-        deploy.applicationId,
-        ActivityType.FAIL,
-        'A aplicação foi deletada',
-      );
-      const application = await this.applicationRepository.findOne(
-        deploy.applicationId,
-      );
-
-      if (await this.deleteWebHooks(application)) {
-        await this.applicationRepository.delete(deploy.applicationId);
-        getConnection().queryResultCache.remove([
-          applicationCacheId.findAllApplications(),
-          applicationCacheId.findApplicationById(application.id),
-          applicationCacheId.findApplicationByName(application.name),
-        ]);
-      }
-    }
-  }
-
   private async deleteWebHooks(application: Application): Promise<boolean> {
     const user = await this.userService.findCompleteUserById(
       application.userId,
@@ -544,6 +505,45 @@ export class ApplicationsService {
         ActivityType.FAIL,
         updateMessage.error,
       );
+    }
+  }
+
+  @RabbitSubscribe({
+    exchange: defaultExchange,
+    routingKey: apps.delete.res.routingKey,
+    queue: apps.delete.res.queue,
+  })
+  async reciveDeleteDeployResponse(updateMessage: ResDeleteDto): Promise<void> {
+    const deploy = await this.deploysRepository.findOne(updateMessage.id);
+
+    if (deploy.type !== DeployType.DELETE) return;
+
+    deploy.status = updateMessage.success
+      ? DeployStatusEnum.SUCCESS
+      : DeployStatusEnum.FAIL;
+
+    deploy.error = updateMessage.error;
+
+    deploy.save();
+
+    if (updateMessage.success) {
+      await this.updateLastCreatingActivity(
+        deploy.applicationId,
+        ActivityType.FAIL,
+        'A aplicação foi deletada',
+      );
+      const application = await this.applicationRepository.findOne(
+        deploy.applicationId,
+      );
+
+      if (await this.deleteWebHooks(application)) {
+        await this.applicationRepository.delete(deploy.applicationId);
+        getConnection().queryResultCache.remove([
+          applicationCacheId.findAllApplications(),
+          applicationCacheId.findApplicationById(application.id),
+          applicationCacheId.findApplicationByName(application.name),
+        ]);
+      }
     }
   }
 

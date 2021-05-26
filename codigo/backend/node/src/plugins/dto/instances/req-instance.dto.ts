@@ -5,5 +5,5 @@ export class ReqInstanceDto {
 
 class PluginData {
   name: string;
-  dockerfile: string;
+  chart: string;
 }
