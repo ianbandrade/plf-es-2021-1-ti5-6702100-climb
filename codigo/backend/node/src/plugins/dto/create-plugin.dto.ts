@@ -1,4 +1,4 @@
-export class CreatePuglinDto {
+export class CreatePluginDto {
   name: string;
   image: string;
   description: string;

@@ -7,18 +7,16 @@ import {
   UseToastOptions,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
-import apiClient from "../shared/api/api-client";
-import { isAuthenticated, login } from "../shared/auth/localStorageManager";
+import { authService } from "../shared/services/authService";
 import { getMessages } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
-const AUTHURL = `/auth/signin`;
 const PROFILE_PATH = "user/profile";
 
 const Home = () => {
@@ -26,12 +24,6 @@ const Home = () => {
   const [password, setPassword] = useState("");
   const toast = useToast();
   const router = useRouter();
-
-  useEffect(() => {
-    if (isAuthenticated()) {
-      router.push(PROFILE_PATH);
-    }
-  });
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -67,12 +59,10 @@ const Home = () => {
       });
 
     const body = { email: email.replace(" ", ""), password: password };
-    apiClient
-      .post(AUTHURL, body)
+    authService
+      .signIn(body)
       .then((res) => {
-        if (res.data?.token) {
-          login(res.data.token);
-
+        if (res) {
           showToast({
             title: "Sucesso!",
             description: "Acesso autorizado",
@@ -83,7 +73,7 @@ const Home = () => {
           router.push(PROFILE_PATH);
         }
       })
-      .catch((e) =>
+      .catch((e) => {
         getMessages(e?.response?.data).forEach((description, i) =>
           showToast({
             title: "Erro!",
@@ -92,8 +82,8 @@ const Home = () => {
             id: i,
             position: "bottom-left",
           })
-        )
-      );
+        );
+      });
   }
 
   const showToast = (data: UseToastOptions) => {

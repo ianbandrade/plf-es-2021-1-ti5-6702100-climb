@@ -4,6 +4,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from '../users/users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/user.entity';
+import { SiginInReturn } from './dto/sign-in-return';
 
 @Injectable()
 export class AuthService {
@@ -14,14 +16,19 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signIn(
-    credentialsDto: CredentialsDto,
-  ): Promise<{ token: string; cookie: string }> {
+  async signIn(credentialsDto: CredentialsDto): Promise<SiginInReturn> {
     const user = await this.userRepository.checkCredentials(credentialsDto);
 
     if (user === null) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
+
+    delete user.password;
+    delete user.salt;
+    delete user.gitHubToken;
+    delete user.gitLabToken;
+    delete user.createdAt;
+    delete user.updatedAt;
 
     const jwtPayload = {
       id: user.id,
@@ -32,10 +39,10 @@ export class AuthService {
       gitLabAccount: user.gitLabAccount,
     };
     const token = this.jwtService.sign(jwtPayload);
-    return { token, cookie: this.getCookieToken(token) };
+    return { user, cookie: this.getCookieToken(token) };
   }
 
-  getCookieToken(token: string) {
+  getCookieToken(token: string): string {
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${+this.configService.get(
       'jwt.signOptions.expiresIn',
     )}`;

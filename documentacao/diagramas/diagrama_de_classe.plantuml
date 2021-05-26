@@ -1,0 +1,692 @@
+@startuml Climb
+
+' ==================================== Main ====================================
+class AppModule {
+  + bootstrap(): void
+}
+' ==============================================================================
+
+' ================================ Applications ================================
+class ApplicationsModule {}
+
+class ApplicationsController {
+  + create(user: User, createApplicationDto: CreateApplicationDto): Application
+  + findAll(user: User, query: FindApplicationQueryDto): ReturList<GetApplication>>
+  + findOneId(user: User, id: string): GetApplication
+  + findOnebyName(user: User, name: string): GetApplication
+  + update(user: User, id: string, updateApplicationDto: UpdateApplicationDto): GetApplication
+  + remove(user: User, id: string): string
+  + getDeploys(user: User, appId: string): ReturList<Deploy>
+  + getDeploy(user: User, deployId: string): Deploys 
+  + reciveWebhook(appId: string, body: GithubWebhookEventDto | GitlabWebhookEventDto): boolean 
+  + getAppActivities(user: User, appId: string): GetActivities
+  + doRollback(user: User, appId: string): boolean 
+  + undoRollback(user: User, appId: string): boolean 
+}
+
+class ApplicationsGateway {
+  - server: Server
+  - logger: Logger
+  - map: Map
+  + afterInit(): void
+  + handleConnection(client: Socket): void
+  + handleDisconnect(client: Socket): void
+  + handleMessage(client: Socket, applicationName: string): void
+} 
+
+class ApplicationsService {
+  + create(createApplicationDto: CreateApplicationDto, user: User): Application
+  - getCommitData(repositoryData: RepositoryData): string
+  - createActivity(application: Application, commit: string, type: ActivityType, error: string): Activity
+  - getGithubCommitData(repositoryOwner: string, repositoryName: string, repositoryRef: string, user: User): string
+  - getGitlabCommitData(repositoryOwner: string, repositoryName: string, repositoryRef: string, user: User): string
+  + findAll(query: FindApplicationQueryDto, user: User): ReturList<Application>
+  + findOnebyId(appId: string, user: User): GetApplication
+  - findCompleteApplication(appId: string, user: User): Application
+  - verifyApplicationFetch(application: Application, user: User): void
+  + findOnebyName(name: string, user: User): GetApplication
+  - getPubicApplicationFields(application: Application): GetApplication
+  + update(id: string, updateApplicationDto: UpdateApplicationDto, user: User): GetApplication
+  - createUpdateDeploy(application: Application, commit: string): ReqUpdateDto
+  - createDeleteDeploy(application: Application): ReqDeleteDto
+  + remove(id: string, user: User): string
+  - createNewDeploy(application: Application, user: User, commit: string): ReqCreateDto
+  + reciveDeleteDeployResponse(updateMessage: ResUpdateDto): void
+  - deleteWebHooks(application: Application): boolean
+  - deleteGithubWebhooks(application: Application, user: User): void
+  - deleteGitlabWebhooks(application: Application, user: User): void 
+  + reciveUpdateDeployResponse(updateMessage: ResUpdateDto): void
+  + reciveNewDeployResponse(updateMessage: ResCreateDto): void
+  - updateLastCreatingActivity(applicationId: string, type: ActivityType, error: string | null): Activity>
+  + getOneDeploy(id: string, user: User): Deploy
+  + getDeploys(appId: string, user: User): ReturList<Deploy>>
+  + reciveWebhook(appId: string, webhook: GithubWebhookEventDto | GitlabWebhookEventDto): boolean
+  - mapEnvironments(baseEnvironments: BaseEnvironment[], applicationId: string): Environment[]
+  - sendNewDeployMessage(payload: ReqCreateDto): void
+  - sendUpdateDeployMessage(payload: ReqUpdateDto): void
+  - sendDeleteDeployMessage(payload: ReqDeleteDto): void
+  - createApplicationHook(application: Application): void>
+  + createGithubApplicationHook(application: Application): GithubWebhook
+  - createGitlabApplicationHook(application: Application): GitlabWebhook
+  + getAppActivities(user: User, appId: string): GetActivities
+  + doRollBack(user: User, appId: string): boolean
+  + undoRollBack(user: User, appId: string): boolean
+}
+
+
+interface QueryResult {
+  results: any  
+}
+
+' Have an any return
+class MonitoringGRPCService {
+  - socketClientMap: Map
+  + getDashboards(appName: string): MonitorNewDataDto
+  - getMetrics(query: string): any 
+  + getAppData(clientId: string, appName: string): BehaviorSubject<MonitorNewDataDto>
+  - updateSubject(appName: string, subject: BehaviorSubject<MonitorNewDataDto>): void
+  + close(clientId: string, appName: string): boolean
+  - getConnectionKey(clientId: string, appName: string): string
+}
+
+class CreateApplicationDto {
+  + name: string
+  + provider: ProvidersEnum
+  + repositoryId: string
+  + repositoryRef: string
+  + repositoryPath: string
+  + repositoryURL: string
+  + repositoryOwner: string
+  + repositoryName: string
+  + environments: BaseEnvironment[]
+}
+
+class FindApplicationQueryDto {
+  + name: string
+  + provider: ProvidersEnum
+}
+
+FindApplicationQueryDto <|-- BaseQueryParametersDto
+
+class GetApplication {
+  + id: string
+  + name: string
+  + provider: ProvidersEnum
+  + repositoryId: string
+  + repositoryRef: string
+  + repositoryPath: string
+  + repositoryURL: string
+  + repositoryOwner: string
+  + repositoryName: string
+  + userId: string
+  + environments: BaseEnvironment[]
+}
+
+class UpdateApplicationDto {
+  + repositoryRef: string
+  + repositoryPath: string
+  + environments: BaseEnvironment[]
+}
+
+class BaseActivities {
+  + type: ActivityType
+  + commit: string
+  + error: string | null
+}
+
+class GetActivities {
+  + activities: BaseActivities[]
+}
+
+class FindDeployQueryDto{
+  + status: DeployStatusEnum
+}
+
+FindDeployQueryDto <|-- BaseQueryParametersDto
+
+class ReqCreateDto {
+  + id: string
+  + token: string
+  + commit: string
+  + application: Application
+  + timestamp: number
+}
+
+class ReqDeleteDto {
+  + id: string
+  + application: Application
+}
+
+class ReqUpdateDto {
+  + id: string
+  + commit: string
+  + application: Application
+  + timestamp: number
+}
+
+class ResCreateDto {
+  + id: string
+  + success: boolean
+  + error: string | null
+}
+
+class ReDeleteDto {
+  + id: string
+  + success: boolean
+  + error: string | null
+}
+
+class ResUpdateDto {
+  + id: string
+  + success: boolean
+  + error: string | null
+}
+
+class BaseEnvironment {
+  + key: string
+  + value: string
+}
+
+class MonitorNewDataDto {
+  + results: MonitorResults
+}
+
+class MonitorResults {
+  + openConnections: Metrics[]
+  + responseStatusCode: Metrics[]
+  + averageRequestTime: Metrics[]
+}
+
+class Metrics {
+  + metric: any
+  + value: Map<number, string>
+}
+
+class Application  {
+  + id: string
+  + name: string
+  + provider: ProvidersEnum
+  + repositoryId: string
+  + repositoryRef: string
+  + repositoryPath: string
+  + repositoryURL: string
+  + repositoryName: string
+  + repositoryOwner: string
+  + webhookToken: string
+  + hookId: number
+  + user: User
+  + userId: string
+  + environments: Environment[]
+  + deploys: Deploy[]
+  + createdAt: Date
+  + updatedAt: Date
+  + activities: any
+  + publicAttributes(): string[]
+}
+
+Application <|-- BaseEntity
+
+class ApplicationRepository  {
+  + createApplication(createApplicationDto: CreateApplicationDto, user: User): Application
+  + findAll(queryDto: FindApplicationQueryDto, user: User): ReturList<Application>
+}
+
+ApplicationRepository <|-- Repository
+
+class Activity {
+  + id: string
+  + type: ActivityType
+  + commit: string
+  + error: string | null
+  + application: Application
+  + createdAt: Date
+  + publicAttributes(): string[]
+}
+
+Activity <|-- BaseEntity
+
+class ActivityRepository{}
+
+ActivityRepository <|-- Repository
+
+class Deploy {
+  + id: string
+  + application: Application
+  + applicationId: string
+  + status: DeployStatusEnum
+  + error: string | null
+  + type: DeployType
+  + createdAt: Date
+  + updatedAt: Date
+}
+
+Deploy <|-- BaseEntity
+
+class DeploysRepository {
+  + createNewDeploy(application: Application, user: User, commit: string): ReqCreateDto
+  + createUpdateDeploy(application: Application, commit: string): ReqUpdateDto 
+  + createDeleteDeploy(application: Application): ReqDeleteDto
+}
+
+DeploysRepository <|-- Repository
+
+class Environment {
+  + id: string
+  + applicationId: string
+  + key: string
+  + value: string
+  + createdAt: Date
+}
+
+Environment <|-- BaseEntity
+
+' ==============================================================================
+
+
+' ==================================== Auth ====================================
+
+class AuthController {
+  + signIn(credentiaslsDto: CredentialsDto, response: Response): ReturnUserDto
+  + getMe(user: User): User
+  + logOut(response: Response): boolean
+}
+
+class AuthModule {}
+
+class AuthService {
+  + signIn(credentialsDto: CredentialsDto): SiginInReturn
+  + getCookieToken(token: string): string
+  + getCookieForLogOut(): string
+}
+
+class VaidatePayload {
+  id: number
+}
+
+class JwtStrategy {
+  + async validate(payload: VaidatePayload): User
+}
+
+class RolesGuard {}
+
+RolesGuard <|.. CanActivate
+
+class CredentialsDto {
+  + email: string
+  + password: string
+}
+
+' ==============================================================================
+
+
+' =============================== Configuration ================================
+
+class ConfigurationModule {}
+
+' ==============================================================================
+
+
+' ================================ Interceptors ================================
+
+class LoggerInterceptor {
+  - log(req: any): void
+}
+
+LoggerInterceptor <|.. NestInterceptor 
+
+' ==============================================================================
+
+
+' ================================== Plugins ===================================
+
+class PluginsController {
+  + findAll(): GetPuglinsDto
+  + getInstaces(pluginId: string, user: User): GetInstances
+  + getOneInstace(instanceId: string, user: User): BasicInstance
+  + createPuglin(body: CreatePluginDto): BasicPlugin
+  + createInstance(pluginId: string, createIntanceDto: CreateInstancesDto, user: User): Instance
+  + deleteInstance(instanceId: string, user: User): boolean
+  }
+
+class PluginsModule {}
+
+class PluginsService {
+  + findAll(): GetPuglinsDto
+  + getInstaces(pluginId: string, user: User): GetInstances
+  + getOneInstaces(instanceId: string, user: User): BasicInstance
+  + createInstance(pluginId: string, createIntanceDto: CreateInstancesDto, user: User): Instance
+  + deleteInstance(instanceId: string, user: User): boolean
+  + sendNewInstance(instance: Instance, plugin: Plugin): void
+  + createPlugin(bcreatePluginnDto: CreatePluginDto): BasicPlugin
+  + deployResponse(resInstanceDto: ResInstanceDto): Instance,
+  - mapCredentials(baseCredentials: BasicCredentials[], instanceId: string): Credential[]
+}
+
+class BasicPlugin {
+  + id: string
+  + name: string
+  + image: string
+  + description: string
+}
+
+class CreatePluginDto {
+  + name: string
+  + image: string
+  + description: string
+  + dockerImage: string
+}
+
+class GetPuglinsDto {
+  + plugins: BasicPlugin[]
+}
+
+class BasicCredentials {
+  + key: string
+  + value: string
+}
+
+class BasicInstance {
+  + id: string
+  + name: string
+  + status: DeployStatusEnum
+  + credentials: BasicCredentials[]
+}
+
+class CreateInstancesDto {
+  + name: string
+}
+
+class Credential {
+  + key: string
+  + value: string
+}
+
+class GetInstances {
+  + instances: BasicInstance[]
+}
+
+class ReqInstanceDto {
+  + id: string
+  + plugin: PluginData
+}
+
+class PluginData {
+  + name: string
+  + dockerfile: string
+}
+
+class ResInstanceDto {
+  + id: string
+  + success: boolean
+  + credentials: BasicCredentials[]
+}
+
+class UpdateInstancesMessageDto {
+  + id: string
+  + success: boolean
+  + credentials: Credential[]
+  + status: DeployStatusEnum
+  + error: string | null
+}
+
+class Plugin  {
+  + id: string
+  + name: string
+  + description: string
+  + image: string
+  + dockerImage: string
+  + instances: Instance[]
+}
+
+Plugin <|-- BaseEntity
+
+class PluginRepository {
+  + createPlugin(createPluginDto: CreatePluginDto): Plugin
+}
+
+PluginRepository <|-- Repository
+
+class Credential {
+  + id: string
+  + key: string
+  + value: string
+  + instance: Instance
+  + instanceId: string
+  + createdAt: Date
+}
+
+Credential <|-- BaseEntity
+
+class Instance {
+  + id: string
+  + name: string
+  + plugin: Plugin
+  + status: DeployStatusEnum
+  + credentials: Credential[]
+  + user: User
+  + userId: string
+}
+
+Instance <|-- BaseEntity
+
+class InstanceRepository {
+  + createInstance(plugin: Plugin, createInstancesDto: CreateInstancesDto, user: User): Instance
+}
+
+InstanceRepository <|-- Repository
+
+' ==============================================================================
+
+
+' =================================== Shared ===================================
+
+abstract class BaseQueryParametersDto {
+  + sort: string
+  + page: number
+  + limit: number
+}
+
+class GitlabCommit
+
+class GithubCommit 
+
+class Message {
+  + message: string
+}
+
+class RepositoryData {
+  + repositoryOwner: string
+  + repositoryName: string
+  + repositoryRef: string
+  + provider: string
+  + user: User
+}
+
+class ReturList<T> {
+  + items: T[]
+  + total: number
+}
+
+class GithubWebhookEventDto {
+  + ref: string
+  + head_commit: CommitData
+}
+
+class GitlabWebhookEventDto {
+  + ref: string
+  + commits: CommitData[]
+}
+
+class CommitData {
+  + id: string
+}
+
+CommitData "1" -- "1" GithubWebhookEventDto
+CommitData "1" -- "1" GitlabWebhookEventDto
+
+class GithubWebhook {
+  + id: number
+}
+
+class GitlabWebhook {
+  + id: number
+}
+
+
+' ==============================================================================
+
+
+' ==================================== User ====================================
+
+class User  {
+  + id: string
+  + email: string
+  + name: string
+  + role: string
+  + status: boolean
+  + password: string
+  + salt: string
+  + image: string
+  + gitHubAccount: string
+  + gitLabAccount: string
+  + gitHubToken: string
+  + gitLabToken: string
+  + createdAt: Date
+  + updatedAt: Date
+  + applications: Application[]
+  + pluginsInstances: Instance[]
+  + checkPassword(password: string): boolean
+  + static publicAttributes(): string[]
+}
+
+User <|-- BaseEntity
+
+class UsersController {
+  + createUser(createUserDto: CreateUserDto): ReturnUserDto
+  + createManyUsers(createManyUsersDto: CreateManyUsersDto): boolean
+  + findUsers(query: FindUsersQueryDto): ReturList<User>
+  + findUserById(id: string): ReturnUserDto
+  + updateUser(updateUserDto: UpdateUserDto, id: string): User
+  + deleteUser(id: string): Message
+}
+
+class UsersModule {}
+
+class UserRepository {
+  + findUsers(queryDto: FindUsersQueryDto): ReturList<User>
+  + createUser(createUserDto: CreateUserDto): User
+  + createManyUsers(createManyUsersDto: CreateManyUsersDto): boolean
+  + checkCredentials(credentialsDto: CredentialsDto): User
+  + hashPassword(password: string, salt: string): string
+}
+
+UserRepository <|-- Repository
+
+class UsersService {
+  + createUser(createUserDto: CreateUserDto): User
+  + createManyUsers(createManyUsersDto: CreateManyUsersDto): boolean
+  + findUsers(queryDto: FindUsersQueryDto): User
+  + findUserById(userId: string): User
+  + findCompleteUserById(userId: string): User
+  + updateUser(updateUserDto: UpdateUserDto, id: string): User
+  + deleteUser(userId: string): void
+}
+
+UsersService <|.. OnModuleInit
+
+class CreateManyUsersDto {
+  + users: CreateUserDto[]
+}
+
+class CreateUserDto {
+  + email: string
+  + name: string
+  + password: string
+  + passwordConfirmation: string
+  + role: UserRole
+}
+
+class FindUsersQueryDto {
+  + name: string
+  + email: string
+  + status: boolean
+  + role: UserRole
+}
+
+FindUsersQueryDto <|-- BaseQueryParametersDto
+
+class ReturnUserDto {
+  user: User
+}
+
+class UpdateUserDto {
+  + name: string
+  + email: string
+  + role: UserRole
+  + status: boolean
+}
+
+' ==============================================================================
+
+
+' =============================== VersionControl ===============================
+
+class VersionControlController {
+  + github(user: User, gitRequest: GitRequest): Message
+  + gitlab(user: User, gitRequest: GitRequest): Message 
+}
+
+class VersionControlModule {}
+
+class VersionControlService {
+  + github(user: User, code: string): void
+  + gitlab(user: User, code: string, redirectUrl: string): void
+  - updateAccounts(): void
+  - checkUser(id: string): void
+  - getAccessToken(tokenURI: string, params: TokenParams): string
+  - getGitHubAccount(token: string): GithubUser
+  - getGitLabAccount(token: string): GitlabUser
+}
+
+class GitRequest {
+  + code: string
+  + redirectUrl: string
+}
+
+class GithubUser {
+  + login: string
+  + avatar_url: string
+}
+
+class GitlabUser {
+  + username: string
+  + avatar_url: string
+}
+
+' ==============================================================================
+
+
+' ================================== typeORM ===================================
+  
+class Repository
+class BaseEntity 
+  
+' ==============================================================================
+
+
+' =================================== NestJS ===================================
+  
+interface CanActivate {
+  canActivate(context: ExecutionContext): boolean
+}
+  
+interface NestInterceptor<T, R> {
+  intercept(context: ExecutionContext, next: CallHandler<T>): R
+}
+
+interface OnModuleInit {
+  onModuleInit(): any
+}
+' ==============================================================================
+
+@enduml

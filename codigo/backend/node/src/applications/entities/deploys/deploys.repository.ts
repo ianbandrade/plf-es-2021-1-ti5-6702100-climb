@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from 'src/users/user.entity';
-import { Deploys } from './deploys.entity';
+import { Deploy } from './deploys.entity';
 import { ReqCreateDto } from '../../dto/deploys/req-create.dto';
 import { v4 } from 'uuid';
 import { Application } from '../application.entity';
@@ -10,14 +10,14 @@ import { ReqUpdateDto } from 'src/applications/dto/deploys/req-update.dto';
 import { ReqDeleteDto } from 'src/applications/dto/deploys/req-delete.dto';
 import { DeployType } from 'src/shared/enum/deploy-message-type.enum';
 
-@EntityRepository(Deploys)
-export class DeploysRepository extends Repository<Deploys> {
+@EntityRepository(Deploy)
+export class DeploysRepository extends Repository<Deploy> {
   async createNewDeploy(
     application: Application,
     user: User,
     commit: string,
   ): Promise<ReqCreateDto> {
-    const deploy = new Deploys();
+    const deploy = new Deploy();
 
     deploy.id = v4();
     deploy.application = application;
@@ -51,7 +51,7 @@ export class DeploysRepository extends Repository<Deploys> {
     application: Application,
     commit: string,
   ): Promise<ReqUpdateDto> {
-    const deploy = new Deploys();
+    const deploy = new Deploy();
 
     deploy.id = v4();
     deploy.application = application;
@@ -80,7 +80,7 @@ export class DeploysRepository extends Repository<Deploys> {
   }
 
   async createDeleteDeploy(application: Application): Promise<ReqDeleteDto> {
-    const deploy = new Deploys();
+    const deploy = new Deploy();
 
     deploy.id = v4();
     deploy.application = application;

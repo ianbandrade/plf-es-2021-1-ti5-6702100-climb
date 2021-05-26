@@ -20,7 +20,7 @@ class UserProfile extends StatelessWidget {
                 )
               : ClipRRect(
                   child: Image.network(
-                    'https://picsum.photos/250?image=9',
+                    image,
                     height: 160,
                     width: 160,
                   ),

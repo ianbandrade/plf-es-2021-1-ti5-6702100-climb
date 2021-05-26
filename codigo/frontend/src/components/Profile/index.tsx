@@ -12,7 +12,6 @@ import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import apiClient from "../../shared/api/api-client";
-import { setCurrentUser } from "../../shared/auth/localStorageManager";
 import { User } from "../../shared/interfaces/user";
 import { authService } from "../../shared/services/authService";
 import { getMessages } from "../../shared/utils/toast-messages";
@@ -58,8 +57,11 @@ const Profile = ({ user, setUser }: ProfileProps) => {
         .post(`/version-control/${state}`, body)
         .then((res) => {
           authService.me().then((me) => {
-            setUser(me);
-            setCurrentUser(me);
+            if (user) {
+              setUser(user);
+            } else {
+              router.push(authService.LOGIN_PATH);
+            }
           });
 
           getMessages(res.data).forEach((description, i) =>

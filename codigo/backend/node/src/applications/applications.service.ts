@@ -10,6 +10,7 @@ import * as dotenv from 'dotenv';
 import * as publicIp from 'public-ip';
 import configuration from 'src/configuration/configuration';
 import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
+import { RepositoryData } from 'src/shared/dto/repository-data';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import {
   GithubWebhookEventDto,
@@ -27,7 +28,9 @@ import {
 } from 'src/shared/utils/version-control-services';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { getConnection } from 'typeorm';
 import { v4 } from 'uuid';
+import { GetActivities } from './dto/activities/get-activities.dto';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { ReqCreateDto } from './dto/deploys/req-create.dto';
 import { ReqDeleteDto } from './dto/deploys/req-delete.dto';
@@ -40,9 +43,10 @@ import { GetApplication } from './dto/get-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { Activity } from './entities/activities/activity.entity';
 import { ActivityRepository } from './entities/activities/activity.repository';
+import { applicationCacheId } from './entities/application.cache';
 import { Application } from './entities/application.entity';
 import { ApplicationRepository } from './entities/application.repository';
-import { Deploys } from './entities/deploys/deploys.entity';
+import { Deploy } from './entities/deploys/deploys.entity';
 import { DeploysRepository } from './entities/deploys/deploys.repository';
 import { Environment } from './entities/environments/environments.entity';
 
@@ -66,7 +70,10 @@ export class ApplicationsService {
     private httpService: HttpService,
   ) {}
 
-  async create(createApplicationDto: CreateApplicationDto, user: User) {
+  async create(
+    createApplicationDto: CreateApplicationDto,
+    user: User,
+  ): Promise<Application> {
     const {
       repositoryOwner,
       repositoryName,
@@ -90,6 +97,9 @@ export class ApplicationsService {
     this.createNewDeploy(application, user, commit);
     this.createActivity(application, commit);
     this.createApplicationHook(application);
+    getConnection().queryResultCache.remove([
+      applicationCacheId.findAllApplications(),
+    ]);
 
     return application;
   }
@@ -100,13 +110,7 @@ export class ApplicationsService {
     repositoryRef,
     provider,
     user,
-  }: {
-    repositoryOwner: string;
-    repositoryName: string;
-    repositoryRef: string;
-    provider: string;
-    user: User;
-  }) {
+  }: RepositoryData): Promise<string> {
     switch (provider) {
       case ProvidersEnum.GITHUB:
         return this.getGithubCommitData(
@@ -130,7 +134,7 @@ export class ApplicationsService {
     commit: string,
     type: ActivityType = ActivityType.CREATING,
     error?: string,
-  ) {
+  ): Promise<Activity> {
     const activity = this.activityRepository.create({
       id: v4(),
       application,
@@ -139,7 +143,11 @@ export class ApplicationsService {
       error,
     });
     try {
-      return await activity.save();
+      const savedActivity = await activity.save();
+      getConnection().queryResultCache.remove([
+        applicationCacheId.findAllApplications(),
+      ]);
+      return savedActivity;
     } catch (e) {
       postgresCatch(e);
     }
@@ -150,7 +158,7 @@ export class ApplicationsService {
     repositoryName: string,
     repositoryRef: string,
     user: User,
-  ) {
+  ): Promise<string> {
     const createWebhookUrl = `${githubApiBaseUrl}/repos/${repositoryOwner}/${repositoryName}/commits/refs/heads/${repositoryRef}`;
 
     const createWebhookConfig = {
@@ -175,7 +183,7 @@ export class ApplicationsService {
     repositoryName: string,
     repositoryRef: string,
     user: User,
-  ) {
+  ): Promise<string> {
     const getCommitDataUrl = `${gitlabApiBaseUrl}/projects/${repositoryOwner}%2F${repositoryName}/repository/commits/${repositoryRef}`;
 
     const createWebhookConfig = {
@@ -212,8 +220,16 @@ export class ApplicationsService {
     return this.getPubicApplicationFields(await application);
   }
 
-  private async findCompleteApplication(appId: string, user: User) {
-    const application = await this.applicationRepository.findOne(appId);
+  private async findCompleteApplication(
+    appId: string,
+    user: User,
+  ): Promise<Application> {
+    const application = await this.applicationRepository.findOne(appId, {
+      cache: {
+        id: applicationCacheId.findApplicationById(appId),
+        milliseconds: 30000,
+      },
+    });
     this.verifyApplicationFetch(application, user);
     return application;
   }
@@ -225,16 +241,20 @@ export class ApplicationsService {
       throw new ForbiddenException('Você não tem acesso à essa aplicação');
   }
 
-  async findOnebyName(name: string, user: User) {
+  async findOnebyName(name: string, user: User): Promise<GetApplication> {
     const application = await this.applicationRepository.findOne({
       where: { name },
+      cache: {
+        id: applicationCacheId.findApplicationById(name),
+        milliseconds: 30000,
+      },
     });
     this.verifyApplicationFetch(application, user);
 
     return this.getPubicApplicationFields(application);
   }
 
-  private getPubicApplicationFields(application: Application) {
+  private getPubicApplicationFields(application: Application): GetApplication {
     const {
       id,
       name,
@@ -268,7 +288,7 @@ export class ApplicationsService {
     id: string,
     updateApplicationDto: UpdateApplicationDto,
     user: User,
-  ) {
+  ): Promise<GetApplication> {
     const application = await this.findCompleteApplication(id, user);
 
     const {
@@ -314,13 +334,21 @@ export class ApplicationsService {
       );
       this.createActivity(application, commit);
 
+      getConnection().queryResultCache.remove([
+        applicationCacheId.findAllApplications(),
+        applicationCacheId.findApplicationById(application.id),
+        applicationCacheId.findApplicationById(application.name),
+      ]);
       return this.findOnebyId(id, user);
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
   }
 
-  private async createUpdateDeploy(application: Application, commit: string) {
+  private async createUpdateDeploy(
+    application: Application,
+    commit: string,
+  ): Promise<ReqUpdateDto> {
     const deployReq = await this.deploysRepository.createUpdateDeploy(
       application,
       commit,
@@ -331,7 +359,9 @@ export class ApplicationsService {
     return deployReq;
   }
 
-  private async createDeleteDeploy(application: Application) {
+  private async createDeleteDeploy(
+    application: Application,
+  ): Promise<ReqDeleteDto> {
     const deployReq = await this.deploysRepository.createDeleteDeploy(
       application,
     );
@@ -356,7 +386,7 @@ export class ApplicationsService {
     application: Application,
     user: User,
     commit: string,
-  ) {
+  ): Promise<ReqCreateDto> {
     const fechedUser = this.userService.findCompleteUserById(user.id);
 
     const deployReq = await this.deploysRepository.createNewDeploy(
@@ -375,7 +405,7 @@ export class ApplicationsService {
     routingKey: apps.delete.res.routingKey,
     queue: apps.delete.res.queue,
   })
-  async reciveDeleteDeployResponse(updateMessage: ResUpdateDto) {
+  async reciveDeleteDeployResponse(updateMessage: ResUpdateDto): Promise<void> {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
     if (deploy.type !== DeployType.DELETE) return;
@@ -400,11 +430,16 @@ export class ApplicationsService {
 
       if (await this.deleteWebHooks(application)) {
         await this.applicationRepository.delete(deploy.applicationId);
+        getConnection().queryResultCache.remove([
+          applicationCacheId.findAllApplications(),
+          applicationCacheId.findApplicationById(application.id),
+          applicationCacheId.findApplicationByName(application.name),
+        ]);
       }
     }
   }
 
-  private async deleteWebHooks(application: Application) {
+  private async deleteWebHooks(application: Application): Promise<boolean> {
     const user = await this.userService.findCompleteUserById(
       application.userId,
     );
@@ -419,7 +454,7 @@ export class ApplicationsService {
     }
   }
 
-  private async deleteGithubWebhooks(application: Application, user: User) {
+  private deleteGithubWebhooks(application: Application, user: User): void {
     const { repositoryOwner, repositoryName, hookId } = application;
 
     const getCommitDataUrl = `${githubApiBaseUrl}/repos/${repositoryOwner}/${repositoryName}/hooks/${hookId}`;
@@ -430,12 +465,10 @@ export class ApplicationsService {
       },
     };
 
-    return this.httpService
-      .delete(getCommitDataUrl, createWebhookConfig)
-      .toPromise();
+    this.httpService.delete(getCommitDataUrl, createWebhookConfig).toPromise();
   }
 
-  private async deleteGitlabWebhooks(application: Application, user: User) {
+  private deleteGitlabWebhooks(application: Application, user: User): void {
     const { repositoryOwner, repositoryName, hookId } = application;
 
     const getCommitDataUrl = `${gitlabApiBaseUrl}/projects/${repositoryOwner}%2F${repositoryName}/hooks/${hookId}`;
@@ -446,9 +479,7 @@ export class ApplicationsService {
       },
     };
 
-    return this.httpService
-      .delete(getCommitDataUrl, createWebhookConfig)
-      .toPromise();
+    this.httpService.delete(getCommitDataUrl, createWebhookConfig).toPromise();
   }
 
   @RabbitSubscribe({
@@ -456,7 +487,7 @@ export class ApplicationsService {
     routingKey: apps.update.res.routingKey,
     queue: apps.update.res.queue,
   })
-  async reciveUpdateDeployResponse(updateMessage: ResUpdateDto) {
+  async reciveUpdateDeployResponse(updateMessage: ResUpdateDto): Promise<void> {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
     if (deploy.type !== DeployType.UPDATE) return;
@@ -488,7 +519,7 @@ export class ApplicationsService {
     routingKey: apps.create.res.routingKey,
     queue: apps.create.res.queue,
   })
-  async reciveNewDeployResponse(updateMessage: ResCreateDto) {
+  async reciveNewDeployResponse(updateMessage: ResCreateDto): Promise<void> {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
     if (deploy.type !== DeployType.CREATE) return;
@@ -519,7 +550,7 @@ export class ApplicationsService {
     applicationId: string,
     type: ActivityType,
     error?: string,
-  ) {
+  ): Promise<Activity> {
     const lastCreatingActivity = await this.activityRepository.findOne({
       where: {
         application: { id: applicationId },
@@ -535,7 +566,7 @@ export class ApplicationsService {
     return await lastCreatingActivity.save();
   }
 
-  async getOneDeploy(id: string, user: User) {
+  async getOneDeploy(id: string, user: User): Promise<Deploy> {
     const deploy = await this.deploysRepository.findOne(id);
 
     if (!deploy) throw new NotFoundException('Deploy não encontrado');
@@ -545,7 +576,7 @@ export class ApplicationsService {
     return deploy;
   }
 
-  async getDeploys(appId: string, user: User): Promise<ReturList<Deploys>> {
+  async getDeploys(appId: string, user: User): Promise<ReturList<Deploy>> {
     const { id } = await this.findCompleteApplication(appId, user);
     const deploys = await this.deploysRepository.find({
       where: { application: { id } },
@@ -558,7 +589,7 @@ export class ApplicationsService {
   async reciveWebhook(
     appId: string,
     webhook: GithubWebhookEventDto | GitlabWebhookEventDto,
-  ) {
+  ): Promise<boolean> {
     const application = await this.applicationRepository.findOne(appId);
     this.verifyApplicationFetch(application);
 
@@ -586,7 +617,7 @@ export class ApplicationsService {
   private mapEnvironments(
     baseEnvironments: BaseEnvironment[],
     applicationId: string,
-  ) {
+  ): Environment[] {
     return baseEnvironments.map<Environment>(({ key, value }) => {
       const env = new Environment();
 
@@ -604,7 +635,7 @@ export class ApplicationsService {
     });
   }
 
-  private sendNewDeployMessage(payload: ReqCreateDto) {
+  private sendNewDeployMessage(payload: ReqCreateDto): void {
     this.amqpConnection.publish(
       defaultExchange,
       apps.create.req.routingKey,
@@ -615,7 +646,7 @@ export class ApplicationsService {
     );
   }
 
-  private sendUpdateDeployMessage(payload: ReqUpdateDto) {
+  private sendUpdateDeployMessage(payload: ReqUpdateDto): void {
     this.amqpConnection.publish(
       defaultExchange,
       apps.update.req.routingKey,
@@ -626,7 +657,7 @@ export class ApplicationsService {
     );
   }
 
-  private sendDeleteDeployMessage(payload: ReqDeleteDto) {
+  private sendDeleteDeployMessage(payload: ReqDeleteDto): void {
     this.amqpConnection.publish(
       defaultExchange,
       apps.delete.req.routingKey,
@@ -637,7 +668,7 @@ export class ApplicationsService {
     );
   }
 
-  private async createApplicationHook(application: Application) {
+  private async createApplicationHook(application: Application): Promise<void> {
     switch (application.provider) {
       case ProvidersEnum.GITHUB:
         const githubHook = await this.createGithubApplicationHook(application);
@@ -651,7 +682,9 @@ export class ApplicationsService {
     await application.save();
   }
 
-  async createGithubApplicationHook(application: Application) {
+  async createGithubApplicationHook(
+    application: Application,
+  ): Promise<GithubWebhook> {
     const user = await this.userService.findCompleteUserById(
       application.userId,
     );
@@ -686,7 +719,9 @@ export class ApplicationsService {
     } catch (e) {}
   }
 
-  private async createGitlabApplicationHook(application: Application) {
+  private async createGitlabApplicationHook(
+    application: Application,
+  ): Promise<GitlabWebhook> {
     const user = await this.userService.findCompleteUserById(
       application.userId,
     );
@@ -717,7 +752,7 @@ export class ApplicationsService {
     } catch (e) {}
   }
 
-  async getAppActivities(user: User, appId: string) {
+  async getAppActivities(user: User, appId: string): Promise<GetActivities> {
     const application = await this.findOnebyId(appId, user);
     const activities = await this.activityRepository.find({
       where: { application },
@@ -728,7 +763,7 @@ export class ApplicationsService {
     return { activities };
   }
 
-  async doRollBack(user: User, appId: string) {
+  async doRollBack(user: User, appId: string): Promise<boolean> {
     const activities = (await this.getAppActivities(user, appId)).activities;
     const actualActivity = activities[0];
 
@@ -763,7 +798,7 @@ export class ApplicationsService {
     return false;
   }
 
-  async undoRollBack(user: User, appId: string) {
+  async undoRollBack(user: User, appId: string): Promise<boolean> {
     const activities = (await this.getAppActivities(user, appId)).activities;
     const actualActivity = activities[0];
 

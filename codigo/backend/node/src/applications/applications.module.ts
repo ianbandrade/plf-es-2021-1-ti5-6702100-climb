@@ -9,6 +9,9 @@ import { UsersModule } from 'src/users/users.module';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { rabbitMQConfig } from 'src/configuration/configs/rabbitmq.config';
 import { ActivityRepository } from './entities/activities/activity.repository';
+import { ApplicationsGateway } from './applications.gateway';
+import { MonitoringGRPCService } from './monitoring.grpc.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,8 +24,9 @@ import { ActivityRepository } from './entities/activities/activity.repository';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
     HttpModule,
+    ConfigModule,
   ],
   controllers: [ApplicationsController],
-  providers: [ApplicationsService],
+  providers: [ApplicationsService, ApplicationsGateway, MonitoringGRPCService],
 })
 export class ApplicationsModule {}

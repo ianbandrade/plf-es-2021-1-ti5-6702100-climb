@@ -1,9 +1,7 @@
-import { ActivityType } from 'src/shared/enum/activity-type.enum';
+import { ApiProperty } from '@nestjs/swagger';
+import { BaseActivities } from './base-activities.dto';
 
 export class GetActivities {
-  activities: {
-    type: ActivityType;
-    commit: string;
-    error: string | null;
-  }[];
+  @ApiProperty({ type: () => [BaseActivities] })
+  activities: BaseActivities[];
 }

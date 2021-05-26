@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/models/monitory_application.dart';
 
 import 'button.dart';
 
@@ -6,8 +7,9 @@ class AppTile extends StatelessWidget {
   final String appName;
   final String orgRepo;
   final String provider;
+  final String appId;
 
-  AppTile({this.appName, this.orgRepo, this.provider});
+  AppTile({this.appName, this.orgRepo, this.provider, this.appId});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class AppTile extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: 110,
-        child: Flexible(
+        child: Center(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18),
             child: ListTile(
@@ -40,7 +42,10 @@ class AppTile extends StatelessWidget {
                           primary: Colors.green[400],
                         ),
                         textStyle: Theme.of(context).textTheme.headline6,
-                        onPressed: () {},
+                        onPressed: () => Navigator.of(context).pushNamed(
+                            '/monitory',
+                            arguments: new MonitoryApplication(
+                                appId: appId, appName: appName)),
                       )
                     ],
                   ),

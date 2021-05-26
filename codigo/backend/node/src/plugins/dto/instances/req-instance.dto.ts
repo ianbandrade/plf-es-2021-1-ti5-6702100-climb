@@ -1,7 +1,9 @@
 export class ReqInstanceDto {
   id: string;
-  plugin: {
-    name: string;
-    dockerfile: string;
-  };
+  plugin: PluginData;
+}
+
+class PluginData {
+  name: string;
+  dockerfile: string;
 }

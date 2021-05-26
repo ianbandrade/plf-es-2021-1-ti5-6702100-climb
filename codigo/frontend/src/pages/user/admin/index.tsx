@@ -17,6 +17,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
 import { AiOutlineUser } from "react-icons/ai";
@@ -29,6 +30,7 @@ import { UserRole } from "../../../shared/enum/user-role";
 import { CreateUser } from "../../../shared/interfaces/create-user";
 import { UpdateUser } from "../../../shared/interfaces/update-user";
 import { User } from "../../../shared/interfaces/user";
+import { authService } from "../../../shared/services/authService";
 import { userService } from "../../../shared/services/userService";
 import { getMessages } from "../../../shared/utils/toast-messages";
 import { colors } from "../../../styles/customTheme";
@@ -91,6 +93,8 @@ const Users = () => {
     password: false,
     passwordConfirmation: false,
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     userService

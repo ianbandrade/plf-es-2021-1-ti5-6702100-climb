@@ -12,8 +12,9 @@ import { CredentialsDto } from './dto/credentials.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/user.entity';
 import { GetUser } from './get-user.decorator';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { ReturnUserDto } from 'src/users/dto/return-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -24,15 +25,16 @@ export class AuthController {
   async signIn(
     @Body(ValidationPipe) credentiaslsDto: CredentialsDto,
     @Res() response: Response,
-  ): Promise<{ token: string }> {
-    const { token, cookie } = await this.authService.signIn(credentiaslsDto);
+  ): Promise<ReturnUserDto> {
+    const { user, cookie } = await this.authService.signIn(credentiaslsDto);
+    response.status(200);
     response.setHeader('Set-Cookie', cookie);
-    response.send({ token });
-    return { token };
+    response.send({ user });
+    return { user };
   }
 
   @Get('/me')
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @UseGuards(AuthGuard())
   getMe(@GetUser() user: User): User {
     return user;
@@ -40,10 +42,10 @@ export class AuthController {
 
   @UseGuards(AuthGuard())
   @Post('logout')
-  async logOut(@Res() response: Response) {
-    return response.setHeader(
-      'Set-Cookie',
-      this.authService.getCookieForLogOut(),
-    );
+  @ApiCookieAuth()
+  async logOut(@Res() response: Response): Promise<boolean> {
+    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    response.send(true);
+    return true;
   }
 }

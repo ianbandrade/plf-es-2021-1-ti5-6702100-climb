@@ -11,20 +11,21 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { PluginsService } from './plugins.service';
 import { User } from '../users/user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { GetPuglinsDto } from './dto/get-plugins.dto';
 import { GetInstances } from './dto/instances/get-instance.dto';
 import { CreateInstancesDto } from './dto/instances/create-instances.dto';
 import { Instance } from './entities/instance/instance.entity';
 import { Role } from 'src/auth/role.decorator';
 import { UserRole } from 'src/users/user-roles.enum';
-import { CreatePuglinDto } from './dto/create-plugin.dto';
+import { CreatePluginDto } from './dto/create-plugin.dto';
 import { BasicInstance } from './dto/instances/basic-instance.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { BasicPlugin } from './dto/basic-plugin.dto';
 
 @ApiTags('Plugins')
 @Controller('plugins')
-@ApiBearerAuth()
+@ApiCookieAuth()
 @UseGuards(AuthGuard(), RolesGuard)
 export class PluginsController {
   constructor(private readonly pluginsService: PluginsService) {}
@@ -52,8 +53,8 @@ export class PluginsController {
 
   @Post()
   @Role(UserRole.ADMIN)
-  async createPuglin(@Body() body: CreatePuglinDto) {
-    return this, this.pluginsService.createPlugiin(body);
+  async createPuglin(@Body() body: CreatePluginDto): Promise<BasicPlugin> {
+    return this.pluginsService.createPlugin(body);
   }
 
   @Post(':pluginId/instances')

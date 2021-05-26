@@ -5,6 +5,12 @@
     },
     {
       "path": "./backend/node"
+    },
+    {
+      "path": "./backend/golang"
+    },
+    {
+      "path": "./mobile"
     }
   ],
   "settings": {
@@ -18,7 +24,8 @@
       "ms-azuretools.vscode-docker",
       "editorconfig.editorconfig",
       "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode"
+      "esbenp.prettier-vscode",
+      "arcticicestudio.nord-visual-studio-code"
     ]
   }
 }

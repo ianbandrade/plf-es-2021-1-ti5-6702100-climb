@@ -78,7 +78,7 @@ export class UsersService implements OnModuleInit {
     return user;
   }
 
-  async updateUser(updateUserDto: UpdateUserDto, id: string) {
+  async updateUser(updateUserDto: UpdateUserDto, id: string): Promise<User> {
     const result = await this.userRepository.update({ id }, updateUserDto);
     if (result.affected > 0) {
       const user = await this.findUserById(id);
@@ -88,7 +88,7 @@ export class UsersService implements OnModuleInit {
     }
   }
 
-  async deleteUser(userId: string) {
+  async deleteUser(userId: string): Promise<void> {
     const result = await this.userRepository.delete({ id: userId });
     if (result.affected === 0) {
       throw new NotFoundException('Usuário não foi encontrado');

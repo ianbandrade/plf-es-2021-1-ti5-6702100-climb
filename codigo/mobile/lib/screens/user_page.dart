@@ -5,10 +5,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/models/application.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/shared/api.dart';
-import 'package:mobile/widgets/app_tile.dart';
 import 'package:mobile/widgets/apps_list.dart';
 import 'package:mobile/widgets/change_theme_widget.dart';
 import 'package:mobile/widgets/logo.dart';
+import 'package:mobile/widgets/refresh_widget.dart';
 import 'package:mobile/widgets/user_profile.dart';
 
 class UserPage extends StatefulWidget {
@@ -17,40 +17,31 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  User user = new User(
-    id: 'dsad',
-    name: 'João Guilherme',
-    gitHubAccount: 'JoaoGuiMB',
-    gitLabAccount: 'Masdasd',
-    image: 'asdsad',
-  );
+  final List<Application> _applications = [
+    new Application(
+      id: '1',
+      branch: 'master',
+      enviroments: [],
+      name: "express-3",
+      provider: "GITHUB",
+      repository: 'dasdasd',
+      repositoryName: 'express',
+      repositoryPath: '/',
+      repositoryOwner: 'JoaoGuiMB',
+      repositoryURL: 'asdasd',
+      userId: '354354',
+    ),
+  ];
 
-  final List<Application> _applications = [];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    ApiClient().get(Uri.http(env['API_HOST'], '/applications')).then((res) {
+  Future fetchApplicationsData() {
+    return ApiClient()
+        .get(Uri.http(env['API_HOST'], '/applications'))
+        .then((res) {
       final parsedApp = json.decode(res.body);
       final items = parsedApp['items'];
-      print('aqui');
-      print(parsedApp['items'].length);
       for (var i = 0; i < items.length; i++) {
-        final item = items[i];
-        Application app = new Application(
-          id: item['id'],
-          branch: item['branch'],
-          enviroments: item['enviroments'],
-          name: item['name'],
-          provider: item['provider'],
-          repository: item['repository'],
-          repositoryName: item['repositoryName'],
-          repositoryOwner: item['repositoryOwner'],
-          repositoryPath: item['repositoryPath'],
-          repositoryURL: item['repositoryUrl'],
-          userId: item['userId'],
-        );
+        final json = items[i];
+        Application app = Application.fromJson(json);
         setState(() {
           _applications.add(app);
         });
@@ -59,9 +50,15 @@ class _UserPageState extends State<UserPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchApplicationsData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final routeData = ModalRoute.of(context).settings.arguments as User;
-    print(_applications.length);
+    final User routeData = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -74,24 +71,23 @@ class _UserPageState extends State<UserPage> {
         ),
         actions: [ChangeThemeSwitch()],
       ),
-      body: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Column(
-          children: [
-            Center(
-              child: UserProfile(
-                name: routeData.gitHubAccount != null
-                    ? routeData.gitHubAccount
-                    : (routeData.gitLabAccount != null
-                        ? routeData.gitLabAccount
-                        : routeData.name),
-                image: routeData.image,
+      body: RefreshWidget(
+        onRefresh: fetchApplicationsData,
+        child: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              Center(
+                child: UserProfile(
+                  name: routeData.gitHubAccount,
+                  image: routeData.image,
+                ),
               ),
-            ),
-            AppList(
-              applications: _applications,
-            )
-          ],
+              AppList(
+                applications: _applications,
+              )
+            ],
+          ),
         ),
       ),
     );
