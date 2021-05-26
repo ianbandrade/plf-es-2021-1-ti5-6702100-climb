@@ -98,8 +98,8 @@ const Plugins = (): JSX.Element => {
             }
           )
         ) : (
-          <Text mt={5} fontSize="3xl" fontWeight="bold">
-            Ainda não existem plugins pré-configuradas!
+          <Text mt={5} fontSize="2xl" fontWeight="bold">
+            Ainda não existem plugins pré-configurados!
           </Text>
         )}
       </Flex>

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { Flex, useToast } from "@chakra-ui/react";
+import { Flex, Spinner, Stack, useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import NotLinkedGit from "../../../../components/NotLinkedGit";
 import RepositoriesCard from "../../../../components/RepositoriesCard";
 import { HeadingActionButton } from "../../../../components/SubHeading/ActionButton";
+import { getCurrentUser } from "../../../../shared/auth/localStorageManager";
 import { GitProviders } from "../../../../shared/interfaces/GitProviders";
 import { githubService } from "../../../../shared/services/githubService";
 import { gitlabService } from "../../../../shared/services/gitlabService";
@@ -26,44 +27,49 @@ const NewApp = () => {
   }, []);
 
   async function fetchData() {
-    await githubService
-      .getRepositories()
-      .then((res) => {
-        setProviders({ github: res.organizations, gitlab: null });
-      })
-      .catch((error) => {
-        console.log(error);
-        getMessages(error?.response.data).forEach((description, i) => {
-          toast({
-            title: "Erro!",
-            description: `${description}`,
-            status: "error",
-            id: i,
-            position: "bottom-left",
+    if (getCurrentUser().gitHubAccount) {
+      await githubService
+        .getRepositories()
+        .then((res) => {
+          setProviders({ github: res.organizations, gitlab: null });
+        })
+        .catch((error) => {
+          console.log(error);
+          getMessages(error?.response.data).forEach((description, i) => {
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            });
           });
         });
-      });
+    }
 
-    await gitlabService
-      .getRepositories()
-      .then((res) => {
-        console.log(res);
-        setProviders((prevState) => {
-          prevState.gitlab = res.organizations;
-          return prevState;
-        });
-      })
-      .catch((error) => {
-        getMessages(error?.response.data).forEach((description, i) => {
-          toast({
-            title: "Erro!",
-            description: `${description}`,
-            status: "error",
-            id: i,
-            position: "bottom-left",
+    if (getCurrentUser().gitLabAccount) {
+      await gitlabService
+        .getRepositories()
+        .then((res) => {
+          console.log(res);
+          setProviders((prevState) => {
+            prevState.gitlab = res.organizations;
+            return prevState;
+          });
+          setGitProvider("gitlab");
+        })
+        .catch((error) => {
+          getMessages(error?.response.data).forEach((description, i) => {
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            });
           });
         });
-      });
+    }
   }
 
   function handleSelectGit(gitProvider: string) {
@@ -73,7 +79,14 @@ const NewApp = () => {
   }
 
   return !providers.github && !providers.gitlab ? (
-    <NotLinkedGit />
+    <NotLinkedGit
+      title={"Carregando..."}
+      children={
+        <Stack direction="row" spacing={4}>
+          <Spinner size="xl" />
+        </Stack>
+      }
+    />
   ) : (
     <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Nova Aplicação" />
