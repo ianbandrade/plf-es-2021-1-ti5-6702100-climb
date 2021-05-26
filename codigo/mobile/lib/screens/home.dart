@@ -46,19 +46,7 @@ class HomePage extends StatelessWidget {
             await storage.write(key: 'token', value: token);
             ApiClient().get(Uri.http(env['API_HOST'], '/auth/me')).then((res) {
               final parsedUser = json.decode(res.body);
-
-              User userData = new User(
-                id: parsedUser['id'],
-                name: parsedUser['name'],
-                role: parsedUser['role'],
-                gitHubAccount: parsedUser['gitHubAccount'],
-                gitHubToken: parsedUser['gitHubToken'],
-                gitLabAccount: parsedUser['gitLabAccount'],
-                gitLabToken: parsedUser['gitLabToken'],
-                image: parsedUser['image'],
-                status: parsedUser['status'],
-              );
-
+              User userData = User.fromJson(parsedUser);
               Navigator.of(context).pushNamed('/user', arguments: userData);
             });
           }
@@ -70,7 +58,6 @@ class HomePage extends StatelessWidget {
           } else {
             text = messages[0];
           }
-          print(messages);
           showDialog(
               context: context,
               builder: (BuildContext ctx) {

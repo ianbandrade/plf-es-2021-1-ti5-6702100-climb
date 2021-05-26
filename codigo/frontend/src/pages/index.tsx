@@ -7,18 +7,16 @@ import {
   UseToastOptions,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
-import apiClient from "../shared/api/api-client";
-import { isAuthenticated, login } from "../shared/auth/localStorageManager";
-import { showDefaultFetchError, messageFactory,newBaseToast } from "../shared/utils/toast-messages";
+import { authService } from "../shared/services/authService";
+import { showDefaultFetchError, messageFactory, newBaseToast } from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
 
-const AUTHURL = `/auth/signin`;
 const PROFILE_PATH = "user/profile";
 
 const Home = () => {
@@ -27,14 +25,9 @@ const Home = () => {
   const toast = useToast();
   const router = useRouter();
 
-  useEffect(() => {
-    if (isAuthenticated()) {
-      router.push(PROFILE_PATH);
-    }
-  });
   const createWarningToast = (description: string, id: string | number): UseToastOptions => (
     {
-      description, 
+      description,
       id,
       ...newBaseToast("warning"),
     }
@@ -54,6 +47,7 @@ const Home = () => {
   }
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
+    console.log("Hello")
     try {
       validate();
     } catch (e) {
@@ -61,12 +55,12 @@ const Home = () => {
         createWarningToast(e, 1));
     }
     const body = { email: email.replace(" ", ""), password: password };
-    apiClient
-      .post(AUTHURL, body)
+    authService
+      .signIn(body)
       .then((res) => {
-        if (res.data?.token) {
-          login(res.data.token);
+        if (res) {
           showToastMessage({
+            title: "Sucesso!",
             description: "Acesso autorizado",
             id: "login",
             ...newBaseToast("success"),
@@ -75,11 +69,12 @@ const Home = () => {
         }
       })
       .catch((e) => {
+        console.log(e?.response?.data)
         if (e?.response?.data) {
           messageFactory(e.response.data, 'warning').forEach(message => showToastMessage(message))
         } else
-          showToastMessage(showDefaultFetchError("para efetuar o acesso."));
-      })
+          showDefaultFetchError("para efetuar o acesso")
+      });
   }
 
   const showToastMessage = (data: UseToastOptions) => {
@@ -88,8 +83,8 @@ const Home = () => {
   };
 
   const isEmailOrPassEmpty = () => { if (!(email && password)) throw ("Prencha os campos de e-mail e senha") };
-  const isInvalidMail = () => { if (!/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email)) throw ("Email inválido")}
-  const isInvalidPassword = () => {if(password.length < 6) throw ("A senha deve conter 6 ou mais caracteres")};
+  const isInvalidMail = () => { if (!/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email)) throw ("Email inválido") }
+  const isInvalidPassword = () => { if (password.length < 6) throw ("A senha deve conter 6 ou mais caracteres") };
 
   const { colorMode } = useColorMode();
 

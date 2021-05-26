@@ -70,7 +70,7 @@ class GitlabService {
             repository {
               empty
               rootRef
-              branchNames(searchPattern: "*")
+              branchNames(searchPattern: "*", offset: 0, limit: 1024)
               tree(recursive: true) {
                 trees(first: 100, after: $cursor) {
                   pageInfo {
@@ -89,7 +89,6 @@ class GitlabService {
         operationName: "Repository",
       }
     );
-    debugger;
 
     const { repository, webUrl, id } = data.data.project;
 

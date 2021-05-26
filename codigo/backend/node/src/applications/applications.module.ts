@@ -9,6 +9,8 @@ import { UsersModule } from 'src/users/users.module';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { rabbitMQConfig } from 'src/configuration/configs/rabbitmq.config';
 import { ActivityRepository } from './entities/activities/activity.repository';
+import { ApplicationsGateway } from './applications.gateway';
+import { MonitoringGRPCService } from './monitoring.grpc.service';
 
 @Module({
   imports: [
@@ -23,6 +25,6 @@ import { ActivityRepository } from './entities/activities/activity.repository';
     HttpModule,
   ],
   controllers: [ApplicationsController],
-  providers: [ApplicationsService],
+  providers: [ApplicationsService, ApplicationsGateway, MonitoringGRPCService],
 })
-export class ApplicationsModule {}
+export class ApplicationsModule { }

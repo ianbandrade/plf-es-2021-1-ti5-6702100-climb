@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { IconType } from "react-icons/lib";
@@ -8,6 +9,7 @@ import { RepoItem } from "../../../components/RepoItem/RepoItem";
 import { HeadingActionButton } from "../../../components/SubHeading/ActionButton";
 import apiClient from "../../../shared/api/api-client";
 import { RepoItemProps } from "../../../shared/interfaces/RepoItemProps";
+import { authService } from "../../../shared/services/authService";
 import { getMessages } from "../../../shared/utils/toast-messages";
 export const Apps = () => {
   const avaiableIcons: Record<string, IconType> = {
@@ -17,6 +19,7 @@ export const Apps = () => {
   const icon = (provider: string): IconType => avaiableIcons[provider];
   const [applications, setApplications] = useState<RepoItemProps.Items>();
   const toast = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();

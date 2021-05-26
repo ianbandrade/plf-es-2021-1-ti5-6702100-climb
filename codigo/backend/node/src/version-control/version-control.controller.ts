@@ -5,7 +5,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/users/user.entity';
@@ -15,9 +15,10 @@ import { VersionControlService } from './version-control.service';
 @ApiTags('Version Control')
 @Controller('version-control')
 export class VersionControlController {
-  constructor(private versionControlService: VersionControlService) {}
+  constructor(private versionControlService: VersionControlService) { }
 
   @Post('github')
+  @ApiCookieAuth()
   @UseGuards(AuthGuard())
   async github(
     @GetUser() user: User,
@@ -31,6 +32,7 @@ export class VersionControlController {
   }
 
   @Post('gitlab')
+  @ApiCookieAuth()
   @UseGuards(AuthGuard())
   async gitlab(
     @GetUser() user: User,

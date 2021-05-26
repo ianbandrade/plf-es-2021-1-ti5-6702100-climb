@@ -9,6 +9,7 @@ import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { Plugin } from "../../../shared/interfaces/PreConfigCardInterface";
 import { messageFactory, showDefaultFetchError } from "../../../shared/utils/toast-messages";
 
+
 interface PluginsResponse {
   plugins: Plugin[];
 }

@@ -1,23 +1,19 @@
 import axios from "axios";
-import { getAccessToken } from "../auth/localStorageManager";
 
 const apiClient = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API_HOST}`,
+  baseURL: `/api-client`,
 });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken();
+// apiClient.interceptors.request.use((config) => {
+//   const token = getAccessToken();
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
 
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
+//   return config;
+// }, function (error) {
+//   return Promise.reject(error);
+// });
 
 export default apiClient;

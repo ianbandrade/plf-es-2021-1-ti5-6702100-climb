@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
-import { logout } from "../../shared/auth/localStorageManager";
+import { authService } from "../../shared/services/authService";
 import { UserContext } from "../../store/UserProvider";
 import { colors } from "../../styles/customTheme";
 import ThemeToggle from "../layout/ThemeToggle";
@@ -38,7 +38,7 @@ const Header = () => {
 
   const handleRenderHeader = (): JSX.Element | string => {
     if (router.pathname === "/") return "";
-    else if (isUserPage) return <UserHeader />;
+    else if (isUserPage) return <UserHeader user={user} />;
     return <RegularHeader />;
   };
 
@@ -91,8 +91,7 @@ const Header = () => {
                 <MenuGroup title="Sessão">
                   <MenuItem
                     onClick={() => {
-                      logout();
-                      router.replace("/");
+                      authService.logout(router);
                     }}
                   >
                     Sair

@@ -8,6 +8,8 @@ const githubClient = axios.create({
 githubClient.interceptors.request.use(
   async (config) => {
     const me = await authService.me();
+    if (!me) return {};
+
     const token = me.gitHubToken;
 
     if (token) {

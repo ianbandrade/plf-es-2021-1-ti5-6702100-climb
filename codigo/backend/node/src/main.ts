@@ -17,7 +17,7 @@ export async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const swaggerDocumentOptions = new DocumentBuilder()
-    .addBearerAuth({ in: 'header', type: 'http' })
+    .addCookieAuth('Authentication', { type: 'http' })
     .setTitle('Climb API')
     .setVersion('1.0')
     .build();
