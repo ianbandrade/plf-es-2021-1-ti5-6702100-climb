@@ -27,14 +27,13 @@ const NewApp = () => {
   }, []);
 
   async function fetchData() {
-    if (getCurrentUser().gitHubAccount) {
+    if (getCurrentUser()?.gitHubAccount) {
       await githubService
         .getRepositories()
         .then((res) => {
           setProviders({ github: res.organizations, gitlab: null });
         })
         .catch((error) => {
-          console.log(error);
           getMessages(error?.response.data).forEach((description, i) => {
             toast({
               title: "Erro!",
@@ -47,7 +46,7 @@ const NewApp = () => {
         });
     }
 
-    if (getCurrentUser().gitLabAccount) {
+    if (getCurrentUser()?.gitLabAccount) {
       await gitlabService
         .getRepositories()
         .then((res) => {

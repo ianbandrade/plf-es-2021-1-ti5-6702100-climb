@@ -1,5 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { Flex, Text, useToast, UseToastOptions } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AccordionInstance from "../../../components/AccordionInstance";
 import Modal from "../../../components/Modal";
@@ -8,7 +7,8 @@ import { HeadingActionButton } from "../../../components/SubHeading/ActionButton
 import api from "../../../shared/api/api-client";
 import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { Plugin } from "../../../shared/interfaces/PreConfigCardInterface";
-import { authService } from "../../../shared/services/authService";
+import { messageFactory, showDefaultFetchError } from "../../../shared/utils/toast-messages";
+
 
 interface PluginsResponse {
   plugins: Plugin[];
@@ -24,25 +24,39 @@ const Plugins = (): JSX.Element => {
   const [flag, setFlag] = useState<boolean>(false);
   const [plugins, setPlugins] = useState<Plugin[]>([]);
   const [instances, setInstances] = useState<Instance[]>([]);
-  const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     getPlugins();
   }, []);
 
-  async function getPlugins() {
-    await api.get<PluginsResponse>("/plugins").then((res) => {
-      setPlugins(res.data.plugins);
-    });
+  function getPlugins() {
+    api
+      .get<PluginsResponse>("/plugins")
+      .then((res) => {
+        setPlugins(res.data.plugins);
+      })
+      .catch((e) => {
+        if (e?.response?.data) {
+          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
+        } else
+          showToastMessage(showDefaultFetchError("para carregar os plugins pré-configurados."))
+      });
   }
 
-  async function getPluginInstances(selectedId: string) {
-    await api
+  function getPluginInstances(selectedId: string) {
+    api
       .get<InstancesResponse>(`/plugins/${selectedId}/instances`)
       .then((res) => {
         setInstances(res.data.instances);
         setFlag(true);
-      });
+      })
+      .catch((e) => {
+        if (e?.response?.data) {
+          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
+        } else
+          showToastMessage(showDefaultFetchError("carregar os plugins pré-configurados."))
+      })
   }
 
   const toggleCardSelect = (index: number): void => {
@@ -57,6 +71,11 @@ const Plugins = (): JSX.Element => {
     setTitle(selectedTitle);
   };
 
+  function showToastMessage(message: UseToastOptions, id = 1){
+    if (!toast.isActive(id))
+      toast(message)
+  }
+  
   return (
     <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton title="Plugins pré-configurados" />

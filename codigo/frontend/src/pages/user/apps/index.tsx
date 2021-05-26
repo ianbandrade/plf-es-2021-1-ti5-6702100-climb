@@ -33,15 +33,25 @@ export const Apps = () => {
         setApplications(data);
       })
       .catch((error) => {
-        getMessages(error?.response.data).forEach((description, i) => {
+        if (error?.response?.data) {
+          getMessages(error.response.data).forEach((description, i) =>
+            toast({
+              title: "Erro!",
+              description: `${description}`,
+              status: "error",
+              id: i,
+              position: "bottom-left",
+            })
+          );
+        } else
           toast({
             title: "Erro!",
-            description: `${description}`,
+            description:
+              "Não foi possível comunicar com o servidor para carregar as aplicações.",
+            id: 1,
             status: "error",
-            id: i,
             position: "bottom-left",
           });
-        });
       });
   }
 

@@ -26,12 +26,14 @@ class AuthService {
   }
 
   async signIn(credentials: { email: string; password: string }) {
+    console.log("Hello2");
     const user = (
       await apiClient.post<{ success: boolean; user: User }>(
         `${this.DEFAULT_PATH}/signin`,
         credentials
       )
     ).data.user;
+    console.log(user);
     setCurrentUser(user);
     return user;
   }
