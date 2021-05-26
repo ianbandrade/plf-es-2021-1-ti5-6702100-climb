@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { MonitorNewDataDto } from './dto/monitoring/monitorData.dto';
 
 @Injectable()
-export class MonitoringGRPCService {
+export class MonitoringService {
   constructor(
     private httpService: HttpService,
     private configService: ConfigService,

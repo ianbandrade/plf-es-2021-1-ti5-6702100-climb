@@ -106,7 +106,7 @@ class FindApplicationQueryDto {
   + provider: ProvidersEnum
 }
 
-FindApplicationQueryDto <|-- BaseQueryParametersDto
+FindApplicationQueryDto --|> BaseQueryParametersDto
 
 class GetApplication {
   + id: string
@@ -142,7 +142,7 @@ class FindDeployQueryDto{
   + status: DeployStatusEnum
 }
 
-FindDeployQueryDto <|-- BaseQueryParametersDto
+FindDeployQueryDto --|> BaseQueryParametersDto
 
 class ReqCreateDto {
   + id: string
@@ -170,7 +170,7 @@ class ResCreateDto {
   + error: string | null
 }
 
-class ReDeleteDto {
+class ResDeleteDto {
   + id: string
   + success: boolean
   + error: string | null
@@ -224,14 +224,14 @@ class Application  {
   + publicAttributes(): string[]
 }
 
-Application <|-- BaseEntity
+Application --|> BaseEntity
 
 class ApplicationRepository  {
   + createApplication(createApplicationDto: CreateApplicationDto, user: User): Application
   + findAll(queryDto: FindApplicationQueryDto, user: User): ReturList<Application>
 }
 
-ApplicationRepository <|-- Repository
+ApplicationRepository --|> Repository
 
 class Activity {
   + id: string
@@ -243,11 +243,11 @@ class Activity {
   + publicAttributes(): string[]
 }
 
-Activity <|-- BaseEntity
+Activity --|> BaseEntity
 
 class ActivityRepository{}
 
-ActivityRepository <|-- Repository
+ActivityRepository --|> Repository
 
 class Deploy {
   + id: string
@@ -260,7 +260,7 @@ class Deploy {
   + updatedAt: Date
 }
 
-Deploy <|-- BaseEntity
+Deploy --|> BaseEntity
 
 class DeploysRepository {
   + createNewDeploy(application: Application, user: User, commit: string): ReqCreateDto
@@ -268,7 +268,7 @@ class DeploysRepository {
   + createDeleteDeploy(application: Application): ReqDeleteDto
 }
 
-DeploysRepository <|-- Repository
+DeploysRepository --|> Repository
 
 class Environment {
   + id: string
@@ -278,7 +278,7 @@ class Environment {
   + createdAt: Date
 }
 
-Environment <|-- BaseEntity
+Environment --|> BaseEntity
 
 ' ==============================================================================
 
@@ -309,7 +309,7 @@ class JwtStrategy {
 
 class RolesGuard {}
 
-RolesGuard <|.. CanActivate
+RolesGuard ..|> CanActivate
 
 class CredentialsDto {
   + email: string
@@ -332,7 +332,7 @@ class LoggerInterceptor {
   - log(req: any): void
 }
 
-LoggerInterceptor <|.. NestInterceptor 
+LoggerInterceptor ..|> NestInterceptor 
 
 ' ==============================================================================
 
@@ -438,13 +438,13 @@ class Plugin  {
   + instances: Instance[]
 }
 
-Plugin <|-- BaseEntity
+Plugin --|> BaseEntity
 
 class PluginRepository {
   + createPlugin(createPluginDto: CreatePluginDto): Plugin
 }
 
-PluginRepository <|-- Repository
+PluginRepository --|> Repository
 
 class Credential {
   + id: string
@@ -455,7 +455,7 @@ class Credential {
   + createdAt: Date
 }
 
-Credential <|-- BaseEntity
+Credential --|> BaseEntity
 
 class Instance {
   + id: string
@@ -467,13 +467,13 @@ class Instance {
   + userId: string
 }
 
-Instance <|-- BaseEntity
+Instance --|> BaseEntity
 
 class InstanceRepository {
   + createInstance(plugin: Plugin, createInstancesDto: CreateInstancesDto, user: User): Instance
 }
 
-InstanceRepository <|-- Repository
+InstanceRepository --|> Repository
 
 ' ==============================================================================
 
@@ -532,6 +532,34 @@ class GitlabWebhook {
   + id: number
 }
 
+enum ActivityType {
+  CREATING
+  SUCCESS
+  FAIL
+  ROLLBACK
+}
+
+enum DeployStatusEnum {
+  SUCCESS
+  FAIL
+  CREATING
+}
+
+enum DeployType {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum ProvidersEnum {
+  GITHUB
+  GITLAB
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
 
 ' ==============================================================================
 
@@ -542,7 +570,7 @@ class User  {
   + id: string
   + email: string
   + name: string
-  + role: string
+  + role: UserRole
   + status: boolean
   + password: string
   + salt: string
@@ -559,7 +587,7 @@ class User  {
   + static publicAttributes(): string[]
 }
 
-User <|-- BaseEntity
+User --|> BaseEntity
 
 class UsersController {
   + createUser(createUserDto: CreateUserDto): ReturnUserDto
@@ -580,7 +608,7 @@ class UserRepository {
   + hashPassword(password: string, salt: string): string
 }
 
-UserRepository <|-- Repository
+UserRepository --|> Repository
 
 class UsersService {
   + createUser(createUserDto: CreateUserDto): User
@@ -592,7 +620,7 @@ class UsersService {
   + deleteUser(userId: string): void
 }
 
-UsersService <|.. OnModuleInit
+UsersService ..|> OnModuleInit
 
 class CreateManyUsersDto {
   + users: CreateUserDto[]
@@ -613,7 +641,7 @@ class FindUsersQueryDto {
   + role: UserRole
 }
 
-FindUsersQueryDto <|-- BaseQueryParametersDto
+FindUsersQueryDto --|> BaseQueryParametersDto
 
 class ReturnUserDto {
   user: User
@@ -687,6 +715,278 @@ interface NestInterceptor<T, R> {
 interface OnModuleInit {
   onModuleInit(): any
 }
+
+' ==============================================================================
+
+' ================================ Relationship ================================
+
+AppModule "1" -- "1" ConfigurationModule
+AppModule "1" -- "1" VersionControlModule
+AppModule "1" -- "1" UsersModule
+AppModule "1" -- "1" AuthModule
+AppModule "1" -- "1" ApplicationsModule
+AppModule "1" -- "1" PluginsModule
+AppModule "1" -- "1" LoggerInterceptor
+
+VersionControlModule "1" -- "1" VersionControlController
+VersionControlModule "1" -- "1" VersionControlService
+VersionControlModule "1" -- "1" UserRepository
+
+VersionControlController "1" -- "1" VersionControlService
+VersionControlController "1" -- "1" UserRepository
+VersionControlController "1" -- "*" User
+VersionControlController "1" -- "*" GitRequest
+VersionControlController "1" -- "*" Message
+
+VersionControlService "1" -- "*" User
+VersionControlService "1" -- "*" GithubUser
+VersionControlService "1" -- "*" GitlabUser
+VersionControlService "1" -- "*" TokenParams
+
+UsersModule "1" -- "1" UsersController
+UsersModule "1" -- "1" UsersService
+UsersModule "1" -- "1" UserRepository
+
+UsersController "1" -- "1" UsersService
+UsersController "1" -- "1" RolesGuard
+UsersController "1" -- "*" UpdateUserDto
+UsersController "1" -- "*" CreateUserDto
+UsersController "1" -- "*" ReturnUserDto
+UsersController "1" -- "*" UserRole
+UsersController "1" -- "*" FindUsersQueryDto
+UsersController "1" -- "*" CreateManyUsersDto
+UsersController "1" -- "*" ReturList
+UsersController "1" -- "*" User
+UsersController "1" -- "*" Message
+
+UsersService "1" -- "1" UserRepository
+UsersService "1" -- "*" UpdateUserDto
+UsersService "1" -- "*" UserRepository
+UsersService "1" -- "*" CreateUserDto
+UsersService "1" -- "*" User
+UsersService "1" -- "*" UserRole
+UsersService "1" -- "*" FindUsersQueryDto
+UsersService "1" -- "*" CreateManyUsersDto
+UsersService "1" -- "*" ReturList
+
+UserRepository "1" -- "*" CredentialsDto
+UserRepository "1" -- "*" User
+UserRepository "1" -- "*" CreateUserDto
+UserRepository "1" -- "*" FindUsersQueryDto
+UserRepository "1" -- "*" CreateManyUsersDto
+UserRepository "1" -- "*" ReturList
+
+User "1" -- "*" Application
+User "1" -- "*" Instance
+User "1" *-- "1" UserRole
+
+UpdateUserDto "1" -- "0..1" UserRole
+
+ReturnUserDto "1" -- "1" User
+
+FindUsersQueryDto "1" -- "0..1" UserRole
+
+CreateUserDto "1" -- "1" UserRole
+
+CreateManyUsersDto "1" -- "*" CreateUserDto
+
+GithubWebhookEventDto "1" -- "1" CommitData
+GitlabWebhookEventDto "1" -- "*" CommitData
+
+RepositoryData "1" -- "1" User
+
+PluginsModule "1" -- "1" PluginsService
+PluginsModule "1" -- "1" PluginsController
+PluginsModule "1" -- "1" InstanceRepository
+PluginsModule "1" -- "1" PluginRepository
+
+PluginsController "1" -- "1" PluginsService
+PluginsController "1" -- "*" User
+PluginsController "1" -- "*" GetPuglinsDto
+PluginsController "1" -- "*" GetInstances
+PluginsController "1" -- "*" CreateInstancesDto
+PluginsController "1" -- "*" Instance
+PluginsController "1" -- "*" UserRole
+PluginsController "1" -- "*" CreatePluginDto
+PluginsController "1" -- "*" BasicInstance
+PluginsController "1" -- "*" BasicPlugin
+
+PluginsService "1" -- "1" PluginRepository
+PluginsService "1" -- "1" InstanceRepository
+PluginsService "1" -- "*" User
+PluginsService "1" -- "*" BasicCredentials
+PluginsService "1" -- "*" GetPuglinsDto
+PluginsService "1" -- "*" BasicInstance
+PluginsService "1" -- "*" CreateInstancesDto
+PluginsService "1" -- "*" GetInstances
+PluginsService "1" -- "*" BasicPlugin
+PluginsService "1" -- "*" Instance
+PluginsService "1" -- "*" ResInstanceDto
+PluginsService "1" -- "*" ReqInstanceDto
+PluginsService "1" -- "*" DeployStatusEnum
+PluginsService "1" -- "*" Credential
+PluginsService "1" -- "*" CreatePluginDto
+PluginsService "1" -- "*" Plugin
+
+PluginRepository "1" -- "*" CreatePluginDto
+PluginRepository "1" -- "*" Plugin
+ 
+Plugin "1" -- "*" Instance
+
+InstanceRepository "1" -- "*" CreateInstancesDto
+InstanceRepository "1" -- "*" User
+InstanceRepository "1" -- "*" Plugin
+InstanceRepository "1" -- "*" Instance
+
+Instance "1" -- "1" DeployStatusEnum
+Instance "1" -- "*" Credential
+
+GetPuglinsDto "1" -- "*" BasicPlugin
+
+UpdateInstancesMessageDto "1" -- "*" Credential
+UpdateInstancesMessageDto "1" -- "1" DeployStatusEnum
+
+ResInstanceDto "1" -- "*" BasicCredentials
+
+ReqInstanceDto "1" -- "1" PluginData
+
+GetInstances "1" -- "*" BasicInstance
+
+BasicInstance "1" -- "1" DeployStatusEnum
+BasicInstance "1" -- "*" BasicCredentials
+
+JwtStrategy "1" -- "*" User
+JwtStrategy "1" -- "1" UserRepository
+JwtStrategy "1" -- "*" VaidatePayload
+
+AuthService "1" -- "*" CredentialsDto
+AuthService "1" -- "1" UserRepository
+AuthService "1" -- "*" SiginInReturn
+
+AuthModule "1" -- "1" AuthController
+AuthModule "1" -- "1" AuthService
+AuthModule "1" -- "1" UserRepository
+AuthModule "1" -- "1" JwtStrategy
+
+AuthController "1" -- "1" AuthService
+AuthController "1" -- "*" CredentialsDto
+AuthController "1" -- "*" User
+AuthController "1" -- "*" GetUser
+AuthController "1" -- "*" ReturnUserDto
+
+MonitoringService "1" -- "*" MonitorNewDataDto
+
+ApplicationsService "1" -- "1" ApplicationRepository
+ApplicationsService "1" -- "1" DeploysRepository
+ApplicationsService "1" -- "1" ActivityRepository
+ApplicationsService "1" -- "1" UsersService
+ApplicationsService "1" -- "*" GithubCommit
+ApplicationsService "1" -- "*" GitlabCommit
+ApplicationsService "1" -- "*" RepositoryData
+ApplicationsService "1" -- "*" ReturList
+ApplicationsService "1" -- "*" GithubWebhookEventDto
+ApplicationsService "1" -- "*" GitlabWebhookEventDto
+ApplicationsService "1" -- "*" GithubWebhook
+ApplicationsService "1" -- "*" GitlabWebhook
+ApplicationsService "1" -- "*" ActivityType
+ApplicationsService "1" -- "*" DeployStatusEnum
+ApplicationsService "1" -- "*" DeployType
+ApplicationsService "1" -- "*" ProvidersEnum
+ApplicationsService "1" -- "*" User
+ApplicationsService "1" -- "*" GetActivities
+ApplicationsService "1" -- "*" CreateApplicationDto
+ApplicationsService "1" -- "*" ReqCreateDto
+ApplicationsService "1" -- "*" ReqDeleteDto
+ApplicationsService "1" -- "*" ReqUpdateDto
+ApplicationsService "1" -- "*" ResCreateDto
+ApplicationsService "1" -- "*" ResDeleteDto
+ApplicationsService "1" -- "*" ResUpdateDto
+ApplicationsService "1" -- "*" BaseEnvironment
+ApplicationsService "1" -- "*" FindApplicationQueryDto
+ApplicationsService "1" -- "*" GetApplication
+ApplicationsService "1" -- "*" UpdateApplicationDto
+ApplicationsService "1" -- "*" Activity
+ApplicationsService "1" -- "*" Application
+ApplicationsService "1" -- "*" Deploy
+ApplicationsService "1" -- "*" Environment
+
+ApplicationsModule "1" -- "1" ApplicationRepository
+ApplicationsModule "1" -- "1" DeploysRepository
+ApplicationsModule "1" -- "1" ActivityRepository
+ApplicationsModule "1" -- "1" UsersModule
+ApplicationsModule "1" -- "1" ApplicationsController
+ApplicationsModule "1" -- "1" ApplicationsService
+ApplicationsModule "1" -- "1" ApplicationsGateway
+ApplicationsModule "1" -- "1" MonitoringService
+
+MonitoringService "1" -- "1" ApplicationsGateway
+
+ApplicationsController "1" -- "*" GetUser
+ApplicationsController "1" -- "*" ReturList
+ApplicationsController "1" -- "*" GithubWebhookEventDto
+ApplicationsController "1" -- "*" GitlabWebhookEventDto
+ApplicationsController "1" -- "*" User
+ApplicationsController "1" -- "1" ApplicationsService
+ApplicationsController "1" -- "*" GetActivities
+ApplicationsController "1" -- "*" CreateApplicationDto
+ApplicationsController "1" -- "*" FindApplicationQueryDto
+ApplicationsController "1" -- "*" GetApplication
+ApplicationsController "1" -- "*" UpdateApplicationDto
+ApplicationsController "1" -- "*" Application
+ApplicationsController "1" -- "*" Deploy
+
+ApplicationRepository "1" -- "*" CreateApplicationDto
+ApplicationRepository "1" -- "*" Application
+ApplicationRepository "1" -- "*" ReturList
+ApplicationRepository "1" -- "*" FindApplicationQueryDto
+ApplicationRepository "1" -- "*" User
+ApplicationRepository "1" -- "*" Environment
+
+Application "1" -- "1" ProvidersEnum
+Application "1" -- "*" Activity
+Application "1" -- "*" Environment
+Application "1" -- "*" Deploy
+
+DeploysRepository "1" -- "*" User
+DeploysRepository "1" -- "*" Deploy
+DeploysRepository "1" -- "*" ReqCreateDto
+DeploysRepository "1" -- "*" Application
+DeploysRepository "1" -- "*" ProvidersEnum
+DeploysRepository "1" -- "*" ReqUpdateDto
+DeploysRepository "1" -- "*" ReqDeleteDto
+DeploysRepository "1" -- "*" DeployType
+
+Deploy "1" -- "1" DeployStatusEnum
+Deploy "1" -- "1" DeployType
+
+Activity "1" -- "1" ActivityType
+
+UpdateApplicationDto "1" -- "0..*" BaseEnvironment
+
+GetApplication "1" -- "1" ProvidersEnum
+GetApplication "1" -- "*" BaseEnvironment
+
+FindApplicationQueryDto "1" -- "0..*" ProvidersEnum
+
+CreateApplicationDto "1" -- "1" ProvidersEnum
+CreateApplicationDto "1" -- "*" BaseEnvironment
+
+MonitorResults "1" -- "*" Metrics
+
+MonitorNewDataDto "1" -- "1" MonitorResults
+
+ReqUpdateDto "1" -- "1" Application
+
+ReqDeleteDto "1" -- "1" Application
+
+ReqCreateDto "1" -- "1" Application
+
+FindDeployQueryDto "1" -- "0..1" DeployStatusEnum
+
+GetActivities "1" -- "*" BaseActivities
+
+BaseActivities "1" -- "1" ActivityType
+
 ' ==============================================================================
 
 @enduml

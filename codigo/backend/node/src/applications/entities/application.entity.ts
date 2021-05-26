@@ -80,7 +80,7 @@ export class Application extends BaseEntity {
   @OneToMany(() => Activity, (activity) => activity.application, {
     onDelete: 'CASCADE',
   })
-  activities: any;
+  activities: Activity[];
 
   static get publicAttributes(): (keyof Application)[] {
     return [

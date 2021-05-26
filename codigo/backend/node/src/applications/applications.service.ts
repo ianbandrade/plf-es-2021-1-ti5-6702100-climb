@@ -36,6 +36,7 @@ import { ReqCreateDto } from './dto/deploys/req-create.dto';
 import { ReqDeleteDto } from './dto/deploys/req-delete.dto';
 import { ReqUpdateDto } from './dto/deploys/req-update.dto';
 import { ResCreateDto } from './dto/deploys/res-create.dto';
+import { ResDeleteDto } from './dto/deploys/res-delete.dto';
 import { ResUpdateDto } from './dto/deploys/res-update.dto';
 import { BaseEnvironment } from './dto/environments/basic-environment.dto';
 import { FindApplicationQueryDto } from './dto/find-application-query.dto';
@@ -405,7 +406,7 @@ export class ApplicationsService {
     routingKey: apps.delete.res.routingKey,
     queue: apps.delete.res.queue,
   })
-  async reciveDeleteDeployResponse(updateMessage: ResUpdateDto): Promise<void> {
+  async reciveDeleteDeployResponse(updateMessage: ResDeleteDto): Promise<void> {
     const deploy = await this.deploysRepository.findOne(updateMessage.id);
 
     if (deploy.type !== DeployType.DELETE) return;

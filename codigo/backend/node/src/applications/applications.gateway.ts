@@ -10,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { MonitoringGRPCService } from './monitoring.grpc.service';
+import { MonitoringService } from './monitoring.service';
 
 @WebSocketGateway({ namespace: 'applications' })
 export class ApplicationsGateway
@@ -19,7 +19,7 @@ export class ApplicationsGateway
   server: Server;
   private logger: Logger = new Logger(ApplicationsGateway.name);
 
-  constructor(private grpc: MonitoringGRPCService) {}
+  constructor(private grpc: MonitoringService) {}
 
   private map = new Map<string, string>();
 

@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { encryptionTransformer } from 'src/shared/transformers/encryption.transformer';
 import { Application } from 'src/applications/entities/application.entity';
 import { Instance } from 'src/plugins/entities/instance/instance.entity';
+import { UserRole } from './user-roles.enum';
 
 @Entity()
 export class User extends BaseEntity {
@@ -23,7 +24,7 @@ export class User extends BaseEntity {
   name: string;
 
   @Column({ nullable: false, type: 'varchar', length: 20 })
-  role: string;
+  role: UserRole;
 
   @Column({ nullable: false, default: true })
   status: boolean;

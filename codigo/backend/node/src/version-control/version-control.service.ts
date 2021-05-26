@@ -8,7 +8,6 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
-
 import { User } from 'src/users/user.entity';
 import { chunkArray } from 'src/shared/utils/arrays.util';
 import {
