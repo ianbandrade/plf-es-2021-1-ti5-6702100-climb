@@ -43,10 +43,10 @@ services:
     ports:
       - 15672:15672
 
-  apps_deployer:
-    build: ./backend/golang/apps_deployer
+  apps-worker:
+    build: ./backend/golang/apps-worker
     volumes:
-      - ./backend/golang/apps_deployer/src:/go/src/app
+      - ./backend/golang/apps-worker/src:/go/src/app
     ports:
       - 8080:80
     environment:
