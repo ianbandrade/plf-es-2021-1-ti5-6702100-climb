@@ -64,8 +64,9 @@ class _MonitoryPageState extends State<MonitoryPage> {
   getAppStaticsData(data) {
     setState(() {
       dashboard = DashboardData.fromJson(data);
-      connectionsNumber =
-          int.tryParse(dashboard.results.openConnections[0].value[1]) ?? 0;
+      if (dashboard.results.openConnections.length > 0)
+        connectionsNumber =
+            int.tryParse(dashboard.results.openConnections[0].value[1]) ?? 0;
       responseStatusCode = getReponseStatusCode(dashboard);
       averageRequestTime = getAvgResponseTimeByMethod(dashboard);
     });
