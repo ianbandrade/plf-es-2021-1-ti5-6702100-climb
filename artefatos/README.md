@@ -16,6 +16,10 @@ Liste os artefatos produzidos, com suas localizaçãoes e descrição do conteú
   - [ATA-2021-04-10.md](atas/ATA-2021-04-10.md) - Ata de alinhamento do desenvolvimento da Sprint III
   - [ATA-2021-04-17.md](atas/ATA-2021-04-17.md) - Ata de planejamento da Sprint IV
   - [ATA-2021-04-22.md](atas/ATA-2021-04-22.md) - Ata de acompanhamento da Sprint IV
+  - [ATA-2021-05-01.md](atas/ATA-2021-05-01.md) - Ata de planejamento da Sprint V
+  - [ATA-2021-05-06.md](atas/ATA-2021-05-06.md) - Ata de alinhamento para a apresentação e primeira entrega da Sprint V
+  - [ATA-2021-05-13.md](atas/ATA-2021-05-13.md) - Ata de alinhamento final Sprint V - parte 01
+  - [ATA-2021-05-20.md](atas/ATA-2021-05-20.md) - Ata de alinhamento final Sprint V - parte 02
 
 * `/gerencia`
   * [declaracao_de_escopo.md](declaracao_de_escopo.md) -  Definição de escopo do projeto;
