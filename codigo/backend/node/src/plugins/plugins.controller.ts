@@ -23,6 +23,7 @@ import { CreatePluginDto } from './dto/create-plugin.dto';
 import { BasicInstance } from './dto/instances/basic-instance.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { BasicPlugin } from './dto/basic-plugin.dto';
+import { Message } from 'src/shared/dto/message.dto';
 
 @ApiTags('Plugins')
 @Controller('plugins')
@@ -75,7 +76,7 @@ export class PluginsController {
   async deleteInstance(
     @Param('instanceId') instanceId: string,
     @GetUser() user: User,
-  ): Promise<boolean> {
+  ): Promise<Message> {
     return await this.pluginsService.deleteInstance(instanceId, user);
   }
 }

@@ -27,6 +27,7 @@ import * as dotenv from 'dotenv';
 import configuration from 'src/configuration/configuration';
 import { ApplicationRepository } from 'src/applications/entities/application.repository';
 import { ResInstanceDeleteDto } from './dto/instances/res-delete.dto';
+import { Message } from 'src/shared/dto/message.dto';
 
 dotenv.config();
 
@@ -116,7 +117,7 @@ export class PluginsService {
     return instance;
   }
 
-  async deleteInstance(instanceId: string, user: User): Promise<boolean> {
+  async deleteInstance(instanceId: string, user: User): Promise<Message> {
     const instance = await this.instanceRepository.findOne(instanceId);
 
     if (!instance) throw new NotFoundException('Instância não encontrada');
@@ -132,7 +133,7 @@ export class PluginsService {
       },
     };
     this.amqpConnection.publish(defaultExchange, plugins.delete.req.routingKey, payload);
-    return true;
+    return { message: `A instância ${instance.name} será deletada em breve` };
   }
 
   sendNewInstance(instance: Instance, plugin: Plugin): void {
@@ -174,7 +175,7 @@ export class PluginsService {
         ? DeployStatusEnum.SUCCESS
         : DeployStatusEnum.FAIL;
 
-      instance.credentials = this.mapCredentials(credentials, instance.id);
+      instance.credentials = await this.mapCredentials(credentials, instance);
       instance.url = url;
 
       instance.save();
@@ -197,24 +198,27 @@ export class PluginsService {
     }
   }
 
-  private mapCredentials(
+  private async mapCredentials(
     baseCredentials: BasicCredentials[],
-    instanceId: string,
-  ): Credential[] {
-    return baseCredentials.map<Credential>(({ key, value }) => {
-      const credential = new Credential();
+    instance: Instance,
+  ): Promise<Credential[]> {
+    return await Promise.all(
+      baseCredentials.map<Promise<Credential>>(async ({ key, value }) => {
+        const credential = new Credential();
 
-      credential.id = v4();
-      credential.key = key;
-      credential.value = value;
-      credential.instanceId = instanceId;
+        credential.id = v4();
+        credential.key = key;
+        credential.value = value;
+        credential.instance = instance;
+        credential.instanceId = instance.id;
 
-      try {
-        credential.save();
-        return credential;
-      } catch (e) {
-        throw new InternalServerErrorException(e);
-      }
-    });
+        try {
+          await credential.save();
+          return credential;
+        } catch (e) {
+          throw new InternalServerErrorException(e);
+        }
+      }),
+    );
   }
 }

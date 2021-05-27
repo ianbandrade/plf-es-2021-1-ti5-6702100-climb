@@ -13,6 +13,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { Message } from 'src/shared/dto/message.dto';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import {
   GithubWebhookEventDto,
@@ -86,7 +87,7 @@ export class ApplicationsController {
   @UseGuards(AuthGuard())
   @ApiCookieAuth()
   @Delete(':id')
-  remove(@GetUser() user: User, @Param('id') id: string): Promise<string> {
+  remove(@GetUser() user: User, @Param('id') id: string): Promise<Message> {
     return this.applicationsService.remove(id, user);
   }
 

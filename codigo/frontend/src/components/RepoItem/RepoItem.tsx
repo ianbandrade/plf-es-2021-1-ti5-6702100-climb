@@ -22,10 +22,10 @@ export const RepoItem = (props: RepoItemProps.Application) => {
   const removeApp = () => {
     apiClient
       .delete(`/applications/${props.id}`)
-      .then(() => {
+      .then(({ data }) => {
         toast({
           title: "Sucesso!",
-          description: `'${props.name}' excluída.`,
+          description: data.message,
           status: "success",
           id: props.id,
           position: "bottom-left",
