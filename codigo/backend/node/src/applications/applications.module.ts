@@ -12,6 +12,7 @@ import { ActivityRepository } from './entities/activities/activity.repository';
 import { ApplicationsGateway } from './applications.gateway';
 import { MonitoringService } from './monitoring.service';
 import { ConfigModule } from '@nestjs/config';
+import { InstanceRepository } from 'src/plugins/entities/instance/instance.repository';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
       ApplicationRepository,
       DeploysRepository,
       ActivityRepository,
+      InstanceRepository,
     ]),
     RabbitMQModule.forRootAsync(RabbitMQModule, rabbitMQConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),

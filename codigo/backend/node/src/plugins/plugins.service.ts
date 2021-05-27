@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -24,6 +25,7 @@ import { CreatePluginDto } from './dto/create-plugin.dto';
 import { Plugin } from './entities/plugin.entity';
 import * as dotenv from 'dotenv';
 import configuration from 'src/configuration/configuration';
+import { ApplicationRepository } from 'src/applications/entities/application.repository';
 
 dotenv.config();
 
@@ -35,6 +37,7 @@ export class PluginsService {
   constructor(
     private instanceRepository: InstanceRepository,
     private pluginRepository: PluginRepository,
+    private applicationRepository: ApplicationRepository,
     private amqpConnection: AmqpConnection,
   ) {}
 
@@ -93,6 +96,16 @@ export class PluginsService {
     const plugin = await this.pluginRepository.findOne(pluginId);
     if (!plugin) throw new NotFoundException('Plugin não encontrado');
 
+    const nameAlreadyUsed =
+      this.instanceRepository.find({
+        where: { name: createIntanceDto.name },
+      }) ||
+      this.applicationRepository.find({
+        where: { name: createIntanceDto.name },
+      });
+
+    if (nameAlreadyUsed) throw new ConflictException('Nome já utilizado');
+
     const instance = await this.instanceRepository.createInstance(
       plugin,
       createIntanceDto,
@@ -114,8 +127,8 @@ export class PluginsService {
     const payload: ReqInstanceDto = {
       id: instance.id,
       plugin: {
-        name: plugin.name,
-        chart: plugin.dockerImage,
+        name: instance.name,
+        chart: plugin.chart,
       },
     };
     this.amqpConnection.publish('', plugins.deploy.req.routingKey, payload);

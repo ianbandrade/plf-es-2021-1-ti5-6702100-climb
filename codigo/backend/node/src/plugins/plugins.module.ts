@@ -7,10 +7,15 @@ import { InstanceRepository } from './entities/instance/instance.repository';
 import { PluginRepository } from './entities/plugin.repository';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { rabbitMQConfig } from 'src/configuration/configs/rabbitmq.config';
+import { ApplicationRepository } from 'src/applications/entities/application.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([InstanceRepository, PluginRepository]),
+    TypeOrmModule.forFeature([
+      InstanceRepository,
+      PluginRepository,
+      ApplicationRepository,
+    ]),
     RabbitMQModule.forRootAsync(RabbitMQModule, rabbitMQConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],

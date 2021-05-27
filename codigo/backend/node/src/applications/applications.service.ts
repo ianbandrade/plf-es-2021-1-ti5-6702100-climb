@@ -1,5 +1,6 @@
 import { AmqpConnection, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import {
+  ConflictException,
   ForbiddenException,
   HttpService,
   Injectable,
@@ -9,6 +10,8 @@ import {
 import * as dotenv from 'dotenv';
 import * as publicIp from 'public-ip';
 import configuration from 'src/configuration/configuration';
+import { InstanceRepository } from 'src/plugins/entities/instance/instance.repository';
+import { PluginRepository } from 'src/plugins/entities/plugin.repository';
 import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { RepositoryData } from 'src/shared/dto/repository-data';
 import { ReturList } from 'src/shared/dto/return-list.dto';
@@ -64,6 +67,7 @@ const {
 export class ApplicationsService {
   constructor(
     private applicationRepository: ApplicationRepository,
+    private instanceRepository: InstanceRepository,
     private deploysRepository: DeploysRepository,
     private activityRepository: ActivityRepository,
     private userService: UsersService,
@@ -75,6 +79,16 @@ export class ApplicationsService {
     createApplicationDto: CreateApplicationDto,
     user: User,
   ): Promise<Application> {
+    const nameAlreadyUsed =
+      this.instanceRepository.find({
+        where: { name: createApplicationDto.name },
+      }) ||
+      this.applicationRepository.find({
+        where: { name: createApplicationDto.name },
+      });
+
+    if (nameAlreadyUsed) throw new ConflictException('Nome já utilizado');
+
     const {
       repositoryOwner,
       repositoryName,

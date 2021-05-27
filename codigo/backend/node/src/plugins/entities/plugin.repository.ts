@@ -10,7 +10,7 @@ export class PluginRepository extends Repository<Plugin> {
     name,
     description,
     image,
-    dockerImage,
+    chart,
   }: CreatePluginDto): Promise<Plugin> {
     const plugins = new Plugin();
 
@@ -18,7 +18,7 @@ export class PluginRepository extends Repository<Plugin> {
     plugins.name = name;
     plugins.description = description;
     plugins.image = image;
-    plugins.dockerImage = dockerImage;
+    plugins.chart = chart;
 
     try {
       plugins.save();

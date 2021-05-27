@@ -22,7 +22,7 @@ export class Plugin extends BaseEntity {
   image: string;
 
   @Column({ nullable: false })
-  dockerImage: string;
+  chart: string;
 
   @OneToMany(() => Instance, (instance) => instance.plugin)
   instances: Instance[];
