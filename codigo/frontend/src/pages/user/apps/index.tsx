@@ -63,7 +63,10 @@ export const Apps = () => {
 
   return (
     <Flex flexDirection="column" padding="12" width="full">
-      <HeadingActionButton title="Aplicações conectadas" />
+      <HeadingActionButton
+        title="Aplicações conectadas"
+        backRoute="/user/apps"
+      />
       <Flex flexWrap="wrap">{renderRepos}</Flex>
     </Flex>
   );

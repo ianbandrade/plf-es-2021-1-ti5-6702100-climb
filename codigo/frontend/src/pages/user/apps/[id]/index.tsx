@@ -161,17 +161,17 @@ const ConfigApp = () => {
         });
       });
   };
-
+  console.log(enviroments);
   return (
     <Skeleton isLoaded={!!enviroments}>
       {appData && (
         <Flex flexDirection="row" padding="12" width="full">
-          <HeadingActionButton title={appData.name} />
+          <HeadingActionButton title={appData.name} backRoute="/user/apps" />
         </Flex>
       )}
       <Flex
         flexDirection="row"
-        width="60%"
+        width="65%"
         height="100%"
         margin="0 auto;"
         bgColor={bgColor}

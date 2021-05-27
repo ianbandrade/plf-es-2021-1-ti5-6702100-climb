@@ -92,7 +92,7 @@ const NewApp = () => {
     />
   ) : (
     <Flex flexDirection="column" padding="12" width="full">
-      <HeadingActionButton title="Nova Aplicação" />
+      <HeadingActionButton title="Nova Aplicação" backRoute="/user/apps" />
       <Flex justifyContent="center" alignItems="center">
         <RepositoriesCard
           gitOrganizations={providers[gitProvider]}
