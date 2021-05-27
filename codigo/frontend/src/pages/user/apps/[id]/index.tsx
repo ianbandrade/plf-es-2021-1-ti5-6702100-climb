@@ -10,7 +10,6 @@ import { HeadingActionButton } from "../../../../components/SubHeading/ActionBut
 import apiClient from "../../../../shared/api/api-client";
 import { Activities, Activity } from "../../../../shared/interfaces/Activities";
 import Environment from "../../../../shared/interfaces/environment";
-import { authService } from "../../../../shared/services/authService";
 import { getMessages } from "../../../../shared/utils/toast-messages";
 import { colors } from "../../../../styles/customTheme";
 const LIGHT = "light";
@@ -26,15 +25,17 @@ export interface ApplicationResponse {
   repositoryPath: string;
   repositoryURL: string;
   userId: string;
+  url: string;
   environments: Environment[];
 }
 
 export interface ConfigAppState {
   name: string;
   id: string;
+  url: string;
 }
 
-const ConfigApp = () => {
+const ConfigApp = (): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
   const [enviroments, setEnviroments] = useState<
@@ -166,7 +167,11 @@ const ConfigApp = () => {
     <Skeleton isLoaded={!!enviroments}>
       {appData && (
         <Flex flexDirection="row" padding="12" width="full">
-          <HeadingActionButton title={appData.name} backRoute="/user/apps" />
+          <HeadingActionButton
+            title={appData.name}
+            app_link={appData.url}
+            backRoute="/user/apps"
+          />
         </Flex>
       )}
       <Flex

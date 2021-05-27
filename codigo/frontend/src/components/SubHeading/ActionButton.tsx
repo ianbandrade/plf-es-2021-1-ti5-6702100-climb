@@ -1,15 +1,17 @@
 import { Button, ButtonGroup } from "@chakra-ui/button";
+import Icon from "@chakra-ui/icon";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
+import { useColorMode } from "@chakra-ui/react";
+import router from "next/dist/client/router";
 import Link from "next/link";
+import { FiChevronLeft, FiExternalLink } from "react-icons/fi";
 import { ActionButtonProps } from "../../shared/interfaces/ActionButtonProps";
 import { colors } from "../../styles/customTheme";
-import { FiChevronLeft } from "react-icons/fi";
-import Icon from "@chakra-ui/icon";
-import router from "next/dist/client/router";
-import { useColorMode } from "@chakra-ui/react";
+
 interface HeadingActionButtonProps {
   title: string;
+  app_link: string;
   backRoute: string;
 }
 
@@ -17,6 +19,7 @@ export const BASE_URL = "/user/apps";
 
 export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
   title,
+  app_link,
   backRoute,
 }) => {
   const baseButtom = {
@@ -76,6 +79,19 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
           </Button>
         )}
         <Heading size="md">{title}</Heading>
+        {app_link !== undefined ? (
+          <Flex ml={5} mb={1}>
+            <Link href={app_link}>
+              <Icon
+                as={FiExternalLink}
+                boxSize={5}
+                _hover={{ cursor: "pointer" }}
+              />
+            </Link>
+          </Flex>
+        ) : (
+          ""
+        )}
       </Flex>
       <Spacer />
       <Box>
