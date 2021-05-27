@@ -132,7 +132,11 @@ export class PluginsService {
         chart: instance.plugin.chart,
       },
     };
-    this.amqpConnection.publish(defaultExchange, plugins.delete.req.routingKey, payload);
+    this.amqpConnection.publish(
+      defaultExchange,
+      plugins.delete.req.routingKey,
+      payload,
+    );
     return { message: `A instância ${instance.name} será deletada em breve` };
   }
 
@@ -144,7 +148,11 @@ export class PluginsService {
         chart: plugin.chart,
       },
     };
-    this.amqpConnection.publish(defaultExchange, plugins.create.req.routingKey, payload);
+    this.amqpConnection.publish(
+      defaultExchange,
+      plugins.create.req.routingKey,
+      payload,
+    );
   }
 
   async createPlugin(bcreatePluginnDto: CreatePluginDto): Promise<BasicPlugin> {
@@ -210,7 +218,6 @@ export class PluginsService {
         credential.key = key;
         credential.value = value;
         credential.instance = instance;
-        credential.instanceId = instance.id;
 
         try {
           await credential.save();
