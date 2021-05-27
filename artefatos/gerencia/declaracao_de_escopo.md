@@ -81,7 +81,6 @@ Construir um sistema simples e prático para implantação de aplicações escal
 - O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
 - A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
 - A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
-- A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
 - A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
 - Para a persistência de dados deve ser utilizado o PostgreSQL;
 - Para o cache de consultas à API deve ser utilizado o Redis;
