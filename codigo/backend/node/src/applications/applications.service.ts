@@ -256,13 +256,15 @@ export class ApplicationsService {
   }
 
   async findOnebyName(name: string, user: User): Promise<GetApplication> {
-    const application = await this.applicationRepository.findOne({
+    const { id } = await this.applicationRepository.findOne({
       where: { name },
       cache: {
-        id: applicationCacheId.findApplicationById(name),
+        id: applicationCacheId.findApplicationByName(name),
         milliseconds: 30000,
       },
     });
+    const application = await this.findCompleteApplication(id, user);
+
     this.verifyApplicationFetch(application, user);
 
     return this.getPubicApplicationFields(application);
@@ -328,7 +330,7 @@ export class ApplicationsService {
 
     try {
       await application.save();
-      getConnection().queryResultCache.remove([
+      await getConnection().queryResultCache.remove([
         applicationCacheId.findAllApplications(),
         applicationCacheId.findApplicationById(application.id),
         applicationCacheId.findApplicationByName(application.name),

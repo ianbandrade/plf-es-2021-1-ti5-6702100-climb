@@ -98,10 +98,10 @@ export class PluginsService {
     if (!plugin) throw new NotFoundException('Plugin não encontrado');
 
     const nameAlreadyUsed =
-      !!(await this.instanceRepository.find({
+      !!(await this.instanceRepository.findOne({
         where: { name: createIntanceDto.name },
       })) ||
-      !!(await this.applicationRepository.find({
+      !!(await this.applicationRepository.findOne({
         where: { name: createIntanceDto.name },
       }));
 
