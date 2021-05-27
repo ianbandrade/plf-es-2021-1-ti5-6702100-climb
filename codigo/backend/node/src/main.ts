@@ -6,10 +6,8 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 
 export async function bootstrap() {
-  // const logger = WinstonModule.createLogger(winstonConfig);
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
-    // logger,
   });
 
   app.use(cookieParser());

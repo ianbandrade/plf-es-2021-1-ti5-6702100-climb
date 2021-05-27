@@ -11,7 +11,7 @@ import { colors } from "../../styles/customTheme";
 
 interface HeadingActionButtonProps {
   title: string;
-  app_link: string;
+  app_link?: string;
   backRoute: string;
 }
 

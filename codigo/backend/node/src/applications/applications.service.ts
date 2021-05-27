@@ -79,12 +79,12 @@ export class ApplicationsService {
     user: User,
   ): Promise<Application> {
     const nameAlreadyUsed =
-      this.instanceRepository.find({
+      !!(await this.instanceRepository.findOne({
         where: { name: createApplicationDto.name },
-      }) ||
-      this.applicationRepository.find({
+      })) ||
+      !!(await this.applicationRepository.findOne({
         where: { name: createApplicationDto.name },
-      });
+      }));
 
     if (nameAlreadyUsed) throw new ConflictException('Nome já utilizado');
 
