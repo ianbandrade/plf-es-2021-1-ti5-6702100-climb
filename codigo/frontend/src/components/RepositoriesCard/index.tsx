@@ -3,7 +3,10 @@ import { useState } from "react";
 import { AiFillGithub, AiOutlineSearch } from "react-icons/ai";
 import { RiGitlabFill } from "react-icons/ri";
 import { Organization } from "../../shared/interfaces/Organization";
-import { Repository } from "../../shared/interfaces/Repository";
+import {
+  BasicRepository,
+  Repository,
+} from "../../shared/interfaces/Repository";
 import { colors } from "../../styles/customTheme";
 import Input from "../Input";
 import NotLinkedGit from "../NotLinkedGit";
@@ -133,7 +136,7 @@ const RepositoriesCard = ({
       <Flex flexDirection="column" justifyContent="center" width="93%" mt="4">
         {gitOrganizations && gitOrganizations[orgIndex] !== null ? (
           filterInput.length > 1 && repositories ? (
-            repositories.map((repository: Repository) => {
+            repositories.map((repository: BasicRepository) => {
               return (
                 <RepositoryItem
                   key={`${gitOrganizations[orgIndex].name}/${repository.name}`}
@@ -146,7 +149,7 @@ const RepositoriesCard = ({
           ) : gitOrganizations === null ||
             gitOrganizations.length === 0 ? null : (
             gitOrganizations[orgIndex].repositories.map(
-              (repository: Repository) => {
+              (repository: BasicRepository) => {
                 return (
                   <RepositoryItem
                     key={`${gitOrganizations[orgIndex].name}/${repository.name}`}
