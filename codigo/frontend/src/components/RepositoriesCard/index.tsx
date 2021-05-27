@@ -68,7 +68,7 @@ const RepositoriesCard = ({
 
     return onSelectGit(provider);
   }
-  console.log(gitOrganizations);
+
   return (
     <Flex
       flexDirection="column"

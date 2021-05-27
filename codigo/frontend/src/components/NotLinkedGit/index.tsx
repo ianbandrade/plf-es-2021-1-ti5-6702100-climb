@@ -17,10 +17,10 @@ const NotLinkedGit: React.FC<NotLinkedGitProps> = ({
       width="full"
     >
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
-        {children}
         <Text mt={5} fontSize="2xl" fontWeight="bold">
           {title}
         </Text>
+        {children}
       </Flex>
     </Flex>
   );

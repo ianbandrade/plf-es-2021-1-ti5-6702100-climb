@@ -1,5 +1,5 @@
-import Environment from "./environment";
 import { IconType } from "react-icons/lib";
+import Environment from "./environment";
 
 export module RepoItemProps {
   export interface Items {

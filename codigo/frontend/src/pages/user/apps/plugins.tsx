@@ -7,8 +7,10 @@ import { HeadingActionButton } from "../../../components/SubHeading/ActionButton
 import api from "../../../shared/api/api-client";
 import { Instance } from "../../../shared/interfaces/AccordionProps";
 import { Plugin } from "../../../shared/interfaces/PreConfigCardInterface";
-import { messageFactory, showDefaultFetchError } from "../../../shared/utils/toast-messages";
-
+import {
+  messageFactory,
+  showDefaultFetchError,
+} from "../../../shared/utils/toast-messages";
 
 interface PluginsResponse {
   plugins: Plugin[];
@@ -38,9 +40,13 @@ const Plugins = (): JSX.Element => {
       })
       .catch((e) => {
         if (e?.response?.data) {
-          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
+          messageFactory(e.response.data, "warning").forEach((message, i) =>
+            showToastMessage(message, i)
+          );
         } else
-          showToastMessage(showDefaultFetchError("para carregar os plugins pré-configurados."))
+          showToastMessage(
+            showDefaultFetchError("para carregar os plugins pré-configurados.")
+          );
       });
   }
 
@@ -53,10 +59,14 @@ const Plugins = (): JSX.Element => {
       })
       .catch((e) => {
         if (e?.response?.data) {
-          messageFactory(e.response.data,"warning").forEach((message,i) => showToastMessage(message,i))
+          messageFactory(e.response.data, "warning").forEach((message, i) =>
+            showToastMessage(message, i)
+          );
         } else
-          showToastMessage(showDefaultFetchError("carregar os plugins pré-configurados."))
-      })
+          showToastMessage(
+            showDefaultFetchError("carregar os plugins pré-configurados.")
+          );
+      });
   }
 
   const toggleCardSelect = (index: number): void => {
@@ -71,14 +81,16 @@ const Plugins = (): JSX.Element => {
     setTitle(selectedTitle);
   };
 
-  function showToastMessage(message: UseToastOptions, id = 1){
-    if (!toast.isActive(id))
-      toast(message)
+  function showToastMessage(message: UseToastOptions, id = 1) {
+    if (!toast.isActive(id)) toast(message);
   }
-  
+
   return (
     <Flex flexDirection="column" padding="12" width="full">
-      <HeadingActionButton title="Plugins pré-configurados" />
+      <HeadingActionButton
+        title="Plugins pré-configurados"
+        backRoute="/user/apps"
+      />
       <Modal
         isOpen={flag}
         title={title}

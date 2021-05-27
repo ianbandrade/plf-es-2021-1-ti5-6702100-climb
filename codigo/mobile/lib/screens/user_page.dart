@@ -17,23 +17,10 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  final List<Application> _applications = [
-    new Application(
-      id: '1',
-      branch: 'master',
-      enviroments: [],
-      name: "express-3",
-      provider: "GITHUB",
-      repository: 'dasdasd',
-      repositoryName: 'express',
-      repositoryPath: '/',
-      repositoryOwner: 'JoaoGuiMB',
-      repositoryURL: 'asdasd',
-      userId: '354354',
-    ),
-  ];
+  List<Application> _applications = [];
 
   Future fetchApplicationsData() {
+    List<Application> auxApps = [];
     return ApiClient()
         .get(Uri.http(env['API_HOST'], '/applications'))
         .then((res) {
@@ -42,10 +29,11 @@ class _UserPageState extends State<UserPage> {
       for (var i = 0; i < items.length; i++) {
         final json = items[i];
         Application app = Application.fromJson(json);
-        setState(() {
-          _applications.add(app);
-        });
+        auxApps.add(app);
       }
+      setState(() {
+        _applications = auxApps;
+      });
     });
   }
 
@@ -89,7 +77,11 @@ class _UserPageState extends State<UserPage> {
               children: [
                 Center(
                   child: UserProfile(
-                    name: routeData.gitHubAccount,
+                    name: routeData.gitHubAccount != null
+                        ? routeData.gitHubAccount
+                        : routeData.gitLabAccount != null
+                            ? routeData.gitLabAccount
+                            : routeData.name,
                     image: routeData.image,
                   ),
                 ),

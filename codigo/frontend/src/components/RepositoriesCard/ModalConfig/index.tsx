@@ -161,7 +161,6 @@ const ModalConfig = ({
           showToastMessage(message, i)
         )
       );
-    console.log(newApplication);
   }
 
   function showToastMessage(message: UseToastOptions, id = 1) {

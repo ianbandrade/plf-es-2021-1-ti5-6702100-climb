@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
               });
         }
       } catch (error) {
-        print('error aqui');
+        print(error);
       }
     }
 
