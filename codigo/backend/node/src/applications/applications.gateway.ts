@@ -48,8 +48,8 @@ export class ApplicationsGateway
     @MessageBody() applicationName: string,
   ) {
     (await this.grpc.getAppData(client.id, applicationName)).subscribe(
-      (mockedData) => {
-        client.emit('message', mockedData);
+      (data) => {
+        client.emit('message', data);
       },
     );
     this.map.set(client.id, applicationName);

@@ -38,7 +38,7 @@ const Layout = ({ children }: LayoutProps) => {
         {(isLogged || isLoginPage) && (
           <>
             <Header />
-            <Box as="main" marginY={22}>
+            <Box as="main" marginTop={22}>
               {children}
             </Box>
             <Footer />

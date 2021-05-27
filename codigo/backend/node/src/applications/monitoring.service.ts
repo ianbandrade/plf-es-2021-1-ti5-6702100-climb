@@ -45,7 +45,10 @@ export class MonitoringService {
     const requestConfig = { params: { query } };
 
     return this.httpService
-      .get(this.configService.get<string>('prometheusHost'), requestConfig)
+      .get(
+        `${this.configService.get<string>('prometheusHost')}/api/v1/query`,
+        requestConfig,
+      )
       .toPromise()
       .then((response) => response.data.data.result)
       .catch(() => {

@@ -15,6 +15,7 @@ until nc -z ${DB_HOST} ${DB_PORT}; do
 done
 
 yarn install --silent
+yarn typeorm schema:sync
 yarn typeorm migration:run
 
 exec "$@"

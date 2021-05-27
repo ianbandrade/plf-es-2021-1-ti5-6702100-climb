@@ -18,17 +18,23 @@ const UserHeader = ({ user }: UserHeaderProps) => {
   const [pages, setPages] = useState([
     { url: `${BASE_URL}/profile`, text: "Perfil" },
     { url: `${BASE_URL}/apps`, text: "Aplicações" },
-    { url: `${BASE_URL}/monitor`, text: "Monitoramento" },
   ]);
 
   const index = pages.findIndex((page) => router.pathname.includes(page.url));
 
+  const getRouteURL = (routes: { url: String; text: String }[]) =>
+    routes.map((route) => route.url);
+
   useEffect(() => {
+    const adminRoutes = [
+      { url: `${BASE_URL}/monitor`, text: "Monitor" },
+      { url: `${BASE_URL}/admin`, text: "Administração" },
+    ];
     if (
       user?.role === UserRole.ADMIN &&
-      !pages.some((item) => item.text === "Administração")
+      !pages.some((item) => getRouteURL(adminRoutes).includes(item.url))
     ) {
-      setPages([...pages, { url: `/user/admin`, text: "Administração" }]);
+      setPages([...pages, ...adminRoutes]);
     }
   }, [user]);
 
