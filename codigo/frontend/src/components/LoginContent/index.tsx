@@ -28,9 +28,9 @@ const LoginContent = () => {
               : `${colors.light.Nord6}`
           }
         >
-          Mais além do princípio de prazer, o limite teórico das ruturas de
-          campo interpretativas se acompanha então de inconvenientes não
-          negligenciáveis que delimita o campo de intervenção do analista
+          A plataforma de desenvolvimento que simplifica o processo de
+          configurar, subir, escalar e gerenciar as soluções do dia a dia em
+          ambientes on premisses.
         </Text>
       </Box>
     </Flex>

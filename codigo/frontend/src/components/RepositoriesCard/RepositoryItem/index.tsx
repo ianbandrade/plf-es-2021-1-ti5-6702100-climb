@@ -57,7 +57,6 @@ const RepositoryItem = ({
       await githubService
         .getRepository(organizationName, repository.name)
         .then((res) => {
-          console.log(res);
           setRepo(res);
         })
         .catch((error) => {

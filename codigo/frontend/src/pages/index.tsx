@@ -12,7 +12,11 @@ import Form from "../components/Form";
 import Input from "../components/Input";
 import LoginContent from "../components/LoginContent";
 import { authService } from "../shared/services/authService";
-import { showDefaultFetchError, messageFactory, newBaseToast } from "../shared/utils/toast-messages";
+import {
+  showDefaultFetchError,
+  messageFactory,
+  newBaseToast,
+} from "../shared/utils/toast-messages";
 import { colors } from "../styles/customTheme";
 const LIGHT = "light";
 const DEFAULT_DURATION = 3600;
@@ -25,19 +29,20 @@ const Home = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const createWarningToast = (description: string, id: string | number): UseToastOptions => (
-    {
-      description,
-      id,
-      ...newBaseToast("warning"),
-    }
-  )
+  const createWarningToast = (
+    description: string,
+    id: string | number
+  ): UseToastOptions => ({
+    description,
+    id,
+    ...newBaseToast("warning"),
+  });
 
   const validate = () => {
     isEmailOrPassEmpty();
     isInvalidMail();
-    isInvalidPassword()
-  }
+    isInvalidPassword();
+  };
 
   function handleChangeEmail(e: any) {
     setEmail(e.target.value);
@@ -47,12 +52,11 @@ const Home = () => {
   }
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
-    console.log("Hello")
+
     try {
       validate();
     } catch (e) {
-      return showToastMessage(
-        createWarningToast(e, 1));
+      return showToastMessage(createWarningToast(e, 1));
     }
     const body = { email: email.replace(" ", ""), password: password };
     authService
@@ -69,11 +73,11 @@ const Home = () => {
         }
       })
       .catch((e) => {
-        console.log(e?.response?.data)
         if (e?.response?.data) {
-          messageFactory(e.response.data, 'warning').forEach(message => showToastMessage(message))
-        } else
-          showDefaultFetchError("para efetuar o acesso")
+          messageFactory(e.response.data, "warning").forEach((message) =>
+            showToastMessage(message)
+          );
+        } else showDefaultFetchError("para efetuar o acesso");
       });
   }
 
@@ -82,28 +86,35 @@ const Home = () => {
     toast({ ...data, duration: data.duration || DEFAULT_DURATION });
   };
 
-  const isEmailOrPassEmpty = () => { if (!(email && password)) throw ("Prencha os campos de e-mail e senha") };
-  const isInvalidMail = () => { if (!/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email)) throw ("Email inválido") }
-  const isInvalidPassword = () => { if (password.length < 6) throw ("A senha deve conter 6 ou mais caracteres") };
+  const isEmailOrPassEmpty = () => {
+    if (!(email && password)) throw "Prencha os campos de e-mail e senha";
+  };
+  const isInvalidMail = () => {
+    if (!/[^\.]\w+\.?\w+@\w+\.\w+[\.]{0,2}[\w]+/.test(email))
+      throw "Email inválido";
+  };
+  const isInvalidPassword = () => {
+    if (password.length < 6) throw "A senha deve conter 6 ou mais caracteres";
+  };
 
   const { colorMode } = useColorMode();
 
   const { formColor, textColor, inputBgColor, inputTextColor, labelColor } =
     colorMode === LIGHT
       ? {
-        formColor: colors.dark.Nord2,
-        textColor: colors.light.Nord6,
-        inputTextColor: colors.dark.Nord2,
-        labelColor: colors.light.Nord6,
-        inputBgColor: colors.light.Nord4,
-      }
+          formColor: colors.dark.Nord2,
+          textColor: colors.light.Nord6,
+          inputTextColor: colors.dark.Nord2,
+          labelColor: colors.light.Nord6,
+          inputBgColor: colors.light.Nord4,
+        }
       : {
-        formColor: colors.light.Nord6,
-        textColor: colors.dark.Nord2,
-        inputTextColor: colors.light.Nord6,
-        labelColor: colors.dark.Nord2,
-        inputBgColor: colors.dark.Nord0,
-      };
+          formColor: colors.light.Nord6,
+          textColor: colors.dark.Nord2,
+          inputTextColor: colors.light.Nord6,
+          labelColor: colors.dark.Nord2,
+          inputBgColor: colors.dark.Nord0,
+        };
   return (
     <>
       <Flex
