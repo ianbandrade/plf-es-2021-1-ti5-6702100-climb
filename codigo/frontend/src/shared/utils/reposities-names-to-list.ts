@@ -1,8 +1,4 @@
-import {
-  BasicRepository,
-  RepositoriesList,
-  Repository,
-} from "../interfaces/repositories-organization-list";
+import { BasicRepository, RepositoriesList } from "../interfaces/Repository";
 
 const ropsitoriesNamesToList = (repositories: BasicRepository[]) => {
   const map = new Map<string, BasicRepository[]>();

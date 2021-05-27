@@ -70,13 +70,22 @@ export default () => ({
       },
     },
     plugins: {
-      deploy: {
+      create: {
         req: {
-          routingKey: 'plugins.deploy.req',
+          routingKey: 'plugins.create.req',
         },
         res: {
-          routingKey: 'plugins.deploy.res',
-          queue: 'plugins.deploy.res',
+          routingKey: 'plugins.create.res',
+          queue: 'plugins.create.res',
+        },
+      },
+      delete: {
+        req: {
+          routingKey: 'plugins.delete.req',
+        },
+        res: {
+          routingKey: 'plugins.delete.res',
+          queue: 'plugins.delete.res',
         },
       },
     },

@@ -12,7 +12,10 @@ import {
   ModalOverlay,
   useToast,
 } from "@chakra-ui/react";
-import { Repository } from "../../../shared/interfaces/Repository";
+import {
+  BasicRepository,
+  Repository,
+} from "../../../shared/interfaces/Repository";
 import { colors } from "../../../styles/customTheme";
 import { GoRepo } from "react-icons/go";
 import ModalConfig from "../ModalConfig";
@@ -22,7 +25,7 @@ import { getMessages } from "../../../shared/utils/toast-messages";
 
 interface RepositoryItem {
   organizationName: string;
-  repository: Repository;
+  repository: BasicRepository;
   provider: string;
 }
 
@@ -50,7 +53,7 @@ const RepositoryItem = ({
   const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [repo, setRepo] = useState<Repository>(repository);
+  const [repo, setRepo] = useState<Repository>({} as Repository);
 
   async function handleClickAddRepo() {
     if (provider === "github") {
@@ -99,7 +102,7 @@ const RepositoryItem = ({
         <Flex justifyContent="space-between">
           <Icon as={GoRepo} color={iconColor} boxSize="6" mr="4" />
           <Text fontSize="md" alignSelf="center" color={textColor}>
-            {`${repo.name}`}
+            {`${repository.name}`}
           </Text>
         </Flex>
         <Flex>

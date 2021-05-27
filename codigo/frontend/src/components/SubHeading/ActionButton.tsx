@@ -11,7 +11,7 @@ import { colors } from "../../styles/customTheme";
 
 interface HeadingActionButtonProps {
   title: string;
-  app_link: string;
+  app_link?: string;
   backRoute: string;
 }
 
@@ -79,7 +79,7 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
           </Button>
         )}
         <Heading size="md">{title}</Heading>
-        {app_link !== undefined ? (
+        {app_link ? (
           <Flex ml={5} mb={1}>
             <Link href={app_link}>
               <Icon

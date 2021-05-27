@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -24,6 +25,8 @@ import { CreatePluginDto } from './dto/create-plugin.dto';
 import { Plugin } from './entities/plugin.entity';
 import * as dotenv from 'dotenv';
 import configuration from 'src/configuration/configuration';
+import { ApplicationRepository } from 'src/applications/entities/application.repository';
+import { ResInstanceDeleteDto } from './dto/instances/res-delete.dto';
 
 dotenv.config();
 
@@ -35,6 +38,7 @@ export class PluginsService {
   constructor(
     private instanceRepository: InstanceRepository,
     private pluginRepository: PluginRepository,
+    private applicationRepository: ApplicationRepository,
     private amqpConnection: AmqpConnection,
   ) {}
 
@@ -93,6 +97,16 @@ export class PluginsService {
     const plugin = await this.pluginRepository.findOne(pluginId);
     if (!plugin) throw new NotFoundException('Plugin não encontrado');
 
+    const nameAlreadyUsed =
+      !!(await this.instanceRepository.findOne({
+        where: { name: createIntanceDto.name },
+      })) ||
+      !!(await this.applicationRepository.findOne({
+        where: { name: createIntanceDto.name },
+      }));
+
+    if (nameAlreadyUsed) throw new ConflictException('Nome já utilizado');
+
     const instance = await this.instanceRepository.createInstance(
       plugin,
       createIntanceDto,
@@ -103,22 +117,33 @@ export class PluginsService {
   }
 
   async deleteInstance(instanceId: string, user: User): Promise<boolean> {
-    const deleteResult = await this.instanceRepository.delete({
-      id: instanceId,
-      userId: user.id,
-    });
-    return deleteResult.affected > 0;
+    const instance = await this.instanceRepository.findOne(instanceId);
+
+    if (!instance) throw new NotFoundException('Instância não encontrada');
+
+    if (instance.userId !== user.id)
+      throw new ForbiddenException('Você não tem acesso à essa instância');
+
+    const payload: ReqInstanceDto = {
+      id: instance.id,
+      plugin: {
+        name: instance.name,
+        chart: instance.plugin.chart,
+      },
+    };
+    this.amqpConnection.publish('', plugins.delete.req.routingKey, payload);
+    return true;
   }
 
   sendNewInstance(instance: Instance, plugin: Plugin): void {
     const payload: ReqInstanceDto = {
       id: instance.id,
       plugin: {
-        name: plugin.name,
-        chart: plugin.dockerImage,
+        name: instance.name,
+        chart: plugin.chart,
       },
     };
-    this.amqpConnection.publish('', plugins.deploy.req.routingKey, payload);
+    this.amqpConnection.publish('', plugins.create.req.routingKey, payload);
   }
 
   async createPlugin(bcreatePluginnDto: CreatePluginDto): Promise<BasicPlugin> {
@@ -133,13 +158,14 @@ export class PluginsService {
 
   @RabbitSubscribe({
     exchange: defaultExchange,
-    routingKey: plugins.deploy.res.routingKey,
-    queue: plugins.deploy.res.queue,
+    routingKey: plugins.create.res.routingKey,
+    queue: plugins.create.res.queue,
   })
   async deployResponse({
     id,
     success,
     credentials,
+    url,
   }: ResInstanceDto): Promise<Instance> {
     try {
       const instance = await this.instanceRepository.findOne(id);
@@ -149,11 +175,25 @@ export class PluginsService {
         : DeployStatusEnum.FAIL;
 
       instance.credentials = this.mapCredentials(credentials, instance.id);
+      instance.url = url;
 
       instance.save();
       return instance;
     } catch (e) {
       throw new InternalServerErrorException(e);
+    }
+  }
+
+  @RabbitSubscribe({
+    exchange: defaultExchange,
+    routingKey: plugins.delete.res.routingKey,
+    queue: plugins.delete.res.queue,
+  })
+  async deleteResponse({ id, success }: ResInstanceDeleteDto): Promise<void> {
+    if (success) {
+      await this.instanceRepository.delete({
+        id,
+      });
     }
   }
 

@@ -82,7 +82,7 @@ const ModalConfig = ({
 
   const [keyInput, setKeyInput] = useState<string>("");
   const [valueInput, setValueInput] = useState<string>("");
-  const [envs, setEnvs] = useState<Environment[] | []>([]);
+  const [envs, setEnvs] = useState<Environment[]>([]);
   const [appNameInput, setAppNameInput] = useState("");
   //Fix deafult branch later
   const [branchNameSelect, setBranchNameSelect] = useState(

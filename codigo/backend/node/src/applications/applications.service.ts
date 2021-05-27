@@ -1,5 +1,6 @@
 import { AmqpConnection, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import {
+  ConflictException,
   ForbiddenException,
   HttpService,
   Injectable,
@@ -9,6 +10,7 @@ import {
 import * as dotenv from 'dotenv';
 import * as publicIp from 'public-ip';
 import configuration from 'src/configuration/configuration';
+import { InstanceRepository } from 'src/plugins/entities/instance/instance.repository';
 import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { RepositoryData } from 'src/shared/dto/repository-data';
 import { ReturList } from 'src/shared/dto/return-list.dto';
@@ -64,6 +66,7 @@ const {
 export class ApplicationsService {
   constructor(
     private applicationRepository: ApplicationRepository,
+    private instanceRepository: InstanceRepository,
     private deploysRepository: DeploysRepository,
     private activityRepository: ActivityRepository,
     private userService: UsersService,
@@ -75,6 +78,16 @@ export class ApplicationsService {
     createApplicationDto: CreateApplicationDto,
     user: User,
   ): Promise<Application> {
+    const nameAlreadyUsed =
+      !!(await this.instanceRepository.findOne({
+        where: { name: createApplicationDto.name },
+      })) ||
+      !!(await this.applicationRepository.findOne({
+        where: { name: createApplicationDto.name },
+      }));
+
+    if (nameAlreadyUsed) throw new ConflictException('Nome já utilizado');
+
     const {
       repositoryOwner,
       repositoryName,
@@ -243,13 +256,15 @@ export class ApplicationsService {
   }
 
   async findOnebyName(name: string, user: User): Promise<GetApplication> {
-    const application = await this.applicationRepository.findOne({
+    const { id } = await this.applicationRepository.findOne({
       where: { name },
       cache: {
-        id: applicationCacheId.findApplicationById(name),
+        id: applicationCacheId.findApplicationByName(name),
         milliseconds: 30000,
       },
     });
+    const application = await this.findCompleteApplication(id, user);
+
     this.verifyApplicationFetch(application, user);
 
     return this.getPubicApplicationFields(application);
@@ -259,6 +274,7 @@ export class ApplicationsService {
     const {
       id,
       name,
+      url,
       userId,
       provider,
       repositoryId,
@@ -273,6 +289,7 @@ export class ApplicationsService {
     return {
       id,
       name,
+      url,
       userId,
       provider,
       repositoryId,
@@ -313,6 +330,11 @@ export class ApplicationsService {
 
     try {
       await application.save();
+      await getConnection().queryResultCache.remove([
+        applicationCacheId.findAllApplications(),
+        applicationCacheId.findApplicationById(application.id),
+        applicationCacheId.findApplicationByName(application.name),
+      ]);
       const {
         repositoryOwner,
         repositoryName,
@@ -495,6 +517,11 @@ export class ApplicationsService {
     deploy.save();
 
     if (updateMessage.success) {
+      const app = await this.applicationRepository.findOne(
+        deploy.applicationId,
+      );
+      app.url = updateMessage.url;
+      await app.save();
       this.updateLastCreatingActivity(
         deploy.applicationId,
         ActivityType.SUCCESS,
