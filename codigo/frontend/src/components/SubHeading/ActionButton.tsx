@@ -82,7 +82,13 @@ export const HeadingActionButton: React.FC<HeadingActionButtonProps> = ({
         {app_link ? (
           <Flex ml={5} mb={1}>
             <Link href={app_link} passHref={true}>
-              <Button rightIcon={<FiExternalLink />} variant="outline">
+              <Button
+                rightIcon={<FiExternalLink />}
+                color={colors.light.Nord6}
+                _hover={{ bg: "#A3BE8C", boxShadow: "xl", color: "#FFFF" }}
+                backgroundColor={colors.aurora.Nord14}
+                variant="ghost"
+              >
                 Acessar
               </Button>
             </Link>
