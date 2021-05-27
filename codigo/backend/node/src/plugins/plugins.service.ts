@@ -131,7 +131,7 @@ export class PluginsService {
         chart: instance.plugin.chart,
       },
     };
-    this.amqpConnection.publish('', plugins.delete.req.routingKey, payload);
+    this.amqpConnection.publish(defaultExchange, plugins.delete.req.routingKey, payload);
     return true;
   }
 
@@ -143,7 +143,7 @@ export class PluginsService {
         chart: plugin.chart,
       },
     };
-    this.amqpConnection.publish('', plugins.create.req.routingKey, payload);
+    this.amqpConnection.publish(defaultExchange, plugins.create.req.routingKey, payload);
   }
 
   async createPlugin(bcreatePluginnDto: CreatePluginDto): Promise<BasicPlugin> {

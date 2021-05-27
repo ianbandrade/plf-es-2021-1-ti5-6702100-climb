@@ -1,8 +1,8 @@
 package config
 
 import (
-  "climb/apps-deployer/utils"
-  "fmt"
+	"climb/apps-worker/utils"
+	"fmt"
 )
 
 var RegistryAddress = utils.RequiredEnv("REGISTRY_ADDRESS")

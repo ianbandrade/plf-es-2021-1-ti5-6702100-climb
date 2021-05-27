@@ -1,16 +1,16 @@
 package main
 
 import (
-	"climb/apps-deployer/config"
-	"climb/apps-deployer/infrastructure/message"
-	"climb/apps-deployer/services/build"
-	"climb/apps-deployer/services/clone"
-	"climb/apps-deployer/services/deploy"
-	"climb/apps-deployer/services/destroy"
-	"climb/apps-deployer/services/extractPort"
-	"climb/apps-deployer/services/push"
-	"climb/apps-deployer/structs"
-	"climb/apps-deployer/utils"
+	"climb/apps-worker/config"
+	"climb/apps-worker/infrastructure/message"
+	"climb/apps-worker/services/build"
+	"climb/apps-worker/services/clone"
+	"climb/apps-worker/services/deploy"
+	"climb/apps-worker/services/destroy"
+	"climb/apps-worker/services/extractPort"
+	"climb/apps-worker/services/push"
+	"climb/apps-worker/structs"
+	"climb/apps-worker/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -24,7 +24,7 @@ func main() {
 	go func() {
 		if err := message.Consumer("apps_deploy",
 			[]string{"apps.create.req", "apps.update.req"}, func(msg amqp.Delivery) {
-				messageId, err := func() (messageId string, err error) {
+				messageId, appName, err := func() (messageId, appName string, err error) {
 					var deployRequest structs.DeployRequest
 
 					if err = json.Unmarshal(msg.Body, &deployRequest); err != nil {
@@ -32,8 +32,10 @@ func main() {
 						return
 					}
 
-					messageId = deployRequest.Id
 					app := &deployRequest.Application
+					messageId = deployRequest.Id
+					appName = app.Name
+
 					image := fmt.Sprintf("%s:%s/%s:%s",
 						config.RegistryAddress, config.RegistryPort, app.Name, deployRequest.Commit)
 
@@ -42,7 +44,7 @@ func main() {
 
 						if err != nil {
 							utils.LogError(err, "failed to create workspace directory")
-							return messageId, err
+							return messageId, appName, err
 						}
 
 						defer os.RemoveAll(directory)
@@ -56,17 +58,17 @@ func main() {
 							workdir,
 						); err != nil {
 							err = &structs.AppError{Err: err, Message: "Falha ao clonar o repositório"}
-							return messageId, err
+							return messageId, appName, err
 						}
 
 						if err = build.Build(image, workdir); err != nil {
 							err = &structs.AppError{Err: err, Message: "Falha ao construir a aplicação"}
-							return messageId, err
+							return messageId, appName, err
 						}
 
 						if err = push.Push(image); err != nil {
 							err = &structs.AppError{Err: err, Message: "Falha ao armazenar a aplicação"}
-							return messageId, err
+							return messageId, appName, err
 						}
 					}
 
@@ -90,7 +92,7 @@ func main() {
 					return
 				}()
 
-				if response := getResponse(messageId, err); response != nil {
+				if response := getResponse(messageId, appName, err); response != nil {
 					routingKey := "apps.create.res"
 					if msg.RoutingKey == "apps.update.req" {
 						routingKey = "apps.update.res"
@@ -108,26 +110,27 @@ func main() {
 	go func() {
 		if err := message.Consumer("apps_destroy",
 			[]string{"apps.delete.req"}, func(msg amqp.Delivery) {
-				messageId, err := func() (messageId string, err error) {
+				messageId, appName, err := func() (messageId, appName string, err error) {
 					var destroyRequest structs.DestroyRequest
 
 					if err = json.Unmarshal(msg.Body, &destroyRequest); err != nil {
 						utils.LogError(err, "failed to parse Destroy Request")
-						return messageId, err
+						return messageId, appName, err
 					}
 
-					messageId = destroyRequest.Id
 					app := &destroyRequest.Application
+					messageId = destroyRequest.Id
+					appName = app.Name
 
 					if err = destroy.Destroy(app.Name); err != nil {
 						err = &structs.AppError{Err: err, Message: "Falha ao remover a aplicação"}
-						return messageId, err
+						return messageId, appName, err
 					}
 
 					return
 				}()
 
-				if response := getResponse(messageId, err); response != nil {
+				if response := getResponse(messageId, appName, err); response != nil {
 					routingKey := "apps.delete.res"
 
 					if err = message.Producer(routingKey, "application/json", *response); err != nil {
@@ -143,9 +146,13 @@ func main() {
 	select {}
 }
 
-func getResponse(messageId string, err error) *[]byte {
+func getResponse(messageId, appName string, err error) *[]byte {
+	host := utils.RequiredEnv("HOST")
+	url := fmt.Sprintf("https://%s.%s", appName, host)
+
 	response := structs.Response{
 		Id:      messageId,
+		URL:     url,
 		Error:   nil,
 		Success: true,
 	}

@@ -43,12 +43,11 @@ services:
     ports:
       - 15672:15672
 
-  apps-worker:
+  apps_worker:
     build: ./backend/golang/apps-worker
     volumes:
       - ./backend/golang/apps-worker/src:/go/src/app
-    ports:
-      - 8080:80
+      - ./kubernetes:/go/src/app/kubernetes
     environment:
       - HOST=${HOST:-localhost}
       - DOCKER_ADDRESS=${DOCKER_ADDRESS:-localhost}
@@ -59,10 +58,23 @@ services:
     depends_on:
       - rabbitmq
 
+  plugins_worker:
+    build: ./backend/golang/plugins-worker
+    volumes:
+      - ./backend/golang/plugins-worker/src:/go/src/app
+      - ./kubernetes:/go/src/app/kubernetes
+    environment:
+      - HOST=${HOST:-localhost}
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-rabbitmq}
+    depends_on:
+      - rabbitmq
+
   front_end:
     build: ./frontend
     volumes:
       - ./frontend:/home/node/app
+    environment:
+      - NEXT_PUBLIC_API_HOST=climb_node:${PORT:-3333}
     ports:
       - 3000:3000
 

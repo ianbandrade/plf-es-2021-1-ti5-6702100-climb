@@ -1,9 +1,9 @@
 package deploy
 
 import (
-	"climb/apps-deployer/services/deploy/specs"
-	"climb/apps-deployer/structs"
-	"climb/apps-deployer/utils"
+	"climb/apps-worker/services/deploy/specs"
+	"climb/apps-worker/structs"
+	"climb/apps-worker/utils"
 	"context"
 	"fmt"
 	"path/filepath"
@@ -84,12 +84,12 @@ func Deploy(name, image string, port nat.Port, envs []structs.Env) (err error) {
 		ctx, ingressRouteSpec, metaV1.CreateOptions{})
 
 	if err != nil {
-		errorMessage := fmt.Sprintf("failed to create Traefik Ingress Route %s", name)
+		errorMessage := fmt.Sprintf("failed to create Traefik IngressRoute %s", name)
 		utils.LogError(err, errorMessage)
 		return
 	}
 
-	fmt.Printf("Created Ingress Route %s\n", ingressRoute.ObjectMeta.Name)
+	fmt.Printf("Created IngressRoute %s\n", ingressRoute.ObjectMeta.Name)
 
 	return
 }

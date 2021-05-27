@@ -1,8 +1,7 @@
 {
-  "name": "nextchakra-starter",
+  "name": "climb-front",
   "version": "0.1.0",
   "private": true,
-  "author": "sozonome",
   "scripts": {
     "dev": "NODE_ENV='development' node server.js",
     "build": "next build",

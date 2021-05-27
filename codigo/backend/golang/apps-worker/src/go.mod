@@ -1,4 +1,4 @@
-module climb/apps-deployer
+module climb/apps-worker
 
 go 1.16
 

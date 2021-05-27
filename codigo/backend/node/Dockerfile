@@ -12,7 +12,7 @@ RUN mkdir $WORK
 
 WORKDIR $WORK
 
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 RUN yarn -s
 
