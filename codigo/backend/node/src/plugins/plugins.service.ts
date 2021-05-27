@@ -175,21 +175,17 @@ export class PluginsService {
     success,
     credentials,
     url,
-  }: ResInstanceDto): Promise<Instance> {
-    try {
-      const instance = await this.instanceRepository.findOne(id);
+  }: ResInstanceDto): Promise<void> {
+    const instance = await this.instanceRepository.findOne(id);
 
+    if (instance) {
       instance.status = success
         ? DeployStatusEnum.SUCCESS
         : DeployStatusEnum.FAIL;
-
       instance.credentials = await this.mapCredentials(credentials, instance);
       instance.url = url;
 
-      instance.save();
-      return instance;
-    } catch (e) {
-      throw new InternalServerErrorException(e);
+      await instance.save();
     }
   }
 
