@@ -220,9 +220,9 @@ O projeto terá dois tipos de front-end, web e móvel nativo, sendo que o móvel
 
 ### Diagrama de Classes
 
-![Diagrama de classes](imagens/diagrama_de_classe.png 'Diagrama de classes')
+![Diagrama de classes](imagens/diagrama_de_classe_final.svg 'Diagrama de classes')
 
-**Figura 2 – Diagrama de classes (exemplo). Fonte: Autores**
+**Figura 2 – Diagrama de classes. Fonte: Autores**
 
 ### Diagrama de componentes
 
