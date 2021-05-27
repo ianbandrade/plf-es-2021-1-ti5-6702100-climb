@@ -93,11 +93,11 @@ const AccordionInstance: React.FC<AccordionProps> = ({
 
     api
       .delete(`/plugins/instances/${current_instance_id}`)
-      .then(() => {
+      .then(({ data }) => {
         closeModal(false);
         toast({
           title: "Sucesso!",
-          description: `A aplicação ${appName} foi removida da sua lista de aplicações.`,
+          description: data.message,
           status: "success",
           duration: 3000,
           position: "bottom-left",

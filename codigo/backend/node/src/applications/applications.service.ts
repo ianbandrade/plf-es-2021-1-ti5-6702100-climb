@@ -12,6 +12,7 @@ import * as publicIp from 'public-ip';
 import configuration from 'src/configuration/configuration';
 import { InstanceRepository } from 'src/plugins/entities/instance/instance.repository';
 import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
+import { Message } from 'src/shared/dto/message.dto';
 import { RepositoryData } from 'src/shared/dto/repository-data';
 import { ReturList } from 'src/shared/dto/return-list.dto';
 import {
@@ -394,12 +395,14 @@ export class ApplicationsService {
     return deployReq;
   }
 
-  async remove(id: string, user: User): Promise<string> {
+  async remove(id: string, user: User): Promise<Message> {
     const application = await this.findCompleteApplication(id, user);
 
     try {
       this.createDeleteDeploy(application);
-      return 'A applicação será deletada';
+      return {
+        message: `A applicação ${application.name} será deletada em breve`,
+      };
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
