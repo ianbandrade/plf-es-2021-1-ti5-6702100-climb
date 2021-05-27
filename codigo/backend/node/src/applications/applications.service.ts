@@ -11,7 +11,6 @@ import * as dotenv from 'dotenv';
 import * as publicIp from 'public-ip';
 import configuration from 'src/configuration/configuration';
 import { InstanceRepository } from 'src/plugins/entities/instance/instance.repository';
-import { PluginRepository } from 'src/plugins/entities/plugin.repository';
 import { GithubCommit, GitlabCommit } from 'src/shared/dto/commit-response';
 import { RepositoryData } from 'src/shared/dto/repository-data';
 import { ReturList } from 'src/shared/dto/return-list.dto';
@@ -273,6 +272,7 @@ export class ApplicationsService {
     const {
       id,
       name,
+      url,
       userId,
       provider,
       repositoryId,
@@ -287,6 +287,7 @@ export class ApplicationsService {
     return {
       id,
       name,
+      url,
       userId,
       provider,
       repositoryId,
@@ -327,6 +328,11 @@ export class ApplicationsService {
 
     try {
       await application.save();
+      getConnection().queryResultCache.remove([
+        applicationCacheId.findAllApplications(),
+        applicationCacheId.findApplicationById(application.id),
+        applicationCacheId.findApplicationByName(application.name),
+      ]);
       const {
         repositoryOwner,
         repositoryName,
@@ -509,6 +515,11 @@ export class ApplicationsService {
     deploy.save();
 
     if (updateMessage.success) {
+      const app = await this.applicationRepository.findOne(
+        deploy.applicationId,
+      );
+      app.url = updateMessage.url;
+      await app.save();
       this.updateLastCreatingActivity(
         deploy.applicationId,
         ActivityType.SUCCESS,

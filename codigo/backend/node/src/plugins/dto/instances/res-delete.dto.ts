@@ -1,6 +1,5 @@
-export class ResCreateDto {
+export class ResInstanceDeleteDto {
   id: string;
   success: boolean;
   error: string | null;
-  url: string;
 }

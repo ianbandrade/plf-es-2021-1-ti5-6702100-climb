@@ -23,6 +23,9 @@ export class Application extends BaseEntity {
   @Column({ nullable: false, unique: true })
   name: string;
 
+  @Column({ nullable: true, unique: true })
+  url: string;
+
   @Column({ nullable: false })
   provider: ProvidersEnum;
 
@@ -86,6 +89,7 @@ export class Application extends BaseEntity {
     return [
       'id',
       'name',
+      'url',
       'provider',
       'repositoryId',
       'repositoryPath',

@@ -20,6 +20,9 @@ export class Instance extends BaseEntity {
   @Column({ nullable: false })
   name: string;
 
+  @Column({ nullable: true })
+  url: string;
+
   @ManyToOne(() => Plugin, (plugin) => plugin.instances, {
     onDelete: 'CASCADE',
     eager: true,
