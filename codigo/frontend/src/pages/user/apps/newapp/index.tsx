@@ -51,7 +51,6 @@ const NewApp = () => {
       await gitlabService
         .getRepositories()
         .then((res) => {
-          console.log(res);
           setProviders((prevState) => {
             prevState.gitlab = res.organizations;
             return prevState;

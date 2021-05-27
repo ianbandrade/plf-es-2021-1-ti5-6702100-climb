@@ -20,7 +20,6 @@ const Layout = ({ children }: LayoutProps) => {
   const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
-    console.log("dokaok");
     if (isLoginPage) {
       authService
         .isAuthenticated(router, { success: "/user/profile" }, setUser)
@@ -30,7 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
         .isAuthenticated(router, { useDefault: true }, setUser)
         .then(setIsLogged);
     }
-  }, []);
+  }, [isLoginPage]);
 
   return (
     <Box margin="0 auto" transition="0.5s ease-out">

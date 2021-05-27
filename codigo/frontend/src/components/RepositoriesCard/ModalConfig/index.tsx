@@ -36,7 +36,10 @@ import { colors } from "../../../styles/customTheme";
 import Environment from "../../../shared/interfaces/environment";
 import { CreateApplication } from "../../../shared/interfaces/create-application";
 import apiClient from "../../../shared/api/api-client";
-import { messageFactory, newBaseToast } from "../../../shared/utils/toast-messages";
+import {
+  messageFactory,
+  newBaseToast,
+} from "../../../shared/utils/toast-messages";
 import { Flex } from "@chakra-ui/layout";
 
 interface ModalConfigProps {
@@ -63,17 +66,17 @@ const ModalConfig = ({
   const { addonInputColor, inputBgColor, inputColor, envButtonColor } =
     colorMode === LIGHT
       ? {
-        addonInputColor: colors.light.Nord5,
-        inputBgColor: colors.dark.Nord0,
-        inputColor: colors.light.Nord6,
-        envButtonColor: colors.light.Nord6,
-      }
+          addonInputColor: colors.light.Nord5,
+          inputBgColor: colors.dark.Nord0,
+          inputColor: colors.light.Nord6,
+          envButtonColor: colors.light.Nord6,
+        }
       : {
-        addonInputColor: colors.dark.Nord2,
-        inputBgColor: colors.light.Nord4,
-        inputColor: colors.dark.Nord2,
-        envButtonColor: colors.dark.Nord2,
-      };
+          addonInputColor: colors.dark.Nord2,
+          inputBgColor: colors.light.Nord4,
+          inputColor: colors.dark.Nord2,
+          envButtonColor: colors.dark.Nord2,
+        };
 
   const toast = useToast();
 
@@ -131,13 +134,12 @@ const ModalConfig = ({
     };
 
     try {
-      validateFields(newApplication)
+      validateFields(newApplication);
     } catch (e) {
-      return showToastMessage(
-        {
-          ...newBaseToast("warning"),
-          description: e
-        })
+      return showToastMessage({
+        ...newBaseToast("warning"),
+        description: e,
+      });
     }
 
     apiClient
@@ -155,17 +157,17 @@ const ModalConfig = ({
         router.push("/user/apps");
       })
       .catch((e) =>
-        messageFactory(e.response.data, 'warning').forEach((message, i) => showToastMessage(message, i))
-      )
-    console.log(newApplication);
+        messageFactory(e.response.data, "warning").forEach((message, i) =>
+          showToastMessage(message, i)
+        )
+      );
   }
 
-  function showToastMessage(message: UseToastOptions, id = 1){
-    if (!toast.isActive(id))
-      toast(message)
+  function showToastMessage(message: UseToastOptions, id = 1) {
+    if (!toast.isActive(id)) toast(message);
   }
 
-  function clearAllFields(){
+  function clearAllFields() {
     setAppNameInput("");
     setEnvs([]);
     setPathInput("");
@@ -178,11 +180,11 @@ const ModalConfig = ({
   function validateFields(newApplication: CreateApplication) {
     const { name, repositoryPath } = newApplication;
     if (name.length < 1) {
-      throw "O nome da aplicação não pode ser vazio"
+      throw "O nome da aplicação não pode ser vazio";
     } else if (!validateNameFieldFormat(name)) {
-      throw "O nome da aplicação possui formato inválido, pode conter apenas letras minúsculas ou números"
+      throw "O nome da aplicação possui formato inválido, pode conter apenas letras minúsculas ou números";
     } else if (repositoryPath.length < 1) {
-      throw "O caminho não pode ser vazio"
+      throw "O caminho não pode ser vazio";
     }
   }
 
@@ -237,16 +239,16 @@ const ModalConfig = ({
                 >
                   {repository.branchs
                     ? repository.branchs.map(
-                      (branch: string, index: number) => (
-                        <option
-                          value={branch}
-                          key={index}
-                          style={{ color: inputBgColor }}
-                        >
-                          {branch}
-                        </option>
+                        (branch: string, index: number) => (
+                          <option
+                            value={branch}
+                            key={index}
+                            style={{ color: inputBgColor }}
+                          >
+                            {branch}
+                          </option>
+                        )
                       )
-                    )
                     : ""}
                 </Select>
               </Flex>

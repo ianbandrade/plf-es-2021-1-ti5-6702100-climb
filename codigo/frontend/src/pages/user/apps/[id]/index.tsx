@@ -58,7 +58,6 @@ const ConfigApp = () => {
       apiClient
         .get<Activities>(`applications/${appData.id}/activities`)
         .then((res) => {
-          console.log(res.data);
           setActivities(
             res.data.activities.map((item) => ({
               ...item,

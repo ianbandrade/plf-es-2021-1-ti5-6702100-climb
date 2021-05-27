@@ -46,13 +46,12 @@ const GitButtons = ({ user, setUser, baseUrl }: GitButtonsProps) => {
   const toggleIntegrationButton = async (): Promise<void> => {
     if (code) {
       const body = { code, redirectUrl };
-
       await apiClient
         .post(`/version-control/${state}`, body)
         .then((res) => {
           authService.me().then((me) => {
-            if (user) {
-              setUser(user);
+            if (me) {
+              setUser(me);
             } else {
               router.push(authService.LOGIN_PATH);
             }
