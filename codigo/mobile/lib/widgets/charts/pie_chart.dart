@@ -18,7 +18,6 @@ class SimplePieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     bool hasData = true;
     seriesList.last.data.forEach((element) {
-      print(element.quantity);
       if (int.parse(element.quantity) == 0) {
         hasData = false;
       }

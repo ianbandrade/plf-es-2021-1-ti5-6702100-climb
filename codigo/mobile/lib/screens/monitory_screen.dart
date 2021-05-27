@@ -18,7 +18,7 @@ class MonitoryPage extends StatefulWidget {
 
 class _MonitoryPageState extends State<MonitoryPage> {
   int connectionsNumber = 0;
-  MonitoryApplication routeData;
+  String appName;
   Map<String, String> responseStatusCode = {
     "2XX": "0",
     "4XX": "0",
@@ -51,7 +51,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
       // Connect to websocket
       socket.connect();
-      socket.emit('message', routeData.appName);
+      socket.emit('message', appName);
       // Handle socket events
       socket.on('connect', (_) => print('connect: ${socket.id}'));
       socket.on('message', (data) => getAppStaticsData(data));
@@ -73,7 +73,10 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    routeData = ModalRoute.of(context).settings.arguments;
+    MonitoryApplication routeData = ModalRoute.of(context).settings.arguments;
+    setState(() {
+      appName = routeData.appName;
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +101,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
           Column(
             children: [
               Text(
-                routeData.appName,
+                appName,
                 style: Theme.of(context).textTheme.headline3,
               ),
               GaugeChart(
