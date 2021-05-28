@@ -81,6 +81,7 @@ services:
       - ./frontend:/home/node/app
     environment:
       - NEXT_PUBLIC_API_HOST=climb_node:${PORT:-3333}
+      - NEXT_PUBLIC_EXTERNAL_API_HOST=localhost:${PORT:-3333}
       - NEXT_PUBLIC_HOST=${NEXT_PUBLIC_HOST}
       - NEXT_PUBLIC_DASHBOARD_HOST=${NEXT_PUBLIC_DASHBOARD_HOST}
       - NEXT_PUBLIC_GIT_REDIRECT_URL=http://${NEXT_PUBLIC_HOST}/user/profile
