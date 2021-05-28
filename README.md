@@ -121,7 +121,7 @@ Ao final da execução, terá criado os containers expostos nas seguintes portas
 
 Para acessar a aplicação basta navegar até `localhost:3000` e acessar utilizando as credenciais:
 
-```
+```txt
 e-mail: admin@example.com
 senha: password
 ```
@@ -130,9 +130,65 @@ Para acessar a documentação da api-node é possivél navegar até `localhost:3
 
 ## Histórico de versões
 
-- 0.1.1
-  - CHANGE: Atualização das documentacoes. Código permaneceu inalterado.
-- 0.1.0
-  - Implementação da funcionalidade X pertencente ao processo P.
 - 0.0.1
-  - Trabalhando na modelagem do processo de negócios.
+  - Definição do Tema e Tecnologias
+- 0.0.2
+  - Criação de PoC's
+- 0.0.3
+  - Definição de identidade
+- 0.0.4
+  - Montar apresentação de slides
+- 0.1.0
+  - Montar apresentação de slides
+- 0.1.1
+  - Termo de Abertura de Projeto
+- 0.1.2
+  - Estrutura analítica do projeto (EAP)
+- 0.2.0
+  - Tela de Login
+- 0.2.1
+  - Autenticação
+- 0.2.2
+  - Tabela de usuários
+- 0.2.3
+  - Tela de Integração com GitHub/GitLab
+- 0.2.4
+  - Webhook com GitHub/GitLab
+- 0.2.5
+  - Cadastro de usuários por arquivo
+- 0.2.6
+  - Protótipos de interfaces
+- 0.2.7
+  - Diagrama de Classes
+- 0.2.8
+  - Diagrama de Componentes
+- 0.2.9
+  - Diagrama de Visão Geral e Documento de arquitetura
+- 0.3.0
+  - Tela de Aplicações
+- 0.3.1
+  - Tela de Plugins
+- 0.3.2
+  - Build com Pack
+- 0.3.3
+  - Build com Docker Build
+- 0.4.0
+  - Deploy por Webhook
+- 0.4.1
+  - Configurar Implantação
+- 0.4.2
+  - Listagem de Rollbacks
+- 0.4.3
+  - Iniciar Projeto Mobile
+- 0.4.4
+  - Tela de Aplicações
+- 0.5.0
+  - Avaliação da Arquitetura
+- 0.5.1
+  - Tela de Aplicações
+- 0.5.2
+  - Visualização de informações mobile
+- 0.5.3
+  - Monitoramento Prometheus + Grafana
+- 1.0.0
+  - Deploy da versão inicial

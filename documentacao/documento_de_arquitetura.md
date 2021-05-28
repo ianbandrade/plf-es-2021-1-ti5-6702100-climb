@@ -127,12 +127,12 @@ Os objetivos específicos são:
 | RF005  | Implantação da aplicação do usuário por meio de Webhook                | Essencial      |
 | RF006  | Lista de atividades com Rollback                                       | Essencial      |
 | RF007  | Diferenciar níveis de acesso de administrador e usuário                | Essencial      |
-| RF009  | Visualização de informações (Mobile)                                   | Essencial      |
-| RF010  | Monitoramento (Prometheus + Grafana)                                   | Desejável      |
-| RF011  | Construção da imagem de container com o Buildpacks Pack                | Desejável      |
-| RF012  | Integração com GitLab                                                  | Opcional       |
-| RF013  | Disponibilizar aplicativos pré configurado por meio de template        | Opcional       |
-| RF014  | Cadastro por meio de carga arquivo ou por meio do acesso a organização | Opcional       |
+| RF008  | Visualização de informações (Mobile)                                   | Essencial      |
+| RF009  | Monitoramento (Prometheus + Grafana)                                   | Desejável      |
+| RF010  | Construção da imagem de container com o Buildpacks Pack                | Desejável      |
+| RF011  | Integração com GitLab                                                  | Opcional       |
+| RF012  | Disponibilizar aplicativos pré configurado por meio de template        | Opcional       |
+| RF013  | Cadastro por meio de carga arquivo ou por meio do acesso a organização | Opcional       |
 
 ## 2.2. Requisitos Não-Funcionais
 
@@ -152,18 +152,17 @@ Os objetivos específicos são:
 4. O software back-end de comunicação com serviços de containers deve ser desenvolvido em GoLang;
 5. A comunicação sem necessidade de ser em tempo real entre front-end e back-end deve seguir o padrão RESTful;
 6. A comunicação com necessidade de ser em tempo real entre front-end e back-end deve utilizar o WebSocket;
-7. A comunicação síncrona entre os back-ends devem utilizar o framework gRPC;
-8. A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
-9. Para a persistência de dados deve ser utilizado o PostgreSQL;
-10. Para o cache de consultas à API deve ser utilizado o Redis;
-11. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
-12. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
-13. Para a orquestração de containers deve ser utilizado um implementação do Kubernetes;
-14. Para o controle de ingresso dos serviços do orquestrador deve ser utilizado o Traefik;
-15. Para o fornecimento de certificados de criptografia TLS deve ser utilizado o Let's Encrypt;
-16. Para a coleta de métricas do orquestrador e do controlador de ingresso deve ser utilizado o Prometheus;
-17. Para a visualização de métricas coletadas deve ser utilizado Prometheus Datasources como o Grafana;
-18. Para a resolução de nomes dos endereços IPs para o exterior deve ser utilizado o Cloudflare.
+7. A comunicação assíncrona entre os back-ends devem utilizar o sistema de mensageria RabbitMQ;
+8. Para a persistência de dados deve ser utilizado o PostgreSQL;
+9. Para o cache de consultas à API deve ser utilizado o Redis;
+10. Para a autorização de acesso aos repositórios de aplicativos externos deve ser utilizado o OAuth;
+11. Para a escuta de envios de commits nos repositórios deve ser utilizado Webhooks;
+12. Para a orquestração de containers deve ser utilizado um implementação do Kubernetes;
+13. Para o controle de ingresso dos serviços do orquestrador deve ser utilizado o Traefik;
+14. Para o fornecimento de certificados de criptografia TLS deve ser utilizado o Let's Encrypt;
+15. Para a coleta de métricas do orquestrador e do controlador de ingresso deve ser utilizado o Prometheus;
+16. Para a visualização de métricas coletadas deve ser utilizado Prometheus Datasources como o Grafana;
+17. Para a resolução de nomes dos endereços IPs para o exterior deve ser utilizado o Cloudflare.
 
 ## 2.4. Mecanismos Arquiteturais
 
@@ -175,7 +174,6 @@ Os objetivos específicos são:
 | Negócio        | Back-end web             | GoLang            |
 | Comunicação    | Front-Back non-real-time | Restful           |
 | Comunicação    | Front-Back real-time     | WebSocket         |
-| Comunicação    | Back-Back point-to-point | gRPC              |
 | Comunicação    | Back-Back broker-based   | RabbitMQ          |
 | Persistência   | Relational SGBD          | PostgreSQL        |
 | Cache          | In-memory                | Redis             |

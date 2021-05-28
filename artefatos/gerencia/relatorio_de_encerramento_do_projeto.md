@@ -52,7 +52,7 @@ Sim, todas os requisitos que foram levantados no início do projeto foram entreg
 # 4. Liçoes aprendidas
 
 Durante o processo de desenvolvimento do Climb, muitas lições foram apreendidas pelos integrantes do grupo, como a utilização de diversas tecnologias e protocolos
-de comunicação para compor um software complexo, sendo algumas delas: Next.js, Flutter, Nest.js, Kubernetes, HTTP, Websocket, RabbitMQ, gRPC, Grafana, 
+de comunicação para compor um software complexo, sendo algumas delas: Next.js, Flutter, Nest.js, Kubernetes, HTTP, Websocket, RabbitMQ, Grafana, 
 Prometheus. Além disso, foram apreendidas muitas técnicas para gerenciar o projeto, como a utilização de algumas ferramentas usando a metodologia SCRUM.
 
 # 5. Questões em Aberto
