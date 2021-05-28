@@ -38,7 +38,6 @@ class _MonitoryPageState extends State<MonitoryPage> {
   @override
   void initState() {
     super.initState();
-    connectToServer();
   }
 
   void connectToServer() {
@@ -51,6 +50,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
 
       // Connect to websocket
       socket.connect();
+
       socket.emit('message', appName);
       // Handle socket events
       socket.on('connect', (_) => print('connect: ${socket.id}'));
@@ -78,7 +78,7 @@ class _MonitoryPageState extends State<MonitoryPage> {
     setState(() {
       appName = routeData.appName;
     });
-
+    connectToServer();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
