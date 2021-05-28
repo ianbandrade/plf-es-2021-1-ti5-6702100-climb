@@ -22,11 +22,7 @@ export class Credential extends BaseEntity {
   @ManyToOne(() => Instance, (instance) => instance.credentials, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'instanceId' })
   instance: Instance;
-
-  @Column({ nullable: false })
-  instanceId: string;
 
   @CreateDateColumn({ select: false })
   createdAt?: Date;

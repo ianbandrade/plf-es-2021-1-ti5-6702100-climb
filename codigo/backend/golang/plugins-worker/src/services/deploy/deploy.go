@@ -72,7 +72,7 @@ func Deploy(name, chartName string) (credentials Credentials, err error) {
 		return
 	}
 
-	values, credentials := getDeployData(name, chartName, plugin.Configs)
+	values, credentials := getDeployData(name, plugin.Protocol, plugin.Configs)
 
 	_, err = installClient.Run(chart, values)
 

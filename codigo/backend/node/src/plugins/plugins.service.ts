@@ -132,7 +132,11 @@ export class PluginsService {
         chart: instance.plugin.chart,
       },
     };
-    this.amqpConnection.publish(defaultExchange, plugins.delete.req.routingKey, payload);
+    this.amqpConnection.publish(
+      defaultExchange,
+      plugins.delete.req.routingKey,
+      payload,
+    );
     return { message: `A instância ${instance.name} será deletada em breve` };
   }
 
@@ -144,7 +148,11 @@ export class PluginsService {
         chart: plugin.chart,
       },
     };
-    this.amqpConnection.publish(defaultExchange, plugins.create.req.routingKey, payload);
+    this.amqpConnection.publish(
+      defaultExchange,
+      plugins.create.req.routingKey,
+      payload,
+    );
   }
 
   async createPlugin(bcreatePluginnDto: CreatePluginDto): Promise<BasicPlugin> {
@@ -167,21 +175,17 @@ export class PluginsService {
     success,
     credentials,
     url,
-  }: ResInstanceDto): Promise<Instance> {
-    try {
-      const instance = await this.instanceRepository.findOne(id);
+  }: ResInstanceDto): Promise<void> {
+    const instance = await this.instanceRepository.findOne(id);
 
+    if (instance) {
       instance.status = success
         ? DeployStatusEnum.SUCCESS
         : DeployStatusEnum.FAIL;
-
       instance.credentials = await this.mapCredentials(credentials, instance);
       instance.url = url;
 
-      instance.save();
-      return instance;
-    } catch (e) {
-      throw new InternalServerErrorException(e);
+      await instance.save();
     }
   }
 
@@ -210,7 +214,6 @@ export class PluginsService {
         credential.key = key;
         credential.value = value;
         credential.instance = instance;
-        credential.instanceId = instance.id;
 
         try {
           await credential.save();

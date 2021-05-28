@@ -46,7 +46,7 @@ export class MonitoringService {
 
     return this.httpService
       .get(
-        `${this.configService.get<string>('prometheusHost')}/api/v1/query`,
+        `http://${this.configService.get<string>('prometheusHost')}/api/v1/query`,
         requestConfig,
       )
       .toPromise()
