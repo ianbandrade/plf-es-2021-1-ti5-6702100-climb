@@ -7,10 +7,17 @@
       "path": "./backend/node"
     },
     {
-      "path": "./backend/golang"
+      "path": "./backend/golang/apps-worker"
+    },
+    {
+      "path": "./backend/golang/plugins-worker"
     },
     {
       "path": "./mobile"
+    },
+    {
+      "name": "root",
+      "path": "./"
     }
   ],
   "settings": {

@@ -18,4 +18,6 @@ RUN yarn -s
 
 COPY --chown=$USER:$USER . .
 
+ENTRYPOINT ["sh", ".docker/entrypoint.sh"]
+
 CMD ["yarn", "dev"]
