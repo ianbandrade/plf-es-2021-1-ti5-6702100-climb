@@ -45,7 +45,7 @@ const Plugins = (): JSX.Element => {
           );
         } else
           showToastMessage(
-            showDefaultFetchError("para carregar os plugins pré-configurados.")
+            showDefaultFetchError("para carregar os apps pré-configurados.")
           );
       });
   }
@@ -64,7 +64,7 @@ const Plugins = (): JSX.Element => {
           );
         } else
           showToastMessage(
-            showDefaultFetchError("carregar os plugins pré-configurados.")
+            showDefaultFetchError("carregar os apps pré-configurados.")
           );
       });
   }
@@ -88,7 +88,7 @@ const Plugins = (): JSX.Element => {
   return (
     <Flex flexDirection="column" padding="12" width="full">
       <HeadingActionButton
-        title="Plugins pré-configurados"
+        title="Apps pré-configurados"
         backRoute="/user/apps"
       />
       <Modal
@@ -130,7 +130,7 @@ const Plugins = (): JSX.Element => {
           )
         ) : (
           <Text mt={5} fontSize="2xl" fontWeight="bold">
-            Ainda não existem plugins pré-configurados!
+            Ainda não existem apps pré-configurados!
           </Text>
         )}
       </Flex>

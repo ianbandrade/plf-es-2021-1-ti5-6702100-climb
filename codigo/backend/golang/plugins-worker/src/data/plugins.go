@@ -7,6 +7,7 @@ import (
 var Plugins = structs.Plugins{
 	"mariadb": {
 		Entrypoint: "mysql",
+		Protocol:   "mariadb",
 		WebPort:    nil,
 		Storages: []string{
 			"data-%s-0",
@@ -36,6 +37,7 @@ var Plugins = structs.Plugins{
 	},
 	"mongodb": {
 		Entrypoint: "mongodb",
+		Protocol:   "mongodb",
 		WebPort:    nil,
 		Storages: []string{
 			"%s",
@@ -65,6 +67,7 @@ var Plugins = structs.Plugins{
 	},
 	"mysql": {
 		Entrypoint: "mysql",
+		Protocol:   "mysql",
 		WebPort:    nil,
 		Storages: []string{
 			"data-%s-0",
@@ -94,6 +97,7 @@ var Plugins = structs.Plugins{
 	},
 	"postgresql": {
 		Entrypoint: "postgresql",
+		Protocol:   "postgresql",
 		WebPort:    nil,
 		Storages: []string{
 			"data-%s-postgresql-0",
@@ -118,6 +122,7 @@ var Plugins = structs.Plugins{
 	},
 	"rabbitmq": {
 		Entrypoint: "rabbitmq",
+		Protocol:   "amqp",
 		WebPort:    int32Ptr(15672),
 		Storages: []string{
 			"data-%s-rabbitmq-0",
@@ -137,6 +142,7 @@ var Plugins = structs.Plugins{
 	},
 	"redis": {
 		Entrypoint: "redis",
+		Protocol:   "redis",
 		WebPort:    nil,
 		Storages: []string{
 			"redis-data-%s-master-0",

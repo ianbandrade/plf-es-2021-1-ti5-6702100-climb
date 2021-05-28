@@ -1,0 +1,18 @@
+additionalArguments:
+  - --entrypoints.web.http.redirections.entryPoint.to=:443
+  - --entrypoints.web.http.redirections.entryPoint.scheme=https
+  - --certificatesResolvers.letsencrypt.acme.dnschallenge=true
+  - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
+  - --certificatesResolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+  - --certificatesresolvers.letsencrypt.acme.email=johndoe@example.com
+  - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
+  - --metrics.prometheus=true
+  - --api.insecure=true
+  - --accesslog=true
+  - --log.level=INFO
+env:
+  - name: CF_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare
+        key: dns-token
