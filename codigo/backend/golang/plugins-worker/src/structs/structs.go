@@ -4,6 +4,7 @@ type Plugins map[string]PluginData
 
 type PluginData struct {
 	WebPort    *int32   `json:"webPort"`
+	Protocol   string   `json:"protocol"`
 	Entrypoint string   `json:"entrypoint"`
 	Storages   []string `json:"storages"`
 	Configs    Configs  `json:"configs"`
