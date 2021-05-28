@@ -1,0 +1,14 @@
+version: "3.5"
+
+services:
+  app:
+    build: .
+    volumes:
+      - ./src:/go/src/app
+    environment:
+      - HOST=${HOST:-localhost}
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-rabbitmq}
+
+networks:
+  default:
+    name: climb

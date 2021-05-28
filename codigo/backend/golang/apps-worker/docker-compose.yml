@@ -1,0 +1,18 @@
+version: "3.5"
+
+services:
+  app:
+    build: .
+    volumes:
+      - ./src:/go/src/app
+    environment:
+      - HOST=${HOST:-localhost}
+      - DOCKER_ADDRESS=${DOCKER_ADDRESS:-localhost}
+      - DOCKER_PORT=${DOCKER_PORT:-2375}
+      - REGISTRY_ADDRESS=${REGISTRY_ADDRESS:-localhost}
+      - REGISTRY_PORT=${REGISTRY_PORT:-5000}
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-rabbitmq}
+
+networks:
+  default:
+    name: climb

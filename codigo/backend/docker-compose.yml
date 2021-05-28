@@ -1,0 +1,11 @@
+version: '3.5'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.8.14-management-alpine
+    ports:
+      - 15672:15672
+
+networks:
+  default:
+    name: climb

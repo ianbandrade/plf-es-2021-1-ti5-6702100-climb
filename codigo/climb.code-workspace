@@ -1,0 +1,38 @@
+{
+  "folders": [
+    {
+      "path": "./frontend"
+    },
+    {
+      "path": "./backend/node"
+    },
+    {
+      "path": "./backend/golang/apps-worker"
+    },
+    {
+      "path": "./backend/golang/plugins-worker"
+    },
+    {
+      "path": "./mobile"
+    },
+    {
+      "name": "root",
+      "path": "./"
+    }
+  ],
+  "settings": {
+    "workbench.colorTheme": "Nord",
+    "material-icon-theme.activeIconPack": "nest",
+    "material-icon-theme.folders.theme": "classic",
+    "workbench.iconTheme": "material-icon-theme"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-azuretools.vscode-docker",
+      "editorconfig.editorconfig",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "arcticicestudio.nord-visual-studio-code"
+    ]
+  }
+}

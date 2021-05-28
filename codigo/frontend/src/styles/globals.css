@@ -1,0 +1,45 @@
+/* Global Styling here */
+* {
+  padding: 0;
+  margin: 0;
+  vertical-align: baseline;
+  list-style: none;
+  border: 0;
+}
+
+html {
+  min-height: 100vh;
+  --scrollbarBG: #edf2f7;
+  --thumbBG: #2e3440;
+}
+
+#iframe {
+  width: 100vw;
+  height: 120vh;
+  pointer-events: none;
+}
+
+body::-webkit-scrollbar,
+div::-webkit-scrollbar,
+ul::-webkit-scrollbar {
+  width: 10px;
+}
+body,
+div,
+ul {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+body::-webkit-scrollbar-track,
+div::-webkit-scrollbar-track,
+ul::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+  border-radius: 6px;
+}
+body::-webkit-scrollbar-thumb,
+div::-webkit-scrollbar-thumb,
+ul::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 2px;
+  border: 2px solid var(--scrollbarBG);
+}

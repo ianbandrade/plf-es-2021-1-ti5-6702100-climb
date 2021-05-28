@@ -1,0 +1,45 @@
+version: '3.5'
+
+services:
+  app:
+    container_name: climb_node
+    build: .
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST:-database}
+      - DATABASE_PORT=${DATABASE_PORT:-5432}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - AMQP_HOST=${AMQP_HOST:-rabbitmq}
+      - AMQP_PORT=${AMQP_PORT:-5672}
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=${PORT:-3333}
+    ports:
+      - '${PORT:-3333}:${PORT:-3333}'
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - database
+      - redis
+
+  database:
+    container_name: climb_node_database
+    image: postgres:13.2-alpine
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME:-database}
+      - POSTGRES_USER=${DATABASE_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-postgres}
+      - PGPORT=${DATABASE_PORT:-5432}
+    ports:
+      - '${DATABASE_PORT:-5432}:${DATABASE_PORT:-5432}'
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+
+volumes:
+  data:
+
+networks:
+  default:
+    name: climb
